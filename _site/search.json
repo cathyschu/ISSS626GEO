@@ -12,5 +12,12 @@
     "title": "About",
     "section": "",
     "text": "About this site\n\n1 + 1\n\n[1] 2"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#objective",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#objective",
+    "title": "Hands-on Exercise 01",
+    "section": "Objective",
+    "text": "Objective\nIn this exercise, we will learn how to perform geospatial data science tasks in R by using sf package.\nWe aim to achieve the following competencies:\n\ninstalling and loading sf and tidyverse packages into R environment;\nimporting geospatial data by using appropriate functions of sf package;\nimporting aspatial data by using appropriate function of readr package;\nexploring the content of simple feature data frame by using appropriate Base R and sf functions;\nassigning or transforming coordinate systems by using using appropriate sf functions;\nconverting an aspatial data into a sf data frame by using appropriate function of sf package;\nperforming geoprocessing tasks by using appropriate functions of sf package;\nperforming data wrangling tasks by using appropriate functions of dplyr package and\nperforming Exploratory Data Analysis (EDA) by using appropriate functions from ggplot2 package.\n\n\nGetting started"
   }
 ]

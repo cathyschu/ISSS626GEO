@@ -1,9 +1,9 @@
 {
     "id": "348512F6",
-    "path": "~/Documents/cathyschu/ISSS626GEO/Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.qmd",
-    "project_path": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.qmd",
+    "path": "~/Documents/cathyschu/ISSS626GEO/Hands-on_Ex/template.qmd",
+    "project_path": "Hands-on_Ex/template.qmd",
     "type": "quarto_markdown",
-    "hash": "0",
+    "hash": "3576789826",
     "contents": "",
     "dirty": false,
     "created": 1756161677741.0,
@@ -18,14 +18,14 @@
         "rmdVisualCollapsedChunks": "",
         "cursorPosition": "0,0",
         "scrollLine": "0",
-        "rmdVisualModeLocation": "354:0"
+        "rmdVisualModeLocation": "393:0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1756161681,
+    "lastKnownWriteTime": 1756161898,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1756161681477,
+    "last_content_update": 1756161898595,
     "read_only": false,
     "read_only_alternatives": []
 }

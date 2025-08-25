@@ -13,7 +13,7 @@ execute: #how YML page work
 
 ## Overview
 
-## Objective
+## Objectives
 
 In this exercise, we will learn how to perform geospatial data science tasks in R by using **sf** package.
 
