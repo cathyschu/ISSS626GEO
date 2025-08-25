@@ -3,7 +3,7 @@
     "path": "~/Documents/cathyschu/ISSS626GEO/_quarto.yml",
     "project_path": "_quarto.yml",
     "type": "yaml",
-    "hash": "518593230",
+    "hash": "529847959",
     "contents": "",
     "dirty": false,
     "created": 1756164557088.0,
@@ -12,15 +12,15 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "8,10",
+        "cursorPosition": "16,31",
         "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1756165321,
+    "lastKnownWriteTime": 1756165918,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1756165321032,
+    "last_content_update": 1756165918114,
     "read_only": false,
     "read_only_alternatives": []
 }
