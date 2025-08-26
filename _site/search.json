@@ -32,7 +32,7 @@
     "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#data-acquisition",
     "title": "01-Geospatial Data Science with R",
     "section": "1.2 Data Acquisition",
-    "text": "1.2 Data Acquisition\nWe will extract data sets for this exercise from the following sources:\n\nMaster Plan 2014 Subzone Boundary (Web) from data.gov.sg\nPre-Schools Location from data.gov.sg\nCycling Path from LTADataMall\nLatest version of Singapore Airbnb listing data from Inside Airbnb\n\n\n1.2.1 Extracting the geospatial data sets\n\n\n1.2.2 Extracting the aspatial data set"
+    "text": "1.2 Data Acquisition\nWe will extract data sets for this exercise from the following sources:\n\nMaster Plan 2014 Subzone Boundary (Web) from data.gov.sg\nPre-Schools Location from data.gov.sg\nCycling Path from LTADataMall\nLatest version of Singapore Airbnb listing data from Inside Airbnb\n\n\n1.2.1 Extracting the geospatial data sets\nIn the Hands-on_Ex01 folder, we create a sub-folder called data and 2 data sub-folders as geospatial and aspatial respectively. Then, we place Master Plan 2014 Subzone Boundary (Web), Pre-Schools Location and Cycling Path zipped files into geospatial sub-folder and unzipped them. Copy the unzipped files from their respective sub-folders and place them inside geospatial sub-folder.\n\n\n1.2.2 Extracting the aspatial data set"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#getting-started",

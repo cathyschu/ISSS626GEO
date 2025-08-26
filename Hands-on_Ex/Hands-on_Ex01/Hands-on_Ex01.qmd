@@ -40,6 +40,8 @@ We will extract data sets for this exercise from the following sources:
 
 ### 1.2.1 Extracting the geospatial data sets
 
+In the Hands-on_Ex01 folder, we create a sub-folder called data and 2 data sub-folders as geospatial and aspatial respectively. Then, we place `Master Plan 2014 Subzone Boundary (Web)`, `Pre-Schools Location` and `Cycling Path` zipped files into `geospatial` sub-folder and unzipped them. Copy the unzipped files from their respective sub-folders and place them inside geospatial sub-folder.
+
 ### 1.2.2 Extracting the aspatial data set
 
 ## 1.3 Getting Started
