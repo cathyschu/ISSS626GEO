@@ -31,7 +31,16 @@ We aim to achieve the following competencies:
 
 ## 1.2 Data Acquisition
 
+We will extract data sets for this exercise from the following sources:
+
+-   Master Plan 2014 Subzone Boundary (Web) from [data.gov.sg](https://data.gov.sg/)
+-   Pre-Schools [Location](https://data.gov.sg/datasets?query=preschool&resultId=d_61eefab99958fd70e6aab17320a71f1c&page=1) from [data.gov.sg](https://data.gov.sg/)
+-   Cycling Path from [LTADataMall](https://www.mytransport.sg/content/mytransport/home/dataMall.html)
+-   Latest version of Singapore Airbnb listing data from [Inside Airbnb](http://insideairbnb.com/get-the-data.html)
+
 ### 1.2.1 Extracting the geospatial data sets
+
+In the Hands-on_Ex01 folder, we create a sub-folder called data and 2 data sub-folders as geospatial and aspatial respectively. Then, we place `Master Plan 2014 Subzone Boundary (Web)`, `Pre-Schools Location` and `Cycling Path` zipped files into `geospatial` sub-folder and unzipped them. Copy the unzipped files from their respective sub-folders and place them inside geospatial sub-folder.
 
 ### 1.2.2 Extracting the aspatial data set
 
