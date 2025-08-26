@@ -1,5 +1,5 @@
 ---
-title: "Hands-on Exercise 01"
+title: "01-Geospatial Data Science with R"
 author: "Cathy C."
 date: "Aug 23, 2025"
 date-modified: "last-modified" #auto render date
@@ -11,7 +11,7 @@ execute: #how YML page work
   freeze: true #controls rendering - no render if no changes
 ---
 
-## Overview
+## Hands-on 01 Overview
 
 ## 1.1 Objectives
 
@@ -48,3 +48,25 @@ We aim to achieve the following competencies:
 ## 1.5 Checking the Content of A Simple Feature Data Frame
 
 ### 1.5.1 **Working with *st_geometry()***
+
+### 1.5.2
+
+## 1.6
+
+## 1.7
+
+### 1.7.1
+
+### 1.7.2
+
+## 1.8
+
+### 1.8.1
+
+### 1.8.2
+
+## 1.9
+
+### 1.9.1
+
+### 1.9.2

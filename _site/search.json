@@ -23,36 +23,64 @@
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#objectives",
     "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#objectives",
-    "title": "Hands-on Exercise 01",
+    "title": "01-Geospatial Data Science with R",
     "section": "1.1 Objectives",
     "text": "1.1 Objectives\nIn this exercise, we will learn how to perform geospatial data science tasks in R by using sf package.\nWe aim to achieve the following competencies:\n\ninstalling and loading sf and tidyverse packages into R environment;\nimporting geospatial data by using appropriate functions of sf package;\nimporting aspatial data by using appropriate function of readr package;\nexploring the content of simple feature data frame by using appropriate Base R and sf functions;\nassigning or transforming coordinate systems by using using appropriate sf functions;\nconverting an aspatial data into a sf data frame by using appropriate function of sf package;\nperforming geoprocessing tasks by using appropriate functions of sf package;\nperforming data wrangling tasks by using appropriate functions of dplyr package and\nperforming Exploratory Data Analysis (EDA) by using appropriate functions from ggplot2 package."
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#data-acquisition",
     "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#data-acquisition",
-    "title": "Hands-on Exercise 01",
+    "title": "01-Geospatial Data Science with R",
     "section": "1.2 Data Acquisition",
     "text": "1.2 Data Acquisition\n\n1.2.1 Extracting the geospatial data sets\n\n\n1.2.2 Extracting the aspatial data set"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#getting-started",
     "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#getting-started",
-    "title": "Hands-on Exercise 01",
+    "title": "01-Geospatial Data Science with R",
     "section": "1.3 Getting Started",
     "text": "1.3 Getting Started"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#importing-geospatial-data",
     "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#importing-geospatial-data",
-    "title": "Hands-on Exercise 01",
+    "title": "01-Geospatial Data Science with R",
     "section": "1.4 Importing Geospatial Data",
     "text": "1.4 Importing Geospatial Data\n\n1.4.1 Importing polygon feature data in shapefile format\n\n\n1.4.2 Importing polyline feature data in shapefile form\n\n\n1.4.3 Importing GIS data in kml format"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#checking-the-content-of-a-simple-feature-data-frame",
     "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#checking-the-content-of-a-simple-feature-data-frame",
-    "title": "Hands-on Exercise 01",
+    "title": "01-Geospatial Data Science with R",
     "section": "1.5 Checking the Content of A Simple Feature Data Frame",
-    "text": "1.5 Checking the Content of A Simple Feature Data Frame\n\n1.5.1 Working with st_geometry()"
+    "text": "1.5 Checking the Content of A Simple Feature Data Frame\n\n1.5.1 Working with st_geometry()\n\n\n1.5.2"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#section-1",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#section-1",
+    "title": "01-Geospatial Data Science with R",
+    "section": "1.6",
+    "text": "1.6"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#section-2",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#section-2",
+    "title": "01-Geospatial Data Science with R",
+    "section": "1.7",
+    "text": "1.7\n\n1.7.1\n\n\n1.7.2"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#section-5",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#section-5",
+    "title": "01-Geospatial Data Science with R",
+    "section": "1.8",
+    "text": "1.8\n\n1.8.1\n\n\n1.8.2"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#section-8",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#section-8",
+    "title": "01-Geospatial Data Science with R",
+    "section": "1.9",
+    "text": "1.9\n\n1.9.1\n\n\n1.9.2"
   }
 ]

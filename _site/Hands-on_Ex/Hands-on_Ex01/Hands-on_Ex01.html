@@ -9,7 +9,7 @@
 <meta name="author" content="Cathy C.">
 <meta name="dcterms.date" content="2025-08-23">
 
-<title>Hands-on Exercise 01 – GeoSpatial</title>
+<title>01-Geospatial Data Science with R – GeoSpatial</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -139,7 +139,7 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#hands-on-01-overview" id="toc-hands-on-01-overview" class="nav-link active" data-scroll-target="#hands-on-01-overview">Hands-on 01 Overview</a></li>
   <li><a href="#objectives" id="toc-objectives" class="nav-link" data-scroll-target="#objectives">1.1 Objectives</a></li>
   <li><a href="#data-acquisition" id="toc-data-acquisition" class="nav-link" data-scroll-target="#data-acquisition">1.2 Data Acquisition</a>
   <ul class="collapse">
@@ -156,6 +156,23 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#checking-the-content-of-a-simple-feature-data-frame" id="toc-checking-the-content-of-a-simple-feature-data-frame" class="nav-link" data-scroll-target="#checking-the-content-of-a-simple-feature-data-frame">1.5 Checking the Content of A Simple Feature Data Frame</a>
   <ul class="collapse">
   <li><a href="#working-with-st_geometry" id="toc-working-with-st_geometry" class="nav-link" data-scroll-target="#working-with-st_geometry">1.5.1 <strong>Working with <em>st_geometry()</em></strong></a></li>
+  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section">1.5.2</a></li>
+  </ul></li>
+  <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1">1.6</a></li>
+  <li><a href="#section-2" id="toc-section-2" class="nav-link" data-scroll-target="#section-2">1.7</a>
+  <ul class="collapse">
+  <li><a href="#section-3" id="toc-section-3" class="nav-link" data-scroll-target="#section-3">1.7.1</a></li>
+  <li><a href="#section-4" id="toc-section-4" class="nav-link" data-scroll-target="#section-4">1.7.2</a></li>
+  </ul></li>
+  <li><a href="#section-5" id="toc-section-5" class="nav-link" data-scroll-target="#section-5">1.8</a>
+  <ul class="collapse">
+  <li><a href="#section-6" id="toc-section-6" class="nav-link" data-scroll-target="#section-6">1.8.1</a></li>
+  <li><a href="#section-7" id="toc-section-7" class="nav-link" data-scroll-target="#section-7">1.8.2</a></li>
+  </ul></li>
+  <li><a href="#section-8" id="toc-section-8" class="nav-link" data-scroll-target="#section-8">1.9</a>
+  <ul class="collapse">
+  <li><a href="#section-9" id="toc-section-9" class="nav-link" data-scroll-target="#section-9">1.9.1</a></li>
+  <li><a href="#section-10" id="toc-section-10" class="nav-link" data-scroll-target="#section-10">1.9.2</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -165,7 +182,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Hands-on Exercise 01</h1>
+<h1 class="title">01-Geospatial Data Science with R</h1>
 </div>
 
 
@@ -200,8 +217,8 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="overview" class="level2">
-<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<section id="hands-on-01-overview" class="level2">
+<h2 class="anchored" data-anchor-id="hands-on-01-overview">Hands-on 01 Overview</h2>
 </section>
 <section id="objectives" class="level2">
 <h2 class="anchored" data-anchor-id="objectives">1.1 Objectives</h2>
@@ -247,6 +264,39 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="checking-the-content-of-a-simple-feature-data-frame">1.5 Checking the Content of A Simple Feature Data Frame</h2>
 <section id="working-with-st_geometry" class="level3">
 <h3 class="anchored" data-anchor-id="working-with-st_geometry">1.5.1 <strong>Working with <em>st_geometry()</em></strong></h3>
+</section>
+<section id="section" class="level3">
+<h3 class="anchored" data-anchor-id="section">1.5.2</h3>
+</section>
+</section>
+<section id="section-1" class="level2">
+<h2 class="anchored" data-anchor-id="section-1">1.6</h2>
+</section>
+<section id="section-2" class="level2">
+<h2 class="anchored" data-anchor-id="section-2">1.7</h2>
+<section id="section-3" class="level3">
+<h3 class="anchored" data-anchor-id="section-3">1.7.1</h3>
+</section>
+<section id="section-4" class="level3">
+<h3 class="anchored" data-anchor-id="section-4">1.7.2</h3>
+</section>
+</section>
+<section id="section-5" class="level2">
+<h2 class="anchored" data-anchor-id="section-5">1.8</h2>
+<section id="section-6" class="level3">
+<h3 class="anchored" data-anchor-id="section-6">1.8.1</h3>
+</section>
+<section id="section-7" class="level3">
+<h3 class="anchored" data-anchor-id="section-7">1.8.2</h3>
+</section>
+</section>
+<section id="section-8" class="level2">
+<h2 class="anchored" data-anchor-id="section-8">1.9</h2>
+<section id="section-9" class="level3">
+<h3 class="anchored" data-anchor-id="section-9">1.9.1</h3>
+</section>
+<section id="section-10" class="level3">
+<h3 class="anchored" data-anchor-id="section-10">1.9.2</h3>
 
 
 </section>
