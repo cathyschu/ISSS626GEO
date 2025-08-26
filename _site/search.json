@@ -2,9 +2,9 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "ISSS626 Geospatial Analytics",
+    "title": "Geospatial Analytics",
     "section": "",
-    "text": "Welcome to the working page for the Geospatial Analytics Course\n\n1 + 1\n\n[1] 2"
+    "text": "Welcome to the working page for the Geospatial Analytics Course.\nThis website will cover below topics, as well as course assignments, projects.\n\nIntroduction to Geospatial Analytics\nSpatial Point Patterns Analysis (SPAA)\nAdvanced Spatial Point Patterns Analysis\nSpatial Weights and Applications\nGlobal and Local Measures of Spatial Association\nGeographic Segmentation\nGeographically Weighted Explanatory Models\nGeographically Weighted Predictive Models\nModelling Geographic of Accessibility\nSpatial Interaction Models"
   },
   {
     "objectID": "about.html",
