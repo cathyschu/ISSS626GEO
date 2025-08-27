@@ -44,7 +44,15 @@ In the Hands-on_Ex01 folder, we create a sub-folder called data and 2 data sub-f
 
 ### 1.2.2 Extracting the aspatial data set
 
+Here we will extract the downloaded `listing` data file. Cut and paste `listing.csv` into `aspatial`sub-folder.
+
 ## 1.3 Getting Started
+
+Two R packages are used in this exercise:
+
+-   **sf** for importing, managing, and processing geospatial data.
+
+-   **tidyverse** for performing data science tasks such as importing, wrangling and visualising data.
 
 ## 1.4 Importing Geospatial Data
 
