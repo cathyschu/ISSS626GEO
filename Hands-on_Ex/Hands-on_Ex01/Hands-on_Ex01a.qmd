@@ -169,7 +169,52 @@ Note:
 
 One of the useful argument of *head()* is it allows user to select the numbers of record to display (i.e. the n argument).
 
-## 1.6
+## 1.6 **Plotting the Geospatial Data**
+
+In geospatial data science, by looking at the feature information is not enough. We are also interested to visualise the **geospatial features**. This is the time we use *plot()* of R Graphic in the code chunk below to achieve this.
+
+```{r}
+par(bg = "#D0DDD0")
+plot(mpsz)
+```
+
+The default plot of an sf object is a multi-plot of all attributes, up to a reasonable maximum as shown above. We can, however, choose to plot only the geometry by using the code chunk below.
+
+```{r}
+par(bg = "#e6f0e6")
+plot(st_geometry(mpsz))
+```
+
+Alternatively, we can also choose to plot the sf object by **using a specific attribute** as shown in the code chunk below.
+
+```{r}
+par(bg = "#D0DDD0")
+plot(mpsz["PLN_AREA_C"])
+```
+
+Note:
+
+`plot()` is appropriate for plotting the geospatial object for quick look. For high cartographic quality map, other R package such as **tmap** should be used.
+
+Next, we will plot the preschool layer on top of the mpsz layer by using the code chunk below.
+
+```{r}
+par(bg = "#e6f0e6")
+plot(st_geometry(mpsz))
+plot(st_geometry(preschool), add = TRUE)
+```
+
+Learning:
+
+In this plot, it has failed to plot on top of the mpsz layer. It is because `mpsz` is in **svy21** and `preschool` is in **wgs84.** We need to transform `preschool` to match the SVY21 coordinate system.
+
+```{r}
+par(bg = "#e6f0e6")
+preschool_svy21 <- st_transform(preschool, 3414)
+
+plot(st_geometry(mpsz))
+plot(st_geometry(preschool_svy21), add = TRUE, col = "#BA487F", pch = 16, cex = 0.25)
+```
 
 ## 1.7
 
