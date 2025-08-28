@@ -314,11 +314,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>We will learn how to import the following geospatial data into R by using <a href="https://r-spatial.github.io/sf/reference/st_read.html"><em>st_read()</em></a> of <strong>sf</strong> package:</p>
 <ul>
 <li><code>MP14_SUBZONE_WEB_PL</code>, a polygon feature layer in ESRI shapefile format,</li>
-</ul>
-<!-- -->
-<ul>
-<li><p><code>CyclingPath</code>, a line feature layer in ESRI shapefile format,</p></li>
-<li><p><code>PreSchool</code>, a point feature layer in kml file format.</p></li>
+<li><code>CyclingPath</code>, a line feature layer in ESRI shapefile format,</li>
+<li><code>PreSchool</code>, a point feature layer in kml file format.</li>
 </ul>
 <section id="importing-polygon-feature-data-in-shapefile-format" class="level3">
 <h3 class="anchored" data-anchor-id="importing-polygon-feature-data-in-shapefile-format">1.4.1 Importing polygon feature data in shapefile format</h3>
@@ -342,6 +339,12 @@ Bounding box:  xmin: 2667.538 ymin: 15748.72 xmax: 56396.44 ymax: 50256.33
 Projected CRS: SVY21</code></pre>
 </div>
 </div>
+<p>Learning:</p>
+<ul>
+<li><p>The geospatial objects are multipolygon features.</p></li>
+<li><p>There are a total of 323 multipolygon features and 15 fields in <code>mpsz</code> simple feature data frame. <code>mpsz</code> is in <strong>svy21</strong> projected coordinates systems.</p></li>
+<li><p>The bounding box provides the x extend and y extend of the data.</p></li>
+</ul>
 </section>
 <section id="importing-polyline-feature-data-in-shapefile-form" class="level3">
 <h3 class="anchored" data-anchor-id="importing-polyline-feature-data-in-shapefile-form">1.4.2 Importing polyline feature data in shapefile form</h3>

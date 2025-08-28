@@ -79,11 +79,7 @@ p_load function of **pacman** is used to install and load sf and tidyverse packa
 We will learn how to import the following geospatial data into R by using [*st_read()*](https://r-spatial.github.io/sf/reference/st_read.html) of **sf** package:
 
 -   `MP14_SUBZONE_WEB_PL`, a polygon feature layer in ESRI shapefile format,
-
-<!-- -->
-
 -   `CyclingPath`, a line feature layer in ESRI shapefile format,
-
 -   `PreSchool`, a point feature layer in kml file format.
 
 ### 1.4.1 Importing polygon feature data in shapefile format
@@ -100,6 +96,14 @@ Note:
 mpsz = st_read(dsn = "data/geospatial",
                layer = "MP14_SUBZONE_WEB_PL")
 ```
+
+Learning:
+
+-   The geospatial objects are multipolygon features.
+
+-   There are a total of 323 multipolygon features and 15 fields in `mpsz` simple feature data frame. `mpsz` is in **svy21** projected coordinates systems.
+
+-   The bounding box provides the x extend and y extend of the data.
 
 ### 1.4.2 Importing polyline feature data in shapefile form
 
