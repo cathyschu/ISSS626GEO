@@ -187,5 +187,26 @@
     "title": "01-Geospatial Data Science with R",
     "section": "1.9",
     "text": "1.9\n\n1.9.1\n\n\n1.9.2"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01a.html#working-with-projection",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01a.html#working-with-projection",
+    "title": "01-Geospatial Data Science with R",
+    "section": "1.7 Working with Projection",
+    "text": "1.7 Working with Projection\n\n1.7.1 Assigning EPSG code to a simple feature data frame\n\n\n1.7.2 Transforming the projection of preschool from wgs84 to svy21"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01a.html#importing-and-converting-an-aspatial-data",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01a.html#importing-and-converting-an-aspatial-data",
+    "title": "01-Geospatial Data Science with R",
+    "section": "1.8 Importing and Converting An Aspatial Data",
+    "text": "1.8 Importing and Converting An Aspatial Data\n\n1.8.1 Importing the aspatial data\n\n\n1.8.2 Creating a simple feature data frame from an aspatial data frame"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01a.html#geoprocessing-with-sf-package",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01a.html#geoprocessing-with-sf-package",
+    "title": "01-Geospatial Data Science with R",
+    "section": "1.9 Geoprocessing with sf package",
+    "text": "1.9 Geoprocessing with sf package\n\n1.9.1 Use case 1: Land acquisition analysis\n\n\n1.9.2 Use case 2: To determine the number of pre-schools by planning subzone"
   }
 ]

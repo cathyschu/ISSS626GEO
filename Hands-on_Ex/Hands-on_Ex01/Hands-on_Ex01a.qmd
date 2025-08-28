@@ -216,20 +216,20 @@ plot(st_geometry(mpsz))
 plot(st_geometry(preschool_svy21), add = TRUE, col = "#BA487F", pch = 16, cex = 0.25)
 ```
 
-## 1.7
+## 1.7 **Working with Projection**
 
-### 1.7.1
+### 1.7.1 **Assigning EPSG code to a simple feature data frame**
 
-### 1.7.2
+### 1.7.2 **Transforming the projection of preschool from wgs84 to svy21**
 
-## 1.8
+## 1.8 **Importing and Converting An Aspatial Data**
 
-### 1.8.1
+### 1.8.1 **Importing the aspatial data**
 
-### 1.8.2
+### 1.8.2 **Creating a simple feature data frame from an aspatial data frame**
 
-## 1.9
+## 1.9 **Geoprocessing with sf package**
 
-### 1.9.1
+### 1.9.1 **Use case 1: Land acquisition analysis**
 
-### 1.9.2
+### 1.9.2 **Use case 2: To determine the number of pre-schools by planning subzone**
