@@ -294,11 +294,65 @@ Now the display of map is what we wanted.
 
 ## 1.8 **Importing and Converting An Aspatial Data**
 
+In practice, it is not unusual that we come across data such as `listing` of Inside Airbnb. We call this kind of data **aspatial** data. It is not a geospatial data but among the data fields, there are **two fields** that capture the **x- and y-coordinates of the data points.**
+
+In this section, we will import an aspatial data into R environment and save it as a **tibble data frame**. Next, we will convert it into a **simple feature data frame.**
+
+For the purpose of this exercise, the `listings.csv` data downloaded from AirBnb will be used.
+
 ### 1.8.1 **Importing the aspatial data**
+
+Since `listings` data set is in csv file format, we will use [*read_csv()*](https://readr.tidyverse.org/reference/read_delim.html) of **readr** package to import `listing.csv`. The output R object is called `listings` and it is a [tibble data frame](https://r4ds.had.co.nz/tibbles.html).
+
+```{r}
+listings <- read_csv("data/aspatial/listings.csv")
+```
+
+After importing the data file into R, it is important for us to examine if the data file has been imported correctly.
+
+The code chunk below uses *list()* of Base R instead of *glimpse()*.
+
+```{r}
+list(listings)
+```
+
+The output reveals that `listing` tibble data frame consists of 3659 rows and 18 columns. Two useful fields we are going to use in the next phase are `latitude` and `longitude`.
+
+Note that they are in **decimal degree format**. As a best guess, we will assume that the data is in **wgs84** Geographic Coordinate System.
 
 ### 1.8.2 **Creating a simple feature data frame from an aspatial data frame**
 
 ## 1.9 **Geoprocessing with sf package**
+
+The code chunk below converts `listing` data frame into a simple feature data frame by using [*st_as_sf()*](https://r-spatial.github.io/sf/reference/st_as_sf.html) of **sf** packages.
+
+```{r}
+listings_sf <- st_as_sf(listings,
+                        coords = c("longitude", "latitude"),
+                        crs = 4326) %>%
+  st_transform(crs = 3414)
+```
+
+Learning:
+
+-   *coords* argument requires you to provide the **column name** of the x-coordinates first then followed by the column name of the y-coordinates.
+
+-   *crs* argument requires you to provide the **coordinates system** in epsg format. [EPSG: 4326](https://epsg.io/4326) is wgs84 Geographic Coordinate System and [EPSG: 3414](https://epsg.io/3414) is Singapore SVY21 Projected Coordinate System. \
+    We can search for other country’s epsg code by referring to [epsg.io](https://epsg.io/).
+
+-   *%\>%* is used to nest *st_transform()* to transform the newly created simple feature data frame into svy21 projected coordinates system.
+
+Let us examine the content of this newly created simple feature data frame.
+
+```{r}
+glimpse(listings_sf)
+```
+
+Table above shows the content of `listing_sf`.
+
+Notice that a new column called `geometry` has been **added** into the data frame. On the other hand, the `longitude` and `latitude` columns have been **dropped** from the data frame.
+
+**DIY:**
 
 ### 1.9.1 **Use case 1: Land acquisition analysis**
 

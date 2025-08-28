@@ -713,8 +713,43 @@ First 5 geometries:</code></pre>
 </section>
 <section id="importing-and-converting-an-aspatial-data" class="level2">
 <h2 class="anchored" data-anchor-id="importing-and-converting-an-aspatial-data">1.8 <strong>Importing and Converting An Aspatial Data</strong></h2>
+<p>In practice, it is not unusual that we come across data such as <code>listing</code> of Inside Airbnb. We call this kind of data <strong>aspatial</strong> data. It is not a geospatial data but among the data fields, there are <strong>two fields</strong> that capture the <strong>x- and y-coordinates of the data points.</strong></p>
+<p>In this section, we will import an aspatial data into R environment and save it as a <strong>tibble data frame</strong>. Next, we will convert it into a <strong>simple feature data frame.</strong></p>
+<p>For the purpose of this exercise, the <code>listings.csv</code> data downloaded from AirBnb will be used.</p>
 <section id="importing-the-aspatial-data" class="level3">
 <h3 class="anchored" data-anchor-id="importing-the-aspatial-data">1.8.1 <strong>Importing the aspatial data</strong></h3>
+<p>Since <code>listings</code> data set is in csv file format, we will use <a href="https://readr.tidyverse.org/reference/read_delim.html"><em>read_csv()</em></a> of <strong>readr</strong> package to import <code>listing.csv</code>. The output R object is called <code>listings</code> and it is a <a href="https://r4ds.had.co.nz/tibbles.html">tibble data frame</a>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>listings <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/aspatial/listings.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>After importing the data file into R, it is important for us to examine if the data file has been imported correctly.</p>
+<p>The code chunk below uses <em>list()</em> of Base R instead of <em>glimpse()</em>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(listings)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+# A tibble: 3,659 × 18
+       id name      host_id host_name neighbourhood_group neighbourhood latitude
+    &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;               &lt;chr&gt;            &lt;dbl&gt;
+ 1  71609 Ensuite …  367042 Belinda   East Region         Tampines          1.35
+ 2  71896 B&amp;B  Roo…  367042 Belinda   East Region         Tampines          1.35
+ 3  71903 Room 2-n…  367042 Belinda   East Region         Tampines          1.35
+ 4 275343 10min wa… 1439258 Kay       Central Region      Bukit Merah       1.29
+ 5 275344 15 mins … 1439258 Kay       Central Region      Bukit Merah       1.29
+ 6 294281 5 mins w… 1521514 Elizabeth Central Region      Newton            1.31
+ 7 324945 Comforta… 1439258 Kay       Central Region      Bukit Merah       1.29
+ 8 330095 Relaxing… 1439258 Kay       Central Region      Bukit Merah       1.29
+ 9 344803 Budget s…  367042 Belinda   East Region         Tampines          1.35
+10 369141 5mins fr… 1521514 Elizabeth Central Region      Newton            1.31
+# ℹ 3,649 more rows
+# ℹ 11 more variables: longitude &lt;dbl&gt;, room_type &lt;chr&gt;, price &lt;dbl&gt;,
+#   minimum_nights &lt;dbl&gt;, number_of_reviews &lt;dbl&gt;, last_review &lt;date&gt;,
+#   reviews_per_month &lt;dbl&gt;, calculated_host_listings_count &lt;dbl&gt;,
+#   availability_365 &lt;dbl&gt;, number_of_reviews_ltm &lt;dbl&gt;, license &lt;chr&gt;</code></pre>
+</div>
+</div>
+<p>The output reveals that <code>listing</code> tibble data frame consists of 3659 rows and 18 columns. Two useful fields we are going to use in the next phase are <code>latitude</code> and <code>longitude</code>.</p>
+<p>Note that they are in <strong>decimal degree format</strong>. As a best guess, we will assume that the data is in <strong>wgs84</strong> Geographic Coordinate System.</p>
 </section>
 <section id="creating-a-simple-feature-data-frame-from-an-aspatial-data-frame" class="level3">
 <h3 class="anchored" data-anchor-id="creating-a-simple-feature-data-frame-from-an-aspatial-data-frame">1.8.2 <strong>Creating a simple feature data frame from an aspatial data frame</strong></h3>
@@ -722,6 +757,48 @@ First 5 geometries:</code></pre>
 </section>
 <section id="geoprocessing-with-sf-package" class="level2">
 <h2 class="anchored" data-anchor-id="geoprocessing-with-sf-package">1.9 <strong>Geoprocessing with sf package</strong></h2>
+<p>The code chunk below converts <code>listing</code> data frame into a simple feature data frame by using <a href="https://r-spatial.github.io/sf/reference/st_as_sf.html"><em>st_as_sf()</em></a> of <strong>sf</strong> packages.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>listings_sf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(listings,</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"longitude"</span>, <span class="st">"latitude"</span>),</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">crs =</span> <span class="dv">4326</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="at">crs =</span> <span class="dv">3414</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Learning:</p>
+<ul>
+<li><p><em>coords</em> argument requires you to provide the <strong>column name</strong> of the x-coordinates first then followed by the column name of the y-coordinates.</p></li>
+<li><p><em>crs</em> argument requires you to provide the <strong>coordinates system</strong> in epsg format. <a href="https://epsg.io/4326">EPSG: 4326</a> is wgs84 Geographic Coordinate System and <a href="https://epsg.io/3414">EPSG: 3414</a> is Singapore SVY21 Projected Coordinate System.<br>
+We can search for other country’s epsg code by referring to <a href="https://epsg.io/">epsg.io</a>.</p></li>
+<li><p><em>%&gt;%</em> is used to nest <em>st_transform()</em> to transform the newly created simple feature data frame into svy21 projected coordinates system.</p></li>
+</ul>
+<p>Let us examine the content of this newly created simple feature data frame.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(listings_sf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 3,659
+Columns: 17
+$ id                             &lt;dbl&gt; 71609, 71896, 71903, 275343, 275344, 29…
+$ name                           &lt;chr&gt; "Ensuite Room (Room 1 &amp; 2) near EXPO", …
+$ host_id                        &lt;dbl&gt; 367042, 367042, 367042, 1439258, 143925…
+$ host_name                      &lt;chr&gt; "Belinda", "Belinda", "Belinda", "Kay",…
+$ neighbourhood_group            &lt;chr&gt; "East Region", "East Region", "East Reg…
+$ neighbourhood                  &lt;chr&gt; "Tampines", "Tampines", "Tampines", "Bu…
+$ room_type                      &lt;chr&gt; "Private room", "Private room", "Privat…
+$ price                          &lt;dbl&gt; 143, NA, 76, NA, NA, 85, NA, NA, 41, 79…
+$ minimum_nights                 &lt;dbl&gt; 92, 92, 92, 180, 180, 92, 180, 180, 92,…
+$ number_of_reviews              &lt;dbl&gt; 19, 24, 46, 20, 16, 131, 17, 5, 60, 81,…
+$ last_review                    &lt;date&gt; 2020-01-17, 2019-10-13, 2020-01-09, 20…
+$ reviews_per_month              &lt;dbl&gt; 0.12, 0.14, 0.27, 0.13, 0.10, 0.80, 0.1…
+$ calculated_host_listings_count &lt;dbl&gt; 5, 5, 5, 58, 58, 7, 58, 58, 5, 7, 7, 1,…
+$ availability_365               &lt;dbl&gt; 90, 79, 90, 153, 153, 365, 153, 153, 36…
+$ number_of_reviews_ltm          &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, …
+$ license                        &lt;chr&gt; NA, NA, NA, "S0399", "S0399", NA, "S039…
+$ geometry                       &lt;POINT [m]&gt; POINT (41972.5 36390.05), POINT (…</code></pre>
+</div>
+</div>
+<p>Table above shows the content of <code>listing_sf</code>.</p>
+<p>Notice that a new column called <code>geometry</code> has been <strong>added</strong> into the data frame. On the other hand, the <code>longitude</code> and <code>latitude</code> columns have been <strong>dropped</strong> from the data frame.</p>
+<p><strong>DIY:</strong></p>
 <section id="use-case-1-land-acquisition-analysis" class="level3">
 <h3 class="anchored" data-anchor-id="use-case-1-land-acquisition-analysis">1.9.1 <strong>Use case 1: Land acquisition analysis</strong></h3>
 </section>
