@@ -322,8 +322,6 @@ Note that they are in **decimal degree format**. As a best guess, we will assume
 
 ### 1.8.2 **Creating a simple feature data frame from an aspatial data frame**
 
-## 1.9 **Geoprocessing with sf package**
-
 The code chunk below converts `listing` data frame into a simple feature data frame by using [*st_as_sf()*](https://r-spatial.github.io/sf/reference/st_as_sf.html) of **sf** packages.
 
 ```{r}
@@ -353,6 +351,8 @@ Table above shows the content of `listing_sf`.
 Notice that a new column called `geometry` has been **added** into the data frame. On the other hand, the `longitude` and `latitude` columns have been **dropped** from the data frame.
 
 **DIY:**
+
+## 1.9 **Geoprocessing with sf package**
 
 ### 1.9.1 **Use case 1: Land acquisition analysis**
 
