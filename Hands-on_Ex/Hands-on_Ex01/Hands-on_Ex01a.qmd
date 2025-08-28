@@ -133,9 +133,41 @@ Learning from code:
 
 ## 1.5 Checking the Content of A Simple Feature Data Frame
 
+Prior to wrangle the geospatial data, we should know more about the data sets first.
+
 ### 1.5.1 **Working with *st_geometry()***
 
-### 1.5.2
+The column in the sf data.frame that contains the geometries is a list of class `sfc`. We can retrieve the geometry list-column in this case by mpsz\$geom or mpsz\[\[1\]\], but the more general way uses [`st_geometry()`](https://r-spatial.github.io/sf/reference/st_geometry.html) as shown in the code chunk below.
+
+```{r}
+st_geometry(mpsz)
+```
+
+Note:
+
+The print only displays basic information of the feature class such as type of geometry, the geographic extent of the features and the coordinate system of the data.
+
+### 1.5.2 **Working with glimpse()**
+
+We would like to learn more about the **associated attribute information** in the data frame, besides the feature information. We will use [`glimpse()`](https://dplyr.tidyverse.org/reference/glimpse.html) of **dplyr** in the code chunk below.
+
+```{r}
+glimpse(mpsz)
+```
+
+`glimpse()` report reveals the data type of each fields. For example, `FMEL-UPD_D` field is in **date** data type and `X_ADDR`, `Y_ADDR`, `SHAPE_L` and `SHAPE_AREA` fields are all in **double-precision values**.
+
+### 1.5.3 **Working with *head()***
+
+When we want to reveal **complete information** of a feature object, we can use [*head()*](https://www.rdocumentation.org/packages/utils/versions/3.6.2/topics/head) of Base R.
+
+```{r}
+head(mpsz, n = 5)
+```
+
+Note:
+
+One of the useful argument of *head()* is it allows user to select the numbers of record to display (i.e. the n argument).
 
 ## 1.6
 
