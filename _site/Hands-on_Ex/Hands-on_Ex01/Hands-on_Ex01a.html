@@ -322,8 +322,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The code chunk below uses <em>st_read()</em> function of <strong>sf</strong> package to import <code>MP14_SUBZONE_WEB_PL</code> shapefile into R as a polygon feature data frame.</p>
 <p>Note:</p>
 <ul>
-<li><p>when the input geospatial data is in shapefile format, two arguments will be used, namely: <code>dsn</code> to define the data path and <code>layer</code> to provide the shapefile name.</p></li>
-<li><p>no extension such as .shp, .dbf, .prj and .shx are needed.</p></li>
+<li>when the input geospatial data is in shapefile format, two arguments will be used, namely: <code>dsn</code> to define the data path and <code>layer</code> to provide the shapefile name.</li>
+<li>no extension such as .shp, .dbf, .prj and .shx are needed.</li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>mpsz <span class="ot">=</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"data/geospatial"</span>,</span>
@@ -341,16 +341,58 @@ Projected CRS: SVY21</code></pre>
 </div>
 <p>Learning:</p>
 <ul>
-<li><p>The geospatial objects are multipolygon features.</p></li>
-<li><p>There are a total of 323 multipolygon features and 15 fields in <code>mpsz</code> simple feature data frame. <code>mpsz</code> is in <strong>svy21</strong> projected coordinates systems.</p></li>
-<li><p>The bounding box provides the x extend and y extend of the data.</p></li>
+<li>The geospatial objects are multipolygon features.</li>
+<li>There are a total of 323 multipolygon features and 15 fields in <code>mpsz</code> simple feature data frame. <code>mpsz</code> is in <strong>svy21</strong> projected coordinates systems.</li>
+<li>The bounding box provides the x extend and y extend of the data.</li>
 </ul>
 </section>
 <section id="importing-polyline-feature-data-in-shapefile-form" class="level3">
 <h3 class="anchored" data-anchor-id="importing-polyline-feature-data-in-shapefile-form">1.4.2 Importing polyline feature data in shapefile form</h3>
+<p>Now we use <em>st_read()</em> function of <strong>sf</strong> package to import <code>CyclingPath</code> shapefile into R as line feature data frame.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cyclingpath <span class="ot">=</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"data/geospatial"</span>,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">layer =</span> <span class="st">"MP14_SUBZONE_WEB_PL"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reading layer `MP14_SUBZONE_WEB_PL' from data source 
+  `/Users/cathyc/Documents/cathyschu/ISSS626GEO/Hands-on_Ex/Hands-on_Ex01/data/geospatial' 
+  using driver `ESRI Shapefile'
+Simple feature collection with 323 features and 15 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 2667.538 ymin: 15748.72 xmax: 56396.44 ymax: 50256.33
+Projected CRS: SVY21</code></pre>
+</div>
+</div>
+<p>Learning:</p>
+<ul>
+<li>There are a total of 4651 features and 19 fields in <code>cyclingpath</code> sf data frame.</li>
+<li>The geospatial entities are capture in <em>multilinestring</em> object.</li>
+<li>Similar to the <em>MP19_SUBZONE_WEB_PL</em> shape file, this data set is in in <strong>svy21</strong> projected coordinates system too.</li>
+</ul>
 </section>
 <section id="importing-gis-data-in-kml-format" class="level3">
 <h3 class="anchored" data-anchor-id="importing-gis-data-in-kml-format">1.4.3 Importing GIS data in kml format</h3>
+<p>The <code>PreSchoolsLocation</code> is in <a href="https://en.wikipedia.org/wiki/Keyhole_Markup_Language"><strong>kml</strong></a> format. The code chunk below will be used to import the kml into R.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>preschool <span class="ot">=</span> <span class="fu">st_read</span>(<span class="st">"data/geospatial/PreSchoolsLocation.kml"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reading layer `PRESCHOOLS_LOCATION' from data source 
+  `/Users/cathyc/Documents/cathyschu/ISSS626GEO/Hands-on_Ex/Hands-on_Ex01/data/geospatial/PreSchoolsLocation.kml' 
+  using driver `KML'
+Simple feature collection with 2290 features and 2 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 103.6878 ymin: 1.247759 xmax: 103.9897 ymax: 1.462134
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84</code></pre>
+</div>
+</div>
+<p>Learning from code:</p>
+<ul>
+<li><code>preschool</code> is a point feature data frame.</li>
+<li>There are a total of 2290 features and 2 fields.</li>
+<li>Different from the previous two simple feature data frame, preschool is in <strong>wgs84</strong> coordinates system.</li>
+</ul>
 </section>
 </section>
 <section id="checking-the-content-of-a-simple-feature-data-frame" class="level2">

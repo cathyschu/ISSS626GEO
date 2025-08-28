@@ -89,7 +89,6 @@ The code chunk below uses *st_read()* function of **sf** package to import `MP14
 Note:
 
 -   when the input geospatial data is in shapefile format, two arguments will be used, namely: `dsn` to define the data path and `layer` to provide the shapefile name.
-
 -   no extension such as .shp, .dbf, .prj and .shx are needed.
 
 ```{r}
@@ -100,14 +99,37 @@ mpsz = st_read(dsn = "data/geospatial",
 Learning:
 
 -   The geospatial objects are multipolygon features.
-
 -   There are a total of 323 multipolygon features and 15 fields in `mpsz` simple feature data frame. `mpsz` is in **svy21** projected coordinates systems.
-
 -   The bounding box provides the x extend and y extend of the data.
 
 ### 1.4.2 Importing polyline feature data in shapefile form
 
+Now we use *st_read()* function of **sf** package to import `CyclingPath` shapefile into R as line feature data frame.
+
+```{r}
+cyclingpath = st_read(dsn = "data/geospatial",
+               layer = "MP14_SUBZONE_WEB_PL")
+```
+
+Learning:
+
+-   There are a total of 4651 features and 19 fields in `cyclingpath` sf data frame.
+-   The geospatial entities are capture in *multilinestring* object.
+-   Similar to the *MP19_SUBZONE_WEB_PL* shape file, this data set is in in **svy21** projected coordinates system too.
+
 ### 1.4.3 Importing GIS data in kml format
+
+The `PreSchoolsLocation` is in [**kml**](https://en.wikipedia.org/wiki/Keyhole_Markup_Language) format. The code chunk below will be used to import the kml into R.
+
+```{r}
+preschool = st_read("data/geospatial/PreSchoolsLocation.kml")
+```
+
+Learning from code:
+
+-   `preschool` is a point feature data frame.
+-   There are a total of 2290 features and 2 fields.
+-   Different from the previous two simple feature data frame, preschool is in **wgs84** coordinates system.
 
 ## 1.5 Checking the Content of A Simple Feature Data Frame
 
