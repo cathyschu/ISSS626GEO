@@ -350,7 +350,18 @@ Table above shows the content of `listing_sf`.
 
 Notice that a new column called `geometry` has been **added** into the data frame. On the other hand, the `longitude` and `latitude` columns have been **dropped** from the data frame.
 
-**DIY:**
+**DIY:** Using the method you learned earlier, plot listing_sf layer on top of mpsz layer.
+
+```{r}
+
+```
+
+```{r}
+par(bg = "#D0DDD0")
+
+plot(st_geometry(mpsz))
+plot(st_geometry(listings_sf), add = TRUE, col = "#9112BC", pch = 16, cex = 0.25)
+```
 
 ## 1.9 **Geoprocessing with sf package**
 
