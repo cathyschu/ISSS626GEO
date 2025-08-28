@@ -1,0 +1,132 @@
+---
+title: "01-Geospatial Data Science with R"
+author: "Cathy C."
+date: "Aug 23, 2025"
+date-modified: "last-modified" #auto render date
+format: html
+execute: #how YML page work
+  echo: true #will show code
+  eval: true #will run code every time and show output
+  warning: false #dont show warning msg
+  freeze: true #controls rendering - no render if no changes
+---
+
+## Hands-on 01 Overview
+
+## 1.1 Objectives
+
+In this exercise, we will learn how to perform geospatial data science tasks in R by using **sf** package.
+
+We aim to achieve the following competencies:
+
+-   installing and loading [sf](https://r-spatial.github.io/sf/) and [tidyverse](https://www.tidyverse.org/) packages into R environment;
+-   importing geospatial data by using appropriate functions of **sf** package;
+-   importing aspatial data by using appropriate function of **readr** package;
+-   exploring the content of simple feature data frame by using appropriate **Base R** and **sf** functions;
+-   assigning or transforming coordinate systems by using using appropriate *sf* functions;
+-   converting an aspatial data into a sf data frame by using appropriate function of **sf** package;
+-   performing geoprocessing tasks by using appropriate functions of **sf** package;
+-   performing data wrangling tasks by using appropriate functions of **dplyr** package and
+-   performing Exploratory Data Analysis (EDA) by using appropriate functions from **ggplot2** package.
+
+## 1.2 Data Acquisition
+
+We will extract data sets for this exercise from the following sources:
+
+-   Master Plan 2014 Subzone Boundary (Web) from [data.gov.sg](https://data.gov.sg/)
+-   Pre-Schools [Location](https://data.gov.sg/datasets?query=preschool&resultId=d_61eefab99958fd70e6aab17320a71f1c&page=1) from [data.gov.sg](https://data.gov.sg/)
+-   Cycling Path from [LTADataMall](https://www.mytransport.sg/content/mytransport/home/dataMall.html)
+-   Latest version of Singapore Airbnb listing data from [Inside Airbnb](http://insideairbnb.com/get-the-data.html)
+
+### 1.2.1 Extracting the geospatial data sets
+
+In the Hands-on_Ex01 folder, we create a sub-folder called data and 2 data sub-folders as geospatial and aspatial respectively. Then, we place `Master Plan 2014 Subzone Boundary (Web)`, `Pre-Schools Location` and `Cycling Path` zipped files into `geospatial` sub-folder and unzipped them. Copy the unzipped files from their respective sub-folders and place them inside geospatial sub-folder.
+
+### 1.2.2 Extracting the aspatial data set
+
+Here we will extract the downloaded `listing` data file. Cut and paste `listing.csv` into `aspatial`sub-folder.
+
+## 1.3 Getting Started
+
+Two R packages are used in this exercise:
+
+-   **sf** for importing, managing, and processing geospatial data.
+
+-   **tidyverse** for performing data science tasks such as importing, wrangling and visualising data.
+
+The following packages from the Tidyverse package will be used.
+
+-   **readr** for importing csv data,
+
+-   **tidyr** for manipulating data,
+
+-   **dplyr** for transforming data, and
+
+-   **ggplot2** for visualising data
+
+**pacman** must be installed. We will use the code below to load the necessary R packages into R.
+
+```{r}
+pacman::p_load(sf, tidyverse)
+```
+
+We learn from the code above:
+
+p_load function of **pacman** is used to install and load sf and tidyverse packages into R.
+
+## 1.4 Importing Geospatial Data
+
+We will learn how to import the following geospatial data into R by using [*st_read()*](https://r-spatial.github.io/sf/reference/st_read.html) of **sf** package:
+
+-   `MP14_SUBZONE_WEB_PL`, a polygon feature layer in ESRI shapefile format,
+
+<!-- -->
+
+-   `CyclingPath`, a line feature layer in ESRI shapefile format,
+
+-   `PreSchool`, a point feature layer in kml file format.
+
+### 1.4.1 Importing polygon feature data in shapefile format
+
+The code chunk below uses *st_read()* function of **sf** package to import `MP14_SUBZONE_WEB_PL` shapefile into R as a polygon feature data frame.
+
+Note:
+
+-   when the input geospatial data is in shapefile format, two arguments will be used, namely: `dsn` to define the data path and `layer` to provide the shapefile name.
+
+-   no extension such as .shp, .dbf, .prj and .shx are needed.
+
+```{r}
+mpsz = st_read(dsn = "data/geospatial",
+               layer = "MP14_SUBZONE_WEB_PL")
+```
+
+### 1.4.2 Importing polyline feature data in shapefile form
+
+### 1.4.3 Importing GIS data in kml format
+
+## 1.5 Checking the Content of A Simple Feature Data Frame
+
+### 1.5.1 **Working with *st_geometry()***
+
+### 1.5.2
+
+## 1.6
+
+## 1.7
+
+### 1.7.1
+
+### 1.7.2
+
+## 1.8
+
+### 1.8.1
+
+### 1.8.2
+
+## 1.9
+
+### 1.9.1
+
+### 1.9.2
