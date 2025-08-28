@@ -76,6 +76,16 @@ p_load function of **pacman** is used to install and load sf and tidyverse packa
 
 ## 1.4 Importing Geospatial Data
 
+We will learn how to import the following geospatial data into R by using [*st_read()*](https://r-spatial.github.io/sf/reference/st_read.html) of **sf** package:
+
+-   `MP14_SUBZONE_WEB_PL`, a polygon feature layer in ESRI shapefile format,
+
+<!-- -->
+
+-   `CyclingPath`, a line feature layer in ESRI shapefile format, and
+
+-   `PreSchool`, a point feature layer in kml file format.
+
 ### 1.4.1 Importing polygon feature data in shapefile format
 
 ### 1.4.2 Importing polyline feature data in shapefile form

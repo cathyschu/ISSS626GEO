@@ -46,7 +46,7 @@
     "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#importing-geospatial-data",
     "title": "01-Geospatial Data Science with R",
     "section": "1.4 Importing Geospatial Data",
-    "text": "1.4 Importing Geospatial Data\n\n1.4.1 Importing polygon feature data in shapefile format\n\n\n1.4.2 Importing polyline feature data in shapefile form\n\n\n1.4.3 Importing GIS data in kml format"
+    "text": "1.4 Importing Geospatial Data\nWe will learn how to import the following geospatial data into R by using st_read() of sf package:\n\nMP14_SUBZONE_WEB_PL, a polygon feature layer in ESRI shapefile format,\n\n\n\nCyclingPath, a line feature layer in ESRI shapefile format, and\nPreSchool, a point feature layer in kml file format.\n\n\n1.4.1 Importing polygon feature data in shapefile format\n\n\n1.4.2 Importing polyline feature data in shapefile form\n\n\n1.4.3 Importing GIS data in kml format"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#checking-the-content-of-a-simple-feature-data-frame",
