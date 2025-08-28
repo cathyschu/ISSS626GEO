@@ -3,9 +3,9 @@
     "path": "~/Documents/cathyschu/ISSS626GEO/Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.qmd",
     "project_path": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.qmd",
     "type": "quarto_markdown",
-    "hash": "1414474047",
+    "hash": "0",
     "contents": "",
-    "dirty": false,
+    "dirty": true,
     "created": 1756161915305.0,
     "source_on_save": false,
     "relative_order": 2,
@@ -16,16 +16,16 @@
         "Source": "Source",
         "docOutlineVisible": "1",
         "rmdVisualCollapsedChunks": "",
-        "cursorPosition": "48,0",
+        "cursorPosition": "76,0",
         "scrollLine": "31",
-        "rmdVisualModeLocation": "2336:937.5"
+        "rmdVisualModeLocation": "3097:3940.5"
     },
     "folds": "",
-    "lastKnownWriteTime": 1756310873,
+    "lastKnownWriteTime": 1756350238,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1756310873417,
+    "last_content_update": 1756350379164,
     "read_only": false,
     "read_only_alternatives": []
 }

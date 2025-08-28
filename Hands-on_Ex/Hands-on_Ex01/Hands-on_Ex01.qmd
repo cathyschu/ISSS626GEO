@@ -54,6 +54,26 @@ Two R packages are used in this exercise:
 
 -   **tidyverse** for performing data science tasks such as importing, wrangling and visualising data.
 
+The following packages from the Tidyverse package will be used.
+
+-   **readr** for importing csv data,
+
+-   **tidyr** for manipulating data,
+
+-   **dplyr** for transforming data, and
+
+-   **ggplot2** for visualising data
+
+**pacman** must be installed. We will use the code below to load the necessary R packages into R.
+
+```{r}
+pacman::p_load(sf, tidyverse)
+```
+
+We learn from the code above:
+
+p_load function of **pacman** is used to install and load sf and tidyverse packages into R.
+
 ## 1.4 Importing Geospatial Data
 
 ### 1.4.1 Importing polygon feature data in shapefile format
