@@ -218,9 +218,79 @@ plot(st_geometry(preschool_svy21), add = TRUE, col = "#BA487F", pch = 16, cex = 
 
 ## 1.7 **Working with Projection**
 
+Map projection is an important property of a geospatial data. In order to perform geoprocessing using two geospatial data, we need to ensure that both geospatial data are projected using similar coordinate system.
+
+In this section, we will project a simple feature data frame from one coordinate system to another coordinate system. The technical term of this process is called **projection transformation**.
+
 ### 1.7.1 **Assigning EPSG code to a simple feature data frame**
 
+One of the common issue that can happen during importing geospatial data into R is that the coordinate system of the source data was either missing (such as due to missing .proj for ESRI shapefile) or wrongly assigned during the importing process.
+
+Below is an example the coordinate system of `mpsz` simple feature data frame by using *st_crs()* of *sf* package.
+
+```{r}
+st_crs(mpsz)
+```
+
+Although `mpsz` data frame is projected in **svy21** but when we read until the end of the print, it indicates that the EPSG is 9001. The correct EPSG code for svy21 should be [3414](https://epsg.io/3414).
+
+In order to assign the correct EPSG code to `mpsz` data frame, *st_set_crs()* of **sf** package is used as shown in the code chunk below.
+
+```{r}
+mpsz <- st_set_crs(mpsz, 3414)
+```
+
+Now, let us check the CSR again by using the code chunk below.
+
+```{r}
+st_crs(mpsz)
+```
+
+The EPSG code is now 3414.
+
 ### 1.7.2 **Transforming the projection of preschool from wgs84 to svy21**
+
+In geospatial analytics, it is very common for us to transform the original data from geographic coordinate system to projected coordinate system. This is because geographic coordinate system is not appropriate if the analysis need to use distance or/and area measurements.
+
+Let us take preschool simple feature data frame as an example. The print below reveals that it is in wgs84 coordinate system.
+
+```{r}
+st_geometry(preschool)
+```
+
+This is a scenario that *st_set_crs()* is not appropriate and ***st_transform()*** of sf package should be used. We need to reproject `preschool` from one coordinate system to another coordinate system mathemetically.
+
+Below is how we transform projection using *st_transform()*
+
+```{r}
+preschool <- st_transform(preschool, crs = 3414)
+```
+
+Note:
+
+In practice, we need to find out the appropriate project coordinate system to use before performing the projection transformation.
+
+Below we will see the content of preschool sf data frame.
+
+```{r}
+st_geometry(preschool)
+```
+
+Note:
+
+-   It is in svy21 projected coordinate system now.
+
+-   Refer to *Bounding box:* the values are greater than 0-360 range of decimal degree commonly used by most of the geographic coordinate systems.
+
+Next we will plot the preschool layer on top of mpsz layer again.
+
+```{r}
+par(bg = "#D0DDD0")
+plot(st_geometry(mpsz))
+plot(st_geometry(preschool), add = TRUE)
+```
+
+Now the display of map is what we wanted.
 
 ## 1.8 **Importing and Converting An Aspatial Data**
 
