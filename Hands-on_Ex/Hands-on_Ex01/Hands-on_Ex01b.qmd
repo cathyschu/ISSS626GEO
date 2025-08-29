@@ -248,7 +248,7 @@ In the code chunk below, `tm_shape()` is used to define the input data (i.e *mps
 
 ```{r}
 tm_shape(mpsz_pop2024) +
-  tm_polygons()
+  tm_polygons() 
 ```
 
 #### 2.4.2.2 Drawing a choropleth map using `tm_polygons()`
@@ -257,7 +257,7 @@ To draw a choropleth map showing the geographical distribution of a selected var
 
 ```{r}
 tm_shape(mpsz_pop2024)+
-  tm_polygons(fill = "DEPENDENCY")
+  tm_polygons(fill = "DEPENDENCY") 
 ```
 
 Learning:
@@ -286,7 +286,7 @@ To add the boundary of the planning subzones, `tm_borders()` will be used as sho
 ```{r}
 tm_shape(mpsz_pop2024)+
   tm_fill("DEPENDENCY") +
-  tm_borders()
+  tm_borders() 
 ```
 
 Dark-gray border lines have been added on the choropleth map.
@@ -306,7 +306,7 @@ Beside `fill_alpha` argument, there are three other arguments for `tm_borders()`
       tm_fill("DEPENDENCY") +
       tm_borders(col = "#568F87",
                  lwd = 0.2,
-                 lty = "dashed")
+                 lty = "dashed") 
     ```
 
 ### **2.4.3 Data classification methods of tmap**
@@ -332,7 +332,7 @@ tm_shape(mpsz_pop2024) +
               fill.scale = tm_scale_intervals(
                 style = "quantile",
                 n = 2)) +
-  tm_borders(fill_alpha = 0.5)
+  tm_borders(fill_alpha = 0.5) 
 ```
 
 ## pretty
@@ -343,7 +343,7 @@ tm_shape(mpsz_pop2024) +
               fill.scale = tm_scale_intervals(
                 style = "pretty",
                 n = 2)) +
-  tm_borders(fill_alpha = 0.5)
+  tm_borders(fill_alpha = 0.5) 
 ```
 
 ## sd
@@ -357,7 +357,7 @@ tm_shape(mpsz_pop2024) +
               fill.scale = tm_scale_intervals(
                 style = "sd",
                 n = 2)) +
-  tm_borders(fill_alpha = 0.5)
+  tm_borders(fill_alpha = 0.5) 
 ```
 
 ## equal
@@ -368,7 +368,7 @@ tm_shape(mpsz_pop2024) +
               fill.scale = tm_scale_intervals(
                 style = "equal",
                 n = 2)) +
-  tm_borders(fill_alpha = 0.5)
+  tm_borders(fill_alpha = 0.5) 
 ```
 
 Note:
@@ -383,7 +383,7 @@ tm_shape(mpsz_pop2024) +
               fill.scale = tm_scale_intervals(
                 style = "jenks",
                 n = 2)) +
-  tm_borders(fill_alpha = 0.5)
+  tm_borders(fill_alpha = 0.5) 
 ```
 
 ## kmeans
@@ -394,7 +394,7 @@ tm_shape(mpsz_pop2024) +
               fill.scale = tm_scale_intervals(
                 style = "kmeans",
                 n = 2)) +
-  tm_borders(fill_alpha = 0.5)
+  tm_borders(fill_alpha = 0.5) 
 ```
 
 ## fisher
@@ -405,7 +405,7 @@ tm_shape(mpsz_pop2024) +
               fill.scale = tm_scale_intervals(
                 style = "fisher",
                 n = 2)) +
-  tm_borders(fill_alpha = 0.5)
+  tm_borders(fill_alpha = 0.5) 
 ```
 :::
 
@@ -419,7 +419,7 @@ tm_shape(mpsz_pop2024) +
   tm_polygons(fill = "DEPENDENCY",
               fill.scale = tm_scale_intervals(
                 style = "quantile", n = 6)) +
-  tm_borders(fill_alpha = 0.5)
+  tm_borders(fill_alpha = 0.5) 
 ```
 
 ## pretty
@@ -429,7 +429,7 @@ tm_shape(mpsz_pop2024) +
   tm_polygons(fill = "DEPENDENCY",
               fill.scale = tm_scale_intervals(
                 style = "pretty", n = 6)) +
-  tm_borders(fill_alpha = 0.5)
+  tm_borders(fill_alpha = 0.5) 
 ```
 
 ## sd
@@ -439,7 +439,7 @@ tm_shape(mpsz_pop2024) +
   tm_polygons(fill = "DEPENDENCY",
               fill.scale = tm_scale_intervals(
                 style = "sd", n = 6)) +
-  tm_borders(fill_alpha = 0.5)
+  tm_borders(fill_alpha = 0.5) 
 ```
 
 ## equal
@@ -449,7 +449,7 @@ tm_shape(mpsz_pop2024) +
   tm_polygons(fill = "DEPENDENCY",
               fill.scale = tm_scale_intervals(
                 style = "equal", n = 6)) +
-  tm_borders(fill_alpha = 0.5)
+  tm_borders(fill_alpha = 0.5) 
 ```
 
 ## jenks
@@ -459,7 +459,7 @@ tm_shape(mpsz_pop2024) +
   tm_polygons(fill = "DEPENDENCY",
               fill.scale = tm_scale_intervals(
                 style = "jenks", n = 6)) +
-  tm_borders(fill_alpha = 0.5)
+  tm_borders(fill_alpha = 0.5) 
 ```
 
 ## kmeans
@@ -469,7 +469,7 @@ tm_shape(mpsz_pop2024) +
   tm_polygons(fill = "DEPENDENCY",
               fill.scale = tm_scale_intervals(
                 style = "kmeans", n = 6)) +
-  tm_borders(fill_alpha = 0.5)
+  tm_borders(fill_alpha = 0.5) 
 ```
 
 ## fisher
@@ -480,7 +480,7 @@ tm_shape(mpsz_pop2024) +
               fill.scale = tm_scale_intervals(
                 style = "fisher",
                 n = 5)) +
-  tm_borders(fill_alpha = 0.5)
+  tm_borders(fill_alpha = 0.5) 
 ```
 :::
 
@@ -494,7 +494,7 @@ tm_shape(mpsz_pop2024) +
   tm_polygons(fill = "DEPENDENCY",
               fill.scale = tm_scale_intervals(
                 style = "quantile", n = 20)) +
-  tm_borders(fill_alpha = 0.5)
+  tm_borders(fill_alpha = 0.5) 
 ```
 
 ## pretty
@@ -504,7 +504,7 @@ tm_shape(mpsz_pop2024) +
   tm_polygons(fill = "DEPENDENCY",
               fill.scale = tm_scale_intervals(
                 style = "pretty", n = 20)) +
-  tm_borders(fill_alpha = 0.5)
+  tm_borders(fill_alpha = 0.5) 
 ```
 
 ## sd
@@ -514,7 +514,7 @@ tm_shape(mpsz_pop2024) +
   tm_polygons(fill = "DEPENDENCY",
               fill.scale = tm_scale_intervals(
                 style = "sd", n = 20)) +
-  tm_borders(fill_alpha = 0.5)
+  tm_borders(fill_alpha = 0.5) 
 ```
 
 ## equal
@@ -524,7 +524,7 @@ tm_shape(mpsz_pop2024) +
   tm_polygons(fill = "DEPENDENCY",
               fill.scale = tm_scale_intervals(
                 style = "equal", n = 20)) +
-  tm_borders(fill_alpha = 0.5)
+  tm_borders(fill_alpha = 0.5) 
 ```
 
 ## jenks
@@ -534,7 +534,7 @@ tm_shape(mpsz_pop2024) +
   tm_polygons(fill = "DEPENDENCY",
               fill.scale = tm_scale_intervals(
                 style = "jenks", n = 20)) +
-  tm_borders(fill_alpha = 0.5)
+  tm_borders(fill_alpha = 0.5) 
 ```
 
 ## kmeans
@@ -544,7 +544,7 @@ tm_shape(mpsz_pop2024) +
   tm_polygons(fill = "DEPENDENCY",
               fill.scale = tm_scale_intervals(
                 style = "kmeans", n = 20)) +
-  tm_borders(fill_alpha = 0.5)
+  tm_borders(fill_alpha = 0.5) 
 ```
 
 ## fisher
@@ -554,7 +554,7 @@ tm_shape(mpsz_pop2024) +
   tm_polygons(fill = "DEPENDENCY",
               fill.scale = tm_scale_intervals(
                 style = "fisher", n = 20)) +
-  tm_borders(fill_alpha = 0.5)
+  tm_borders(fill_alpha = 0.5) 
 ```
 :::
 
@@ -577,7 +577,7 @@ tm_shape(mpsz_pop2024)+
   tm_polygons(fill = "DEPENDENCY",
               fill.scale = tm_scale_intervals(
                 breaks = c(0, 0.60, 0.70, 0.80, 0.90, 1.00))) +
-  tm_borders(fill_alpha = 0.5)
+  tm_borders(fill_alpha = 0.5) 
 ```
 
 ### **2.4.4 Colour Scheme**
@@ -595,7 +595,7 @@ tm_shape(mpsz_pop2024) +
                 style = "quantile",
                 n = 5,
                 values = "brewer.oranges")) +
-  tm_borders(fill_alpha = 0.5)
+  tm_borders(fill_alpha = 0.5) 
 ```
 
 Now the choropleth map is shaded in Organes. To reverse the colour shading, **add a “-” prefix**.
@@ -607,7 +607,7 @@ tm_shape(mpsz_pop2024) +
                 style = "quantile",
                 n = 5,
                 values = "-brewer.oranges")) +
-  tm_borders(fill_alpha = 0.5)
+  tm_borders(fill_alpha = 0.5) 
 ```
 
 Now the colour scheme has been reversed.
@@ -635,22 +635,313 @@ tm_shape(mpsz_pop2024) +
 
 ### **2.4.5 Map Layout**
 
+Map layout refers to the combination of all map elements into a cohensive map. It includes the map background, frame, typography, scale, aspect ratio, margins, and more.
+
+We can customize the map layout using the `tm_layout()` function. In this section, we cover the most often used arguments of this function using the dependency choropleth map as example.
+
 #### 2.4.5.1 Map Legend
+
+In **tmap**, several *legend* options are provided to change the placement, format and appearance of the legend.
+
+```{r}
+tm_shape(mpsz_pop2024) +
+  tm_polygons(fill = "DEPENDENCY",
+              fill.scale = tm_scale_intervals(
+                style = "quantile",
+                n = 5),
+              fill.legend = tm_legend(
+                title = "Dependency ratio")) +
+  tm_pos_auto_in() +
+  tm_borders(fill_alpha = 0.5) +
+  tm_compass(type="8star", size = 2) +
+  tm_scalebar() +
+  tm_grid(lwd = 0.1, alpha = 0.2) +
+  tm_credits("Source: data.gov.sg & singstat",
+             position = c("left", "bottom")) 
+```
 
 #### 2.4.5.2 Map style
 
+**tmap** allows a wide variety of layout settings to be changed. They can be called by using *tmap_style()*.
+
+The code chunk below shows the *classic* style is used.
+
+```{r}
+tm_shape(mpsz_pop2024) +
+  tm_polygons(fill = "DEPENDENCY",
+              fill.scale = tm_scale_intervals(
+                style = "quantile",
+                n = 5,
+                values = "-brewer.greens")) + 
+  tm_borders(fill_alpha = 0.5) + 
+  tmap_style("cobalt_v3")
+```
+
+To reset the default style, refer to the code chunk below.
+
+```{r}
+tmap_style("white")
+```
+
 ## **2.5 Drawing Small Multiple Choropleth Maps**
+
+**Small multiple maps**, also referred to as **facet maps**, are composed of many maps arrange side-by-side, and sometimes stacked vertically. Small multiple maps enable the visualisation of **how spatial relationships change with respect to another variable, such as time.**
+
+In **tmap**, small multiple maps can be plotted in three ways:
+
+-   by assigning multiple values to at least one of the asthetic arguments,
+
+-   by creating multiple stand-alone maps with *tmap_arrange()*, and
+
+-   by defining a group-by variable in *tm_facets()*.
 
 ### **2.5.1 By assigning multiple values to at least one of the aesthetic arguments**
 
+In this example, **small multiple choropleth maps** are created by assigning two variables to the visual variable (i.e. fill).
+
+```{r}
+#| fig-width: 12
+
+tm_shape(mpsz_pop2024) + 
+  tm_polygons(
+    fill = c("YOUNG", "AGED"),
+    fill.legend = 
+      tm_legend(position = tm_pos_in(
+        "right", "bottom")),
+    fill.scale = tm_scale_intervals(
+      style = "equal", 
+      n = 5,
+      values = "brewer.blues")) +
+  tm_borders(fill_alpha = 0.5) +
+  tmap_style("classic") 
+```
+
 ### **2.5.2 By arrange multiples choropleth maps in a grid layout**
+
+In this example, multiple choropleth maps are created and `tmap_arrnage()` is used to arrnage them in a grid layout.
+
+```{r}
+#| fig-width: 12
+youngmap <- tm_shape(mpsz_pop2024)+ 
+  tm_polygons(fill = "YOUNG",
+              fill.legend = tm_legend(
+                position = tm_pos_in(
+                  "right", "bottom"),
+                  item.height = 0.8),
+              fill.scale = tm_scale_intervals(
+                style = "quantile", 
+                values = "brewer.blues")) +
+  tm_borders(fill_alpha = 0.5) +
+  tm_title("Distribution of young population")
+                
+agedmap <- tm_shape(mpsz_pop2024)+ 
+  tm_polygons(fill = "AGED",
+              fill.legend = tm_legend(
+                position = tm_pos_in(
+                  "right", "bottom"),
+                item.height = 0.8),
+              fill.scale = tm_scale_intervals(
+              style = "quantile", 
+              values = "brewer.blues")) +
+  tm_borders(fill_alpha = 0.5) +
+  tm_title("Distribution of aged population")
+
+tmap_arrange(youngmap, agedmap, asp=1, ncol=2)
+```
 
 ### **2.5.3 By defining a group-by variable in *tm_facets()***
 
+In this example, multiple small choropleth maps are created by using **tm_facets()**.
+
+```{r}
+#| fig-width: 12
+tm_shape(mpsz_pop2024) +
+  tm_fill(fill = "DEPENDENCY",
+          fill.scale = tm_scale_intervals(
+            style = "quantile",
+            values = "brewer.blues")) + 
+  tm_facets(by = "REGION_N",
+            nrow = 2, 
+            ncols = 3,
+            free.coords=TRUE, 
+            drop.units=TRUE) +
+  tm_layout(legend.show = TRUE,
+            title.position = c("center", "center"), 
+            title.size = 20) +
+  tm_borders(fill_alpha = 0.5)
+```
+
 ## **2.6 Mapping Spatial Object Meeting a Selection Criterion**
+
+Instead of creating small multiple choropleth map, we can also use `filter()` of **dplyr** package to select geographical area of interest and plot a choropleth map focus only on the selected region.
+
+```{r}
+#| fig-width: 12
+
+mpsz_pop2024 %>%
+  filter(REGION_N == "NORTH-EAST REGION") %>%
+  tm_shape() +
+  tm_polygons(fill = "DEPENDENCY",
+              fill.scale = tm_scale_intervals(
+                style = "quantile", 
+                values = "brewer.greens"),
+              fill.legend = tm_legend()) +
+  tm_borders(fill_alpha = 0.5) +
+  tm_layout(title = "Population in North-East Region")
+```
+
+```{r}
+#| fig-width: 12
+
+mpsz_pop2024 %>%
+  filter(REGION_N == "CENTRAL REGION") %>%
+  tm_shape() +
+  tm_polygons(fill = "DEPENDENCY",
+              fill.scale = tm_scale_intervals(
+                style = "quantile", 
+                values = "brewer.greens"),
+              fill.legend = tm_legend()) +
+  tm_borders(fill_alpha = 0.5) +
+  tm_layout(title = "Population in Central Region")
+```
 
 ## **2.7 Complementing Thematic Map with Statistical Chart**
 
+Maps and statistical charts complement each other by visually representing different aspects of the same data, offering a more comprehensive understanding. Maps excel at showing spatial relationships and geographical patterns, while charts effectively display numerical data, trends, and comparisons. Combining both allows for a more insightful and engaging data narrative, especially when dealing with spatial data that also has quantifiable characteristics.
+
+With **tmap,** statistical chart and be incorporate into the map visualisation by using `fill.chat` argument of map layers and [**legend chart**](https://r-tmap.github.io/tmap/reference/tm_chart.html).
+
+```{r}
+#| fig-width: 12
+
+mpsz_pop2024 %>%
+  filter(REGION_N == "CENTRAL REGION") %>%
+  tm_shape() +
+  tm_polygons(fill = "DEPENDENCY",
+              fill.scale = tm_scale_intervals(
+                style = "quantile", 
+                values = "brewer.greens"),
+              fill.legend = tm_legend(),
+              fill.chart = tm_chart_box()) +
+  tm_borders() +
+  tm_layout(asp = 1.0)
+```
+
+In the code chunk below, We improve the visual representation further by **highlighting and lebaling the outliers** on the choropleth map.
+
+```{r}
+#| fig-width: 12
+
+mpsz_selected <- mpsz_pop2024 %>%
+  filter(REGION_N == "CENTRAL REGION")
+
+stats <- boxplot.stats(mpsz_selected$DEPENDENCY)
+
+outlier_vals <- stats$out
+
+outlier_sf <- mpsz_selected[mpsz_selected$DEPENDENCY %in% outlier_vals, ]
+
+tm_shape(mpsz_selected) +
+  tm_polygons(fill = "DEPENDENCY",
+          fill.scale = tm_scale_intervals(
+            style = "quantile", 
+            values = "brewer.blues"),
+          fill.legend = tm_legend(),
+          fill.chart = tm_chart_box()) +
+  tm_borders(fill_alpha = 0.5) +
+tm_shape(outlier_sf) +
+  tm_borders(col = "#B9375D", lwd = 2) +
+  tm_text("SUBZONE_N", col = "#B9375D", size = 1) +
+  tm_layout(asp = 1.2)
+```
+
 ## **2.8 Creating Interactive Map**
 
+Interactive maps let users actively explore and interact with the data they display. Unlike static maps, we can zoom in and out, pan across areas, click on locations for more information, and even work with data overlays or visualizations—making the experience more dynamic and informative. One of the great things about **tmap** is that it lets you switch easily between static and interactive maps using `tmap_mode()`, so you can choose the view that best suits our analysis.
+
+By modifying the code chunk in sub-section 2.6, the code chunks below build an interactive map.
+
+```{r}
+region_selected <- mpsz_pop2024 %>%
+  filter(REGION_N == "CENTRAL REGION")
+region_bbox <- st_bbox(region_selected)
+
+stats <- boxplot.stats(region_selected$DEPENDENCY)
+outlier_vals <- stats$out
+outlier_sf <- region_selected[region_selected$DEPENDENCY %in% outlier_vals, ]
+
+tmap_mode("view")
+tm_shape(region_selected, 
+         bbox = region_bbox) +
+  tm_fill("DEPENDENCY",
+          id = "SUBZONE_N",
+          popup.vars = c(
+            "Name" = "SUBZONE_N", 
+            "Dependency" = "DEPENDENCY")) +
+  tm_borders() +
+  tm_shape(outlier_sf) +
+  tm_borders(col = "red", lwd = 2)
+```
+
+```{r}
+tmap_mode("plot")
+```
+
+## `set_zoom_limits`
+
+The interactive map above is far from satisfactory. While we want to encourage users to engage and explore the interactive by zooming in and out of the study area freely. But, users might lost in the cyberspace with too much freedom to zoom-in and zoom-out.
+
+To address this issue, `set_zoom_limits` argument can be used to limit the map extend users can zooming in and out of the map areas as shown below.
+
+```{r}
+region_selected <- mpsz_pop2024 %>%
+  filter(REGION_N == "CENTRAL REGION")
+region_bbox <- st_bbox(region_selected)
+
+stats <- boxplot.stats(region_selected$DEPENDENCY)
+outlier_vals <- stats$out
+outlier_sf <- region_selected[region_selected$DEPENDENCY %in% outlier_vals, ]
+
+tmap_mode("view")
+
+tm_shape(region_selected, 
+         bbox = region_bbox) +
+  tm_fill("DEPENDENCY",
+          id = "SUBZONE_N",
+          popup.vars = c(
+            "Name" = "SUBZONE_N", 
+            "Dependency" = "DEPENDENCY")) +
+  tm_borders() +
+  tm_shape(outlier_sf) +
+  tm_borders(col = "red", lwd = 2) +
+  tm_view(set_zoom_limits = c(11,14))
+```
+
+```{r}
+tmap_mode("plot")
+```
+
 ## **2.9 Reference**
+
+[R for Geospatial Data Science and Analytics](https://r4gdsa.netlify.app/)
+
+#### 2.9.1 All about tmap package
+
+-   [tmap: Thematic Maps in R](https://www.jstatsoft.org/article/view/v084i06)
+-   [tmap](https://cran.r-project.org/web/packages/tmap/index.html)
+-   [tmap: get started!](https://cran.r-project.org/web/packages/tmap/vignettes/tmap-getstarted.html)
+-   [tmap: changes in version 2.0](https://cran.r-project.org/web/packages/tmap/vignettes/tmap-changes-v2.html)
+-   [tmap: creating thematic maps in a flexible way (useR!2015)](http://von-tijn.nl/tijn/research/presentations/tmap_user2015.pdf)
+-   [Exploring and presenting maps with tmap (useR!2017)](http://von-tijn.nl/tijn/research/presentations/tmap_user2017.pdf)
+
+#### 2.9.2 Geospatial data wrangling
+
+-   [sf: Simple Features for R](https://cran.r-project.org/web/packages/sf/index.html)
+-   [Simple Features for R: StandardizedSupport for Spatial Vector Data](https://journal.r-project.org/archive/2018/RJ-2018-009/RJ-2018-009.pdf)
+-   [Reading, Writing and Converting Simple Features](https://cran.r-project.org/web/packages/sf/vignettes/sf2.html)
+
+#### 2.9.3 Data wrangling
+
+-   [dplyr](https://dplyr.tidyverse.org/)
+-   [Tidy data](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html)
+-   [tidyr: Easily Tidy Data with ‘spread()’ and ‘gather()’ Functions](https://cran.r-project.org/web/packages/tidyr/tidyr.pdf)
