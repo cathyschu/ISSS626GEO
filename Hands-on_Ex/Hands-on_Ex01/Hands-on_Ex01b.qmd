@@ -1,7 +1,7 @@
 ---
-title: "Hands-on Exercise 01"
+title: "01b - Thematic Mapping and GeoVisualisation with R"
 author: "Cathy C."
-date: "Aug 23, 2025"
+date: "Aug 29, 2025"
 date-modified: "last-modified" #auto render date
 format: html
 execute: #how YML page work
@@ -11,8 +11,39 @@ execute: #how YML page work
   freeze: true #controls rendering - no render if no changes
 ---
 
-# Header 1
+## Hands-on 01b Overview
 
-## Overview
+## **2.1 Objectives**
 
-### Getting started
+In this hands-on exercise, the key R package use is [**tmap**](https://cran.r-project.org/web/packages/tmap/) package in R. Beside **tmap** package, five other R packages will be used. They are:
+
+-   [**readr**](https://readr.tidyverse.org/) for importing delimited text file,
+-   [**tidyr**](https://tidyr.tidyverse.org/) for tidying data,
+-   [**dplyr**](https://dplyr.tidyverse.org/) for wrangling data and
+-   [**sf**](https://cran.r-project.org/web/packages/sf/index.html) for handling geospatial data.
+-   [**rvest**](https://rvest.tidyverse.org/) for scraping (or harvesting) data from web pages.
+
+Among the five packages, **readr**, **tidyr** and **dplyr** are part of **tidyverse** package.
+
+## **2.2 Getting started**
+
+The code chunk below will be used to install and load these packages in RStudio. We don't have to install **readr**, **tidyr** and **dplyr** individually.
+
+```{r}
+pacman::p_load(sf, tmap, tidyverse, rvest)
+```
+
+## **2.3 Importing Data into R**
+
+
+## **2.4 Choropleth Mapping Geospatial Data Using tmap**
+
+## **2.5 Drawing Small Multiple Choropleth Maps**
+
+## **2.6 Mappping Spatial Object Meeting a Selection Criterion**
+
+## **2.7 Complementing Thematic Map with Statistical Chart**
+
+## **2.8 Creating Interactive Map**
+
+## **2.9 Reference**

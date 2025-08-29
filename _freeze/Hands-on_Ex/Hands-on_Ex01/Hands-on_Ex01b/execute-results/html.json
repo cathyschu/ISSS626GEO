@@ -1,0 +1,17 @@
+{
+  "hash": "3e55069cb77a2cac65c2d8d4af5a8173",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"01b - Thematic Mapping and GeoVisualisation with R\"\nauthor: \"Cathy C.\"\ndate: \"Aug 29, 2025\"\ndate-modified: \"last-modified\" #auto render date\nformat: html\nexecute: #how YML page work\n  echo: true #will show code\n  eval: true #will run code every time and show output\n  warning: false #dont show warning msg\n  freeze: true #controls rendering - no render if no changes\n---\n\n\n\n## Hands-on 01b Overview\n\n## **2.1 Objectives**\n\nIn this hands-on exercise, the key R package use is [**tmap**](https://cran.r-project.org/web/packages/tmap/) package in R. Beside **tmap** package, five other R packages will be used. They are:\n\n-   [**readr**](https://readr.tidyverse.org/) for importing delimited text file,\n-   [**tidyr**](https://tidyr.tidyverse.org/) for tidying data,\n-   [**dplyr**](https://dplyr.tidyverse.org/) for wrangling data and\n-   [**sf**](https://cran.r-project.org/web/packages/sf/index.html) for handling geospatial data.\n-   [**rvest**](https://rvest.tidyverse.org/) for scraping (or harvesting) data from web pages.\n\nAmong the five packages, **readr**, **tidyr** and **dplyr** are part of **tidyverse** package.\n\n## **2.2 Getting started**\n\nThe code chunk below will be used to install and load these packages in RStudio. We don't have to install **readr**, **tidyr** and **dplyr** individually.\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\npacman::p_load(sf, tmap, tidyverse, rvest)\n```\n:::\n\n\n\n## **2.3 Importing Data into R**\n\n\n## **2.4 Choropleth Mapping Geospatial Data Using tmap**\n\n## **2.5 Drawing Small Multiple Choropleth Maps**\n\n## **2.6 Mappping Spatial Object Meeting a Selection Criterion**\n\n## **2.7 Complementing Thematic Map with Statistical Chart**\n\n## **2.8 Creating Interactive Map**\n\n## **2.9 Reference**\n",
+    "supporting": [
+      "Hands-on_Ex01b_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
