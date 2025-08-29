@@ -463,6 +463,7 @@ mpsz_selected <- mpsz %>%
 2.  `st_intersection()` of **sf** package will be used to **clip cycling buffers** within Tampines West planning subzone.
 
 ```{r}
+par(bg = "#D0DDD0")
 buffer_cycling_selected <- st_intersection(
   st_geometry(buffer_cycling), 
   st_geometry(mpsz_selected)
