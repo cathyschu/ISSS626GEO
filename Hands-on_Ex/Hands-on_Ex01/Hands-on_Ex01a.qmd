@@ -1,5 +1,5 @@
 ---
-title: "01-Geospatial Data Science with R"
+title: "01a - Geospatial Data Science with R"
 author: "Cathy C."
 date: "Aug 23, 2025"
 date-modified: "last-modified" #auto render date
@@ -51,17 +51,13 @@ Here we will extract the downloaded `listing` data file. Cut and paste `listing.
 Two R packages are used in this exercise:
 
 -   **sf** for importing, managing, and processing geospatial data.
-
 -   **tidyverse** for performing data science tasks such as importing, wrangling and visualising data.
 
 The following packages from the Tidyverse package will be used.
 
 -   **readr** for importing csv data,
-
 -   **tidyr** for manipulating data,
-
 -   **dplyr** for transforming data, and
-
 -   **ggplot2** for visualising data
 
 **pacman** must be installed. We will use the code below to load the necessary R packages into R.
@@ -86,21 +82,33 @@ We will learn how to import the following geospatial data into R by using [*st_r
 
 The code chunk below uses *st_read()* function of **sf** package to import `MP14_SUBZONE_WEB_PL` shapefile into R as a polygon feature data frame.
 
-Note:
+::::: markgoals
+::: markgoals-header
+**Note**
+:::
 
+::: markgoals-container
 -   when the input geospatial data is in shapefile format, two arguments will be used, namely: `dsn` to define the data path and `layer` to provide the shapefile name.
 -   no extension such as .shp, .dbf, .prj and .shx are needed.
+:::
+:::::
 
 ```{r}
 mpsz = st_read(dsn = "data/geospatial",
                layer = "MP14_SUBZONE_WEB_PL")
 ```
 
-Learning:
+::::: markgoals
+::: markgoals-header
+**Learning**
+:::
 
+::: markgoals-container
 -   The geospatial objects are multipolygon features.
 -   There are a total of 323 multipolygon features and 15 fields in `mpsz` simple feature data frame. `mpsz` is in **svy21** projected coordinates systems.
 -   The bounding box provides the x extend and y extend of the data.
+:::
+:::::
 
 ### 1.4.2 Importing polyline feature data in shapefile form
 
@@ -108,14 +116,20 @@ Now we use *st_read()* function of **sf** package to import `CyclingPath` shapef
 
 ```{r}
 cyclingpath = st_read(dsn = "data/geospatial",
-               layer = "MP14_SUBZONE_WEB_PL")
+               layer = "CyclingPathGazette")
 ```
 
-Learning:
+::::: markgoals
+::: markgoals-header
+**Learning**
+:::
 
+::: markgoals-container
 -   There are a total of 4651 features and 19 fields in `cyclingpath` sf data frame.
 -   The geospatial entities are capture in *multilinestring* object.
 -   Similar to the *MP19_SUBZONE_WEB_PL* shape file, this data set is in in **svy21** projected coordinates system too.
+:::
+:::::
 
 ### 1.4.3 Importing GIS data in kml format
 
@@ -125,11 +139,17 @@ The `PreSchoolsLocation` is in [**kml**](https://en.wikipedia.org/wiki/Keyhole_M
 preschool = st_read("data/geospatial/PreSchoolsLocation.kml")
 ```
 
-Learning from code:
+::::: markgoals
+::: markgoals-header
+**Learning**
+:::
 
+::: markgoals-container
 -   `preschool` is a point feature data frame.
 -   There are a total of 2290 features and 2 fields.
 -   Different from the previous two simple feature data frame, preschool is in **wgs84** coordinates system.
+:::
+:::::
 
 ## **1.5 Checking the Content of A Simple Feature Data Frame**
 
@@ -143,9 +163,15 @@ The column in the sf data.frame that contains the geometries is a list of class 
 st_geometry(mpsz)
 ```
 
-Note:
+::::: markgoals
+::: markgoals-header
+**Note**
+:::
 
+::: markgoals-container
 The print only displays basic information of the feature class such as type of geometry, the geographic extent of the features and the coordinate system of the data.
+:::
+:::::
 
 ### 1.5.2 **Working with glimpse()**
 
@@ -165,9 +191,15 @@ When we want to reveal **complete information** of a feature object, we can use 
 head(mpsz, n = 5)
 ```
 
-Note:
+::::: markgoals
+::: markgoals-header
+**Note**
+:::
 
+::: markgoals-container
 One of the useful argument of *head()* is it allows user to select the numbers of record to display (i.e. the n argument).
+:::
+:::::
 
 ## 1.6 **Plotting the Geospatial Data**
 
@@ -192,9 +224,15 @@ par(bg = "#D0DDD0")
 plot(mpsz["PLN_AREA_C"])
 ```
 
-Note:
+::::: markgoals
+::: markgoals-header
+**Note**
+:::
 
+::: markgoals-container
 `plot()` is appropriate for plotting the geospatial object for quick look. For high cartographic quality map, other R package such as **tmap** should be used.
+:::
+:::::
 
 Next, we will plot the preschool layer on top of the mpsz layer by using the code chunk below.
 
@@ -204,9 +242,15 @@ plot(st_geometry(mpsz))
 plot(st_geometry(preschool), add = TRUE)
 ```
 
-Learning:
+::::: markgoals
+::: markgoals-header
+**Learning**
+:::
 
+::: markgoals-container
 In this plot, it has failed to plot on top of the mpsz layer. It is because `mpsz` is in **svy21** and `preschool` is in **wgs84.** We need to transform `preschool` to match the SVY21 coordinate system.
+:::
+:::::
 
 ```{r}
 par(bg = "#e6f0e6")
@@ -246,7 +290,7 @@ Now, let us check the CSR again by using the code chunk below.
 st_crs(mpsz)
 ```
 
-The EPSG code is now 3414.
+**The EPSG code is now 3414.**
 
 ### 1.7.2 Transforming the projection of preschool from wgs84 to svy21
 
@@ -266,21 +310,32 @@ Below is how we transform projection using *st_transform()*
 preschool <- st_transform(preschool, crs = 3414)
 ```
 
-Note:
+::::: markgoals
+::: markgoals-header
+**Note**
+:::
 
+::: markgoals-container
 In practice, we need to find out the appropriate project coordinate system to use before performing the projection transformation.
 
 Below we will see the content of preschool sf data frame.
+:::
+:::::
 
 ```{r}
 st_geometry(preschool)
 ```
 
-Note:
+::::: markgoals
+::: markgoals-header
+**Note**
+:::
 
+::: markgoals-container
 -   It is in svy21 projected coordinate system now.
-
 -   Refer to *Bounding box:* the values are greater than 0-360 range of decimal degree commonly used by most of the geographic coordinate systems.
+:::
+:::::
 
 Next we will plot the preschool layer on top of mpsz layer again.
 
@@ -331,14 +386,18 @@ listings_sf <- st_as_sf(listings,
   st_transform(crs = 3414)
 ```
 
-Learning:
+::::: markgoals
+::: markgoals-header
+**Learning**
+:::
 
+::: markgoals-container
 -   *coords* argument requires you to provide the **column name** of the x-coordinates first then followed by the column name of the y-coordinates.
-
 -   *crs* argument requires you to provide the **coordinates system** in epsg format. [EPSG: 4326](https://epsg.io/4326) is wgs84 Geographic Coordinate System and [EPSG: 3414](https://epsg.io/3414) is Singapore SVY21 Projected Coordinate System.\
     We can search for other country’s epsg code by referring to [epsg.io](https://epsg.io/).
-
 -   *%\>%* is used to nest *st_transform()* to transform the newly created simple feature data frame into svy21 projected coordinates system.
+:::
+:::::
 
 Let us examine the content of this newly created simple feature data frame.
 
@@ -408,20 +467,11 @@ buffer_cycling_selected <- st_intersection(
   st_geometry(buffer_cycling), 
   st_geometry(mpsz_selected)
 )
-```
 
-```{r}
-st_crs(buffer_cycling)
-st_crs(mpsz_selected)
-```
-
-```{r}
-par(bg="#f6f6f6")
 plot(st_geometry(mpsz_selected),main = "Cycling Buffer in Tampines West")
 plot(st_geometry(buffer_cycling_selected), 
      col=NA, border ="#8EB859", lwd = 0.5,
      add = TRUE)
-
 ```
 
 ### 1.9.2 Use case 2: To determine the number of pre-schools by planning subzone
@@ -438,9 +488,16 @@ The code chunk below performs two operations at one go. Firstly, identify pre-sc
 mpsz$`PreSch Count` <- lengths(st_intersects(mpsz, preschool))
 ```
 
-Note:
+::::: markgoals
+::: markgoals-header
+**Note**
+:::
 
-[`st_intersects()`](https://r-spatial.github.io/sf/reference/geos_binary_pred.html) is different from [st_intersection()](https://r-spatial.github.io/sf/reference/geos_binary_ops.html).
+::: markgoals-container
+
+[st_intersects()](https://r-spatial.github.io/sf/reference/geos_binary_pred.html) is different from [st_intersection()](https://r-spatial.github.io/sf/reference/geos_binary_ops.html).
+:::
+:::::
 
 We can check the summary statistics of the newly derived *PreSch Count* field by using *summary()* as shown in the code chunk below.
 

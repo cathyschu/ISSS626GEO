@@ -8,3 +8,35 @@ body {
   width: auto;
   max-height: 150px;
 }
+
+/* style callout blocks */
+.markgoals {
+  margin: 1em 0;
+  border: 2px dashed #e4f4f5;
+  border-radius: 10px;
+  background-color: #A7C1A8;
+}
+
+.markgoals-header {
+  margin-left: 0em;
+  padding-left: 80px;
+  padding-top: 20px;
+  padding-bottom: 0.1em;
+  color: #819A91;
+  font-size: 1.2em;
+  font-weight: bold;
+  background-size: 60px;
+  background-color: #A7C1A8;
+  background-repeat: no-repeat;
+  background-position: 15px center;
+  background-image: url("images/catgeo_g.png");
+}
+
+.markgoals-container {
+  padding-top: 5px;
+  padding-left: 10px;
+  padding-right: 20px;
+  color: #343738;
+  background-color: #A7C1A8;
+  border-bottom-right-radius: 10px;  
+}

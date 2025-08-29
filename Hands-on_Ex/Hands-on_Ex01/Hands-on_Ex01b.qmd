@@ -89,10 +89,17 @@ We can examine the content of `mpsz` by using the code chunk below.
 mpsz
 ```
 
-Learning:
+::::: markgoals
+:::: markgoals-header
+**Learning**
+::::
+
+::: markgoals-container
 
 Only the first 10 records are displayedby default to avoid overwhelming the console, especially with large datasets.
 
+:::
+:::::
 ### **2.3.3 Importing Attribute Data into R**
 
 Next, we will import *respopagesextod2024.csv* file into RStudio and save the file into an tibble dataframe called *popdata*.
@@ -164,9 +171,18 @@ mpsz_pop2024 <- left_join(mpsz, popdata2024,
                           by = c("SUBZONE_N" = "SZ"))
 ```
 
-Learning:
+
+::::: markgoals
+:::: markgoals-header
+**Learning**
+::::
+
+::: markgoals-container
 
 -   *left_join()* of **dplyr** package is used with `mpsz` simple feature data frame as the left data table is to ensure that the output will be a **simple features data frame.**
+
+:::
+:::::
 
 `mpsz_pop2024` is written in a rsd file, shown below.
 
@@ -260,13 +276,20 @@ tm_shape(mpsz_pop2024)+
   tm_polygons(fill = "DEPENDENCY") 
 ```
 
-Learning:
+::::: markgoals
+:::: markgoals-header
+**Learning**
+::::
 
--   The default interval binning used to draw the choropleth map is called “pretty”. A detailed discussion of the data classification methods supported by **tmap** is in sub-section 4.3.
+::: markgoals-container
 
--   The default colour scheme used is `blues3` of ColorBrewer. Here a theme is applied. More about the color scheme in sub-section 4.4.
+-   The default interval binning used to draw the choropleth map is called “pretty”. A detailed discussion of the data classification methods supported by **tmap** is in sub-section 2.4.3.
+
+-   The default colour scheme used is `blues3` of ColorBrewer. Here a theme is applied. More about the color scheme in sub-section 2.4.4.
 
 -   By default, Missing value will be shaded in grey.
+:::
+:::::
 
 #### 2.4.2.3 Drawing a choropleth map using *tm_fill()* and \*tm_border()
 
@@ -321,9 +344,9 @@ To define a data classification method, the *style* argument of *tm_fill()* or *
 
 The code chunk below shows a quantile data classification that used n classes. Other tabs so the various methods in n classes, too.
 
-## N = 2
+## n = 2
 
-::: panel-tabset
+:::::: panel-tabset
 ## quantile
 
 ```{r}
@@ -371,9 +394,15 @@ tm_shape(mpsz_pop2024) +
   tm_borders(fill_alpha = 0.5) 
 ```
 
-Note:
+::::: markgoals
+::: markgoals-header
+**Note**
+:::
 
+::: markgoals-container
 The distribution of quantile data classification method are more evenly distributed then equal data classification method.
+:::
+:::::
 
 ## jenks
 
@@ -407,7 +436,7 @@ tm_shape(mpsz_pop2024) +
                 n = 2)) +
   tm_borders(fill_alpha = 0.5) 
 ```
-:::
+::::::
 
 ## n = 6
 
