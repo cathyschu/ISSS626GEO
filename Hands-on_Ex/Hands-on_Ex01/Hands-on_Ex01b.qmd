@@ -192,7 +192,15 @@ The code chunk below will draw a cartographic standard choropleth map as shown b
 
 ```{r}
 tmap_mode("plot")
-qtm(shp = mpsz_pop2024, fill = "DEPENDENCY")
+qtm(shp = mpsz_pop2024, fill = "DEPENDENCY") +
+  tmap_style("cobalt")
+```
+
+```{r}
+tmap_mode("view")
+qtm(shp = mpsz_pop2024, fill = "DEPENDENCY") +
+  tmap_style("cobalt")
+
 ```
 
 Things to learn from the code chunk above:
@@ -206,7 +214,7 @@ Things to learn from the code chunk above:
 Despite its usefulness of drawing a choropleth map quickly and easily, the disadvantge of *qtm()* is that it makes aesthetics of individual layers harder to control. To draw a high quality cartographic choropleth map as shown in the figure below, **tmap**’s drawing elements should be used.
 
 ```{r}
-#| fig-bg: "transparent"
+tmap_mode("plot")
 
 par(bg = "lightblue")
 tm_shape(mpsz_pop2024) +
@@ -220,32 +228,410 @@ tm_shape(mpsz_pop2024) +
   tm_title("Distribution of Dependency Ratio by planning subzone") +
   tm_layout(frame = TRUE,
             bg.color = "lightblue",
-            outer.bg.color = "lightblue") +
+            outer.bg.color = "gold") +
   tm_borders(fill_alpha = 0.5) +
   tm_compass(type="8star", size = 2) +
   tm_scalebar() +
   tm_grid(alpha =0.2) +
   tm_credits("Source: Planning Sub-zone boundary from Urban Redevelopment Authorithy (URA)\n and Population data from Department of Statistics DOS", 
-             position = c("left", "bottom"))
+             position = c("left", "bottom")) +
+  tm_style("cobalt")
 ```
+
+In the following sub-section, we will use **tmap** functions to plot these elements.
 
 #### 2.4.2.1 Drawing a base map
 
+The basic building block of **tmap** is `tm_shape()` followed by one or more layer elemments such as `tm_polygons()`, `tm_symbols()`, `tm_lines()`, `tm_raster()` and `tm_text()`.
+
+In the code chunk below, `tm_shape()` is used to define the input data (i.e *mpsz_pop2024*) and `tm_polygons()` is used to draw the planning subzone polygons
+
+```{r}
+tm_shape(mpsz_pop2024) +
+  tm_polygons()
+```
+
 #### 2.4.2.2 Drawing a choropleth map using `tm_polygons()`
 
-#### 2.4.2.3 Drawing a choropleth map using *tm_fill()* and \*tm_border()\*\*
+To draw a choropleth map showing the geographical distribution of a selected variable by planning subzone, we just need to assign the target variable such as *Dependency* to *tm_polygons()*.
+
+```{r}
+tm_shape(mpsz_pop2024)+
+  tm_polygons(fill = "DEPENDENCY")
+```
+
+Learning:
+
+-   The default interval binning used to draw the choropleth map is called “pretty”. A detailed discussion of the data classification methods supported by **tmap** is in sub-section 4.3.
+
+-   The default colour scheme used is `blues3` of ColorBrewer. Here a theme is applied. More about the color scheme in sub-section 4.4.
+
+-   By default, Missing value will be shaded in grey.
+
+#### 2.4.2.3 Drawing a choropleth map using *tm_fill()* and \*tm_border()
+
+`tm_polygons()` is a wraper of `tm_fill()` and `tm_border()`. `tm_fill()` shades the polygons by using the default colour scheme and `tm_borders()` adds the borders of the polygon features onto the choropleth map.
+
+The code chunk below draws a choropleth map by using `tm_fill()` alone.
+
+```{r}
+tm_shape(mpsz_pop2024)+
+  tm_fill("DEPENDENCY")
+```
+
+Notice that the planning subzones are shared according to the respective dependecy values
+
+To add the boundary of the planning subzones, `tm_borders()` will be used as shown in the code chunk below.
+
+```{r}
+tm_shape(mpsz_pop2024)+
+  tm_fill("DEPENDENCY") +
+  tm_borders()
+```
+
+Dark-gray border lines have been added on the choropleth map.
+
+The `fill_alpha` argument is used to define transparency number between 0 (totally transparent) and 1 (not transparent). By default, the alpha value of the col is used (normally 1).
+
+Beside `fill_alpha` argument, there are three other arguments for `tm_borders()`, they are:
+
+-   `col` = border colour,
+
+-   `lwd` = border line width. The default is 1, and
+
+-   `lty` = border line type. The default is “solid”.
+
+    ```{r}
+    tm_shape(mpsz_pop2024)+
+      tm_fill("DEPENDENCY") +
+      tm_borders(col = "#568F87",
+                 lwd = 0.2,
+                 lty = "dashed")
+    ```
 
 ### **2.4.3 Data classification methods of tmap**
 
+Most choropleth maps employ some methods of data classification. The point of classification is to take a large number of observations and group them into **data ranges or classes**.
+
+**tmap** provides a total ten data classification methods, namely: *fixed*, *sd*, *equal*, *pretty* (default), *quantile*, *kmeans*, *hclust*, *bclust*, *fisher*, and *jenks*.
+
+To define a data classification method, the *style* argument of *tm_fill()* or *tm_polygons()* will be used.
+
 #### 2.4.3.1 Plotting choropleth maps with built-in classification methods
+
+The code chunk below shows a quantile data classification that used n classes. Other tabs so the various methods in n classes, too.
+
+## N = 2
+
+::: panel-tabset
+## quantile
+
+```{r}
+tm_shape(mpsz_pop2024) +
+  tm_polygons(fill = "DEPENDENCY",
+              fill.scale = tm_scale_intervals(
+                style = "quantile",
+                n = 2)) +
+  tm_borders(fill_alpha = 0.5)
+```
+
+## pretty
+
+```{r}
+tm_shape(mpsz_pop2024) +
+  tm_polygons(fill = "DEPENDENCY",
+              fill.scale = tm_scale_intervals(
+                style = "pretty",
+                n = 2)) +
+  tm_borders(fill_alpha = 0.5)
+```
+
+## sd
+
+\
+In the code chunk below, *equal* data classification method is used.
+
+```{r}
+tm_shape(mpsz_pop2024) +
+  tm_polygons(fill = "DEPENDENCY",
+              fill.scale = tm_scale_intervals(
+                style = "sd",
+                n = 2)) +
+  tm_borders(fill_alpha = 0.5)
+```
+
+## equal
+
+```{r}
+tm_shape(mpsz_pop2024) +
+  tm_polygons(fill = "DEPENDENCY",
+              fill.scale = tm_scale_intervals(
+                style = "equal",
+                n = 2)) +
+  tm_borders(fill_alpha = 0.5)
+```
+
+Note:
+
+The distribution of quantile data classification method are more evenly distributed then equal data classification method.
+
+## jenks
+
+```{r}
+tm_shape(mpsz_pop2024) +
+  tm_polygons(fill = "DEPENDENCY",
+              fill.scale = tm_scale_intervals(
+                style = "jenks",
+                n = 2)) +
+  tm_borders(fill_alpha = 0.5)
+```
+
+## kmeans
+
+```{r}
+tm_shape(mpsz_pop2024) +
+  tm_polygons(fill = "DEPENDENCY",
+              fill.scale = tm_scale_intervals(
+                style = "kmeans",
+                n = 2)) +
+  tm_borders(fill_alpha = 0.5)
+```
+
+## fisher
+
+```{r}
+tm_shape(mpsz_pop2024) +
+  tm_polygons(fill = "DEPENDENCY",
+              fill.scale = tm_scale_intervals(
+                style = "fisher",
+                n = 2)) +
+  tm_borders(fill_alpha = 0.5)
+```
+:::
+
+## n = 6
+
+::: panel-tabset
+## quantile
+
+```{r}
+tm_shape(mpsz_pop2024) +
+  tm_polygons(fill = "DEPENDENCY",
+              fill.scale = tm_scale_intervals(
+                style = "quantile", n = 6)) +
+  tm_borders(fill_alpha = 0.5)
+```
+
+## pretty
+
+```{r}
+tm_shape(mpsz_pop2024) +
+  tm_polygons(fill = "DEPENDENCY",
+              fill.scale = tm_scale_intervals(
+                style = "pretty", n = 6)) +
+  tm_borders(fill_alpha = 0.5)
+```
+
+## sd
+
+```{r}
+tm_shape(mpsz_pop2024) +
+  tm_polygons(fill = "DEPENDENCY",
+              fill.scale = tm_scale_intervals(
+                style = "sd", n = 6)) +
+  tm_borders(fill_alpha = 0.5)
+```
+
+## equal
+
+```{r}
+tm_shape(mpsz_pop2024) +
+  tm_polygons(fill = "DEPENDENCY",
+              fill.scale = tm_scale_intervals(
+                style = "equal", n = 6)) +
+  tm_borders(fill_alpha = 0.5)
+```
+
+## jenks
+
+```{r}
+tm_shape(mpsz_pop2024) +
+  tm_polygons(fill = "DEPENDENCY",
+              fill.scale = tm_scale_intervals(
+                style = "jenks", n = 6)) +
+  tm_borders(fill_alpha = 0.5)
+```
+
+## kmeans
+
+```{r}
+tm_shape(mpsz_pop2024) +
+  tm_polygons(fill = "DEPENDENCY",
+              fill.scale = tm_scale_intervals(
+                style = "kmeans", n = 6)) +
+  tm_borders(fill_alpha = 0.5)
+```
+
+## fisher
+
+```{r}
+tm_shape(mpsz_pop2024) +
+  tm_polygons(fill = "DEPENDENCY",
+              fill.scale = tm_scale_intervals(
+                style = "fisher",
+                n = 5)) +
+  tm_borders(fill_alpha = 0.5)
+```
+:::
+
+## n = 20
+
+::: panel-tabset
+## quantile
+
+```{r}
+tm_shape(mpsz_pop2024) +
+  tm_polygons(fill = "DEPENDENCY",
+              fill.scale = tm_scale_intervals(
+                style = "quantile", n = 20)) +
+  tm_borders(fill_alpha = 0.5)
+```
+
+## pretty
+
+```{r}
+tm_shape(mpsz_pop2024) +
+  tm_polygons(fill = "DEPENDENCY",
+              fill.scale = tm_scale_intervals(
+                style = "pretty", n = 20)) +
+  tm_borders(fill_alpha = 0.5)
+```
+
+## sd
+
+```{r}
+tm_shape(mpsz_pop2024) +
+  tm_polygons(fill = "DEPENDENCY",
+              fill.scale = tm_scale_intervals(
+                style = "sd", n = 20)) +
+  tm_borders(fill_alpha = 0.5)
+```
+
+## equal
+
+```{r}
+tm_shape(mpsz_pop2024) +
+  tm_polygons(fill = "DEPENDENCY",
+              fill.scale = tm_scale_intervals(
+                style = "equal", n = 20)) +
+  tm_borders(fill_alpha = 0.5)
+```
+
+## jenks
+
+```{r}
+tm_shape(mpsz_pop2024) +
+  tm_polygons(fill = "DEPENDENCY",
+              fill.scale = tm_scale_intervals(
+                style = "jenks", n = 20)) +
+  tm_borders(fill_alpha = 0.5)
+```
+
+## kmeans
+
+```{r}
+tm_shape(mpsz_pop2024) +
+  tm_polygons(fill = "DEPENDENCY",
+              fill.scale = tm_scale_intervals(
+                style = "kmeans", n = 20)) +
+  tm_borders(fill_alpha = 0.5)
+```
+
+## fisher
+
+```{r}
+tm_shape(mpsz_pop2024) +
+  tm_polygons(fill = "DEPENDENCY",
+              fill.scale = tm_scale_intervals(
+                style = "fisher", n = 20)) +
+  tm_borders(fill_alpha = 0.5)
+```
+:::
 
 #### 2.4.3.2 Plotting choropleth map with custome break
 
+For all the built-in styles, the category breaks are computed internally. In order to override these defaults, the breakpoints can be set explicitly by means of the `breaks` argument to the `tm_scale_intervals()`. It is important to note that, in **tmap** the breaks include a minimum and maximum. As a result, in order to end up with n categories, n+1 elements must be specified in the `breaks` option (the values must be in increasing order).
+
+Before we get started, it is always a good practice to get some descriptive statistics on the variable before setting the break points. Code chunk below will be used to compute and display the descriptive statistics of *DEPENDENCY* field.
+
+```{r}
+summary(mpsz_pop2024$DEPENDENCY)
+```
+
+With reference to the results above, we set break point at 0.60, 0.70, 0.80, and 0.90. In addition, we also need to include a minimum and maximum, which we set at 0 and 100. Our `breaks` vector is thus c(0, 0.60, 0.70, 0.80, 0.90, 1.00)
+
+Now, we will plot the choropleth map by using the code chunk below.
+
+```{r}
+tm_shape(mpsz_pop2024)+
+  tm_polygons(fill = "DEPENDENCY",
+              fill.scale = tm_scale_intervals(
+                breaks = c(0, 0.60, 0.70, 0.80, 0.90, 1.00))) +
+  tm_borders(fill_alpha = 0.5)
+```
+
 ### **2.4.4 Colour Scheme**
+
+**tmap** supports colour ramps either defined by the user or a set of predefined colour ramps from the **RColorBrewer** package.
 
 #### 2.4.4.1 Using ColourBrewer palette
 
+To change the colour, we assign the preferred colour to *palette* argument of *values* as shown in the code chunk below.
+
+```{r}
+tm_shape(mpsz_pop2024) +
+  tm_polygons(fill = "DEPENDENCY",
+              fill.scale = tm_scale_intervals(
+                style = "quantile",
+                n = 5,
+                values = "brewer.oranges")) +
+  tm_borders(fill_alpha = 0.5)
+```
+
+Now the choropleth map is shaded in Organes. To reverse the colour shading, **add a “-” prefix**.
+
+```{r}
+tm_shape(mpsz_pop2024) +
+  tm_polygons(fill = "DEPENDENCY",
+              fill.scale = tm_scale_intervals(
+                style = "quantile",
+                n = 5,
+                values = "-brewer.oranges")) +
+  tm_borders(fill_alpha = 0.5)
+```
+
+Now the colour scheme has been reversed.
+
 #### 2.4.4.2 Cartographic Furniture
+
+Beside map style, **tmap** also also provides arguments to draw other map furniture such as compass, scale bar and grid lines.
+
+In the code chunk below, `tm_compass()`, `tm_scale_bar()`, `tm_grid()` and `tm_credit()` are used to add compass, scale bar, grid lines and data sources onto the choropleth map.
+
+```{r}
+tm_shape(mpsz_pop2024) +
+  tm_polygons(fill = "DEPENDENCY",
+              fill.scale = tm_scale_intervals(
+                style = "quantile",
+                n = 5)) +
+  tm_borders(fill_alpha = 0.5) +
+  tm_compass(type="8star", size = 2) +
+  tm_scalebar() +
+  tm_grid(lwd = 0.1, alpha = 0.2) +
+  tm_credits("Source: data.gov.sg & singstat",
+             position = c("left", "bottom")) +
+  tm_style("classic")
+```
 
 ### **2.4.5 Map Layout**
 
