@@ -48,12 +48,14 @@ Two data set will be used to create the choropleth map. They are:
 The code chunk below uses the *st_read()* function of **sf** package to import `MP14_SUBZONE_WEB_PL` shapefile into R as a simple feature data frame called `mpsz`.
 
 ```{r}
-mpsz <- st_read("data/geospatial/MasterPlan2019SubzoneBoundaryNoSeaKML.kml")
+mpszkml <- st_read("data/geospatial/MasterPlan2019SubzoneBoundaryNoSeaKML.kml")
 ```
 
 #### 2.3.2.1 Tidying data
 
 Function to extract values from the HTML description
+
+*#codes important to split data*
 
 ```{r}
 extract_kml_field <- function(html_text, field_name) {
@@ -72,7 +74,7 @@ extract_kml_field <- function(html_text, field_name) {
 ```
 
 ```{r}
-mpsz <- mpsz %>%
+mpszkml <- mpszkml %>%
   mutate(
     REGION_N = map_chr(Description, extract_kml_field, "REGION_N"),
     PLN_AREA_N = map_chr(Description, extract_kml_field, "PLN_AREA_N"),
@@ -80,26 +82,25 @@ mpsz <- mpsz %>%
     SUBZONE_C = map_chr(Description, extract_kml_field, "SUBZONE_C")
   ) %>%
   select(-Name, -Description) %>%
-  relocate(geometry, .after = last_col())
+  relocate(geometry, .after = last_col()) #move the col to the last col
 ```
 
 We can examine the content of `mpsz` by using the code chunk below.
 
 ```{r}
-mpsz
+mpszkml
 ```
 
 ::::: markgoals
-:::: markgoals-header
+::: markgoals-header
 **Learning**
-::::
+:::
 
 ::: markgoals-container
-
 Only the first 10 records are displayedby default to avoid overwhelming the console, especially with large datasets.
-
 :::
 :::::
+
 ### **2.3.3 Importing Attribute Data into R**
 
 Next, we will import *respopagesextod2024.csv* file into RStudio and save the file into an tibble dataframe called *popdata*.
@@ -171,16 +172,13 @@ mpsz_pop2024 <- left_join(mpsz, popdata2024,
                           by = c("SUBZONE_N" = "SZ"))
 ```
 
-
 ::::: markgoals
-:::: markgoals-header
+::: markgoals-header
 **Learning**
-::::
+:::
 
 ::: markgoals-container
-
 -   *left_join()* of **dplyr** package is used with `mpsz` simple feature data frame as the left data table is to ensure that the output will be a **simple features data frame.**
-
 :::
 :::::
 
@@ -277,12 +275,11 @@ tm_shape(mpsz_pop2024)+
 ```
 
 ::::: markgoals
-:::: markgoals-header
+::: markgoals-header
 **Learning**
-::::
+:::
 
 ::: markgoals-container
-
 -   The default interval binning used to draw the choropleth map is called “pretty”. A detailed discussion of the data classification methods supported by **tmap** is in sub-section 2.4.3.
 
 -   The default colour scheme used is `blues3` of ColorBrewer. Here a theme is applied. More about the color scheme in sub-section 2.4.4.

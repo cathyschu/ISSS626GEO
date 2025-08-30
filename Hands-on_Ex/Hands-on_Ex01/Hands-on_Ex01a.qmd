@@ -304,7 +304,7 @@ st_geometry(preschool)
 
 This is a scenario that *st_set_crs()* is not appropriate and ***st_transform()*** of sf package should be used. We need to reproject `preschool` from one coordinate system to another coordinate system mathemetically.
 
-Below is how we transform projection using *st_transform()*
+Below is how we **transform** projection using *st_transform()*
 
 ```{r}
 preschool <- st_transform(preschool, crs = 3414)
@@ -495,7 +495,6 @@ mpsz$`PreSch Count` <- lengths(st_intersects(mpsz, preschool))
 :::
 
 ::: markgoals-container
-
 [st_intersects()](https://r-spatial.github.io/sf/reference/geos_binary_pred.html) is different from [st_intersection()](https://r-spatial.github.io/sf/reference/geos_binary_ops.html).
 :::
 :::::
