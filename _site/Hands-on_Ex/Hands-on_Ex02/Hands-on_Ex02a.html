@@ -22,6 +22,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -105,6 +139,14 @@ ul.task-list li input[type="checkbox"] {
         <li>
     <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01b.html">
  <span class="dropdown-text">Exercise 1b</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02a.html">
+ <span class="dropdown-text">Exercise 2a</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02b.qmd">
+ <span class="dropdown-text">Exercise 2b</span></a>
   </li>  
     </ul>
   </li>
@@ -251,12 +293,69 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="the-data" class="level2">
 <h2 class="anchored" data-anchor-id="the-data">2 The data</h2>
+<p>We will use two data sets to answer the questions above:</p>
+<ul>
+<li><p><em>Child Care Services</em> data from data.gov.sg, a point feature data providing both location and attribute information of childcare centres.</p></li>
+<li><p><em>Master Plan 2019 Subzone Boundary (No Sea)</em>, a polygon feature data providing information of URA 2019 Master Plan Planning Subzone boundary data.</p></li>
+</ul>
+<p>Both data sets are provided in <strong>kml</strong> and <strong>geojson</strong> format.</p>
 </section>
 <section id="installing-and-loading-the-r-packages" class="level2">
 <h2 class="anchored" data-anchor-id="installing-and-loading-the-r-packages">1.3 Installing and Loading the R packages</h2>
+<table class="caption-top table">
+<caption>In this hands-on exercise, five R packages will be used, they are:</caption>
+<colgroup>
+<col style="width: 20%">
+<col style="width: 80%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>R Package</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://r-spatial.github.io/sf/"><strong>sf</strong></a></td>
+<td style="text-align: left;">a relatively new R package specially designed to import, manage and process vector-based geospatial data in R.</td>
+</tr>
+<tr class="even">
+<td><a href="https://spatstat.org/"><strong>spatstat</strong></a></td>
+<td style="text-align: left;">has a wide range of useful functions for point pattern analysis. In this hands-on exercise, it will be used to perform 1st- and 2nd-order spatial point patterns analysis and derive kernel density estimation (KDE) layer.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://rspatial.github.io/terra/index.html"><strong>terra</strong></a></td>
+<td style="text-align: left;">a modern spatial data analysis package designed to replace the raster package. It offers improved speed and efficiency when working with both raster and vector spatial data, particularly with large datasets. terra provides functionalities for creating, reading, manipulating, and writing raster and vector data, and it’s built on top of GDAL and PROJ libraries for enhanced performance. In this hands-on exercise, it will be used to convert image output generate by spatstat into terra format.</td>
+</tr>
+<tr class="even">
+<td><a href="https://cran.r-project.org/web/packages/tmap/index.html"><strong>tmap</strong></a></td>
+<td style="text-align: left;">provides functions for plotting cartographic quality static point patterns maps or interactive maps by using <a href="https://leafletjs.com/"><strong>leaflet</strong></a> API.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://rvest.tidyverse.org/"><strong>rvest</strong></a></td>
+<td style="text-align: left;">for scraping (or harvesting) data from web pages</td>
+</tr>
+</tbody>
+</table>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(sf, terra, spatstat, tmap, rvest, tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="importing-and-wrangling-geospatial-data-sets" class="level2">
 <h2 class="anchored" data-anchor-id="importing-and-wrangling-geospatial-data-sets">4 Importing and Wrangling Geospatial Data Sets</h2>
+<div class="taskgoals">
+<div class="taskgoals-header">
+<p><strong>TASK</strong></p>
+</div>
+<div class="taskgoals-container">
+<ul>
+<li>Import the two geospatial datasets into R using the methods from Hands-on Exercises 1 and 2.</li>
+<li>Tidy the datasets and, if necessary, transform their projections.</li>
+<li>Validate that both datasets use the same projection.</li>
+<li>Ensure that the final outputs are stored in sf format.</li>
+</ul>
+</div>
+</div>
 <section id="mapping-the-geospatial-data-sets" class="level3">
 <h3 class="anchored" data-anchor-id="mapping-the-geospatial-data-sets">4.1 Mapping the geospatial data sets</h3>
 </section>

@@ -37,11 +37,83 @@ The specific questions we would like to answer are as follows:
 
 ## 2 The data
 
+We will use two data sets to answer the questions above:
+
+-   *Child Care Services* data from data.gov.sg, a point feature data providing both location and attribute information of childcare centres.
+
+-   *Master Plan 2019 Subzone Boundary (No Sea)*, a polygon feature data providing information of URA 2019 Master Plan Planning Subzone boundary data.
+
+Both data sets are provided in **kml** and **geojson** format.
+
 ## 1.3 Installing and Loading the R packages
+
+| R Package | Description |
+|------------------|:-----------------------------------------------------|
+| [**sf**](https://r-spatial.github.io/sf/) | a relatively new R package specially designed to import, manage and process vector-based geospatial data in R. |
+| [**spatstat**](https://spatstat.org/) | has a wide range of useful functions for point pattern analysis. In this hands-on exercise, it will be used to perform 1st- and 2nd-order spatial point patterns analysis and derive kernel density estimation (KDE) layer. |
+| [**terra**](https://rspatial.github.io/terra/index.html) | a modern spatial data analysis package designed to replace the raster package. It offers improved speed and efficiency when working with both raster and vector spatial data, particularly with large datasets. terra provides functionalities for creating, reading, manipulating, and writing raster and vector data, and it’s built on top of GDAL and PROJ libraries for enhanced performance. In this hands-on exercise, it will be used to convert image output generate by spatstat into terra format. |
+| [**tmap**](https://cran.r-project.org/web/packages/tmap/index.html) | provides functions for plotting cartographic quality static point patterns maps or interactive maps by using [**leaflet**](https://leafletjs.com/) API. |
+| [**rvest**](https://rvest.tidyverse.org/) | for scraping (or harvesting) data from web pages |
+
+: In this hands-on exercise, five R packages will be used, they are: {tbl-colwidths="\[20,80\]"}
+
+```{r}
+pacman::p_load(sf, terra, spatstat, tmap, rvest, tidyverse)
+```
 
 ## 4 Importing and Wrangling Geospatial Data Sets
 
+::::: taskgoals
+::: taskgoals-header
+**TASK**
+:::
+
+::: taskgoals-container
+-   Import the two geospatial datasets into R using the methods from Hands-on Exercises 1 and 2.
+-   Tidy the datasets and, if necessary, transform their projections.
+-   Validate that both datasets use the same projection.
+-   Ensure that the final outputs are stored in sf format.
+:::
+:::::
+
+First we import Master Plan 2019 Subzone (No Sea) data set into R environment.
+
 ### 4.1 Mapping the geospatial data sets
+
+```{r}
+mpsz_sf <- st_read("data/MasterPlan2019SubzoneBoundaryNoSeaKML.kml") %>%
+  st_zm(drop = TRUE, what = "ZM") %>%
+  st_transform(crs = 3414)
+```
+
+Learning:
+
+`st_zm()` is used to used to remove Z (elevation) and M (measure) dimensions from geospatial geometries.
+
+Next, we build a function called *extract_kml_field* for extracting REGION_N, PLN_AREA_N, SUBZONE_N, SUBZONE_C from Description field with the code below.
+
+```{r}
+extract_kml_field <- function(html_text, field_name) {
+  if (is.na(html_text) || html_text == "") return(NA_character_)
+  
+  page <- read_html(html_text)
+  rows <- page %>% html_elements("tr")
+  
+  value <- rows %>%
+    keep(~ html_text2(html_element(.x, "th")) == field_name) %>%
+    html_element("td") %>%
+    html_text2()
+  
+  if (length(value) == 0) NA_character_ else value
+}
+```
+
+```{r}
+mpsz_cl <- mpsz_sf %>%
+  filter(SUBZONE_N != "SOUTHERN GROUP",
+         PLN_AREA_N != "WESTERN ISLANDS",
+         PLN_AREA_N != "NORTH-EASTERN ISLANDS")
+```
 
 ## 5 Geospatial Data wrangling
 
