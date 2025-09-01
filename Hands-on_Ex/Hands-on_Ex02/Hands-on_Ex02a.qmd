@@ -1,0 +1,100 @@
+---
+title: "Hands-on Exercise 02a"
+author: "Cathy C."
+date: "Sep 1, 2025"
+date-modified: "last-modified" #auto render date
+format: html
+execute: #how YML page work
+  echo: true #will show code
+  eval: true #will run code every time and show output
+  warning: false #dont show warning msg
+  freeze: true #controls rendering - no render if no changes
+---
+
+## Overview
+
+**Spatial Point Pattern Analysis (SPPA)** is the evaluation of the pattern or distribution of a set of points on a surface. The points may represent:
+
+-   events such as crimes, traffic accidents, or disease onsets, or
+-   business services (e.g., coffee shops and fast-food outlets) or facilities such as childcare centres and eldercare centres.
+
+**First-order Spatial Point Pattern Analysis (1st-SPPA)** focuses on understanding the intensity or **density of points** across a study area. It examines how the distribution of points varies over space, essentially identifying trends or patterns in point density. This type of analysis deals with the individual locations of points and their distribution, without considering interactions between them.
+
+In essence, 1st-SPPA helps answer questions such as:
+
+-   Where are points most densely located within the study area?
+-   Is point density uniform, or does it vary across space?
+-   How spread out is the point pattern?
+
+## 1 Getting started
+
+In this chapter, we will gain hands-on experience with [**spatstat**](https://cran.r-project.org/web/packages/spatstat/) to perform two commonly used 1st-SPPA methods:
+
+The specific questions we would like to answer are as follows:
+
+-   Are the childcare centres in Singapore randomly distributed throughout the country?
+-   If the answer is not, then the next logical question is where are the locations with higher concentration of childcare centres?
+
+## 2 The data
+
+## 1.3 Installing and Loading the R packages
+
+## 4 Importing and Wrangling Geospatial Data Sets
+
+### 4.1 Mapping the geospatial data sets
+
+## 5 Geospatial Data wrangling
+
+### 5.1 Converting sf data frames to ppp class
+
+### 5.2 Creating owin object
+
+### 5.3 Combining point events object and owin object
+
+## 6 Clark-Evan Test for Nearest Neighbour Analysis
+
+### 6.1 Perform the Clark-Evans test without CSR
+
+### 6.2 Perform the Clark-Evans test with CSR
+
+## 7 Kernel Density Estimation Method
+
+### 7.1 Working with automatic bandwidth selection method
+
+### 7.2 Rescalling KDE values
+
+### 7.3 Working with different automatic badwidth methods
+
+### 7.4 Working with different kernel methods
+
+## 8 Fixed and Adaptive KDE
+
+### 8.1 Computing KDE by using fixed bandwidth
+
+### 8.2 Computing KDE by using adaptive bandwidth
+
+## 9 Plotting cartographic quality KDE map
+
+### 9.1 Converting gridded output into raster
+
+### 9.2 Assigning projection systems
+
+### 9.3 Plotting KDE map with tmap
+
+## 10 First Order SPPA at the Planning Subzone Level
+
+### 10.1 Geospatial data wrangling
+
+#### 10.1.1 Extracting study area
+
+#### 10.1.2 Creating owin object
+
+#### 10.1.3 Combining point events object and owin object
+
+### 10.2 Clark and Evans Test
+
+#### 10.2.1 Choa Chu Kang planning area
+
+#### 10.2.2 Tampines planning area
+
+### 10.3 Computing KDE surfaces by planning area

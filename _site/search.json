@@ -166,5 +166,89 @@
     "title": "Geospatial Analytics",
     "section": "",
     "text": "Welcome to the working page for the Geospatial Analytics Course.\nThis website will cover below topics, as well as course assignments, projects.\n\nIntroduction to Geospatial Analytics\nSpatial Point Patterns Analysis (SPAA)\nAdvanced Spatial Point Patterns Analysis\nSpatial Weights and Applications\nGlobal and Local Measures of Spatial Association\nGeographic Segmentation\nGeographically Weighted Explanatory Models\nGeographically Weighted Predictive Models\nModelling Geographic of Accessibility\nSpatial Interaction Models"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02a.html#getting-started",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02a.html#getting-started",
+    "title": "Hands-on Exercise 02a",
+    "section": "1 Getting started",
+    "text": "1 Getting started\nIn this chapter, we will gain hands-on experience with spatstat to perform two commonly used 1st-SPPA methods:\nThe specific questions we would like to answer are as follows:\n\nAre the childcare centres in Singapore randomly distributed throughout the country?\nIf the answer is not, then the next logical question is where are the locations with higher concentration of childcare centres?"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02a.html#the-data",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02a.html#the-data",
+    "title": "Hands-on Exercise 02a",
+    "section": "2 The data",
+    "text": "2 The data"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02a.html#installing-and-loading-the-r-packages",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02a.html#installing-and-loading-the-r-packages",
+    "title": "Hands-on Exercise 02a",
+    "section": "1.3 Installing and Loading the R packages",
+    "text": "1.3 Installing and Loading the R packages"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02a.html#importing-and-wrangling-geospatial-data-sets",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02a.html#importing-and-wrangling-geospatial-data-sets",
+    "title": "Hands-on Exercise 02a",
+    "section": "4 Importing and Wrangling Geospatial Data Sets",
+    "text": "4 Importing and Wrangling Geospatial Data Sets\n\n4.1 Mapping the geospatial data sets"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02a.html#geospatial-data-wrangling",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02a.html#geospatial-data-wrangling",
+    "title": "Hands-on Exercise 02a",
+    "section": "5 Geospatial Data wrangling",
+    "text": "5 Geospatial Data wrangling\n\n5.1 Converting sf data frames to ppp class\n\n\n5.2 Creating owin object\n\n\n5.3 Combining point events object and owin object"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02a.html#clark-evan-test-for-nearest-neighbour-analysis",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02a.html#clark-evan-test-for-nearest-neighbour-analysis",
+    "title": "Hands-on Exercise 02a",
+    "section": "6 Clark-Evan Test for Nearest Neighbour Analysis",
+    "text": "6 Clark-Evan Test for Nearest Neighbour Analysis\n\n6.1 Perform the Clark-Evans test without CSR\n\n\n6.2 Perform the Clark-Evans test with CSR"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02a.html#kernel-density-estimation-method",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02a.html#kernel-density-estimation-method",
+    "title": "Hands-on Exercise 02a",
+    "section": "7 Kernel Density Estimation Method",
+    "text": "7 Kernel Density Estimation Method\n\n7.1 Working with automatic bandwidth selection method\n\n\n7.2 Rescalling KDE values\n\n\n7.3 Working with different automatic badwidth methods\n\n\n7.4 Working with different kernel methods"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02a.html#fixed-and-adaptive-kde",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02a.html#fixed-and-adaptive-kde",
+    "title": "Hands-on Exercise 02a",
+    "section": "8 Fixed and Adaptive KDE",
+    "text": "8 Fixed and Adaptive KDE\n\n8.1 Computing KDE by using fixed bandwidth\n\n\n8.2 Computing KDE by using adaptive bandwidth"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02a.html#plotting-cartographic-quality-kde-map",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02a.html#plotting-cartographic-quality-kde-map",
+    "title": "Hands-on Exercise 02a",
+    "section": "9 Plotting cartographic quality KDE map",
+    "text": "9 Plotting cartographic quality KDE map\n\n9.1 Converting gridded output into raster\n\n\n9.2 Assigning projection systems\n\n\n9.3 Plotting KDE map with tmap"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02a.html#first-order-sppa-at-the-planning-subzone-level",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02a.html#first-order-sppa-at-the-planning-subzone-level",
+    "title": "Hands-on Exercise 02a",
+    "section": "10 First Order SPPA at the Planning Subzone Level",
+    "text": "10 First Order SPPA at the Planning Subzone Level\n\n10.1 Geospatial data wrangling\n\n10.1.1 Extracting study area\n\n\n10.1.2 Creating owin object\n\n\n10.1.3 Combining point events object and owin object\n\n\n\n10.2 Clark and Evans Test\n\n10.2.1 Choa Chu Kang planning area\n\n\n10.2.2 Tampines planning area\n\n\n\n10.3 Computing KDE surfaces by planning area"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02a.html",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02a.html",
+    "title": "Hands-on Exercise 02a",
+    "section": "",
+    "text": "Spatial Point Pattern Analysis (SPPA) is the evaluation of the pattern or distribution of a set of points on a surface. The points may represent:\n\nevents such as crimes, traffic accidents, or disease onsets, or\nbusiness services (e.g., coffee shops and fast-food outlets) or facilities such as childcare centres and eldercare centres.\n\nFirst-order Spatial Point Pattern Analysis (1st-SPPA) focuses on understanding the intensity or density of points across a study area. It examines how the distribution of points varies over space, essentially identifying trends or patterns in point density. This type of analysis deals with the individual locations of points and their distribution, without considering interactions between them.\nIn essence, 1st-SPPA helps answer questions such as:\n\nWhere are points most densely located within the study area?\nIs point density uniform, or does it vary across space?\nHow spread out is the point pattern?"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02a.html#overview",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02a.html#overview",
+    "title": "Hands-on Exercise 02a",
+    "section": "",
+    "text": "Spatial Point Pattern Analysis (SPPA) is the evaluation of the pattern or distribution of a set of points on a surface. The points may represent:\n\nevents such as crimes, traffic accidents, or disease onsets, or\nbusiness services (e.g., coffee shops and fast-food outlets) or facilities such as childcare centres and eldercare centres.\n\nFirst-order Spatial Point Pattern Analysis (1st-SPPA) focuses on understanding the intensity or density of points across a study area. It examines how the distribution of points varies over space, essentially identifying trends or patterns in point density. This type of analysis deals with the individual locations of points and their distribution, without considering interactions between them.\nIn essence, 1st-SPPA helps answer questions such as:\n\nWhere are points most densely located within the study area?\nIs point density uniform, or does it vary across space?\nHow spread out is the point pattern?"
   }
 ]
