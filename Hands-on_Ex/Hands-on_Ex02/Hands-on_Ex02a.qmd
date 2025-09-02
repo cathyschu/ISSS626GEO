@@ -48,7 +48,7 @@ Both data sets are provided in **kml** and **geojson** format.
 ## 1.3 Installing and Loading the R packages
 
 | R Package | Description |
-|----|:---|
+|------------------------------------|:-----------------------------------|
 | [**sf**](https://r-spatial.github.io/sf/) | a relatively new R package specially designed to import, manage and process vector-based geospatial data in R. |
 | [**spatstat**](https://spatstat.org/) | has a wide range of useful functions for point pattern analysis. In this hands-on exercise, it will be used to perform 1st- and 2nd-order spatial point patterns analysis and derive kernel density estimation (KDE) layer. |
 | [**terra**](https://rspatial.github.io/terra/index.html) | a modern spatial data analysis package designed to replace the raster package. It offers improved speed and efficiency when working with both raster and vector spatial data, particularly with large datasets. terra provides functionalities for creating, reading, manipulating, and writing raster and vector data, and it’s built on top of GDAL and PROJ libraries for enhanced performance. In this hands-on exercise, it will be used to convert image output generate by spatstat into terra format. |
@@ -78,19 +78,23 @@ pacman::p_load(sf, terra, spatstat, tmap, rvest, tidyverse)
 
 First we import Master Plan 2019 Subzone (No Sea) data set into R environment.
 
-### 4.1 Mapping the geospatial data sets
-
 ```{r}
 mpsz_sf <- st_read("data/MasterPlan2019SubzoneBoundaryNoSeaKML.kml") %>%
   st_zm(drop = TRUE, what = "ZM") %>%
   st_transform(crs = 3414)
 ```
+::::: markgoals
+::: markgoals-header
+**Learning**
+:::
 
-Learning:
+::: markgoals-container
 
 `st_zm()` is used to used to remove Z (elevation) and M (measure) dimensions from geospatial geometries.
 
 Next, we build a function called *extract_kml_field* for extracting REGION_N, PLN_AREA_N, SUBZONE_N, SUBZONE_C from Description field with the code below.
+:::
+:::::
 
 ```{r}
 extract_kml_field <- function(html_text, field_name) {
@@ -131,6 +135,59 @@ mpsz_cl <- mpsz_sf %>%
 write_rds(mpsz_cl,"data/mpsz_cl.rds")
 ```
 
+Next, we want to import the childcare Service data downloaded from data.gov.sg into R environment as **sf** data frame called *chilcare_sf*.
+
+```{r}
+childcare_sf <- st_read("data/ChildCareServices.kml") %>%
+  st_zm(drop = TRUE, what = "ZM") %>%
+  st_transform(crs = 3414)
+```
+
+### 4.1 Mapping the geospatial data sets
+
+After checking the referencing system of each geospatial data data frame, it is also useful for us to plot a map to show their spatial patterns.
+
+```{r}
+par(bg = "#e6f0e6")
+plot(st_geometry(mpsz_sf))
+plot(st_geometry(childcare_sf), add = TRUE, col = "#BA487F", pch = 16, cex = 0.35)
+```
+
+All the geospatial layers are within the same map extend. This shows that their referencing system and coordinate values are referred to **similar spatial context.** This is very important in any geospatial analysis.
+
+Alternatively, we can also prepare an **interactive point symbol map** by using the code chunk below.
+
+```{r}
+tmap_mode('view')
+tm_shape(childcare_sf)+
+  tm_dots()
+```
+::::: markgoals
+::: markgoals-header
+**Note**
+:::
+
+::: markgoals-container
+-   The interactive mode, **tmap** is using [**leaflet for R**](https://rstudio.github.io/leaflet/) API. The advantage of this interactive pin map is it allows us to navigate and zoom around the map freely. We can also query the information of each simple feature (i.e. the point) by clicking of them.
+
+-   We can also change the background of the internet map layer. Currently, three internet map layers are provided. They are: ESRI.WorldGrayCanvas, OpenStreetMap, and ESRI.WorldTopoMap. The default is ESRI.WorldGrayCanvas.
+:::
+:::::
+
+```{r}
+tmap_mode("plot")
+```
+
+::::: markgoals
+::: markgoals-header
+**Note**
+:::
+
+::: markgoals-container
+- Remember to switch back to plot mode after the interactive map. This is because, each interactive mode will consume a connection. Avoid displaying ecessive numbers of interactive maps (i.e. not more than 10) in one RMarkdown document when publish on Netlify.
+:::
+:::::
+
 ## 5 Geospatial Data wrangling
 
 ### 5.1 Converting sf data frames to ppp class
@@ -138,6 +195,7 @@ write_rds(mpsz_cl,"data/mpsz_cl.rds")
 ### 5.2 Creating owin object
 
 ### 5.3 Combining point events object and owin object
+
 
 ## 6 Clark-Evan Test for Nearest Neighbour Analysis
 
