@@ -4,6 +4,7 @@ project:
 
 website:
   title: "GeoSpatial"
+  favicon: /images/catgeo.svg
   
   navbar:
     logo: "images/catgeo.png"
