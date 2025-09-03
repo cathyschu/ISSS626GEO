@@ -450,7 +450,7 @@ H₀ = The distribution of childcare services at Tampines are randomly distribut
 L_TM.csr <- envelope(childcare_tm_ppp, Lest, nsim = 99, rank = 1, glocal=TRUE)
 ```
 
-**Let's plot the figure:**
+**Let's plot the model output:**
 
 ```{r}
 par(bg = "#EEEEEE")
@@ -482,5 +482,5 @@ plot(L_TM.csr, . - r ~ r,
 +----------+----------------------------+-------------+------------------------+
 | **K**    | Point density at distances | Multi-scale | Overall clustering     |
 +----------+----------------------------+-------------+------------------------+
-| **L**    | Standardised K             | Multi-scale | Clear visualization    |
+| **L**    | Standardised K             | Multi-scale | Clear visualisation    |
 +----------+----------------------------+-------------+------------------------+

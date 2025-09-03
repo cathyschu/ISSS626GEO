@@ -340,6 +340,6 @@
     "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02b.html#summary",
     "title": "02b - Second Order Spatial Point Patterns Analysis Methods",
     "section": "Summary",
-    "text": "Summary\n\n\n\n\n\n\n\n\n\nFunction\nMeasures\nScale\nBest for\n\n\n\n\nG\nNearest neighbor distances\nLocal\nCompetition/inhibition\n\n\nF\nEmpty space distances\nLocal\nCoverage/accessibility\n\n\nK\nPoint density at distances\nMulti-scale\nOverall clustering\n\n\nL\nStandardised K\nMulti-scale\nClear visualization"
+    "text": "Summary\n\n\n\n\n\n\n\n\n\nFunction\nMeasures\nScale\nBest for\n\n\n\n\nG\nNearest neighbor distances\nLocal\nCompetition/inhibition\n\n\nF\nEmpty space distances\nLocal\nCoverage/accessibility\n\n\nK\nPoint density at distances\nMulti-scale\nOverall clustering\n\n\nL\nStandardised K\nMulti-scale\nClear visualisation"
   }
 ]
