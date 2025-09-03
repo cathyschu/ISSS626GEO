@@ -5,11 +5,17 @@ body {
 
 /* Tabset background (different from page) */
 .panel-tabset {
-    background-color: #decece;
+    background-color: #EEEEEE;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     border-radius: 8px;
     padding: 0px;
     margin: 20px 0;
+}
+
+/* Only affect code chunks within tabsets */
+.panel-tabset pre code {
+    background-color: #F5F5F7 !important;
+    color: #5A6C57 !important;
 }
 
 .navbar-brand img {

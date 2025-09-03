@@ -437,13 +437,13 @@ Geodetic CRS:  WGS 84</code></pre>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <section id="computing-g-function-estimation" class="level4">
-<h4 class="anchored" data-anchor-id="computing-g-function-estimation">6.1.1 Computing G-function estimation</h4>
+<h4 class="anchored" data-anchor-id="computing-g-function-estimation">6.1.1 <strong>Computing G-function estimation</strong></h4>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Compute G-function using <em>Gest()</em> of <strong>spatstat</strong> package.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#f5e6e6"</span>)</span>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>G_CK <span class="ot">=</span> <span class="fu">Gest</span>(childcare_ck_ppp, <span class="at">correction =</span> <span class="st">"border"</span>)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(G_CK, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">500</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -456,11 +456,14 @@ Geodetic CRS:  WGS 84</code></pre>
 </div>
 </section>
 <section id="performing-complete-spatial-randomness-test" class="level4">
-<h4 class="anchored" data-anchor-id="performing-complete-spatial-randomness-test">6.1.2 Performing Complete Spatial Randomness Test</h4>
-<p>To confirm the observed spatial patterns above, a hypothesis test will be conducted. The hypothesis and test are as follows: H₀ = The distribution of childcare services at Choa Chu Kang are randomly distributed. H₁ = The distribution of childcare services at Choa Chu Kang are not randomly distributed.</p>
-<p>The null hypothesis will be rejected if <em>p</em>-value is smaller than alpha value of 0.001. Monte Carlo test with G-fucntion</p>
+<h4 class="anchored" data-anchor-id="performing-complete-spatial-randomness-test">6.1.2 <strong>Performing Complete Spatial Randomness Test</strong></h4>
+<p>To confirm the observed spatial patterns above, a hypothesis test will be conducted. The hypothesis and test are as follows:</p>
+<p>H₀ = The distribution of childcare services at Choa Chu Kang are randomly distributed.<br>
+H₁ = The distribution of childcare services at Choa Chu Kang are not randomly distributed.<br>
+The null hypothesis will be rejected if <em>p</em>-value is smaller than alpha value of 0.001.</p>
+<p>Monte Carlo test with G-fucntion.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#f5e6e6"</span>)</span>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>G_CK.csr <span class="ot">&lt;-</span> <span class="fu">envelope</span>(childcare_ck_ppp, Gest, <span class="at">nsim =</span> <span class="dv">999</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Generating 999 simulations of CSR  ...
@@ -486,7 +489,7 @@ Done.</code></pre>
 </div>
 <p><strong>Let’s plot the figure.</strong></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#f5e6e6"</span>)</span>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(G_CK.csr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
@@ -500,10 +503,62 @@ Done.</code></pre>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <section id="computing-g-function-estimation-1" class="level4">
-<h4 class="anchored" data-anchor-id="computing-g-function-estimation-1">6.2.1 Computing G-function estimation</h4>
+<h4 class="anchored" data-anchor-id="computing-g-function-estimation-1">6.2.1 <strong>Computing G-function estimation</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>G_TM <span class="ot">=</span> <span class="fu">Gest</span>(childcare_tm_ppp, <span class="at">correction =</span> <span class="st">"best"</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(G_TM)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex02b_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="performing-complete-spatial-randomness-test-1" class="level4">
-<h4 class="anchored" data-anchor-id="performing-complete-spatial-randomness-test-1">6.2.2 Performing Complete Spatial Randomness Test</h4>
+<h4 class="anchored" data-anchor-id="performing-complete-spatial-randomness-test-1">6.2.2 <strong>Performing Complete Spatial Randomness Test</strong></h4>
+<p>To confirm the observed spatial patterns above, a hypothesis test will be conducted. The hypothesis and test are as follows:</p>
+<p>H₀ = The distribution of childcare services at Tampines are randomly distributed.<br>
+H₁ = The distribution of childcare services at Tampines are not randomly distributed.</p>
+<p>The null hypothesis will be rejected is p-value is smaller than alpha value of 0.001.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>G_TM.csr <span class="ot">&lt;-</span> <span class="fu">envelope</span>(childcare_tm_ppp, Gest, <span class="at">correction =</span> <span class="st">"all"</span>, <span class="at">nsim =</span> <span class="dv">999</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Generating 999 simulations of CSR  ...
+1, 2, 3, ......10.........20.........30.........40.........50.........60..
+.......70.........80.........90.........100.........110.........120.........130
+.........140.........150.........160.........170.........180.........190........
+.200.........210.........220.........230.........240.........250.........260......
+...270.........280.........290.........300.........310.........320.........330....
+.....340.........350.........360.........370.........380.........390.........400..
+.......410.........420.........430.........440.........450.........460.........470
+.........480.........490.........500.........510.........520.........530........
+.540.........550.........560.........570.........580.........590.........600......
+...610.........620.........630.........640.........650.........660.........670....
+.....680.........690.........700.........710.........720.........730.........740..
+.......750.........760.........770.........780.........790.........800.........810
+.........820.........830.........840.........850.........860.........870........
+.880.........890.........900.........910.........920.........930.........940......
+...950.........960.........970.........980.........990........
+999.
+
+Done.</code></pre>
+</div>
+</div>
+<p><strong>Let’s plot the figure:</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(G_TM.csr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex02b_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 </div>
 </div>
@@ -516,18 +571,18 @@ Done.</code></pre>
 <div class="tab-content">
 <div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
 <section id="computing-f-function-estimation" class="level4">
-<h4 class="anchored" data-anchor-id="computing-f-function-estimation">7.1.1 Computing F-function estimation</h4>
+<h4 class="anchored" data-anchor-id="computing-f-function-estimation">7.1.1 <strong>Computing F-function estimation</strong></h4>
 </section>
 <section id="performing-complete-spatial-randomness-test-2" class="level4">
-<h4 class="anchored" data-anchor-id="performing-complete-spatial-randomness-test-2">7.1.2 Performing Complete Spatial Randomness Test</h4>
+<h4 class="anchored" data-anchor-id="performing-complete-spatial-randomness-test-2">7.1.2 <strong>Performing Complete Spatial Randomness Test</strong></h4>
 </section>
 </div>
 <div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
 <section id="computing-f-function-estimation-1" class="level4">
-<h4 class="anchored" data-anchor-id="computing-f-function-estimation-1">7.2.1 Computing F-function estimation</h4>
+<h4 class="anchored" data-anchor-id="computing-f-function-estimation-1">7.2.1 <strong>Computing F-function estimation</strong></h4>
 </section>
 <section id="performing-complete-spatial-randomness-test-3" class="level4">
-<h4 class="anchored" data-anchor-id="performing-complete-spatial-randomness-test-3">7.2.2 Performing Complete Spatial Randomness Test</h4>
+<h4 class="anchored" data-anchor-id="performing-complete-spatial-randomness-test-3">7.2.2 <strong>Performing Complete Spatial Randomness Test</strong></h4>
 </section>
 </div>
 </div>
@@ -540,18 +595,18 @@ Done.</code></pre>
 <div class="tab-content">
 <div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
 <section id="computing-k-fucntion-estimate" class="level4">
-<h4 class="anchored" data-anchor-id="computing-k-fucntion-estimate">8.1.1 Computing K-fucntion estimate</h4>
+<h4 class="anchored" data-anchor-id="computing-k-fucntion-estimate">8.1.1 <strong>Computing K-fucntion estimate</strong></h4>
 </section>
 <section id="performing-complete-spatial-randomness-test-4" class="level4">
-<h4 class="anchored" data-anchor-id="performing-complete-spatial-randomness-test-4">8.1.2 Performing Complete Spatial Randomness Test</h4>
+<h4 class="anchored" data-anchor-id="performing-complete-spatial-randomness-test-4">8.1.2 <strong>Performing Complete Spatial Randomness Test</strong></h4>
 </section>
 </div>
 <div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
 <section id="computing-k-fucntion-estimation" class="level4">
-<h4 class="anchored" data-anchor-id="computing-k-fucntion-estimation">8.2.1 Computing K-fucntion estimation</h4>
+<h4 class="anchored" data-anchor-id="computing-k-fucntion-estimation">8.2.1 <strong>Computing K-fucntion estimation</strong></h4>
 </section>
 <section id="performing-complete-spatial-randomness-test-5" class="level4">
-<h4 class="anchored" data-anchor-id="performing-complete-spatial-randomness-test-5">8.2.2 Performing Complete Spatial Randomness Test</h4>
+<h4 class="anchored" data-anchor-id="performing-complete-spatial-randomness-test-5">8.2.2 <strong>Performing Complete Spatial Randomness Test</strong></h4>
 </section>
 </div>
 </div>
@@ -564,18 +619,18 @@ Done.</code></pre>
 <div class="tab-content">
 <div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
 <section id="computing-l-fucntion-estimation" class="level4">
-<h4 class="anchored" data-anchor-id="computing-l-fucntion-estimation">9.1.1 Computing <strong>L Fucntion</strong> estimation</h4>
+<h4 class="anchored" data-anchor-id="computing-l-fucntion-estimation">9.1.1 <strong>Computing L Fucntion estimation</strong></h4>
 </section>
 <section id="performing-complete-spatial-randomness-test-6" class="level4">
-<h4 class="anchored" data-anchor-id="performing-complete-spatial-randomness-test-6">9.1.2 Performing Complete Spatial Randomness Test</h4>
+<h4 class="anchored" data-anchor-id="performing-complete-spatial-randomness-test-6">9.1.2 <strong>Performing Complete Spatial Randomness Test</strong></h4>
 </section>
 </div>
 <div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
 <section id="computing-l-fucntion-estimate" class="level4">
-<h4 class="anchored" data-anchor-id="computing-l-fucntion-estimate">9.2.1 Computing L-fucntion estimate</h4>
+<h4 class="anchored" data-anchor-id="computing-l-fucntion-estimate">9.2.1 <strong>Computing L-fucntion estimate</strong></h4>
 </section>
 <section id="performing-complete-spatial-randomness-test-7" class="level4">
-<h4 class="anchored" data-anchor-id="performing-complete-spatial-randomness-test-7">9.2.2 Performing Complete Spatial Randomness Test</h4>
+<h4 class="anchored" data-anchor-id="performing-complete-spatial-randomness-test-7">9.2.2 <strong>Performing Complete Spatial Randomness Test</strong></h4>
 </section>
 </div>
 </div>
