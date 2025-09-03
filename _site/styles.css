@@ -3,6 +3,15 @@ body {
   background-color: #D0DDD0; /* Light blue background */
 }
 
+/* Tabset background (different from page) */
+.panel-tabset {
+    background-color: #decece;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    padding: 0px;
+    margin: 20px 0;
+}
+
 .navbar-brand img {
   height: 80px;
   width: auto;
