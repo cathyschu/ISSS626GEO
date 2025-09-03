@@ -250,5 +250,75 @@
     "title": "Hands-on Exercise 02a",
     "section": "",
     "text": "Spatial Point Pattern Analysis (SPPA) is the evaluation of the pattern or distribution of a set of points on a surface. The points may represent:\n\nevents such as crimes, traffic accidents, or disease onsets, or\nbusiness services (e.g., coffee shops and fast-food outlets) or facilities such as childcare centres and eldercare centres.\n\nFirst-order Spatial Point Pattern Analysis (1st-SPPA) focuses on understanding the intensity or density of points across a study area. It examines how the distribution of points varies over space, essentially identifying trends or patterns in point density. This type of analysis deals with the individual locations of points and their distribution, without considering interactions between them.\nIn essence, 1st-SPPA helps answer questions such as:\n\nWhere are points most densely located within the study area?\nIs point density uniform, or does it vary across space?\nHow spread out is the point pattern?"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02b.html",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02b.html",
+    "title": "02b - Second Order Spatial Point Patterns Analysis Methods",
+    "section": "",
+    "text": "Second-order spatial point pattern analysis Second-order spatial point pattern analysis examines the spatial relationships between points in a pattern, specifically focusing on how the presence of one point influences the location of others. It goes beyond simply describing the overall density of points (first-order effects) by investigating clustering, dispersion, or randomness at various spatial scales."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02b.html#overview",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02b.html#overview",
+    "title": "02b - Second Order Spatial Point Patterns Analysis Methods",
+    "section": "",
+    "text": "Second-order spatial point pattern analysis Second-order spatial point pattern analysis examines the spatial relationships between points in a pattern, specifically focusing on how the presence of one point influences the location of others. It goes beyond simply describing the overall density of points (first-order effects) by investigating clustering, dispersion, or randomness at various spatial scales."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02b.html#getting-started",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02b.html#getting-started",
+    "title": "02b - Second Order Spatial Point Patterns Analysis Methods",
+    "section": "1 Getting started",
+    "text": "1 Getting started"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02b.html#the-data",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02b.html#the-data",
+    "title": "02b - Second Order Spatial Point Patterns Analysis Methods",
+    "section": "2 The data",
+    "text": "2 The data"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02b.html#installing-and-loading-the-r-packages",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02b.html#installing-and-loading-the-r-packages",
+    "title": "02b - Second Order Spatial Point Patterns Analysis Methods",
+    "section": "3 Installing and Loading the R packages",
+    "text": "3 Installing and Loading the R packages"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02b.html#data-import-and-preparation",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02b.html#data-import-and-preparation",
+    "title": "02b - Second Order Spatial Point Patterns Analysis Methods",
+    "section": "4 Data Import and Preparation",
+    "text": "4 Data Import and Preparation"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02b.html#analysing-spatial-point-process-using-g-function",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02b.html#analysing-spatial-point-process-using-g-function",
+    "title": "02b - Second Order Spatial Point Patterns Analysis Methods",
+    "section": "6 Analysing Spatial Point Process Using G-Function",
+    "text": "6 Analysing Spatial Point Process Using G-Function\n\n6.1 Choa Chu Kang planning area6.2 Tampines planning area\n\n\n\n6.1.1 Computing G-function estimation\n\n\n6.1.2 Performing Complete Spatial Randomness Test\n\n\n\n\n6.2.1 Computing G-function estimation\n\n\n6.2.2 Performing Complete Spatial Randomness Test"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02b.html#analysing-spatial-point-process-using-f-function",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02b.html#analysing-spatial-point-process-using-f-function",
+    "title": "02b - Second Order Spatial Point Patterns Analysis Methods",
+    "section": "7 Analysing Spatial Point Process Using F-Function",
+    "text": "7 Analysing Spatial Point Process Using F-Function\n\n7.1 Choa Chu Kang planning area7.2 Tampines planning area\n\n\n\n7.1.1 Computing F-function estimation\n\n\n7.1.2 Performing Complete Spatial Randomness Test\n\n\n\n\n7.2.1 Computing F-function estimation\n\n\n7.2.2 Performing Complete Spatial Randomness Test"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02b.html#analysing-spatial-point-process-using-k-function",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02b.html#analysing-spatial-point-process-using-k-function",
+    "title": "02b - Second Order Spatial Point Patterns Analysis Methods",
+    "section": "8 Analysing Spatial Point Process Using K-Function",
+    "text": "8 Analysing Spatial Point Process Using K-Function\n\n8.1 Choa Chu Kang planning area8.2 Tampines planning area\n\n\n\n8.1.1 Computing K-fucntion estimate\n\n\n8.1.2 Performing Complete Spatial Randomness Test\n\n\n\n\n8.2.1 Computing K-fucntion estimation\n\n\n8.2.2 Performing Complete Spatial Randomness Test"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02b.html#analysing-spatial-point-process-using-l-function",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02b.html#analysing-spatial-point-process-using-l-function",
+    "title": "02b - Second Order Spatial Point Patterns Analysis Methods",
+    "section": "9 Analysing Spatial Point Process Using L-Function",
+    "text": "9 Analysing Spatial Point Process Using L-Function\n\n9.1 Choa Chu Kang planning area9.2 Tampines planning area\n\n\n\n9.1.1 Computing L Fucntion estimation\n\n\n9.1.2 Performing Complete Spatial Randomness Test\n\n\n\n\n9.2.1 Computing L-fucntion estimate\n\n\n9.2.2 Performing Complete Spatial Randomness Test"
   }
 ]

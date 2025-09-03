@@ -11,8 +11,87 @@ execute: #how YML page work
   freeze: true #controls rendering - no render if no changes
 ---
 
-# Header 1
-
 ## Overview
 
-### Getting started
+**Second-order spatial point pattern analysis** 
+Second-order spatial point pattern analysis examines the spatial relationships between points in a pattern, specifically focusing on how the presence of one point influences the location of others. It goes beyond simply describing the overall density of points (first-order effects) by investigating clustering, dispersion, or randomness at various spatial scales.
+
+## 1 Getting started
+
+## 2 The data
+
+## 3 Installing and Loading the R packages
+
+## 4 Data Import and Preparation
+
+## 6 Analysing Spatial Point Process Using **G-Function**
+::: panel-tabset
+
+## 6.1 Choa Chu Kang planning area
+
+#### 6.1.1 Computing G-function estimation
+
+#### 6.1.2 Performing Complete Spatial Randomness Test
+
+## 6.2 Tampines planning area
+
+#### 6.2.1 Computing G-function estimation
+
+#### 6.2.2 Performing Complete Spatial Randomness Test
+
+:::
+
+## 7 Analysing Spatial Point Process Using **F-Function**
+
+::: panel-tabset
+
+## 7.1 Choa Chu Kang planning area
+
+#### 7.1.1 Computing F-function estimation
+
+#### 7.1.2 Performing Complete Spatial Randomness Test
+
+## 7.2 Tampines planning area
+
+#### 7.2.1 Computing F-function estimation
+
+#### 7.2.2 Performing Complete Spatial Randomness Test
+:::
+
+## 8 Analysing Spatial Point Process Using **K-Function**
+::: panel-tabset
+
+## 8.1 Choa Chu Kang planning area
+
+#### 8.1.1 Computing K-fucntion estimate
+
+#### 8.1.2 Performing Complete Spatial Randomness Test
+
+## 8.2 Tampines planning area
+
+
+#### 8.2.1 Computing K-fucntion estimation
+
+#### 8.2.2 Performing Complete Spatial Randomness Test
+
+:::
+
+## 9 Analysing Spatial Point Process Using L-Function
+
+::: panel-tabset
+
+## 9.1 Choa Chu Kang planning area
+
+#### 9.1.1 Computing **L Fucntion** estimation
+
+#### 9.1.2 Performing Complete Spatial Randomness Test
+
+## 9.2 Tampines planning area
+
+#### 9.2.1 Computing L-fucntion estimate
+
+#### 9.2.2 Performing Complete Spatial Randomness Test
+
+:::
+
+
