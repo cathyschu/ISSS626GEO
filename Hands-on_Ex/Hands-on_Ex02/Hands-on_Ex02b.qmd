@@ -243,6 +243,7 @@ The F function estimates **the empty space function F(r)** or its **hazard rate 
 ## 7.1 Choa Chu Kang planning area
 
 #### 7.1.1 **Computing F-function estimation**
+
 Below is to compute F-function using `Fest()` of **spatat** package.
 
 ```{r}
@@ -251,8 +252,8 @@ F_CK = Fest(childcare_ck_ppp)
 plot(F_CK)
 ```
 
-
 #### 7.1.2 **Performing Complete Spatial Randomness Test**
+
 To confirm the observed spatial patterns above, a hypothesis test will be conducted. The hypothesis and test are as follows:
 
 H₀ = The distribution of childcare services at Choa Chu Kang are randomly distributed.\
@@ -260,45 +261,125 @@ H₁ = The distribution of childcare services at Choa Chu Kang are not randomly 
 The null hypothesis will be rejected if *p*-value is smaller than alpha value of 0.001.
 
 Monte Carlo test with F-fucntion.
+
 ```{r}
 F_CK.csr <- envelope(childcare_ck_ppp, Fest, nsim = 999)
 ```
+
 **Let's plot the figure:**
+
 ```{r}
 par(bg = "#EEEEEE")
 plot(F_CK.csr)
 ```
 
-
 ## 7.2 Tampines planning area
 
 #### 7.2.1 **Computing F-function estimation**
 
+To compute F-function for Tampines planning area.
+
+```{r}
+par(bg = "#EEEEEE")
+F_TM = Fest(childcare_tm_ppp, correction = "best")
+plot(F_TM)
+```
+
 #### 7.2.2 **Performing Complete Spatial Randomness Test**
+
+To confirm the observed spatial patterns above, a hypothesis test will be conducted. The hypothesis and test are as follows:
+
+H₀ = The distribution of childcare services at Tampines are randomly distributed. H₁ = The distribution of childcare services at Tampines are not randomly distributed. The null hypothesis will be rejected if p-value is smaller than alpha value of 0.001.
+
+```{r}
+F_TM.csr <- envelope(childcare_tm_ppp, Fest, correction = "all", nsim = 999)
+```
+
+**Plot the figure:**
+
+```{r}
+par(bg = "#EEEEEE")
+plot(F_TM.csr)
+```
 :::
 
 ## 8 Analysing Spatial Point Process Using **K-Function**
+
+K-function measures **the number of events** found up to a given distance of any particular event. In this section, we will compute K-function estimates by using [*Kest()*](https://rdrr.io/cran/spatstat/man/Kest.html) of **spatstat** package. We will also perform Monte Carlo simulation test using *envelope()* of **spatstat** package.
 
 ::: panel-tabset
 ## 8.1 Choa Chu Kang planning area
 
 #### 8.1.1 **Computing K-fucntion estimate**
 
+```{r}
+par(bg = "#EEEEEE")
+K_CK = Kest(childcare_ck_ppp, correction = "Ripley")
+plot(K_CK, . -r ~ r, ylab = "K(d)-r", xlab = "d(m)")
+```
+
 #### 8.1.2 **Performing Complete Spatial Randomness Test**
+
+To confirm the observed spatial patterns above, a hypothesis test will be conducted. The hypothesis and test are as follows:
+
+H₀ = The distribution of childcare services at Choa Chu Kang are randomly distributed. H₁ = The distribution of childcare services at Choa Chu Kang are not randomly distributed. The null hypothesis will be rejected if p-value is smaller than alpha value of 0.001.
+
+```{r}
+par(bg = "#EEEEEE")
+K_ck.csr <- envelope(childcare_ck_ppp, Kest, nsim = 99, rank = 1, glocal=TRUE)
+```
+
+**Let's plot the figure:**
+
+```{r}
+par(bg = "#EEEEEE")
+plot(K_ck.csr, . - r ~ r, xlab="d", ylab="K(d)-r")
+```
 
 ## 8.2 Tampines planning area
 
 #### 8.2.1 **Computing K-fucntion estimation**
 
+```{r}
+par(bg = "#EEEEEE")
+K_TM = Kest(childcare_tm_ppp, correction = "Ripley")
+plot(K_TM, . - r ~ r, ylab = "K(d)-r", xlab = "d(m)",
+     xlim = c(0, 1000))
+```
+
 #### 8.2.2 **Performing Complete Spatial Randomness Test**
+
+To confirm the observed spatial patterns above, a hypothesis test will be conducted. The hypothesis and test are as follows:
+
+H₀ = The distribution of childcare services at Tampines are randomly distributed. H₁ = The distribution of childcare services at Tampines are not randomly distributed. The null hypothesis will be rejected if p-value is smaller than alpha value of 0.001.
+
+```{r}
+K_TM.csr <- envelope(childcare_tm_ppp, Kest, nsim = 99, rank = 1, global = TRUE)
+```
+
+**Let's plot the figure:**
+
+```{r}
+par(bg = "#EEEEEE")
+plot(K_TM.csr, . - r ~ r, 
+     xlab = "d", ylab = "K(d)-r", xlim = c(0, 500))
+```
 :::
 
 ## 9 Analysing Spatial Point Process Using **L-Function**
+
+In this section, we will compute L-function estimation by using `Lest()` of **spatstat** package.We will also perform Monte Carlo simulation test using `envelope()` of **spatstat** package.
 
 ::: panel-tabset
 ## 9.1 Choa Chu Kang planning area
 
 #### 9.1.1 **Computing L Fucntion estimation**
+```{r}
+par(bg = "#EEEEEE")
+L_CK = Lest(childcare_ck_ppp, correction = "Ripley")
+plot(L_CK, . - r ~ r,
+     ylab = "L(d)-r", xlab = "d(m)")
+```
 
 #### 9.1.2 **Performing Complete Spatial Randomness Test**
 

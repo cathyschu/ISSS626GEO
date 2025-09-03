@@ -222,7 +222,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">September 3, 2025</p>
+      <p class="date-modified">September 4, 2025</p>
     </div>
   </div>
     
@@ -635,9 +635,60 @@ Done.</code></pre>
 <div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
 <section id="computing-f-function-estimation-1" class="level4">
 <h4 class="anchored" data-anchor-id="computing-f-function-estimation-1">7.2.1 <strong>Computing F-function estimation</strong></h4>
+<p>To compute F-function for Tampines planning area.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>F_TM <span class="ot">=</span> <span class="fu">Fest</span>(childcare_tm_ppp, <span class="at">correction =</span> <span class="st">"best"</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(F_TM)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex02b_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="performing-complete-spatial-randomness-test-3" class="level4">
 <h4 class="anchored" data-anchor-id="performing-complete-spatial-randomness-test-3">7.2.2 <strong>Performing Complete Spatial Randomness Test</strong></h4>
+<p>To confirm the observed spatial patterns above, a hypothesis test will be conducted. The hypothesis and test are as follows:</p>
+<p>H₀ = The distribution of childcare services at Tampines are randomly distributed. H₁ = The distribution of childcare services at Tampines are not randomly distributed. The null hypothesis will be rejected if p-value is smaller than alpha value of 0.001.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>F_TM.csr <span class="ot">&lt;-</span> <span class="fu">envelope</span>(childcare_tm_ppp, Fest, <span class="at">correction =</span> <span class="st">"all"</span>, <span class="at">nsim =</span> <span class="dv">999</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Generating 999 simulations of CSR  ...
+1, 2, 3, ......10.........20.........30.........40.........50.........60..
+.......70.........80.........90.........100.........110.........120.........130
+.........140.........150.........160.........170.........180.........190........
+.200.........210.........220.........230.........240.........250.........260......
+...270.........280.........290.........300.........310.........320.........330....
+.....340.........350.........360.........370.........380.........390.........400..
+.......410.........420.........430.........440.........450.........460.........470
+.........480.........490.........500.........510.........520.........530........
+.540.........550.........560.........570.........580.........590.........600......
+...610.........620.........630.........640.........650.........660.........670....
+.....680.........690.........700.........710.........720.........730.........740..
+.......750.........760.........770.........780.........790.........800.........810
+.........820.........830.........840.........850.........860.........870........
+.880.........890.........900.........910.........920.........930.........940......
+...950.........960.........970.........980.........990........
+999.
+
+Done.</code></pre>
+</div>
+</div>
+<p><strong>Plot the figure:</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(F_TM.csr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex02b_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 </div>
 </div>
@@ -645,23 +696,107 @@ Done.</code></pre>
 </section>
 <section id="analysing-spatial-point-process-using-k-function" class="level2">
 <h2 class="anchored" data-anchor-id="analysing-spatial-point-process-using-k-function">8 Analysing Spatial Point Process Using <strong>K-Function</strong></h2>
+<p>K-function measures <strong>the number of events</strong> found up to a given distance of any particular event. In this section, we will compute K-function estimates by using <a href="https://rdrr.io/cran/spatstat/man/Kest.html"><em>Kest()</em></a> of <strong>spatstat</strong> package. We will also perform Monte Carlo simulation test using <em>envelope()</em> of <strong>spatstat</strong> package.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">8.1 Choa Chu Kang planning area</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">8.2 Tampines planning area</a></li></ul>
 <div class="tab-content">
 <div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
 <section id="computing-k-fucntion-estimate" class="level4">
 <h4 class="anchored" data-anchor-id="computing-k-fucntion-estimate">8.1.1 <strong>Computing K-fucntion estimate</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>K_CK <span class="ot">=</span> <span class="fu">Kest</span>(childcare_ck_ppp, <span class="at">correction =</span> <span class="st">"Ripley"</span>)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(K_CK, . <span class="sc">-</span>r <span class="sc">~</span> r, <span class="at">ylab =</span> <span class="st">"K(d)-r"</span>, <span class="at">xlab =</span> <span class="st">"d(m)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex02b_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="performing-complete-spatial-randomness-test-4" class="level4">
 <h4 class="anchored" data-anchor-id="performing-complete-spatial-randomness-test-4">8.1.2 <strong>Performing Complete Spatial Randomness Test</strong></h4>
+<p>To confirm the observed spatial patterns above, a hypothesis test will be conducted. The hypothesis and test are as follows:</p>
+<p>H₀ = The distribution of childcare services at Choa Chu Kang are randomly distributed. H₁ = The distribution of childcare services at Choa Chu Kang are not randomly distributed. The null hypothesis will be rejected if p-value is smaller than alpha value of 0.001.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>K_ck.csr <span class="ot">&lt;-</span> <span class="fu">envelope</span>(childcare_ck_ppp, Kest, <span class="at">nsim =</span> <span class="dv">99</span>, <span class="at">rank =</span> <span class="dv">1</span>, <span class="at">glocal=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Generating 99 simulations of CSR  ...
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60,
+61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80,
+81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 
+99.
+
+Done.</code></pre>
+</div>
+</div>
+<p><strong>Let’s plot the figure:</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(K_ck.csr, . <span class="sc">-</span> r <span class="sc">~</span> r, <span class="at">xlab=</span><span class="st">"d"</span>, <span class="at">ylab=</span><span class="st">"K(d)-r"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex02b_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 </div>
 <div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
 <section id="computing-k-fucntion-estimation" class="level4">
 <h4 class="anchored" data-anchor-id="computing-k-fucntion-estimation">8.2.1 <strong>Computing K-fucntion estimation</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>K_TM <span class="ot">=</span> <span class="fu">Kest</span>(childcare_tm_ppp, <span class="at">correction =</span> <span class="st">"Ripley"</span>)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(K_TM, . <span class="sc">-</span> r <span class="sc">~</span> r, <span class="at">ylab =</span> <span class="st">"K(d)-r"</span>, <span class="at">xlab =</span> <span class="st">"d(m)"</span>,</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1000</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex02b_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="performing-complete-spatial-randomness-test-5" class="level4">
 <h4 class="anchored" data-anchor-id="performing-complete-spatial-randomness-test-5">8.2.2 <strong>Performing Complete Spatial Randomness Test</strong></h4>
+<p>To confirm the observed spatial patterns above, a hypothesis test will be conducted. The hypothesis and test are as follows:</p>
+<p>H₀ = The distribution of childcare services at Tampines are randomly distributed. H₁ = The distribution of childcare services at Tampines are not randomly distributed. The null hypothesis will be rejected if p-value is smaller than alpha value of 0.001.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>K_TM.csr <span class="ot">&lt;-</span> <span class="fu">envelope</span>(childcare_tm_ppp, Kest, <span class="at">nsim =</span> <span class="dv">99</span>, <span class="at">rank =</span> <span class="dv">1</span>, <span class="at">global =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Generating 99 simulations of CSR  ...
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60,
+61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80,
+81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 
+99.
+
+Done.</code></pre>
+</div>
+</div>
+<p><strong>Let’s plot the figure:</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(K_TM.csr, . <span class="sc">-</span> r <span class="sc">~</span> r, </span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"d"</span>, <span class="at">ylab =</span> <span class="st">"K(d)-r"</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">500</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex02b_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 </div>
 </div>
@@ -669,12 +804,26 @@ Done.</code></pre>
 </section>
 <section id="analysing-spatial-point-process-using-l-function" class="level2">
 <h2 class="anchored" data-anchor-id="analysing-spatial-point-process-using-l-function">9 Analysing Spatial Point Process Using <strong>L-Function</strong></h2>
+<p>In this section, we will compute L-function estimation by using <code>Lest()</code> of <strong>spatstat</strong> package.We will also perform Monte Carlo simulation test using <code>envelope()</code> of <strong>spatstat</strong> package.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true">9.1 Choa Chu Kang planning area</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false">9.2 Tampines planning area</a></li></ul>
 <div class="tab-content">
 <div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
 <section id="computing-l-fucntion-estimation" class="level4">
 <h4 class="anchored" data-anchor-id="computing-l-fucntion-estimation">9.1.1 <strong>Computing L Fucntion estimation</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>L_CK <span class="ot">=</span> <span class="fu">Lest</span>(childcare_ck_ppp, <span class="at">correction =</span> <span class="st">"Ripley"</span>)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(L_CK, . <span class="sc">-</span> r <span class="sc">~</span> r,</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"L(d)-r"</span>, <span class="at">xlab =</span> <span class="st">"d(m)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex02b_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="performing-complete-spatial-randomness-test-6" class="level4">
 <h4 class="anchored" data-anchor-id="performing-complete-spatial-randomness-test-6">9.1.2 <strong>Performing Complete Spatial Randomness Test</strong></h4>
