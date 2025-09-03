@@ -633,7 +633,7 @@ Notice that the raster values are encoded explicitly onto the raster pixel using
 
 ## 10 First Order SPPA at the Planning Subzone Level
 
-In this section, we would like to further our analysis at the planning area level. For simplicity reason, we will focus on Punggol, Tampines, Hougang and Serangoon planning areas.
+In this section, we would like to further our analysis at the planning area level. For simplicity reason, we will focus on Punggol, Tampines, Hougang, Serangoon, River Valley and Woodlands planning areas.
 
 ### 10.1 Geospatial data wrangling
 
@@ -650,6 +650,11 @@ hg <- mpsz_cl %>%
   filter(PLN_AREA_N == "HOUGANG")
 sr <- mpsz_cl %>%
   filter(PLN_AREA_N == "SERANGOON")
+rv <- mpsz_cl %>%
+  filter(PLN_AREA_N == "RIVER VALLEY")
+wl <- mpsz_cl %>%
+  filter(PLN_AREA_N == "WOODLANDS")
+
 
 ```
 
@@ -658,11 +663,14 @@ sr <- mpsz_cl %>%
 ```{r}
 #| fig-width: 12
 #| fig-height: 10
-par(bg = "#e6f0e6", mfrow = c(2,2))
+par(bg = "#e6f0e6", mfrow = c(3,2))
 plot(st_geometry(pg), main = "Punggol")
 plot(st_geometry(tm), main = "Tampines")
 plot(st_geometry(hg), main = "Hougang")
 plot(st_geometry(sr), main = "Serangon")
+plot(st_geometry(rv), main = "River Valley")
+plot(st_geometry(wl), main = "Woodlands")
+
 
 ```
 
@@ -675,6 +683,9 @@ pg_owin = as.owin(pg)
 tm_owin = as.owin(tm)
 hg_owin = as.owin(hg)
 sr_owin = as.owin(sr)
+rv_owin = as.owin(rv)
+wl_owin = as.owin(wl)
+
 ```
 
 #### 10.1.3 Combining point events object and owin object
@@ -684,6 +695,8 @@ childcare_pg_ppp = childcare_ppp[pg_owin]
 childcare_tm_ppp = childcare_ppp[tm_owin]
 childcare_hg_ppp = childcare_ppp[hg_owin]
 childcare_sr_ppp = childcare_ppp[sr_owin]
+childcare_rv_ppp = childcare_ppp[rv_owin]
+childcare_wl_ppp = childcare_ppp[wl_owin]
 ```
 
 Next, *rescale.ppp()* function is used to trasnform the unit of measurement from metre to kilometre.
@@ -693,6 +706,8 @@ childcare_pg_ppp.km = rescale.ppp(childcare_pg_ppp, 1000, "km")
 childcare_tm_ppp.km = rescale.ppp(childcare_tm_ppp, 1000, "km")
 childcare_hg_ppp.km = rescale.ppp(childcare_hg_ppp, 1000, "km")
 childcare_sr_ppp.km = rescale.ppp(childcare_sr_ppp, 1000, "km")
+childcare_rv_ppp.km = rescale.ppp(childcare_rv_ppp, 1000, "km")
+childcare_wl_ppp.km = rescale.ppp(childcare_wl_ppp, 1000, "km")
 ```
 
 The code chunk below is used to plot these four areas of study and locations of childcare centres.
@@ -700,11 +715,14 @@ The code chunk below is used to plot these four areas of study and locations of 
 ```{r}
 #| fig-width: 12
 #| fig-height: 10
-par(bg = "#e6f0e6", mfrow = c(2,2))
+par(bg = "#e6f0e6", mfrow = c(3,2))
 plot(unmark(childcare_pg_ppp.km), main = "Punggol")
 plot(unmark(childcare_tm_ppp.km), main = "Tampines")
 plot(unmark(childcare_hg_ppp.km), main = "Hougang")
 plot(unmark(childcare_sr_ppp.km), main = "Serangoon")
+plot(unmark(childcare_rv_ppp.km), main = "River Valley")
+plot(unmark(childcare_wl_ppp.km), main = "Woodlands")
+
 ```
 
 ### 10.2 Clark and Evans Test
@@ -712,7 +730,7 @@ plot(unmark(childcare_sr_ppp.km), main = "Serangoon")
 ::: panel-tabset
 ## 10.2.1 Hougang
 
-In the code chunk below, [*clarkevans.test()*](https://rdrr.io/cran/spatstat/man/clarkevans.test.html) of **spatstat** is used to performs Clark-Evans test of aggregation for childcare centre in Hougang planning area.
+In the code chunk below, [*clarkevans.test()*](https://rdrr.io/cran/spatstat/man/clarkevans.test.html) of **spatstat** is used to performs Clark-Evans test of aggregation for childcare centre in Hougang, Tampines, River Valley and Woodlands planning area.
 
 ```{r}
 clarkevans.test(childcare_hg_ppp,
@@ -731,30 +749,63 @@ clarkevans.test(childcare_tm_ppp,
                 alternative = c("two.sided"),
                 nsim = 999)
 ```
+
+## 10.2.2 River Valley
+
+```{r}
+clarkevans.test(childcare_rv_ppp,
+                correction = "none",
+                clipregion = NULL,
+                alternative = c("two.sided"),
+                nsim = 999)
+```
 :::
+
+::::: markgoals
+::: markgoals-header
+**Learning**
+:::
+
+::: markgoals-container
+-   **Hougang & Tampines**
+
+Since p-value (0.000007742) \< α (0.05), we reject the null hypothesis of random distribution. The test results (R = 0.764 & 0.66817, p \< 0.001) provide strong statistical evidence that childcare facilities in Hougang and Tampines exhibit a clustered spatial pattern rather than random distribution. 
+
+-   **River Valley**
+
+Since R \> 1, this indicates a dispersed/regular pattern, and p-value = 0.01237 is less than α = 0.05, so we reject the null hypothesis of random distribution. The test result (R = 1.414, p = 0.012) provides statistically significant evidence that childcare facilities in River Valley exhibit a **dispersed spatial pattern** rather than random distribution. 
+:::
+:::::
 
 ### 10.3 Computing KDE surfaces by planning area
 
-The code chunk below will be used to compute the KDE of these four planning area. ***bw.diggle*** method is used to derive the bandwidth of each.
+The code chunk below will be used to compute the KDE of these planning area. ***bw.diggle*** method is used to derive the bandwidth of each.
 
 ```{r}
 #| fig-width: 12
-#| fig-height: 10
-par(bg = "#e6f0e6", mfrow = c(2,2), mar = c(3, 3, 3, 3))
+#| fig-height: 20
+par(bg = "#e6f0e6", mfrow = c(3,2), mar = c(3, 3, 5, 3), oma = c(0, 0, 3, 0))
 plot(density(childcare_pg_ppp.km,
      sigma = bw.diggle, edge = TRUE, kernel = "gaussian"),
-     main = "Punggol")
+     main = "Punggol", cex.main = 0.9)
 
 plot(density(childcare_tm_ppp.km,
      sigma = bw.diggle, edge = TRUE, kernel = "gaussian"),
-     main = "Tampines")
+     main = "Tampines", cex.main = 0.9)
 
 plot(density(childcare_hg_ppp.km,
      sigma = bw.diggle, edge = TRUE, kernel = "gaussian"),
-     main = "Hougang")
+     main = "Hougang", cex.main = 0.9)
 
 plot(density(childcare_sr_ppp.km,
      sigma = bw.diggle, edge = TRUE, kernel = "gaussian"),
-     main = "Serangoon")
+     main = "Serangoon", cex.main = 0.9)
 
+plot(density(childcare_rv_ppp.km,
+     sigma = bw.diggle, edge = TRUE, kernel = "gaussian"),
+     main = "River Valley", cex.main = 0.9)
+
+plot(density(childcare_wl_ppp.km,
+     sigma = bw.diggle, edge = TRUE, kernel = "gaussian"),
+     main = "Woodlands", cex.main = 0.9)
 ```
