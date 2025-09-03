@@ -1,5 +1,5 @@
 ---
-title: "Hands-on Exercise 02a"
+title: "02a - First-order Spatial Point Patterns Analysis Methods"
 author: "Cathy C."
 date: "Sep 1, 2025"
 date-modified: "last-modified" #auto render date
