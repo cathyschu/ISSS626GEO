@@ -191,6 +191,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#analysing-spatial-point-process-using-f-function" id="toc-analysing-spatial-point-process-using-f-function" class="nav-link" data-scroll-target="#analysing-spatial-point-process-using-f-function">7 Analysing Spatial Point Process Using <strong>F-Function</strong></a></li>
   <li><a href="#analysing-spatial-point-process-using-k-function" id="toc-analysing-spatial-point-process-using-k-function" class="nav-link" data-scroll-target="#analysing-spatial-point-process-using-k-function">8 Analysing Spatial Point Process Using <strong>K-Function</strong></a></li>
   <li><a href="#analysing-spatial-point-process-using-l-function" id="toc-analysing-spatial-point-process-using-l-function" class="nav-link" data-scroll-target="#analysing-spatial-point-process-using-l-function">9 Analysing Spatial Point Process Using <strong>L-Function</strong></a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
   </ul>
 </nav>
     </div>
@@ -748,6 +749,17 @@ Done.</code></pre>
 </div>
 </div>
 </div>
+<div class="markgoals">
+<div class="markgoals-header">
+<p><strong>Result</strong></p>
+</div>
+<div class="markgoals-container">
+<ul>
+<li><p>The Monte Carlo envelope test with 99 simulations shows that there is insufficient statistical evidence to conclude that the distribution of childcare services in Choa Chu Kang differs from random distribution at the 0.001 significance level.</p></li>
+<li><p>The random distribution pattern in Choa Chu Kang suggests that childcare facilities are <strong>well-distributed across the area</strong> without significant clustering or regularity.</p></li>
+</ul>
+</div>
+</div>
 </section>
 </div>
 <div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
@@ -805,7 +817,7 @@ Done.</code></pre>
 </section>
 <section id="analysing-spatial-point-process-using-l-function" class="level2">
 <h2 class="anchored" data-anchor-id="analysing-spatial-point-process-using-l-function">9 Analysing Spatial Point Process Using <strong>L-Function</strong></h2>
-<p>In this section, we will compute L-function estimation by using <code>Lest()</code> of <strong>spatstat</strong> package.We will also perform Monte Carlo simulation test using <code>envelope()</code> of <strong>spatstat</strong> package.</p>
+<p>In this section, we will compute L-function estimation by using <code>Lest()</code> of <strong>spatstat</strong> package. We will also perform Monte Carlo simulation test using <code>envelope()</code> of <strong>spatstat</strong> package.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true">9.1 Choa Chu Kang planning area</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false">9.2 Tampines planning area</a></li></ul>
 <div class="tab-content">
@@ -854,6 +866,22 @@ Done.</code></pre>
 <p><img src="Hands-on_Ex02b_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
+</div>
+</div>
+<div class="markgoals">
+<div class="markgoals-header">
+<p><strong>Result</strong></p>
+</div>
+<div class="markgoals-container">
+<ul>
+<li>The observed L-function (L_obs(r) - r) shows a scale-dependent spatial pattern:</li>
+</ul>
+<p><strong>At short to medium distances (0-600m):</strong> The observed function remains within the 99.9% confidence envelope, consistent with random spatial distribution</p>
+<p><strong>At longer distances (600m+):</strong> The observed function significantly exceeds the upper confidence envelope boundary.</p>
+<ul>
+<li>Since the observed L-function significantly deviates from the confidence envelope at distances greater than 600 meters (p &lt; 0.001), we reject the null hypothesis H₀.</li>
+<li>There is statistically significant evidence at the 0.001 level that childcare services in Choa Chu Kang <strong>do not follow a completely random spatial distribution</strong>. The pattern shows scale-dependent clustering: while individual facilities may be positioned relatively independently within neighborhoods, there is an underlying clustered structure when viewed across the broader Choa Chu Kang area.</li>
+</ul>
 </div>
 </div>
 </section>
@@ -906,10 +934,66 @@ Done.</code></pre>
 </div>
 </div>
 </div>
+<div class="markgoals">
+<div class="markgoals-header">
+<p><strong>Result</strong></p>
+</div>
+<div class="markgoals-container">
+<ul>
+<li><p>The test provides strong statistical evidence (p &lt; 0.001) against randomness in favor of clustered distribution. Therefore, we reject H₀ and accept H₁.</p></li>
+<li><p>The distribution of childcare services in Tampines is not randomly distributed but <strong>shows significant spatial clustering.</strong></p></li>
+</ul>
+</div>
+</div>
 </section>
 </div>
 </div>
 </div>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 35%">
+<col style="width: 17%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Measures</th>
+<th>Scale</th>
+<th>Best for</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>G</strong></td>
+<td>Nearest neighbor distances</td>
+<td>Local</td>
+<td>Competition/inhibition</td>
+</tr>
+<tr class="even">
+<td><strong>F</strong></td>
+<td>Empty space distances</td>
+<td>Local</td>
+<td>Coverage/accessibility</td>
+</tr>
+<tr class="odd">
+<td><strong>K</strong></td>
+<td>Point density at distances</td>
+<td>Multi-scale</td>
+<td>Overall clustering</td>
+</tr>
+<tr class="even">
+<td><strong>L</strong></td>
+<td>Standardised K</td>
+<td>Multi-scale</td>
+<td>Clear visualization</td>
+</tr>
+</tbody>
+</table>
 
 
 </section>
