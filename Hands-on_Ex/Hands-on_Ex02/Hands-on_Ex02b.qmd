@@ -315,14 +315,18 @@ K-function measures **the number of events** found up to a given distance of any
 ```{r}
 par(bg = "#EEEEEE")
 K_CK = Kest(childcare_ck_ppp, correction = "Ripley")
-plot(K_CK, . -r ~ r, ylab = "K(d)-r", xlab = "d(m)")
+plot(K_CK, . - r ~ r, ylab = "K(d)-r", xlab = "d(m)")
 ```
 
 #### 8.1.2 **Performing Complete Spatial Randomness Test**
 
 To confirm the observed spatial patterns above, a hypothesis test will be conducted. The hypothesis and test are as follows:
 
-H₀ = The distribution of childcare services at Choa Chu Kang are randomly distributed. H₁ = The distribution of childcare services at Choa Chu Kang are not randomly distributed. The null hypothesis will be rejected if p-value is smaller than alpha value of 0.001.
+H₀ = The distribution of childcare services at Choa Chu Kang are randomly distributed.
+
+H₁ = The distribution of childcare services at Choa Chu Kang are not randomly distributed.
+
+The null hypothesis will be rejected if p-value is smaller than alpha value of 0.001.
 
 ```{r}
 par(bg = "#EEEEEE")
@@ -354,27 +358,30 @@ plot(K_ck.csr, . - r ~ r, xlab="d", ylab="K(d)-r")
 
 ```{r}
 par(bg = "#EEEEEE")
-K_TM = Kest(childcare_tm_ppp, correction = "Ripley")
-plot(K_TM, . - r ~ r, ylab = "K(d)-r", xlab = "d(m)",
-     xlim = c(0, 1000))
+K_tm = Kest(childcare_tm_ppp, correction = "Ripley")
+plot(K_tm, . -r ~ r, 
+     ylab= "K(d)-r", xlab = "d(m)", 
+     xlim=c(0,1000))
 ```
 
 #### 8.2.2 **Performing Complete Spatial Randomness Test**
 
 To confirm the observed spatial patterns above, a hypothesis test will be conducted. The hypothesis and test are as follows:
 
-H₀ = The distribution of childcare services at Tampines are randomly distributed. H₁ = The distribution of childcare services at Tampines are not randomly distributed. The null hypothesis will be rejected if p-value is smaller than alpha value of 0.001.
+H₀ = The distribution of childcare services at Tampines are randomly distributed.
+
+H₁ = The distribution of childcare services at Tampines are not randomly distributed. The null hypothesis will be rejected if p-value is smaller than alpha value of 0.001.
 
 ```{r}
-K_TM.csr <- envelope(childcare_tm_ppp, Kest, nsim = 99, rank = 1, global = TRUE)
+K_tm.csr <- envelope(childcare_tm_ppp, Kest, nsim = 99, rank = 1, glocal=TRUE)
 ```
 
 **Let's plot the model output:**
 
 ```{r}
 par(bg = "#EEEEEE")
-plot(K_TM.csr, . - r ~ r, 
-     xlab = "d", ylab = "K(d)-r", xlim = c(0, 500))
+plot(K_tm.csr, . - r ~ r, 
+     xlab="d", ylab="K(d)-r", xlim=c(0,500))
 ```
 ::::::
 
@@ -398,7 +405,11 @@ plot(L_CK, . - r ~ r,
 
 To confirm the observed spatial patterns above, a hypothesis test will be conducted. The hypothesis and test are as follows:
 
-H₀ = The distribution of childcare services at Choa Chu Kang are randomly distributed. H₁ = The distribution of childcare services at Choa Chu Kang are not randomly distributed. The null hypothesis will be rejected if p-value is smaller than alpha value of 0.001.
+H₀ = The distribution of childcare services at Choa Chu Kang are randomly distributed.
+
+H₁ = The distribution of childcare services at Choa Chu Kang are not randomly distributed.
+
+The null hypothesis will be rejected if p-value is smaller than alpha value of 0.001.
 
 ```{r}
 L_CK.csr <- envelope(childcare_ck_ppp, Lest, nsim = 99, rank = 1, glocal=TRUE)
@@ -473,14 +484,14 @@ plot(L_TM.csr, . - r ~ r,
 
 ## Summary
 
-+----------+----------------------------+-------------+------------------------+
-| Function | Measures                   | Scale       | Best for               |
-+==========+============================+=============+========================+
-| **G**    | Nearest neighbor distances | Local       | Competition/inhibition |
-+----------+----------------------------+-------------+------------------------+
-| **F**    | Empty space distances      | Local       | Coverage/accessibility |
-+----------+----------------------------+-------------+------------------------+
-| **K**    | Point density at distances | Multi-scale | Overall clustering     |
-+----------+----------------------------+-------------+------------------------+
-| **L**    | Standardised K             | Multi-scale | Clear visualisation    |
-+----------+----------------------------+-------------+------------------------+
++-------------+----------------------------+-------------+------------------------+
+| Function    | Measures                   | Scale       | Best for               |
++=============+============================+=============+========================+
+| **G**       | Nearest neighbor distances | Local       | Competition/inhibition |
++-------------+----------------------------+-------------+------------------------+
+| **F**       | Empty space distances      | Local       | Coverage/accessibility |
++-------------+----------------------------+-------------+------------------------+
+| **K**       | Point density at distances | Multi-scale | Overall clustering     |
++-------------+----------------------------+-------------+------------------------+
+| **L**       | Standardised K             | Multi-scale | Clear visualisation    |
++-------------+----------------------------+-------------+------------------------+
