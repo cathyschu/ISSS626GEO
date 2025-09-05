@@ -165,7 +165,7 @@ plot(unmark(childcare_jw_ppp.km), main = "Jurong West")
 
 The G function measures the **distribution of the distances** from an arbitrary event to its nearest event. In this section, we will compute G-function estimation by using [*Gest()*](https://rdrr.io/cran/spatstat/man/Gest.html) of **spatstat** package. We will also perform Monte Carlo simulation test using [*envelope()*](https://rdrr.io/cran/spatstat/man/envelope.html) of **spatstat** package.
 
-::: panel-tabset
+::::::::: panel-tabset
 ## 6.1 Choa Chu Kang planning area
 
 #### 6.1.1 **Computing G-function estimation**
@@ -204,6 +204,18 @@ par(bg = "#EEEEEE")
 plot(G_CK.csr)
 ```
 
+::::: markgoals
+::: markgoals-header
+**Result**
+:::
+
+::: markgoals-container
+-   At the α = 0.001 significance level, there is statistically significant evidence to reject the null hypothesis. We conclude that childcare services in Choa Chu Kang are **not randomly distributed.**
+
+-   Since G(r) is below the expected curve, it's lower probability of finding nearest neighbors at short distances. Specifically, the facilities exhibit a dispersed spatial pattern, where they are **more evenly spaced** than would occur by random chance alone.
+:::
+:::::
+
 ## 6.2 Tampines planning area
 
 #### 6.2.1 **Computing G-function estimation**
@@ -233,7 +245,21 @@ G_TM.csr <- envelope(childcare_tm_ppp, Gest, correction = "all", nsim = 999)
 par(bg = "#EEEEEE")
 plot(G_TM.csr)
 ```
+
+
+:::::::::
+
+::::: markgoals
+::: markgoals-header
+**Note**
 :::
+
+::: markgoals-container
+Observed G(r) \< Expected G(r) → Nearest neighbors are farther away → Regular pattern
+
+Observed G(r) \> Expected G(r) → Nearest neighbors are closer → Clustered pattern
+:::
+:::::
 
 ## 7 Analysing Spatial Point Process Using **F-Function**
 
@@ -307,7 +333,7 @@ plot(F_TM.csr)
 
 K-function measures **the number of events** found up to a given distance of any particular event. In this section, we will compute K-function estimates by using [*Kest()*](https://rdrr.io/cran/spatstat/man/Kest.html) of **spatstat** package. We will also perform Monte Carlo simulation test using *envelope()* of **spatstat** package.
 
-:::::: panel-tabset
+::::::::: panel-tabset
 ## 8.1 Choa Chu Kang planning area
 
 #### 8.1.1 **Computing K-fucntion estimate**
@@ -383,7 +409,19 @@ par(bg = "#EEEEEE")
 plot(K_tm.csr, . - r ~ r, 
      xlab="d", ylab="K(d)-r", xlim=c(0,500))
 ```
-::::::
+
+::::: markgoals
+::: markgoals-header
+**Result**
+:::
+
+::: markgoals-container
+-   At the α = 0.001 significance level, there is statistically significant evidence to reject the null hypothesis. We conclude that childcare services in Tampines are **not randomly distributed - they exhibit significant spatial clustering**.
+
+-   The observed pattern is consistently above the envelope across all distances. In addition, the deviation from randomness is substantial (not just marginally significant).
+:::
+:::::
+:::::::::
 
 ## 9 Analysing Spatial Point Process Using **L-Function**
 
@@ -431,9 +469,9 @@ plot(L_CK.csr, . - r ~ r, xlab="d", ylab="L(d)-r")
 ::: markgoals-container
 -   The observed L-function (L_obs(r) - r) shows a scale-dependent spatial pattern:
 
-**At short to medium distances (0-600m):** The observed function remains within the 99.9% confidence envelope, consistent with random spatial distribution
+**At short to medium distances (0-600r):** The observed function remains within the 99.9% confidence envelope, consistent with random spatial distribution
 
-**At longer distances (600m+):** The observed function significantly exceeds the upper confidence envelope boundary.
+**At longer distances (600r+):** The observed function significantly exceeds the upper confidence envelope boundary.
 
 -   Since the observed L-function significantly deviates from the confidence envelope at distances greater than 600 meters (p \< 0.001), we reject the null hypothesis H₀.
 -   There is statistically significant evidence at the 0.001 level that childcare services in Choa Chu Kang **do not follow a completely random spatial distribution**. The pattern shows scale-dependent clustering: while individual facilities may be positioned relatively independently within neighborhoods, there is an underlying clustered structure when viewed across the broader Choa Chu Kang area.
