@@ -137,6 +137,11 @@ The `PreSchoolsLocation` is in [**kml**](https://en.wikipedia.org/wiki/Keyhole_M
 
 ```{r}
 preschool = st_read("data/geospatial/PreSchoolsLocation.kml")
+
+# can just do the process in one chunk
+#preschool = st_read("data/geospatial/PreSchoolsLocation.kml") %>%
+#  st_transform(crs = 3414)
+
 ```
 
 ::::: markgoals
@@ -273,6 +278,7 @@ One of the common issue that can happen during importing geospatial data into R 
 Below is an example the coordinate system of `mpsz` simple feature data frame by using *st_crs()* of *sf* package.
 
 ```{r}
+# always use to check the projection first.
 st_crs(mpsz)
 ```
 
