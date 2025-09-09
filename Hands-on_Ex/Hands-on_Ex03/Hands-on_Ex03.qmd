@@ -116,8 +116,8 @@ fire_sf <- fire_sf %>%
 ```{r}
 #| fig-align: center
 
-par(bg = "#EEEEEE")
-plot(st_geometry(kbb_sf))
+par(bg = "#EEEEEE", mar = c(1, 1, 1, 1))
+plot(st_geometry(kbb_sf), col = "white")
 plot(st_geometry(fire_sf), add = TRUE, col = "#BA487F", pch = 16, cex = 0.45)
 
 ```
@@ -146,9 +146,9 @@ tm_layout(
 
 tmap_options(bg.color = "#EEEEEE")
 tm_shape(kbb_sf)+
-  tm_polygons() +
+  tm_polygons(fill = "#A8BBA3") +
 tm_shape(fire_sf) +
-  tm_dots() +
+  tm_dots(fill = "#D25D5D", size = 0.2) +
   tm_facets(by = "Month_fac",
             nrow = 3, ncols = 4,
             free.coords = FALSE, drop.units = TRUE) 
