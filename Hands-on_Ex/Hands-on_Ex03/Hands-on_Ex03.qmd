@@ -138,6 +138,34 @@ tm_layout(
 ::::::
 ### 6.2 Visuaising geographic distribution of forest fires by month
 
+:::::: panel-tabset
+## DIY
+
+```{r}
+#| fig-align: center
+
+tmap_options(bg.color = "#EEEEEE")
+tm_shape(kbb_sf)+
+  tm_polygons() +
+tm_shape(fire_sf) +
+  tm_dots() +
+  tm_facets(by = "Month_fac",
+            nrow = 3, ncols = 4,
+            free.coords = FALSE, drop.units = TRUE) 
+```
+## Key
+```{r}
+tm_shape(kbb_sf)+
+  tm_polygons() +
+tm_shape(fire_sf) +
+  tm_dots(size = 0.1) +
+tm_facets(by="Month_fac", 
+            free.coords=FALSE, 
+            drop.units = TRUE)
+```
+
+
+::::::
 ## 7 Computing STKDE by Month
 
 ## 8 Computing STKDE by Day of Year
