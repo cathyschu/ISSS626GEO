@@ -196,7 +196,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#converting-owin" id="toc-converting-owin" class="nav-link" data-scroll-target="#converting-owin">4.2 Converting OWIN</a></li>
   </ul></li>
   <li><a href="#importing-and-preparing-forest-fire-data" id="toc-importing-and-preparing-forest-fire-data" class="nav-link" data-scroll-target="#importing-and-preparing-forest-fire-data">5 Importing and Preparing Forest Fire data</a></li>
-  <li><a href="#visualising-the-fire-points" id="toc-visualising-the-fire-points" class="nav-link" data-scroll-target="#visualising-the-fire-points">6 Visualising the Fire Points</a></li>
+  <li><a href="#visualising-the-fire-points" id="toc-visualising-the-fire-points" class="nav-link" data-scroll-target="#visualising-the-fire-points">6 Visualising the Fire Points</a>
+  <ul class="collapse">
+  <li><a href="#overall-plot" id="toc-overall-plot" class="nav-link" data-scroll-target="#overall-plot">6.1 Overall plot</a></li>
+  <li><a href="#visuaising-geographic-distribution-of-forest-fires-by-month" id="toc-visuaising-geographic-distribution-of-forest-fires-by-month" class="nav-link" data-scroll-target="#visuaising-geographic-distribution-of-forest-fires-by-month">6.2 Visuaising geographic distribution of forest fires by month</a></li>
+  </ul></li>
   <li><a href="#computing-stkde-by-month" id="toc-computing-stkde-by-month" class="nav-link" data-scroll-target="#computing-stkde-by-month">7 Computing STKDE by Month</a></li>
   <li><a href="#computing-stkde-by-day-of-year" id="toc-computing-stkde-by-day-of-year" class="nav-link" data-scroll-target="#computing-stkde-by-day-of-year">8 Computing STKDE by Day of Year</a></li>
   <li><a href="#computing-stkde-by-day-of-year-improved-method" id="toc-computing-stkde-by-day-of-year-improved-method" class="nav-link" data-scroll-target="#computing-stkde-by-day-of-year-improved-method">9 Computing STKDE by Day of Year: Improved method</a></li>
@@ -312,7 +316,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-stdout">
 <pre><code>
 The downloaded binary packages are in
-    /var/folders/zr/rjd69mws5mz_fncmw5z7njtw0000gn/T//Rtmpbc97EB/downloaded_packages</code></pre>
+    /var/folders/zr/rjd69mws5mz_fncmw5z7njtw0000gn/T//RtmpdqHlp9/downloaded_packages</code></pre>
 </div>
 </div>
 </section>
@@ -370,9 +374,23 @@ enclosing rectangle: [512066.8, 705559.4] x [9655398, 9834006] units</code></pre
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="at">crs =</span> <span class="dv">32748</span>) <span class="co">#transform to UTM meter system</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The result is a spatial object where each forest fire location is now a point geometry with coordinates in the UTM 48S projection system. Distance and area calculations are more accurate in projected systems.</p>
+<p>Because <strong>ppp</strong> object only accepts numerical or character as mark. The code chunk below is used to convert data type of <strong><em>acq_date</em></strong> to <strong>numeric.</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fire_sf <span class="ot">&lt;-</span> fire_sf <span class="sc">%&gt;%</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">DayofYear =</span> <span class="fu">yday</span>(acq_date)) <span class="sc">%&gt;%</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Month_num =</span> <span class="fu">month</span>(acq_date)) <span class="sc">%&gt;%</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Month_fac =</span> <span class="fu">month</span>(acq_date,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>                            <span class="at">label =</span> <span class="cn">TRUE</span>, <span class="at">abbr =</span> <span class="cn">FALSE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="visualising-the-fire-points" class="level2">
 <h2 class="anchored" data-anchor-id="visualising-the-fire-points">6 Visualising the Fire Points</h2>
+<section id="overall-plot" class="level3">
+<h3 class="anchored" data-anchor-id="overall-plot">6.1 Overall plot</h3>
+</section>
+<section id="visuaising-geographic-distribution-of-forest-fires-by-month" class="level3">
+<h3 class="anchored" data-anchor-id="visuaising-geographic-distribution-of-forest-fires-by-month">6.2 Visuaising geographic distribution of forest fires by month</h3>
+</section>
 </section>
 <section id="computing-stkde-by-month" class="level2">
 <h2 class="anchored" data-anchor-id="computing-stkde-by-month">7 Computing STKDE by Month</h2>

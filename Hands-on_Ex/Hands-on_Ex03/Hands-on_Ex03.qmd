@@ -96,7 +96,20 @@ fire_sf <- read_csv("data/rawdata/forestfires.csv") %>%
 
 The result is a spatial object where each forest fire location is now a point geometry with coordinates in the UTM 48S projection system. Distance and area calculations are more accurate in projected systems.
 
+Because **ppp** object only accepts numerical or character as mark. The code chunk below is used to convert data type of ***acq_date*** to **numeric.**
+
+```{r}
+fire_sf <- fire_sf %>%
+  mutate(DayofYear = yday(acq_date)) %>%
+  mutate(Month_num = month(acq_date)) %>%
+  mutate(Month_fac = month(acq_date,
+                            label = TRUE, abbr = FALSE))
+```
+
 ## 6 Visualising the Fire Points
+### 6.1 Overall plot
+
+### 6.2 Visuaising geographic distribution of forest fires by month
 
 ## 7 Computing STKDE by Month
 
