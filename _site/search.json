@@ -452,7 +452,7 @@
     "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#installing-and-loading-the-r-packages",
     "title": "03 - Spatio-Temporal Point Patterns Analysis",
     "section": "3 Installing and Loading the R packages",
-    "text": "3 Installing and Loading the R packages\n\nIn this hands-on exercise, six R packages will be used, they are:\n\n\n\n\n\n\nR Package\nDescription\n\n\n\n\nsf\na relatively new R package specially designed to import, manage and process vector-based geospatial data in R.\n\n\nraster\nhandling raster data in R.\n\n\nspatstat\nperforming Spatial Point Patterns Analysis such as kcross, Lcross, etc.\n\n\nsparr\nprovides functions to estimate fixed and adaptive kernel-smoothed spatial relative risk surfaces via the density-ratio method and perform subsequent inference. Fixed-bandwidth spatiotemporal density and relative risk estimation is also supported.\n\n\ntmap\nprovides functions to produce cartographic quality thematic maps.\n\n\ntidyverse\na family of R packages that provide functions to perform common data science tasks including and not limited to data import, data transformation, data wrangling and data visualisation.\n\n\n\n\npacman::p_load(sf, raster, sparr, tmap, tidyverse, spatstat)\n\n\nThe downloaded binary packages are in\n    /var/folders/zr/rjd69mws5mz_fncmw5z7njtw0000gn/T//RtmpdqHlp9/downloaded_packages"
+    "text": "3 Installing and Loading the R packages\n\nIn this hands-on exercise, six R packages will be used, they are:\n\n\n\n\n\n\nR Package\nDescription\n\n\n\n\nsf\na relatively new R package specially designed to import, manage and process vector-based geospatial data in R.\n\n\nraster\nhandling raster data in R.\n\n\nspatstat\nperforming Spatial Point Patterns Analysis such as kcross, Lcross, etc.\n\n\nsparr\nprovides functions to estimate fixed and adaptive kernel-smoothed spatial relative risk surfaces via the density-ratio method and perform subsequent inference. Fixed-bandwidth spatiotemporal density and relative risk estimation is also supported.\n\n\ntmap\nprovides functions to produce cartographic quality thematic maps.\n\n\ntidyverse\na family of R packages that provide functions to perform common data science tasks including and not limited to data import, data transformation, data wrangling and data visualisation.\n\n\n\n\npacman::p_load(sf, raster, sparr, tmap, tidyverse, spatstat)\n\n\nThe downloaded binary packages are in\n    /var/folders/zr/rjd69mws5mz_fncmw5z7njtw0000gn/T//RtmpjN4JLa/downloaded_packages"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#importing-and-preparing-study-area",
@@ -473,7 +473,7 @@
     "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#visualising-the-fire-points",
     "title": "03 - Spatio-Temporal Point Patterns Analysis",
     "section": "6 Visualising the Fire Points",
-    "text": "6 Visualising the Fire Points\n\n6.1 Overall plot\n\n\n6.2 Visuaising geographic distribution of forest fires by month"
+    "text": "6 Visualising the Fire Points\n\n6.1 Overall plot\n\nDIYKey\n\n\n\npar(bg = \"#EEEEEE\")\nplot(st_geometry(kbb_sf))\nplot(st_geometry(fire_sf), add = TRUE, col = \"#BA487F\", pch = 16, cex = 0.45)\n\n\n\n\n\n\n\n\n\n\n\npar(bg = \"#EEEEEE\")\ntm_shape(kbb_sf)+\n  tm_polygons() +\ntm_shape(fire_sf) +\n  tm_dots() +\ntm_layout(\n    outer.bg.color = \"#EEEEEE\"\n  )\n\n\n\n\n\n\n\n\n\n\n\n\n\n6.2 Visuaising geographic distribution of forest fires by month"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#computing-stkde-by-month",

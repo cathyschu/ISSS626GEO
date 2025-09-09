@@ -40,7 +40,7 @@ For the purpose of this exercise, two data sets will be used, they are:
 ## 3 Installing and Loading the R packages
 
 | R Package | Description |
-|-----------------|:------------------------------------------------------|
+|------------------|:-----------------------------------------------------|
 | [**sf**](https://r-spatial.github.io/sf/) | a relatively new R package specially designed to import, manage and process vector-based geospatial data in R. |
 | [**raster**](https://rspatial.org/raster/) | handling raster data in R. |
 | [**spatstat**](https://cran.r-project.org/web/packages/spatstat/index.html) | performing Spatial Point Patterns Analysis such as kcross, Lcross, etc. |
@@ -107,8 +107,35 @@ fire_sf <- fire_sf %>%
 ```
 
 ## 6 Visualising the Fire Points
-### 6.1 Overall plot
 
+### 6.1 Overall plot
+:::::: panel-tabset
+
+## DIY
+
+```{r}
+#| fig-align: center
+
+par(bg = "#EEEEEE")
+plot(st_geometry(kbb_sf))
+plot(st_geometry(fire_sf), add = TRUE, col = "#BA487F", pch = 16, cex = 0.45)
+
+```
+
+## Key
+
+```{r}
+par(bg = "#EEEEEE")
+tm_shape(kbb_sf)+
+  tm_polygons() +
+tm_shape(fire_sf) +
+  tm_dots() +
+tm_layout(
+    outer.bg.color = "#EEEEEE"
+  )
+```
+
+::::::
 ### 6.2 Visuaising geographic distribution of forest fires by month
 
 ## 7 Computing STKDE by Month
