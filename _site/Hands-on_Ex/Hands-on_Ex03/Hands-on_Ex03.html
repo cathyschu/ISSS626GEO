@@ -312,7 +312,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-stdout">
 <pre><code>
 The downloaded binary packages are in
-    /var/folders/zr/rjd69mws5mz_fncmw5z7njtw0000gn/T//Rtmp6807MS/downloaded_packages</code></pre>
+    /var/folders/zr/rjd69mws5mz_fncmw5z7njtw0000gn/T//Rtmpbc97EB/downloaded_packages</code></pre>
 </div>
 </div>
 </section>
@@ -362,6 +362,14 @@ enclosing rectangle: [512066.8, 705559.4] x [9655398, 9834006] units</code></pre
 </section>
 <section id="importing-and-preparing-forest-fire-data" class="level2">
 <h2 class="anchored" data-anchor-id="importing-and-preparing-forest-fire-data">5 Importing and Preparing Forest Fire data</h2>
+<p>Next, we will import the forest fire data set (i.e.&nbsp;<em>forestfires.csv</em>) into R environment.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>fire_sf <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/rawdata/forestfires.csv"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_as_sf</span>(<span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"longitude"</span>, <span class="st">"latitude"</span>), <span class="co">#convert to spatial format</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">crs =</span> <span class="dv">4326</span>) <span class="sc">%&gt;%</span> <span class="co">#WGS84</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="at">crs =</span> <span class="dv">32748</span>) <span class="co">#transform to UTM meter system</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The result is a spatial object where each forest fire location is now a point geometry with coordinates in the UTM 48S projection system. Distance and area calculations are more accurate in projected systems.</p>
 </section>
 <section id="visualising-the-fire-points" class="level2">
 <h2 class="anchored" data-anchor-id="visualising-the-fire-points">6 Visualising the Fire Points</h2>

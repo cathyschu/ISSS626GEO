@@ -85,6 +85,17 @@ class(kbb_owin)
 
 ## 5 Importing and Preparing Forest Fire data
 
+Next, we will import the forest fire data set (i.e. *forestfires.csv*) into R environment.
+
+```{r}
+fire_sf <- read_csv("data/rawdata/forestfires.csv") %>%
+  st_as_sf(coords = c("longitude", "latitude"), #convert to spatial format
+           crs = 4326) %>% #WGS84
+  st_transform(crs = 32748) #transform to UTM meter system
+```
+
+The result is a spatial object where each forest fire location is now a point geometry with coordinates in the UTM 48S projection system. Distance and area calculations are more accurate in projected systems.
+
 ## 6 Visualising the Fire Points
 
 ## 7 Computing STKDE by Month
