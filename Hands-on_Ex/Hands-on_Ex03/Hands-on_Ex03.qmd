@@ -39,7 +39,49 @@ For the purpose of this exercise, two data sets will be used, they are:
 
 ## 3 Installing and Loading the R packages
 
+| R Package | Description |
+|-----------------|:------------------------------------------------------|
+| [**sf**](https://r-spatial.github.io/sf/) | a relatively new R package specially designed to import, manage and process vector-based geospatial data in R. |
+| [**raster**](https://rspatial.org/raster/) | handling raster data in R. |
+| [**spatstat**](https://cran.r-project.org/web/packages/spatstat/index.html) | performing Spatial Point Patterns Analysis such as kcross, Lcross, etc. |
+| [**sparr**](https://tilmandavies.github.io/sparr/index.html) | provides functions to estimate fixed and adaptive kernel-smoothed spatial relative risk surfaces via the density-ratio method and perform subsequent inference. Fixed-bandwidth spatiotemporal density and relative risk estimation is also supported. |
+| [**tmap**](https://r-tmap.github.io/tmap/) | provides functions to produce cartographic quality thematic maps. |
+| [**tidyverse**](https://www.tidyverse.org/) | a family of R packages that provide functions to perform common data science tasks including and not limited to data import, data transformation, data wrangling and data visualisation. |
+
+: In this hands-on exercise, six R packages will be used, they are: {tbl-colwidths="\[20,80\]"}
+
+```{r}
+pacman::p_load(sf, raster, sparr, tmap, tidyverse, spatstat)
+```
+
 ## 4 Importing and Preparing Study Area
+
+### 4.1 Importing study area
+
+First import study area (i.e. Kepulauan Bangka Belitung) into R environment and transform the data.
+
+```{r}
+kbb_sf <- st_read(dsn="data/rawdata",
+               layer = "Kepulauan_Bangka_Belitung") %>%
+  st_union() %>%
+  st_zm(drop = TRUE, what = "ZM") %>%
+  st_transform(crs = 32748)
+```
+
+### 4.2 Converting OWIN
+
+Next, `as.owin()` is used to convert *kbb* into an **owin** object.
+
+```{r}
+kbb_owin <- as.owin(kbb_sf)
+kbb_owin
+```
+
+Let's confirm kbb_own is indeed an *OWIN* object.
+
+```{r}
+class(kbb_owin)
+```
 
 ## 5 Importing and Preparing Forest Fire data
 

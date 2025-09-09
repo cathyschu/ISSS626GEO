@@ -452,14 +452,14 @@
     "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#installing-and-loading-the-r-packages",
     "title": "03 - Spatio-Temporal Point Patterns Analysis",
     "section": "3 Installing and Loading the R packages",
-    "text": "3 Installing and Loading the R packages"
+    "text": "3 Installing and Loading the R packages\n\nIn this hands-on exercise, six R packages will be used, they are:\n\n\n\n\n\n\nR Package\nDescription\n\n\n\n\nsf\na relatively new R package specially designed to import, manage and process vector-based geospatial data in R.\n\n\nraster\nhandling raster data in R.\n\n\nspatstat\nperforming Spatial Point Patterns Analysis such as kcross, Lcross, etc.\n\n\nsparr\nprovides functions to estimate fixed and adaptive kernel-smoothed spatial relative risk surfaces via the density-ratio method and perform subsequent inference. Fixed-bandwidth spatiotemporal density and relative risk estimation is also supported.\n\n\ntmap\nprovides functions to produce cartographic quality thematic maps.\n\n\ntidyverse\na family of R packages that provide functions to perform common data science tasks including and not limited to data import, data transformation, data wrangling and data visualisation.\n\n\n\n\npacman::p_load(sf, raster, sparr, tmap, tidyverse, spatstat)\n\n\nThe downloaded binary packages are in\n    /var/folders/zr/rjd69mws5mz_fncmw5z7njtw0000gn/T//Rtmp6807MS/downloaded_packages"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#importing-and-preparing-study-area",
     "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#importing-and-preparing-study-area",
     "title": "03 - Spatio-Temporal Point Patterns Analysis",
     "section": "4 Importing and Preparing Study Area",
-    "text": "4 Importing and Preparing Study Area"
+    "text": "4 Importing and Preparing Study Area\n\n4.1 Importing study area\nFirst import study area (i.e. Kepulauan Bangka Belitung) into R environment and transform the data.\n\nkbb_sf &lt;- st_read(dsn=\"data/rawdata\",\n               layer = \"Kepulauan_Bangka_Belitung\") %&gt;%\n  st_union() %&gt;%\n  st_zm(drop = TRUE, what = \"ZM\") %&gt;%\n  st_transform(crs = 32748)\n\nReading layer `Kepulauan_Bangka_Belitung' from data source \n  `/Users/cathyc/Documents/cathyschu/ISSS626GEO/Hands-on_Ex/Hands-on_Ex03/data/rawdata' \n  using driver `ESRI Shapefile'\nSimple feature collection with 297 features and 26 fields\nGeometry type: POLYGON\nDimension:     XYZ\nBounding box:  xmin: 105.1085 ymin: -3.116593 xmax: 106.8488 ymax: -1.501603\nz_range:       zmin: 0 zmax: 0\nGeodetic CRS:  WGS 84\n\n\n\n\n4.2 Converting OWIN\nNext, as.owin() is used to convert kbb into an owin object.\n\nkbb_owin &lt;- as.owin(kbb_sf)\nkbb_owin\n\nwindow: polygonal boundary\nenclosing rectangle: [512066.8, 705559.4] x [9655398, 9834006] units\n\n\nLet’s confirm kbb_own is indeed an OWIN object.\n\nclass(kbb_owin)\n\n[1] \"owin\""
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#importing-and-preparing-forest-fire-data",
