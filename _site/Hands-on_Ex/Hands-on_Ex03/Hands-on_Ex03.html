@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Cathy C.">
+<meta name="dcterms.date" content="2025-09-09">
 
-<title>Geospatial Analytics – GeoSpatial</title>
+<title>03 - Spatio-Temporal Point Patterns Analysis – GeoSpatial</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,23 +25,23 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href=".//images/catgeo.svg" rel="icon" type="image/svg+xml">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-6bd9cfa162949bde0a231f530c97869d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../..//images/catgeo.svg" rel="icon" type="image/svg+xml">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-6bd9cfa162949bde0a231f530c97869d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -69,7 +71,7 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../../styles.css">
 </head>
 
 <body class="nav-fixed">
@@ -79,10 +81,10 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./images/catgeo.png" alt="" class="navbar-logo">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../images/catgeo.png" alt="" class="navbar-logo">
     </a>
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">GeoSpatial</span>
     </a>
   </div>
@@ -98,20 +100,24 @@ ul.task-list li input[type="checkbox"] {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-hands-on-exercise">    
         <li>
-    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01a.html">
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01a.html">
  <span class="dropdown-text">Exercise 1a</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01b.html">
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01b.html">
  <span class="dropdown-text">Exercise 1b</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02a.html">
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02a.html">
  <span class="dropdown-text">Exercise 2a</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02b.html">
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02b.html">
  <span class="dropdown-text">Exercise 2b</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html">
+ <span class="dropdown-text">Exercise 3</span></a>
   </li>  
     </ul>
   </li>
@@ -123,11 +129,11 @@ ul.task-list li input[type="checkbox"] {
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="../../index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
+    <a class="nav-link" href="../../about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
 </ul>
@@ -141,23 +147,56 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#objectives" id="toc-objectives" class="nav-link" data-scroll-target="#objectives">1 Objectives</a></li>
+  <li><a href="#the-data" id="toc-the-data" class="nav-link" data-scroll-target="#the-data">2 The data</a></li>
+  <li><a href="#installing-and-loading-the-r-packages" id="toc-installing-and-loading-the-r-packages" class="nav-link" data-scroll-target="#installing-and-loading-the-r-packages">3 Installing and Loading the R packages</a></li>
+  <li><a href="#importing-and-preparing-study-area" id="toc-importing-and-preparing-study-area" class="nav-link" data-scroll-target="#importing-and-preparing-study-area">4 Importing and Preparing Study Area</a></li>
+  <li><a href="#importing-and-preparing-forest-fire-data" id="toc-importing-and-preparing-forest-fire-data" class="nav-link" data-scroll-target="#importing-and-preparing-forest-fire-data">5 Importing and Preparing Forest Fire data</a></li>
+  <li><a href="#visualising-the-fire-points" id="toc-visualising-the-fire-points" class="nav-link" data-scroll-target="#visualising-the-fire-points">6 Visualising the Fire Points</a></li>
+  <li><a href="#computing-stkde-by-month" id="toc-computing-stkde-by-month" class="nav-link" data-scroll-target="#computing-stkde-by-month">7 Computing STKDE by Month</a></li>
+  <li><a href="#computing-stkde-by-day-of-year" id="toc-computing-stkde-by-day-of-year" class="nav-link" data-scroll-target="#computing-stkde-by-day-of-year">8 Computing STKDE by Day of Year</a></li>
+  <li><a href="#computing-stkde-by-day-of-year-improved-method" id="toc-computing-stkde-by-day-of-year-improved-method" class="nav-link" data-scroll-target="#computing-stkde-by-day-of-year-improved-method">9 Computing STKDE by Day of Year: Improved method</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Geospatial Analytics</h1>
+<h1 class="title">03 - Spatio-Temporal Point Patterns Analysis</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Cathy C. </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">September 9, 2025</p>
+    </div>
+  </div>
   
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">September 9, 2025</p>
+    </div>
+  </div>
     
   </div>
   
@@ -166,27 +205,52 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="images/banner-g.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
-</figure>
-</div>
-<p>Welcome to the working page for the Geospatial Analytics Course.</p>
-<p>This website will cover below topics, as well as course assignments, projects.</p>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<p>A <strong>spatio-temporal point process</strong> (also called space-time or spatial-temporal point process) is a <strong>random collection of points</strong>, where each point represents the <strong>time</strong> and <strong>location</strong> of an event. Examples of events include incidence of disease, sightings or births of a species, or the occurrences of fires, earthquakes, lightning strikes, tsunamis, or volcanic eruptions.</p>
+<p>The analysis of spatio-temporal point patterns is becoming increasingly necessary, given the rapid emergence of geographically and temporally indexed data in a wide range of fields. Several spatio-temporal point patterns analysis methods have been introduced and implemented in R in the last ten years.</p>
+<p>In this exercise, various R packages will be combined to run a set of <strong>spatio-temporal point pattern analyses</strong>.</p>
+<p>A real world forest fire events in Kepulauan Bangka Belitung, Indonesia from 1st January 2023 to 31st December 2023 is used to illustrate the methods, procedures and interpretations.</p>
+</section>
+<section id="objectives" class="level2">
+<h2 class="anchored" data-anchor-id="objectives">1 Objectives</h2>
+<p>Specific questions we would like to answer are:</p>
 <ul>
-<li><p><a href="https://isss626-ay2025-26aug.netlify.app/outline/lesson01_outline">Introduction to Geospatial Analytics</a></p></li>
-<li><p><a href="https://isss626-ay2025-26aug.netlify.app/outline/lesson02_outline">Spatial Point Patterns Analysis (SPAA)</a></p></li>
-<li><p><a href="https://isss626-ay2025-26aug.netlify.app/outline/lesson03_outline">Advanced Spatial Point Patterns Analysis</a></p></li>
-<li><p><a href="https://isss626-ay2025-26aug.netlify.app/outline/lesson04_outline">Spatial Weights and Applications</a></p></li>
-<li><p><a href="https://isss626-ay2025-26aug.netlify.app/outline/lesson05_outline">Global and Local Measures of Spatial Association</a></p></li>
-<li><p><a href="https://isss626-ay2025-26aug.netlify.app/outline/lesson06_outline">Geographic Segmentation</a></p></li>
-<li><p><a href="https://isss626-ay2025-26aug.netlify.app/outline/lesson07_outline">Geographically Weighted Explanatory Models</a></p></li>
-<li><p><a href="https://isss626-ay2025-26aug.netlify.app/outline/lesson08_outline">Geographically Weighted Predictive Models</a></p></li>
-<li><p><a href="https://isss626-ay2025-26aug.netlify.app/outline/lesson09_outline">Modelling Geographic of Accessibility</a></p></li>
-<li><p><a href="https://isss626-ay2025-26aug.netlify.app/outline/lesson10_outline">Spatial Interaction Models</a></p></li>
+<li><p>are the locations of forest fire in Kepulauan Bangka Belitung spatial and spatio-temporally <strong>independen</strong>t?</p></li>
+<li><p>if the answer is NO, <strong>where and when</strong> the observed forest fire locations tend to cluster?</p></li>
 </ul>
+</section>
+<section id="the-data" class="level2">
+<h2 class="anchored" data-anchor-id="the-data">2 The data</h2>
+<p>For the purpose of this exercise, two data sets will be used, they are:</p>
+<ul>
+<li><p><em>forestfires</em>, a csv file provides locations of forest fire detected from the Moderate Resolution Imaging Spectroradiometer (MODIS) sensor data. The data are downloaded from <a href="https://firms.modaps.eosdis.nasa.gov/download/">Fire Information for Resource Management System</a>. Only forest fires within Kepulauan Bangka Belitung will be used for this exercise.</p></li>
+<li><p><em>Kepulauan_Bangka_Belitung</em>, an <strong>ESRI</strong> <strong>shapefile</strong> showing the sub-district (i.e.&nbsp;<a href="https://en.wikipedia.org/wiki/Villages_of_Indonesia">kelurahan</a>) boundary of Kepulauan Bangka Belitung. The data set was downloaded from <a href="https://www.indonesia-geospasial.com/2023/05/download-shapefile-batas-administrasi.html">Indonesia Geospatial</a> portal. The original data covers the whole Indonesia. Only sub-districts within Kepulauan Bangka Belitung are extracted for this exercise.</p></li>
+</ul>
+</section>
+<section id="installing-and-loading-the-r-packages" class="level2">
+<h2 class="anchored" data-anchor-id="installing-and-loading-the-r-packages">3 Installing and Loading the R packages</h2>
+</section>
+<section id="importing-and-preparing-study-area" class="level2">
+<h2 class="anchored" data-anchor-id="importing-and-preparing-study-area">4 Importing and Preparing Study Area</h2>
+</section>
+<section id="importing-and-preparing-forest-fire-data" class="level2">
+<h2 class="anchored" data-anchor-id="importing-and-preparing-forest-fire-data">5 Importing and Preparing Forest Fire data</h2>
+</section>
+<section id="visualising-the-fire-points" class="level2">
+<h2 class="anchored" data-anchor-id="visualising-the-fire-points">6 Visualising the Fire Points</h2>
+</section>
+<section id="computing-stkde-by-month" class="level2">
+<h2 class="anchored" data-anchor-id="computing-stkde-by-month">7 Computing STKDE by Month</h2>
+</section>
+<section id="computing-stkde-by-day-of-year" class="level2">
+<h2 class="anchored" data-anchor-id="computing-stkde-by-day-of-year">8 Computing STKDE by Day of Year</h2>
+</section>
+<section id="computing-stkde-by-day-of-year-improved-method" class="level2">
+<h2 class="anchored" data-anchor-id="computing-stkde-by-day-of-year-improved-method">9 Computing STKDE by Day of Year: Improved method</h2>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
