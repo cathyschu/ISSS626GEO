@@ -341,5 +341,68 @@
     "title": "02b - Second Order Spatial Point Patterns Analysis Methods",
     "section": "Summary",
     "text": "Summary\n\n\n\n\n\n\n\n\n\nFunction\nMeasures\nScale\nBest for\n\n\n\n\nG\nNearest neighbor distances\nLocal\nCompetition/inhibition\n\n\nF\nEmpty space distances\nLocal\nCoverage/accessibility\n\n\nK\nPoint density at distances\nMulti-scale\nOverall clustering\n\n\nL\nStandardised K\nMulti-scale\nClear visualisation"
+  },
+  {
+    "objectID": "Hands-on_Ex/template.html#objectives",
+    "href": "Hands-on_Ex/template.html#objectives",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "1 Objectives",
+    "text": "1 Objectives"
+  },
+  {
+    "objectID": "Hands-on_Ex/template.html#the-data",
+    "href": "Hands-on_Ex/template.html#the-data",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "2 The data",
+    "text": "2 The data"
+  },
+  {
+    "objectID": "Hands-on_Ex/template.html#installing-and-loading-the-r-packages",
+    "href": "Hands-on_Ex/template.html#installing-and-loading-the-r-packages",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "3 Installing and Loading the R packages",
+    "text": "3 Installing and Loading the R packages"
+  },
+  {
+    "objectID": "Hands-on_Ex/template.html#importing-and-preparing-study-area",
+    "href": "Hands-on_Ex/template.html#importing-and-preparing-study-area",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "4 Importing and Preparing Study Area",
+    "text": "4 Importing and Preparing Study Area"
+  },
+  {
+    "objectID": "Hands-on_Ex/template.html#importing-and-preparing-forest-fire-data",
+    "href": "Hands-on_Ex/template.html#importing-and-preparing-forest-fire-data",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "5 Importing and Preparing Forest Fire data",
+    "text": "5 Importing and Preparing Forest Fire data"
+  },
+  {
+    "objectID": "Hands-on_Ex/template.html#visualising-the-fire-points",
+    "href": "Hands-on_Ex/template.html#visualising-the-fire-points",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "6 Visualising the Fire Points",
+    "text": "6 Visualising the Fire Points"
+  },
+  {
+    "objectID": "Hands-on_Ex/template.html#computing-stkde-by-month",
+    "href": "Hands-on_Ex/template.html#computing-stkde-by-month",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "7 Computing STKDE by Month",
+    "text": "7 Computing STKDE by Month"
+  },
+  {
+    "objectID": "Hands-on_Ex/template.html#computing-stkde-by-day-of-year",
+    "href": "Hands-on_Ex/template.html#computing-stkde-by-day-of-year",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "8 Computing STKDE by Day of Year",
+    "text": "8 Computing STKDE by Day of Year"
+  },
+  {
+    "objectID": "Hands-on_Ex/template.html#computing-stkde-by-day-of-year-improved-method",
+    "href": "Hands-on_Ex/template.html#computing-stkde-by-day-of-year-improved-method",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "9 Computing STKDE by Day of Year: Improved method",
+    "text": "9 Computing STKDE by Day of Year: Improved method"
   }
 ]
