@@ -40,7 +40,7 @@ For the purpose of this exercise, two data sets will be used, they are:
 ## 3 Installing and Loading the R packages
 
 | R Package | Description |
-|------------------|:-----------------------------------------------------|
+|--------------------|:---------------------------------------------------|
 | [**sf**](https://r-spatial.github.io/sf/) | a relatively new R package specially designed to import, manage and process vector-based geospatial data in R. |
 | [**raster**](https://rspatial.org/raster/) | handling raster data in R. |
 | [**spatstat**](https://cran.r-project.org/web/packages/spatstat/index.html) | performing Spatial Point Patterns Analysis such as kcross, Lcross, etc. |
@@ -109,8 +109,8 @@ fire_sf <- fire_sf %>%
 ## 6 Visualising the Fire Points
 
 ### 6.1 Overall plot
-:::::: panel-tabset
 
+::: panel-tabset
 ## DIY
 
 ```{r}
@@ -134,11 +134,11 @@ tm_layout(
     outer.bg.color = "#EEEEEE"
   )
 ```
+:::
 
-::::::
 ### 6.2 Visuaising geographic distribution of forest fires by month
 
-:::::: panel-tabset
+::: panel-tabset
 ## DIY
 
 ```{r}
@@ -153,7 +153,9 @@ tm_shape(fire_sf) +
             nrow = 3, ncols = 4,
             free.coords = FALSE, drop.units = TRUE) 
 ```
+
 ## Key
+
 ```{r}
 tm_shape(kbb_sf)+
   tm_polygons() +
@@ -163,11 +165,75 @@ tm_facets(by="Month_fac",
             free.coords=FALSE, 
             drop.units = TRUE)
 ```
+:::
 
-
-::::::
 ## 7 Computing STKDE by Month
 
+In this section, we will compute STKDE by using [`spattemp.density()`](https://tilmandavies.github.io/sparr/reference/spattemp.density.html) of **sparr** package. Before using the function, it is highly recommended you read the function’s reference guide in detail in order to understand the input data requirements and the output object generated.
+
+### 7.1 **Extracting forest fires by month**
+
+`as.ppp()` only need the **mark field** and **geometry field** from the input sf data.frame, so below we want to remove the unwanted fields from *fire_sf* sf data.frame.
+
+```{r}
+fire_month <- fire_sf %>%
+  select(Month_num)
+```
+
+### 7.2 **Creating ppp**
+
+Next we will derive a **ppp** object called *fire_month* from *fire_month* sf data.frame.
+
+```{r}
+fire_month_ppp <- as.ppp(fire_month)
+fire_month_ppp
+```
+
+Use below code to check the output is in the correct object class.
+
+```{r}
+summary(fire_month_ppp)
+```
+
+We also want to check if there are duplicated point events.
+
+```{r}
+any(duplicated(fire_month_ppp))
+```
+
+### 7.3 **Including Owin object**
+
+We use the code below to combine *origin_am_ppp* and *am_owin* objects into one.
+
+```{r}
+fire_month_owin <- fire_month_ppp[kbb_owin]
+summary(fire_month_owin)
+```
+
+Next we will examine the correctness of the output.
+
+```{r}
+par(bg = "#D0DDD0")
+plot(fire_month_owin)
+```
+
+### 7.4 **Computing Spatio-temporal KDE**
+
+Then, `spattemp.density()` of **sparr** package is used to compute the STKDE.
+
+```{r}
+st_kde <- spattemp.density(fire_month_owin)
+summary(st_kde)
+```
+
+### 7.5 **Plotting the spatio-temporal KDE object**
+
 ## 8 Computing STKDE by Day of Year
+
+### 8.1 **Creating ppp object**
+
+### 8.2 **Including Owin object**
+
+### 8.3
 
 ## 9 Computing STKDE by Day of Year: Improved method

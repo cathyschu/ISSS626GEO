@@ -165,7 +165,7 @@ plot(unmark(childcare_jw_ppp.km), main = "Jurong West")
 
 The G function measures the **distribution of the distances** from an arbitrary event to its nearest event. In this section, we will compute G-function estimation by using [*Gest()*](https://rdrr.io/cran/spatstat/man/Gest.html) of **spatstat** package. We will also perform Monte Carlo simulation test using [*envelope()*](https://rdrr.io/cran/spatstat/man/envelope.html) of **spatstat** package.
 
-::::::::: panel-tabset
+:::::: panel-tabset
 ## 6.1 Choa Chu Kang planning area
 
 #### 6.1.1 **Computing G-function estimation**
@@ -245,9 +245,7 @@ G_TM.csr <- envelope(childcare_tm_ppp, Gest, correction = "all", nsim = 999)
 par(bg = "#EEEEEE")
 plot(G_TM.csr)
 ```
-
-
-:::::::::
+::::::
 
 ::::: markgoals
 ::: markgoals-header
