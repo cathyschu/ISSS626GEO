@@ -228,12 +228,58 @@ summary(st_kde)
 
 ### 7.5 **Plotting the spatio-temporal KDE object**
 
+We use `plot()` to plot the KDE for between July 2023 - December 2023.
+
+```{r}
+par(bg = "#D0DDD0")
+tims <- c(7, 8, 9, 10, 11, 12)
+par(mfcol = c(2,3))
+for (i in tims){
+  plot(st_kde, i,
+       override.par = FALSE,
+       fix.range = TRUE)
+  title(main = paste("Month", i))
+}
+```
+
 ## 8 Computing STKDE by Day of Year
+
+In this section, we will compute the STKDE of forest fires by day of year.
 
 ### 8.1 **Creating ppp object**
 
+DayofYear field is included in the output ppp object with the code below.
+
+```{r}
+fire_yday_ppp <- fire_sf %>%
+  select(DayofYear) %>%
+  as.ppp()
+
+```
+
 ### 8.2 **Including Owin object**
 
-### 8.3
+Next we will combine the ppp object and the owin object.
+
+```{r}
+fire_yday_owin <- fire_yday_ppp[kbb_owin]
+summary(fire_yday_owin)
+```
+
+### 8.3 Plot KDE object
+
+```{r}
+kde_yday <- spattemp.density(fire_yday_owin)
+summary(kde_yday)
+```
+
+**Let's plot it.**
+
+```{r}
+#| fig-width: 5
+#| fig-height: 3
+par(bg = "#D0DDD0")
+plot(kde_yday)
+```
 
 ## 9 Computing STKDE by Day of Year: Improved method
