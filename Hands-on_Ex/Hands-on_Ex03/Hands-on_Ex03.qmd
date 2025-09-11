@@ -40,7 +40,7 @@ For the purpose of this exercise, two data sets will be used, they are:
 ## 3 Installing and Loading the R packages
 
 | R Package | Description |
-|--------------------|:---------------------------------------------------|
+|---------------------|:--------------------------------------------------|
 | [**sf**](https://r-spatial.github.io/sf/) | a relatively new R package specially designed to import, manage and process vector-based geospatial data in R. |
 | [**raster**](https://rspatial.org/raster/) | handling raster data in R. |
 | [**spatstat**](https://cran.r-project.org/web/packages/spatstat/index.html) | performing Spatial Point Patterns Analysis such as kcross, Lcross, etc. |
@@ -283,3 +283,38 @@ plot(kde_yday)
 ```
 
 ## 9 Computing STKDE by Day of Year: Improved method
+
+`BOOT.spattemp()` from **sparr** package supports bandwidth selection for standalone spatiotemporal density/intensity based on bootstrap estimation of the MISE, providing an isotropic scalar spatial bandwidth and a scalar temporal bandwidth.
+
+Code chunk below uses `BOOT.spattemp()` to determine both the **spatial bandwidth** and the **scalar temporal bandwidth.**
+
+```{r}
+set.seed(1234)
+BOOT.spattemp(fire_yday_owin)
+```
+
+### 9.1 **Computing spatio-temporal KDE**
+
+Now the STKDE will be derived by using `h` and `lambda` values derived in previous step.
+
+```{r}
+kde_yday <- spattemp.density(fire_yday_owin,
+                             h = 9105, lambda = 19)
+summary(kde_yday)
+```
+
+### 9.2 **Plotting the output spatio-temporal KDE**
+
+Lastly, we use `plot()` of **sparr** package to plot the output.
+
+```{r}
+par(bg = "#D0DDD0")
+tims <- c(10:352)
+par(mfcol = c(2,4))
+for (i in tims){
+  plot(kde_yday, i,
+       override.par = FALSE,
+       fix.range = TRUE)
+  title(main = paste("Day", i))
+}
+```
