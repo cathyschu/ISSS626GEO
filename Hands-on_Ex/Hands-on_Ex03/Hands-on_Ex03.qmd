@@ -276,10 +276,16 @@ summary(kde_yday)
 **Let's plot it.**
 
 ```{r}
-#| fig-width: 5
-#| fig-height: 3
-par(bg = "#D0DDD0")
-plot(kde_yday)
+#| fig-height: 2
+par(bg = "#b2c2b3")
+tims <- c(10:352)
+par(mfcol = c(1,4))
+for (i in tims){
+  plot(kde_yday, i,
+       override.par = FALSE,
+       fix.range = TRUE)
+  title(main = paste("Day", i))
+}
 ```
 
 ## 9 Computing STKDE by Day of Year: Improved method
@@ -305,12 +311,13 @@ summary(kde_yday)
 
 ### 9.2 **Plotting the output spatio-temporal KDE**
 
-Lastly, we use `plot()` of **sparr** package to plot the output.
+Lastly, we use `plot()` of **sparr** package to plot the output. For simplicity, we will plot between day 199-298.
 
 ```{r}
-par(bg = "#D0DDD0")
-tims <- c(10:352)
-par(mfcol = c(2,4))
+#| fig-height: 2
+par(bg = "#b2c2b3")
+tims <- c(199:298)
+par(mfcol = c(1,4))
 for (i in tims){
   plot(kde_yday, i,
        override.par = FALSE,
