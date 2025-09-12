@@ -11,6 +11,51 @@ execute: #how YML page work
   freeze: true #controls rendering - no render if no changes
 ---
 
+```{r}
+#| echo: false 
+#| results: hide
+
+pacman::p_load(sf, raster, sparr, tmap, tidyverse, spatstat)
+
+kbb_sf <- st_read(dsn="data/rawdata",
+               layer = "Kepulauan_Bangka_Belitung") %>%
+  st_union() %>%
+  st_zm(drop = TRUE, what = "ZM") %>%
+  st_transform(crs = 32748)
+kbb_owin <- as.owin(kbb_sf)
+
+fire_sf <- read_csv("data/rawdata/forestfires.csv") %>%
+  st_as_sf(coords = c("longitude", "latitude"), #convert to spatial format
+           crs = 4326) %>% #WGS84
+  st_transform(crs = 32748) #transform to UTM meter system
+
+fire_sf <- fire_sf %>%
+  mutate(DayofYear = yday(acq_date)) %>%
+  mutate(Month_num = month(acq_date)) %>%
+  mutate(Month_fac = month(acq_date,
+                            label = TRUE, abbr = FALSE))
+fire_month <- fire_sf %>%
+  select(Month_num)
+fire_month_ppp <- as.ppp(fire_month)
+fire_month_owin <- fire_month_ppp[kbb_owin]
+
+st_kde <- spattemp.density(fire_month_owin)
+```
+
+```{r}
+#| echo: false 
+#| fig-width: 12
+par(bg = "#D0DDD0")
+tims <- c(7, 8, 9, 10, 11, 12)
+par(mfcol = c(2,3))
+for (i in tims){
+  plot(st_kde, i,
+       override.par = FALSE,
+       fix.range = TRUE)
+  title(main = paste("Month", i))
+}
+```
+
 ## Overview
 
 A **spatio-temporal point process** (also called space-time or spatial-temporal point process) is a **random collection of points**, where each point represents the **time** and **location** of an event. Examples of events include incidence of disease, sightings or births of a species, or the occurrences of fires, earthquakes, lightning strikes, tsunamis, or volcanic eruptions.
@@ -278,9 +323,9 @@ summary(kde_yday)
 ```{r}
 #| fig-height: 2
 par(bg = "#b2c2b3")
-tims <- c(10:352)
+tids <- c(10:352)
 par(mfcol = c(1,4))
-for (i in tims){
+for (i in tids){
   plot(kde_yday, i,
        override.par = FALSE,
        fix.range = TRUE)
@@ -311,14 +356,14 @@ summary(kde_yday)
 
 ### 9.2 **Plotting the output spatio-temporal KDE**
 
-Lastly, we use `plot()` of **sparr** package to plot the output. For simplicity, we will plot between day 199-298.
+Lastly, we use `plot()` of **sparr** package to plot the output. For simplicity, we will plot between day 199-298, during which fire events clustered frequently in the northern area and moving down to the south.
 
 ```{r}
 #| fig-height: 2
 par(bg = "#b2c2b3")
-tims <- c(199:298)
+tids2 <- c(199:298)
 par(mfcol = c(1,4))
-for (i in tims){
+for (i in tids2){
   plot(kde_yday, i,
        override.par = FALSE,
        fix.range = TRUE)
