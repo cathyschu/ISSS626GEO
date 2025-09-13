@@ -404,6 +404,8 @@ bw
 
 In the code chunk below, *rescale.ppp()* is used to covert the unit of measurement from meter to kilometer.
 
+(We rescale it to KM, so the scale legend looks bigger.)
+
 ```{r}
 childcareSG_ppp_km <- rescale.ppp(
   childcareSG_ppp, 1000, "km"
