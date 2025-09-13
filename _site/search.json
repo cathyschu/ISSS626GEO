@@ -600,5 +600,131 @@
     "title": "In-class Exercise 3: Interactive K-function",
     "section": "Building an interative plot with ggplotly",
     "text": "Building an interative plot with ggplotly\nThe previous code chunks uses plot() to visualise the envelopes of the second-order summary statistics (such as L-function). The output is a static plot, therefore it can be difficult to make accurate guesstimates of the statistics and the corresponding distance, r.\nThe below code chunk converts the output (which is in a list form) into a dataframe, which can be used to generate a similar plot using appropriate aesthetic mappings from ggplot package. Finally, ggplotly() is used to convert the ggplot into an interactive plotly visualisation.\nThe codes were referenced from a R-blogger article. Further modifications were made to enhance the user experience by customizing the tooltips for greater clarity and intuition.\n\ntitle &lt;- \"Pairwise Distance: L function\"\n\nLcsr_df &lt;- as.data.frame(L_tm.csr) #change this part only\n\ncolour=c(\"#0D657D\",\"#ee770d\",\"#D3D3D3\")\ncsr_plot &lt;- ggplot(Lcsr_df, aes(r, obs-r))+\n  # plot observed value\n  geom_line(colour=c(\"#4d4d4d\"))+\n  geom_line(aes(r,theo-r), colour=\"red\", linetype = \"dashed\")+\n  # plot simulation envelopes\n  geom_ribbon(aes(ymin=lo-r,ymax=hi-r),alpha=0.1, colour=c(\"#91bfdb\")) +\n  xlab(\"Distance r (m)\") +\n  ylab(\"L(r)-r\") +\n  geom_rug(data=Lcsr_df[Lcsr_df$obs &gt; Lcsr_df$hi,], sides=\"b\", colour=colour[1])  +\n  geom_rug(data=Lcsr_df[Lcsr_df$obs &lt; Lcsr_df$lo,], sides=\"b\", colour=colour[2]) +\n  geom_rug(data=Lcsr_df[Lcsr_df$obs &gt;= Lcsr_df$lo & Lcsr_df$obs &lt;= Lcsr_df$hi,], sides=\"b\", color=colour[3]) +\n  theme_tufte()+\n  ggtitle(title)\n\ntext1&lt;-\"Significant clustering\"\ntext2&lt;-\"Significant segregation\"\ntext3&lt;-\"Not significant clustering/segregation\"\n\n# the below conditional statement is required to ensure that the labels (text1/2/3) are assigned to the correct traces\nif (nrow(Lcsr_df[Lcsr_df$obs &gt; Lcsr_df$hi,])==0){ \n  if (nrow(Lcsr_df[Lcsr_df$obs &lt; Lcsr_df$lo,])==0){ \n    ggplotly(csr_plot, dynamicTicks=T) %&gt;%\n      style(text = text3, traces = 4) %&gt;%\n      rangeslider() \n  }else if (nrow(Lcsr_df[Lcsr_df$obs &gt;= Lcsr_df$lo & Lcsr_df$obs &lt;= Lcsr_df$hi,])==0){ \n    ggplotly(csr_plot, dynamicTicks=T) %&gt;%\n      style(text = text2, traces = 4) %&gt;%\n      rangeslider() \n  }else {\n    ggplotly(csr_plot, dynamicTicks=T) %&gt;%\n      style(text = text2, traces = 4) %&gt;%\n      style(text = text3, traces = 5) %&gt;%\n      rangeslider() \n  }\n} else if (nrow(Lcsr_df[Lcsr_df$obs &lt; Lcsr_df$lo,])==0){\n  if (nrow(Lcsr_df[Lcsr_df$obs &gt;= Lcsr_df$lo & Lcsr_df$obs &lt;= Lcsr_df$hi,])==0){\n    ggplotly(csr_plot, dynamicTicks=T) %&gt;%\n      style(text = text1, traces = 4) %&gt;%\n      rangeslider() \n  } else{\n    ggplotly(csr_plot, dynamicTicks=T) %&gt;%\n      style(text = text1, traces = 4) %&gt;%\n      style(text = text3, traces = 5) %&gt;%\n      rangeslider()\n  }\n} else{\n  ggplotly(csr_plot, dynamicTicks=T) %&gt;%\n    style(text = text1, traces = 4) %&gt;%\n    style(text = text2, traces = 5) %&gt;%\n    style(text = text3, traces = 6) %&gt;%\n    rangeslider()\n  }\n\n\n\n\n\n\n\nLearning\n\n\nTo help us determine at what distance, we can observe the clusters. For example, we start seeing clustering around 23 meters apart.\n\n\n\n\nNote\n\n\nThe main features of the above visualisation:\n\nThe observed and theoretical values of L(r)-r (including the upper and lower curves of the simulated envelope) can be found in the tooltip upon hovering the cursor over the geometry layers.\nThe range slider below the plot enables users to pan and zoom in to a specific range of distance.\nThe colored bands at the bottom of the line graph gives a clearer indication of significant or insignificant spatial segregation/ clustering at distance r. Dark green bands indicate significant clustering, orange indicate significant segregation, while grey indicates insignificant clustering/segregation.\nTooltips were added to provide color legend information."
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex03b.html",
+    "href": "In-class_Ex/In-class_Ex03b.html",
+    "title": "03b - Data Wranggling",
+    "section": "",
+    "text": "In this exercise, we will go through the steps for preparing data for Take-home exercise one where we will investigate the spatial and spatio-temporal patterns of new businesses and firms established in Singapore."
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex03b.html#loading-the-r-package",
+    "href": "In-class_Ex/In-class_Ex03b.html#loading-the-r-package",
+    "title": "03b - Data Wranggling",
+    "section": "1 Loading the R package",
+    "text": "1 Loading the R package\nWe will use tidyverse, sf, tmap, tmap, and httr packages for this exercise to process data sets.\n\npacman::p_load(tidyverse, sf, tmap, httr)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex03b.html#importing-acra-data",
+    "href": "In-class_Ex/In-class_Ex03b.html#importing-acra-data",
+    "title": "03b - Data Wranggling",
+    "section": "2 Importing ACRA data",
+    "text": "2 Importing ACRA data\nWe will import the ACRA data and transform them as tibble frame\n\nfolder_path &lt;- \"data/aspatial/acra\"\nfile_list &lt;- list.files(path = folder_path,\n                        pattern = \"^ACRA*.*\\\\.csv$\",\n                        full.names = TRUE)\nacra_data &lt;- file_list %&gt;%\n  map_dfr(read_csv) #import and append all of them together!!\n\nThen, we will write the data into .rds to store it in the data folder. This is so no need to process data every time.\n\nwrite_rds(acra_data, \"data/rds/acra_data.rds\")"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex03b.html#tidying-acra-data",
+    "href": "In-class_Ex/In-class_Ex03b.html#tidying-acra-data",
+    "title": "03b - Data Wranggling",
+    "section": "3 Tidying ACRA data",
+    "text": "3 Tidying ACRA data\nWith this step, we will extract the business code 56111, rename the columns and transform the data type necessarily.\n\nbiz_56111 &lt;- acra_data %&gt;%\n  select(1:24) %&gt;%\n  filter(primary_ssic_code == 56111) %&gt;%\n  rename(date = registration_incorporation_date) %&gt;%\n  mutate(date = as.Date(date),\n         YEAR = year(date),\n         MONTH_NUM = month(date),\n         MONTH_ABBR = month(date, label = TRUE, abbr = TRUE)) %&gt;% #this gives Jan, Feb, Mar...\n  mutate(postal_code = str_pad(postal_code,\n                               width = 6, side = \"left\", pad = \"0\")) %&gt;% #if missing digits, will replace with zero.\n  filter(YEAR == 2025)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex03b.html#geocoding",
+    "href": "In-class_Ex/In-class_Ex03b.html#geocoding",
+    "title": "03b - Data Wranggling",
+    "section": "4 Geocoding",
+    "text": "4 Geocoding\n(Avoid doing so for &gt; 5K datasets) We will perform the following in this step:\n\nExtract unique postal code from the poastal_code field of the tidied tibble data frame.\nPerform geocode by submitting the postal code to SLA OneMap Reverse Geocode API.\nSave the return results into 2 data frame namely found and not_found.\n\n\npostcodes &lt;- unique(biz_56111$postal_code)\n\nurl &lt;- \"https://onemap.gov.sg/api/common/elastic/search\"\n\nfound &lt;- data.frame()\nnot_found &lt;- data.frame(postcode = character())\n\nfor (pc in postcodes) {\n  query &lt;- list(\n    searchVal = pc,\n    returnGeom = \"Y\",\n    getAddrDetails = \"Y\",\n    pageNum = \"1\"\n  )\n  \n  res &lt;- GET(url, query = query)\n  json &lt;- content(res)\n  \n  if(json$found != 0) {\n    df &lt;- as.data.frame(json$results, stringsAsFactors = FALSE)\n    df$input_postcode &lt;- pc\n    found &lt;- bind_rows(found, df)\n  } else{\n    not_found &lt;- bind_rows(not_found, data.frame(postcodes = pc))\n  }\n}"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/In-class_Ex03b.html",
+    "href": "Hands-on_Ex/Hands-on_Ex03/In-class_Ex03b.html",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "",
+    "text": "A spatio-temporal point process (also called space-time or spatial-temporal point process) is a random collection of points, where each point represents the time and location of an event. Examples of events include incidence of disease, sightings or births of a species, or the occurrences of fires, earthquakes, lightning strikes, tsunamis, or volcanic eruptions.\nThe analysis of spatio-temporal point patterns is becoming increasingly necessary, given the rapid emergence of geographically and temporally indexed data in a wide range of fields. Several spatio-temporal point patterns analysis methods have been introduced and implemented in R in the last ten years.\nIn this exercise, various R packages will be combined to run a set of spatio-temporal point pattern analyses.\nA real world forest fire events in Kepulauan Bangka Belitung, Indonesia from 1st January 2023 to 31st December 2023 is used to illustrate the methods, procedures and interpretations."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/In-class_Ex03b.html#overview",
+    "href": "Hands-on_Ex/Hands-on_Ex03/In-class_Ex03b.html#overview",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "",
+    "text": "A spatio-temporal point process (also called space-time or spatial-temporal point process) is a random collection of points, where each point represents the time and location of an event. Examples of events include incidence of disease, sightings or births of a species, or the occurrences of fires, earthquakes, lightning strikes, tsunamis, or volcanic eruptions.\nThe analysis of spatio-temporal point patterns is becoming increasingly necessary, given the rapid emergence of geographically and temporally indexed data in a wide range of fields. Several spatio-temporal point patterns analysis methods have been introduced and implemented in R in the last ten years.\nIn this exercise, various R packages will be combined to run a set of spatio-temporal point pattern analyses.\nA real world forest fire events in Kepulauan Bangka Belitung, Indonesia from 1st January 2023 to 31st December 2023 is used to illustrate the methods, procedures and interpretations."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/In-class_Ex03b.html#objectives",
+    "href": "Hands-on_Ex/Hands-on_Ex03/In-class_Ex03b.html#objectives",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "1 Objectives",
+    "text": "1 Objectives\nSpecific questions we would like to answer are:\n\nare the locations of forest fire in Kepulauan Bangka Belitung spatial and spatio-temporally independent?\nif the answer is NO, where and when the observed forest fire locations tend to cluster?"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/In-class_Ex03b.html#the-data",
+    "href": "Hands-on_Ex/Hands-on_Ex03/In-class_Ex03b.html#the-data",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "2 The data",
+    "text": "2 The data"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/In-class_Ex03b.html#installing-and-loading-the-r-packages",
+    "href": "Hands-on_Ex/Hands-on_Ex03/In-class_Ex03b.html#installing-and-loading-the-r-packages",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "3 Installing and Loading the R packages",
+    "text": "3 Installing and Loading the R packages"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/In-class_Ex03b.html#importing-and-preparing-study-area",
+    "href": "Hands-on_Ex/Hands-on_Ex03/In-class_Ex03b.html#importing-and-preparing-study-area",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "4 Importing and Preparing Study Area",
+    "text": "4 Importing and Preparing Study Area"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/In-class_Ex03b.html#importing-and-preparing-forest-fire-data",
+    "href": "Hands-on_Ex/Hands-on_Ex03/In-class_Ex03b.html#importing-and-preparing-forest-fire-data",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "5 Importing and Preparing Forest Fire data",
+    "text": "5 Importing and Preparing Forest Fire data"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/In-class_Ex03b.html#visualising-the-fire-points",
+    "href": "Hands-on_Ex/Hands-on_Ex03/In-class_Ex03b.html#visualising-the-fire-points",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "6 Visualising the Fire Points",
+    "text": "6 Visualising the Fire Points"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/In-class_Ex03b.html#computing-stkde-by-month",
+    "href": "Hands-on_Ex/Hands-on_Ex03/In-class_Ex03b.html#computing-stkde-by-month",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "7 Computing STKDE by Month",
+    "text": "7 Computing STKDE by Month"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/In-class_Ex03b.html#computing-stkde-by-day-of-year",
+    "href": "Hands-on_Ex/Hands-on_Ex03/In-class_Ex03b.html#computing-stkde-by-day-of-year",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "8 Computing STKDE by Day of Year",
+    "text": "8 Computing STKDE by Day of Year"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/In-class_Ex03b.html#computing-stkde-by-day-of-year-improved-method",
+    "href": "Hands-on_Ex/Hands-on_Ex03/In-class_Ex03b.html#computing-stkde-by-day-of-year-improved-method",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "9 Computing STKDE by Day of Year: Improved method",
+    "text": "9 Computing STKDE by Day of Year: Improved method"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex03b.html#appending-the-location-information",
+    "href": "In-class_Ex/In-class_Ex03b.html#appending-the-location-information",
+    "title": "03b - Data Wranggling",
+    "section": "5 Appending the location information",
+    "text": "5 Appending the location information\n\nbiz_56111 = biz_56111 %&gt;%\n  left_join(found,\n            by = c('postal_code' = 'POSTAL'))"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex03b.html#converting-into-sf-data-frame",
+    "href": "In-class_Ex/In-class_Ex03b.html#converting-into-sf-data-frame",
+    "title": "03b - Data Wranggling",
+    "section": "6 Converting into SF data frame",
+    "text": "6 Converting into SF data frame\n\nbiz_56111_sf &lt;- st_as_sf(biz_56111,\n                         coords = c(\"X\", \"Y\"),\n                         crs = 3414)\n\n\nhead(biz_56111_sf)\n\nSimple feature collection with 6 features and 125 fields\nGeometry type: POINT\nDimension:     XY\nBounding box:  xmin: 27549.59 ymin: 31216.93 xmax: 37390.83 ymax: 46589.95\nProjected CRS: SVY21 / Singapore TM\n# A tibble: 6 × 126\n  uen        issuance_agency_id entity_name               entity_type_descript…¹\n  &lt;chr&gt;      &lt;chr&gt;              &lt;chr&gt;                     &lt;chr&gt;                 \n1 202501136C ACRA               AL ASHIK PTE. LTD.        Local Company         \n2 202501329K ACRA               ARASH LEGACY PTE. LTD.    Local Company         \n3 202502902M ACRA               ADAM'S FAMILY CATERING P… Local Company         \n4 202503682G ACRA               ASWINS VEG RESTAURANT PT… Local Company         \n5 202504143K ACRA               ADIRAI KR BRIYANI PTE. L… Local Company         \n6 202504371R ACRA               AL YASSIN CAFE  (S) PTE.… Local Company         \n# ℹ abbreviated name: ¹​entity_type_description\n# ℹ 122 more variables: business_constitution_description &lt;chr&gt;,\n#   company_type_description &lt;chr&gt;, paf_constitution_description &lt;chr&gt;,\n#   entity_status_description &lt;chr&gt;, date &lt;date&gt;, uen_issue_date &lt;date&gt;,\n#   address_type &lt;chr&gt;, block &lt;chr&gt;, street_name &lt;chr&gt;, level_no &lt;chr&gt;,\n#   unit_no &lt;chr&gt;, building_name &lt;chr&gt;, postal_code &lt;chr&gt;,\n#   other_address_line1 &lt;chr&gt;, other_address_line2 &lt;chr&gt;, …"
   }
 ]
