@@ -154,10 +154,23 @@ if (nrow(Lcsr_df[Lcsr_df$obs > Lcsr_df$hi,])==0){
     rangeslider()
   }
 ```
+::::: markgoals
+::: markgoals-header
+**Learning**
+:::
 
+::: markgoals-container
 To help us determine at what distance, we can observe the clusters.
+For example, we start seeing clustering around 23 meters apart. 
+:::
+::::
 
-::: callout-note
+::::: markgoals
+::: markgoals-header
+**Note**
+:::
+
+::: markgoals-container
 The main features of the above visualisation:
 
 -   The observed and theoretical values of L(r)-r (including the upper and lower curves of the simulated envelope) can be found in the tooltip upon hovering the cursor over the geometry layers.
@@ -165,3 +178,4 @@ The main features of the above visualisation:
 -   The colored bands at the bottom of the line graph gives a clearer indication of significant or insignificant spatial segregation/ clustering at distance r. Dark green bands indicate significant clustering, orange indicate significant segregation, while grey indicates insignificant clustering/segregation.
 -   Tooltips were added to provide color legend information.
 :::
+:::::
