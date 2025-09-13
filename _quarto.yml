@@ -26,6 +26,8 @@ website:
         menu:
         - text: "Exercise 1a"
           href: In-class_Ex/In-class_Ex02a.qmd
+        - text: "Exercise 1b"
+          href: In-class_Ex/In-class_Ex02b.qmd
       - text: "Take-home Exercise"
         menu:
         - text: "Exercise 1"
