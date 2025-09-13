@@ -520,9 +520,14 @@ plot(L_TM.csr, . - r ~ r,
 
 ## Summary
 
-| Function | Measures                   | Scale       | Best for               |
-|----------|----------------------------|-------------|------------------------|
-| **G**    | Nearest neighbor distances | Local       | Competition/inhibition |
-| **F**    | Empty space distances      | Local       | Coverage/accessibility |
-| **K**    | Point density at distances | Multi-scale | Overall clustering     |
-| **L**    | Standardised K             | Multi-scale | Clear visualisation    |
++-------------+----------------------------+-------------+------------------------+
+| Function    | Measures                   | Scale       | Best for               |
++=============+============================+=============+========================+
+| **G**       | Nearest neighbor distances | Local       | Competition/inhibition |
++-------------+----------------------------+-------------+------------------------+
+| **F**       | Empty space distances      | Local       | Coverage/accessibility |
++-------------+----------------------------+-------------+------------------------+
+| **K**       | Point density at distances | Multi-scale | Overall clustering     |
++-------------+----------------------------+-------------+------------------------+
+| **L**       | Standardised K             | Multi-scale | Clear visualisation    |
++-------------+----------------------------+-------------+------------------------+
