@@ -64,6 +64,7 @@ childcare_jw_ppp = childcare_ppp[jw_owin]
 #### Computing L-fucntion estimate
 
 ```{r}
+par(bg = "#D0DDD0")
 L_tm = Lest(childcare_tm_ppp, correction = "Ripley")
 plot(L_tm, . -r ~ r, 
      ylab= "L(d)-r", xlab = "d(m)", 
@@ -82,6 +83,7 @@ L_tm.csr <- envelope(childcare_tm_ppp, Lest,
 Then, plot the model output by using the code chunk below.
 
 ```{r fig.width=7,  fig.height=5.5}
+par(bg = "#D0DDD0")
 plot(L_tm.csr, . - r ~ r, 
      xlab="d", ylab="L(d)-r", xlim=c(0,500))
 ```
@@ -96,6 +98,8 @@ The codes were referenced from a [R-blogger article](https://www.r-bloggers.com/
 
 ```{r}
 #| fig-height: 5.5
+
+
 title <- "Pairwise Distance: L function"
 
 Lcsr_df <- as.data.frame(L_tm.csr) #change this part only
@@ -112,7 +116,7 @@ csr_plot <- ggplot(Lcsr_df, aes(r, obs-r))+
   geom_rug(data=Lcsr_df[Lcsr_df$obs > Lcsr_df$hi,], sides="b", colour=colour[1])  +
   geom_rug(data=Lcsr_df[Lcsr_df$obs < Lcsr_df$lo,], sides="b", colour=colour[2]) +
   geom_rug(data=Lcsr_df[Lcsr_df$obs >= Lcsr_df$lo & Lcsr_df$obs <= Lcsr_df$hi,], sides="b", color=colour[3]) +
-  theme_tufte()+
+  theme_stata()+
   ggtitle(title)
 
 text1<-"Significant clustering"
@@ -154,16 +158,16 @@ if (nrow(Lcsr_df[Lcsr_df$obs > Lcsr_df$hi,])==0){
     rangeslider()
   }
 ```
+
 ::::: markgoals
 ::: markgoals-header
 **Learning**
 :::
 
 ::: markgoals-container
-To help us determine at what distance, we can observe the clusters.
-For example, we start seeing clustering around 23 meters apart. 
+To help us determine at what distance, we can observe the clusters. For example, we start seeing clustering around 23 meters apart.
 :::
-::::
+:::::
 
 ::::: markgoals
 ::: markgoals-header
