@@ -1,0 +1,79 @@
+---
+title: "03 - Spatio-Temporal Point Patterns Analysis"
+author: "Cathy C."
+date: "Sep 17, 2025"
+date-modified: "last-modified" #auto render date
+format: html
+execute: #how YML page work
+  echo: true #will show code
+  eval: true #will run code every time and show output
+  warning: false #dont show warning msg
+  freeze: true #controls rendering - no render if no changes
+---
+
+## Overview
+
+Starting from this, we will work on spatial weights and applications. In this exercise, we will learn how to compute spatial weights using R.
+
+## 1 Objectives
+
+We will use the the ppropriate function(s) of below packages to achieve various tasks & goals.
+
+| Package   | Task                                                           |
+|-------------------|-----------------------------------------------------|
+| **sf**    | Import geospatial data                                         |
+| **readr** | Import csv file                                                |
+| **dplyr** | Perform relational join                                        |
+| **spdep** | Compute spatial weights & calculate spatially lagged variables |
+
+## 2 **The Study Area and Data**
+
+Two data sets will be used in this hands-on exercise, they are:
+
+-   Hunan county boundary layer. This is a geospatial data set in ESRI shapefile format.
+
+-   *Hunan_2012.csv*: This csv file contains selected Hunan’s local development indicators in 2012.
+
+### 2.1 Getting started
+
+### 2.2 Getting data into R environment
+
+#### **2.2.1 Import shapefile into R environment**
+
+#### **2.2.2 Import csv file into R environment**
+
+#### **2.2.3 Performing relational join**
+
+## 3 **Visualising Regional Development Indicator**
+
+## 4 **Computing Contiguity Spatial Weights**
+
+### 4.1 **Computing (QUEEN) contiguity based neighbours**
+
+### 4.2 **Creating (ROOK) contiguity based neighbours**
+
+### 4.3 **Visualising contiguity weights**
+
+## 5 **Computing distance based neighbours**
+
+### 5.1 **Determine the cut-off distance**
+
+### 5.2 **Computing fixed distance weight matrix**
+
+### 5.3 **Computing adaptive distance weight matrix**
+
+## 6 **Weights based on IDW**
+
+## 7 **Row-standardised Weights Matrix**
+
+## 8 **Application of Spatial Weight Matrix**
+
+### 8.1 **Spatial lag with row-standardized weights**
+
+### 8.2 **Spatial lag as a sum of neighboring values**
+
+### 8.3 **Spatial window average**
+
+### 8.4 **Spatial window sum**
+
+## 9 References

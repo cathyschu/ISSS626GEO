@@ -726,5 +726,138 @@
     "title": "03b - Data Wranggling",
     "section": "6 Converting into SF data frame",
     "text": "6 Converting into SF data frame\n\nbiz_56111_sf &lt;- st_as_sf(biz_56111,\n                         coords = c(\"X\", \"Y\"),\n                         crs = 3414)\n\n\nhead(biz_56111_sf)\n\nSimple feature collection with 6 features and 125 fields\nGeometry type: POINT\nDimension:     XY\nBounding box:  xmin: 27549.59 ymin: 31216.93 xmax: 37390.83 ymax: 46589.95\nProjected CRS: SVY21 / Singapore TM\n# A tibble: 6 × 126\n  uen        issuance_agency_id entity_name               entity_type_descript…¹\n  &lt;chr&gt;      &lt;chr&gt;              &lt;chr&gt;                     &lt;chr&gt;                 \n1 202501136C ACRA               AL ASHIK PTE. LTD.        Local Company         \n2 202501329K ACRA               ARASH LEGACY PTE. LTD.    Local Company         \n3 202502902M ACRA               ADAM'S FAMILY CATERING P… Local Company         \n4 202503682G ACRA               ASWINS VEG RESTAURANT PT… Local Company         \n5 202504143K ACRA               ADIRAI KR BRIYANI PTE. L… Local Company         \n6 202504371R ACRA               AL YASSIN CAFE  (S) PTE.… Local Company         \n# ℹ abbreviated name: ¹​entity_type_description\n# ℹ 122 more variables: business_constitution_description &lt;chr&gt;,\n#   company_type_description &lt;chr&gt;, paf_constitution_description &lt;chr&gt;,\n#   entity_status_description &lt;chr&gt;, date &lt;date&gt;, uen_issue_date &lt;date&gt;,\n#   address_type &lt;chr&gt;, block &lt;chr&gt;, street_name &lt;chr&gt;, level_no &lt;chr&gt;,\n#   unit_no &lt;chr&gt;, building_name &lt;chr&gt;, postal_code &lt;chr&gt;,\n#   other_address_line1 &lt;chr&gt;, other_address_line2 &lt;chr&gt;, …"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "",
+    "text": "Starting from this, we will work on spatial weights and applications. In this exercise, we will learn how to compute spatial weights using R."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#overview",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#overview",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "",
+    "text": "Starting from this, we will work on spatial weights and applications. In this exercise, we will learn how to compute spatial weights using R."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#objectives",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#objectives",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "1 Objectives",
+    "text": "1 Objectives\nWe will use the the ppropriate function(s) of below packages to achieve various tasks & goals.\n\n\n\n\n\n\n\nPackage\nTask\n\n\n\n\nsf\nImport geospatial data\n\n\nreadr\nImport csv file\n\n\ndplyr\nPerform relational join\n\n\nspdep\nCompute spatial weights & calculate spatially lagged variables"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#section",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#section",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "2",
+    "text": "2"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#section-1",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#section-1",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "3",
+    "text": "3"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#section-2",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#section-2",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "4",
+    "text": "4"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#section-3",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#section-3",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "5",
+    "text": "5"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#section-4",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#section-4",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "6",
+    "text": "6"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#section-5",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#section-5",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "7",
+    "text": "7"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#section-6",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#section-6",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "8",
+    "text": "8"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#section-7",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#section-7",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "9",
+    "text": "9"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#the-study-area-and-data",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#the-study-area-and-data",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "2 The Study Area and Data",
+    "text": "2 The Study Area and Data\nTwo data sets will be used in this hands-on exercise, they are:\n\nHunan county boundary layer. This is a geospatial data set in ESRI shapefile format.\nHunan_2012.csv: This csv file contains selected Hunan’s local development indicators in 2012.\n\n\n2.1 Getting started\n\n\n2.2 Getting data into R environment\n\n2.2.1 Import shapefile into R environment\n\n\n2.2.2 Import csv file into R environment\n\n\n2.2.3 Performing relational join"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#visualising-regional-development-indicator",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#visualising-regional-development-indicator",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "3 Visualising Regional Development Indicator",
+    "text": "3 Visualising Regional Development Indicator"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#computing-contiguity-spatial-weights",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#computing-contiguity-spatial-weights",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "4 Computing Contiguity Spatial Weights",
+    "text": "4 Computing Contiguity Spatial Weights\n\n4.1 Computing (QUEEN) contiguity based neighbours\n\n\n4.2 Creating (ROOK) contiguity based neighbours\n\n\n4.3 Visualising contiguity weights"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#computing-distance-based-neighbours",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#computing-distance-based-neighbours",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "5 Computing distance based neighbours",
+    "text": "5 Computing distance based neighbours\n\n5.1 Determine the cut-off distance\n\n\n5.2 Computing fixed distance weight matrix\n\n\n5.3 Computing adaptive distance weight matrix"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#weights-based-on-idw",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#weights-based-on-idw",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "6 Weights based on IDW",
+    "text": "6 Weights based on IDW"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#row-standardised-weights-matrix",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#row-standardised-weights-matrix",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "7 Row-standardised Weights Matrix",
+    "text": "7 Row-standardised Weights Matrix"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#application-of-spatial-weight-matrix",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#application-of-spatial-weight-matrix",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "8 Application of Spatial Weight Matrix",
+    "text": "8 Application of Spatial Weight Matrix\n\n8.1 Spatial lag with row-standardized weights\n\n\n8.2 Spatial lag as a sum of neighboring values\n\n\n8.3 Spatial window average\n\n\n8.4 Spatial window sum"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#references",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#references",
+    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "section": "9 References",
+    "text": "9 References"
   }
 ]
