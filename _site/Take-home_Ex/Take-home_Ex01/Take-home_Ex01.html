@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Cathy C.">
-<meta name="dcterms.date" content="2025-09-09">
+<meta name="dcterms.date" content="2025-09-17">
 
-<title>03 - Spatio-Temporal Point Patterns Analysis – GeoSpatial</title>
+<title>Take-home Exercise: Public Good – GeoSpatial</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,26 +22,60 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<link href="..//images/catgeo.svg" rel="icon" type="image/svg+xml">
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-6bd9cfa162949bde0a231f530c97869d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../..//images/catgeo.svg" rel="icon" type="image/svg+xml">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-6bd9cfa162949bde0a231f530c97869d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -71,7 +105,7 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../../styles.css">
 </head>
 
 <body class="nav-fixed">
@@ -81,10 +115,10 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../images/catgeo.png" alt="" class="navbar-logo">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../images/catgeo.png" alt="" class="navbar-logo">
     </a>
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">GeoSpatial</span>
     </a>
   </div>
@@ -100,27 +134,27 @@ ul.task-list li input[type="checkbox"] {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-hands-on-exercise">    
         <li>
-    <a class="dropdown-item" href="../Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01a.html">
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01a.html">
  <span class="dropdown-text">Exercise 1a</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01b.html">
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01b.html">
  <span class="dropdown-text">Exercise 1b</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02a.html">
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02a.html">
  <span class="dropdown-text">Exercise 2a</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02b.html">
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02b.html">
  <span class="dropdown-text">Exercise 2b</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html">
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html">
  <span class="dropdown-text">Exercise 3</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html">
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html">
  <span class="dropdown-text">Exercise 4</span></a>
   </li>  
     </ul>
@@ -131,15 +165,15 @@ ul.task-list li input[type="checkbox"] {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-in-class-exercise">    
         <li>
-    <a class="dropdown-item" href="../In-class_Ex/In-class_Ex01.html">
+    <a class="dropdown-item" href="../../In-class_Ex/In-class_Ex01.html">
  <span class="dropdown-text">Exercise 1</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../In-class_Ex/In-class_Ex03a.html">
+    <a class="dropdown-item" href="../../In-class_Ex/In-class_Ex03a.html">
  <span class="dropdown-text">Exercise 3a</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../In-class_Ex/In-class_Ex03b.html">
+    <a class="dropdown-item" href="../../In-class_Ex/In-class_Ex03b.html">
  <span class="dropdown-text">Exercise 3b</span></a>
   </li>  
     </ul>
@@ -150,7 +184,7 @@ ul.task-list li input[type="checkbox"] {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-take-home-exercise">    
         <li>
-    <a class="dropdown-item" href="../Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html">
+    <a class="dropdown-item" href="../../Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html">
  <span class="dropdown-text">Exercise 1</span></a>
   </li>  
     </ul>
@@ -158,11 +192,11 @@ ul.task-list li input[type="checkbox"] {
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../index.html"> 
+    <a class="nav-link" href="../../index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../about.html"> 
+    <a class="nav-link" href="../../about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
 </ul>
@@ -176,15 +210,26 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#loading-the-r-package" id="toc-loading-the-r-package" class="nav-link active" data-scroll-target="#loading-the-r-package">1 Loading the R package</a></li>
+  <li><a href="#importing-acra-data" id="toc-importing-acra-data" class="nav-link" data-scroll-target="#importing-acra-data">2 Importing ACRA data</a></li>
+  <li><a href="#tidying-acra-data" id="toc-tidying-acra-data" class="nav-link" data-scroll-target="#tidying-acra-data">3 Tidying ACRA data</a></li>
+  <li><a href="#geocoding" id="toc-geocoding" class="nav-link" data-scroll-target="#geocoding">4 Geocoding</a></li>
+  <li><a href="#appending-the-location-information" id="toc-appending-the-location-information" class="nav-link" data-scroll-target="#appending-the-location-information">5 Appending the location information</a></li>
+  <li><a href="#converting-into-sf-data-frame" id="toc-converting-into-sf-data-frame" class="nav-link" data-scroll-target="#converting-into-sf-data-frame">6 Converting into SF data frame</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">03 - Spatio-Temporal Point Patterns Analysis</h1>
+<h1 class="title">Take-home Exercise: Public Good</h1>
 </div>
 
 
@@ -201,7 +246,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">September 9, 2025</p>
+      <p class="date">September 17, 2025</p>
     </div>
   </div>
   
@@ -219,8 +264,128 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<p>In this exercise, we will go through the steps for preparing data for Take-home exercise one where we will investigate the spatial and spatio-temporal patterns of new businesses and firms established in Singapore.</p>
+<section id="loading-the-r-package" class="level2">
+<h2 class="anchored" data-anchor-id="loading-the-r-package">1 Loading the R package</h2>
+<p>We will use <strong>tidyverse, sf, tmap, tmap,</strong> and <strong>httr</strong> packages for this exercise to process data sets.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, sf, tmap, httr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="importing-acra-data" class="level2">
+<h2 class="anchored" data-anchor-id="importing-acra-data">2 Importing ACRA data</h2>
+<p>We will import the ACRA data and transform them as tibble frame</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>folder_path <span class="ot">&lt;-</span> <span class="st">"data/aspatial/acra"</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>file_list <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> folder_path,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">pattern =</span> <span class="st">"^ACRA*.*</span><span class="sc">\\</span><span class="st">.csv$"</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>acra_data <span class="ot">&lt;-</span> file_list <span class="sc">%&gt;%</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_dfr</span>(read_csv) <span class="co">#import and append all of them together!!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Then, we will write the data into .rds to store it in the data folder. This is so no need to process data every time.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(acra_data, <span class="st">"data/rds/acra_data.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="tidying-acra-data" class="level2">
+<h2 class="anchored" data-anchor-id="tidying-acra-data">3 Tidying ACRA data</h2>
+<p>With this step, we will extract the business code 56111, rename the columns and transform the data type necessarily.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>biz_56111 <span class="ot">&lt;-</span> acra_data <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">24</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(primary_ssic_code <span class="sc">==</span> <span class="dv">56111</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">date =</span> registration_incorporation_date) <span class="sc">%&gt;%</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(date),</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">YEAR =</span> <span class="fu">year</span>(date),</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">MONTH_NUM =</span> <span class="fu">month</span>(date),</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">MONTH_ABBR =</span> <span class="fu">month</span>(date, <span class="at">label =</span> <span class="cn">TRUE</span>, <span class="at">abbr =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span> <span class="co">#this gives Jan, Feb, Mar...</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">postal_code =</span> <span class="fu">str_pad</span>(postal_code,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>                               <span class="at">width =</span> <span class="dv">6</span>, <span class="at">side =</span> <span class="st">"left"</span>, <span class="at">pad =</span> <span class="st">"0"</span>)) <span class="sc">%&gt;%</span> <span class="co">#if missing digits, will replace with zero.</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(YEAR <span class="sc">==</span> <span class="dv">2025</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="geocoding" class="level2">
+<h2 class="anchored" data-anchor-id="geocoding">4 Geocoding</h2>
+<p>(Avoid doing so for &gt; 5K datasets) We will perform the following in this step:</p>
+<ul>
+<li>Extract unique postal code from the poastal_code field of the tidied tibble data frame.</li>
+<li>Perform geocode by submitting the postal code to SLA OneMap Reverse Geocode API.</li>
+<li>Save the return results into 2 data frame namely <em>found</em> and <em>not_found</em>.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>postcodes <span class="ot">&lt;-</span> <span class="fu">unique</span>(biz_56111<span class="sc">$</span>postal_code)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">"https://onemap.gov.sg/api/common/elastic/search"</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>found <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>not_found <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">postcode =</span> <span class="fu">character</span>())</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (pc <span class="cf">in</span> postcodes) {</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  query <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">searchVal =</span> pc,</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">returnGeom =</span> <span class="st">"Y"</span>,</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">getAddrDetails =</span> <span class="st">"Y"</span>,</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">pageNum =</span> <span class="st">"1"</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">GET</span>(url, <span class="at">query =</span> query)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  json <span class="ot">&lt;-</span> <span class="fu">content</span>(res)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(json<span class="sc">$</span>found <span class="sc">!=</span> <span class="dv">0</span>) {</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(json<span class="sc">$</span>results, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    df<span class="sc">$</span>input_postcode <span class="ot">&lt;-</span> pc</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    found <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(found, df)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span>{</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    not_found <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(not_found, <span class="fu">data.frame</span>(<span class="at">postcodes =</span> pc))</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="appending-the-location-information" class="level2">
+<h2 class="anchored" data-anchor-id="appending-the-location-information">5 Appending the location information</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>biz_56111 <span class="ot">=</span> biz_56111 <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(found,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">'postal_code'</span> <span class="ot">=</span> <span class="st">'POSTAL'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="converting-into-sf-data-frame" class="level2">
+<h2 class="anchored" data-anchor-id="converting-into-sf-data-frame">6 Converting into SF data frame</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>biz_56111_sf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(biz_56111,</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"X"</span>, <span class="st">"Y"</span>),</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">crs =</span> <span class="dv">3414</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(biz_56111_sf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simple feature collection with 6 features and 125 fields
+Geometry type: POINT
+Dimension:     XY
+Bounding box:  xmin: 27549.59 ymin: 31216.93 xmax: 37390.83 ymax: 46589.95
+Projected CRS: SVY21 / Singapore TM
+# A tibble: 6 × 126
+  uen        issuance_agency_id entity_name               entity_type_descript…¹
+  &lt;chr&gt;      &lt;chr&gt;              &lt;chr&gt;                     &lt;chr&gt;                 
+1 202501136C ACRA               AL ASHIK PTE. LTD.        Local Company         
+2 202501329K ACRA               ARASH LEGACY PTE. LTD.    Local Company         
+3 202502902M ACRA               ADAM'S FAMILY CATERING P… Local Company         
+4 202503682G ACRA               ASWINS VEG RESTAURANT PT… Local Company         
+5 202504143K ACRA               ADIRAI KR BRIYANI PTE. L… Local Company         
+6 202504371R ACRA               AL YASSIN CAFE  (S) PTE.… Local Company         
+# ℹ abbreviated name: ¹​entity_type_description
+# ℹ 122 more variables: business_constitution_description &lt;chr&gt;,
+#   company_type_description &lt;chr&gt;, paf_constitution_description &lt;chr&gt;,
+#   entity_status_description &lt;chr&gt;, date &lt;date&gt;, uen_issue_date &lt;date&gt;,
+#   address_type &lt;chr&gt;, block &lt;chr&gt;, street_name &lt;chr&gt;, level_no &lt;chr&gt;,
+#   unit_no &lt;chr&gt;, building_name &lt;chr&gt;, postal_code &lt;chr&gt;,
+#   other_address_line1 &lt;chr&gt;, other_address_line2 &lt;chr&gt;, …</code></pre>
+</div>
+</div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

@@ -85,7 +85,7 @@ For the purpose of this exercise, two data sets will be used, they are:
 ## 3 Installing and Loading the R packages
 
 | R Package | Description |
-|---------------------|:--------------------------------------------------|
+|----------------------|:-------------------------------------------------|
 | [**sf**](https://r-spatial.github.io/sf/) | a relatively new R package specially designed to import, manage and process vector-based geospatial data in R. |
 | [**raster**](https://rspatial.org/raster/) | handling raster data in R. |
 | [**spatstat**](https://cran.r-project.org/web/packages/spatstat/index.html) | performing Spatial Point Patterns Analysis such as kcross, Lcross, etc. |
