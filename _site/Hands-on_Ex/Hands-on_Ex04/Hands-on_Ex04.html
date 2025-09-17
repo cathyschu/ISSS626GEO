@@ -22,6 +22,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -183,27 +217,27 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
   <li><a href="#objectives" id="toc-objectives" class="nav-link" data-scroll-target="#objectives">1 Objectives</a></li>
-  <li><a href="#the-study-area-and-data" id="toc-the-study-area-and-data" class="nav-link" data-scroll-target="#the-study-area-and-data">2 <strong>The Study Area and Data</strong></a>
+  <li><a href="#the-study-area-and-data" id="toc-the-study-area-and-data" class="nav-link" data-scroll-target="#the-study-area-and-data">2 The Study Area and Data</a>
   <ul class="collapse">
   <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started">2.1 Getting started</a></li>
   <li><a href="#getting-data-into-r-environment" id="toc-getting-data-into-r-environment" class="nav-link" data-scroll-target="#getting-data-into-r-environment">2.2 Getting data into R environment</a></li>
   </ul></li>
-  <li><a href="#visualising-regional-development-indicator" id="toc-visualising-regional-development-indicator" class="nav-link" data-scroll-target="#visualising-regional-development-indicator">3 <strong>Visualising Regional Development Indicator</strong></a></li>
-  <li><a href="#computing-contiguity-spatial-weights" id="toc-computing-contiguity-spatial-weights" class="nav-link" data-scroll-target="#computing-contiguity-spatial-weights">4 <strong>Computing Contiguity Spatial Weights</strong></a>
+  <li><a href="#visualising-regional-development-indicator" id="toc-visualising-regional-development-indicator" class="nav-link" data-scroll-target="#visualising-regional-development-indicator">3 Visualising Regional Development Indicator</a></li>
+  <li><a href="#computing-contiguity-spatial-weights" id="toc-computing-contiguity-spatial-weights" class="nav-link" data-scroll-target="#computing-contiguity-spatial-weights">4 Computing Contiguity Spatial Weights</a>
   <ul class="collapse">
   <li><a href="#computing-queen-contiguity-based-neighbours" id="toc-computing-queen-contiguity-based-neighbours" class="nav-link" data-scroll-target="#computing-queen-contiguity-based-neighbours">4.1 <strong>Computing (QUEEN) contiguity based neighbours</strong></a></li>
   <li><a href="#creating-rook-contiguity-based-neighbours" id="toc-creating-rook-contiguity-based-neighbours" class="nav-link" data-scroll-target="#creating-rook-contiguity-based-neighbours">4.2 <strong>Creating (ROOK) contiguity based neighbours</strong></a></li>
   <li><a href="#visualising-contiguity-weights" id="toc-visualising-contiguity-weights" class="nav-link" data-scroll-target="#visualising-contiguity-weights">4.3 <strong>Visualising contiguity weights</strong></a></li>
   </ul></li>
-  <li><a href="#computing-distance-based-neighbours" id="toc-computing-distance-based-neighbours" class="nav-link" data-scroll-target="#computing-distance-based-neighbours">5 <strong>Computing distance based neighbours</strong></a>
+  <li><a href="#computing-distance-based-neighbours" id="toc-computing-distance-based-neighbours" class="nav-link" data-scroll-target="#computing-distance-based-neighbours">5 Computing distance based neighbours</a>
   <ul class="collapse">
   <li><a href="#determine-the-cut-off-distance" id="toc-determine-the-cut-off-distance" class="nav-link" data-scroll-target="#determine-the-cut-off-distance">5.1 <strong>Determine the cut-off distance</strong></a></li>
   <li><a href="#computing-fixed-distance-weight-matrix" id="toc-computing-fixed-distance-weight-matrix" class="nav-link" data-scroll-target="#computing-fixed-distance-weight-matrix">5.2 <strong>Computing fixed distance weight matrix</strong></a></li>
   <li><a href="#computing-adaptive-distance-weight-matrix" id="toc-computing-adaptive-distance-weight-matrix" class="nav-link" data-scroll-target="#computing-adaptive-distance-weight-matrix">5.3 <strong>Computing adaptive distance weight matrix</strong></a></li>
   </ul></li>
-  <li><a href="#weights-based-on-idw" id="toc-weights-based-on-idw" class="nav-link" data-scroll-target="#weights-based-on-idw">6 <strong>Weights based on IDW</strong></a></li>
-  <li><a href="#row-standardised-weights-matrix" id="toc-row-standardised-weights-matrix" class="nav-link" data-scroll-target="#row-standardised-weights-matrix">7 <strong>Row-standardised Weights Matrix</strong></a></li>
-  <li><a href="#application-of-spatial-weight-matrix" id="toc-application-of-spatial-weight-matrix" class="nav-link" data-scroll-target="#application-of-spatial-weight-matrix">8 <strong>Application of Spatial Weight Matrix</strong></a>
+  <li><a href="#weights-based-on-idw" id="toc-weights-based-on-idw" class="nav-link" data-scroll-target="#weights-based-on-idw">6 Weights based on IDW</a></li>
+  <li><a href="#row-standardised-weights-matrix" id="toc-row-standardised-weights-matrix" class="nav-link" data-scroll-target="#row-standardised-weights-matrix">7 Row-standardised Weights Matrix</a></li>
+  <li><a href="#application-of-spatial-weight-matrix" id="toc-application-of-spatial-weight-matrix" class="nav-link" data-scroll-target="#application-of-spatial-weight-matrix">8 Application of Spatial Weight Matrix</a>
   <ul class="collapse">
   <li><a href="#spatial-lag-with-row-standardized-weights" id="toc-spatial-lag-with-row-standardized-weights" class="nav-link" data-scroll-target="#spatial-lag-with-row-standardized-weights">8.1 <strong>Spatial lag with row-standardized weights</strong></a></li>
   <li><a href="#spatial-lag-as-a-sum-of-neighboring-values" id="toc-spatial-lag-as-a-sum-of-neighboring-values" class="nav-link" data-scroll-target="#spatial-lag-as-a-sum-of-neighboring-values">8.2 <strong>Spatial lag as a sum of neighboring values</strong></a></li>
@@ -263,8 +297,8 @@ ul.task-list li input[type="checkbox"] {
 <p>We will use the the ppropriate function(s) of below packages to achieve various tasks &amp; goals.</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 26%">
-<col style="width: 73%">
+<col style="width: 14%">
+<col style="width: 85%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -293,7 +327,7 @@ ul.task-list li input[type="checkbox"] {
 </table>
 </section>
 <section id="the-study-area-and-data" class="level2">
-<h2 class="anchored" data-anchor-id="the-study-area-and-data">2 <strong>The Study Area and Data</strong></h2>
+<h2 class="anchored" data-anchor-id="the-study-area-and-data">2 The Study Area and Data</h2>
 <p>Two data sets will be used in this hands-on exercise, they are:</p>
 <ul>
 <li><p>Hunan county boundary layer. This is a geospatial data set in ESRI shapefile format.</p></li>
@@ -301,25 +335,70 @@ ul.task-list li input[type="checkbox"] {
 </ul>
 <section id="getting-started" class="level3">
 <h3 class="anchored" data-anchor-id="getting-started">2.1 Getting started</h3>
+<p>First we will install the necessary packages or ensure they are installed.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(sf, spdep, tmap, tidyverse, knitr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="getting-data-into-r-environment" class="level3">
 <h3 class="anchored" data-anchor-id="getting-data-into-r-environment">2.2 Getting data into R environment</h3>
+<p>The geospatial data is in <strong>ESRI shapefile</strong> format and the attribute table is in <strong>csv fomat</strong>. We will bring the geospatial data and its associated attribute table into R environment.</p>
 <section id="import-shapefile-into-r-environment" class="level4">
-<h4 class="anchored" data-anchor-id="import-shapefile-into-r-environment"><strong>2.2.1 Import shapefile into R environment</strong></h4>
+<h4 class="anchored" data-anchor-id="import-shapefile-into-r-environment"><span style="color: #7D8D86;"><strong>2.2.1 Import shapefile into R environment</strong></span></h4>
+<p>Below we use <a href="https://r-spatial.github.io/sf/reference/st_read.html"><em>st_read()</em></a> of <strong>sf</strong> package to import Hunan shapefile into R. The imported shapefile will be <strong>simple features</strong> Object of <strong>sf</strong>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>hunan <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"data/geospatial"</span>, <span class="at">layer =</span> <span class="st">"Hunan"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reading layer `Hunan' from data source 
+  `/Users/cathyc/Documents/cathyschu/ISSS626GEO/Hands-on_Ex/Hands-on_Ex04/data/geospatial' 
+  using driver `ESRI Shapefile'
+Simple feature collection with 88 features and 7 fields
+Geometry type: POLYGON
+Dimension:     XY
+Bounding box:  xmin: 108.7831 ymin: 24.6342 xmax: 114.2544 ymax: 30.12812
+Geodetic CRS:  WGS 84</code></pre>
+</div>
+</div>
 </section>
-<section id="import-csv-file-into-r-environment" class="level4">
-<h4 class="anchored" data-anchor-id="import-csv-file-into-r-environment"><strong>2.2.2 Import csv file into R environment</strong></h4>
-</section>
-<section id="performing-relational-join" class="level4">
-<h4 class="anchored" data-anchor-id="performing-relational-join"><strong>2.2.3 Performing relational join</strong></h4>
+<section id="import-csv-file-into-r-environment-performing-relational-join" class="level4">
+<h4 class="anchored" data-anchor-id="import-csv-file-into-r-environment-performing-relational-join"><span style="color: #7D8D86;"><strong>2.2.2 Import csv file into R environment &amp; Performing relational join</strong></span></h4>
+<p>Use <em>read_csv()</em> of <strong>readr</strong> package to import <em>Hunan_2012.csv</em>. The output will be R dataframe class.</p>
+<p>Then, use <em>left_join</em> from <strong>dplyr</strong> package to update the attribute table ofHunan’s SpatialPolygonsDataFrame with the attribute fields of <em>hunan2012</em> dataframe.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>hunan2012 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/aspatial/Hunan_2012.csv"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>hunan <span class="ot">&lt;-</span> <span class="fu">left_join</span>(hunan, hunan2012) <span class="sc">%&gt;%</span> <span class="co">#this match by county</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">7</span>, <span class="dv">15</span>) <span class="co">#keep county info and GDPPC</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 </section>
 </section>
 <section id="visualising-regional-development-indicator" class="level2">
-<h2 class="anchored" data-anchor-id="visualising-regional-development-indicator">3 <strong>Visualising Regional Development Indicator</strong></h2>
+<h2 class="anchored" data-anchor-id="visualising-regional-development-indicator">3 Visualising Regional Development Indicator</h2>
+<p>Prepare a basemap and a choropleth map that shows the distribution of GDPPC 2012 by using <code>qtm()</code> from <strong>tmap</strong> package.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>basemap <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(hunan) <span class="sc">+</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>() <span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_text</span>(<span class="st">"NAME_3"</span>, <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">bg.color =</span> <span class="st">"#BBDCE5"</span>, <span class="at">main.title =</span> <span class="st">"Hunan Basemap"</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>gdppc <span class="ot">&lt;-</span> <span class="fu">qtm</span>(hunan, <span class="st">"GDPPC"</span>) <span class="sc">+</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="fu">c</span>(<span class="st">"left"</span>, <span class="st">"bottom"</span>),</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">bg.color =</span> <span class="st">"#BBDCE5"</span>, <span class="at">main.title =</span> <span class="st">"GDP Per Capita"</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_arrange</span>(basemap, gdppc, <span class="at">asp =</span> <span class="dv">1</span>, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Hands-on_Ex04_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="1152"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="computing-contiguity-spatial-weights" class="level2">
-<h2 class="anchored" data-anchor-id="computing-contiguity-spatial-weights">4 <strong>Computing Contiguity Spatial Weights</strong></h2>
+<h2 class="anchored" data-anchor-id="computing-contiguity-spatial-weights">4 Computing Contiguity Spatial Weights</h2>
 <section id="computing-queen-contiguity-based-neighbours" class="level3">
 <h3 class="anchored" data-anchor-id="computing-queen-contiguity-based-neighbours">4.1 <strong>Computing (QUEEN) contiguity based neighbours</strong></h3>
 </section>
@@ -331,7 +410,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 </section>
 <section id="computing-distance-based-neighbours" class="level2">
-<h2 class="anchored" data-anchor-id="computing-distance-based-neighbours">5 <strong>Computing distance based neighbours</strong></h2>
+<h2 class="anchored" data-anchor-id="computing-distance-based-neighbours">5 Computing distance based neighbours</h2>
 <section id="determine-the-cut-off-distance" class="level3">
 <h3 class="anchored" data-anchor-id="determine-the-cut-off-distance">5.1 <strong>Determine the cut-off distance</strong></h3>
 </section>
@@ -343,13 +422,13 @@ ul.task-list li input[type="checkbox"] {
 </section>
 </section>
 <section id="weights-based-on-idw" class="level2">
-<h2 class="anchored" data-anchor-id="weights-based-on-idw">6 <strong>Weights based on IDW</strong></h2>
+<h2 class="anchored" data-anchor-id="weights-based-on-idw">6 Weights based on IDW</h2>
 </section>
 <section id="row-standardised-weights-matrix" class="level2">
-<h2 class="anchored" data-anchor-id="row-standardised-weights-matrix">7 <strong>Row-standardised Weights Matrix</strong></h2>
+<h2 class="anchored" data-anchor-id="row-standardised-weights-matrix">7 Row-standardised Weights Matrix</h2>
 </section>
 <section id="application-of-spatial-weight-matrix" class="level2">
-<h2 class="anchored" data-anchor-id="application-of-spatial-weight-matrix">8 <strong>Application of Spatial Weight Matrix</strong></h2>
+<h2 class="anchored" data-anchor-id="application-of-spatial-weight-matrix">8 Application of Spatial Weight Matrix</h2>
 <section id="spatial-lag-with-row-standardized-weights" class="level3">
 <h3 class="anchored" data-anchor-id="spatial-lag-with-row-standardized-weights">8.1 <strong>Spatial lag with row-standardized weights</strong></h3>
 </section>

@@ -20,13 +20,13 @@ Starting from this, we will work on spatial weights and applications. In this ex
 We will use the the ppropriate function(s) of below packages to achieve various tasks & goals.
 
 | Package   | Task                                                           |
-|-------------------|-----------------------------------------------------|
+|-----------|----------------------------------------------------------------|
 | **sf**    | Import geospatial data                                         |
 | **readr** | Import csv file                                                |
 | **dplyr** | Perform relational join                                        |
 | **spdep** | Compute spatial weights & calculate spatially lagged variables |
 
-## 2 **The Study Area and Data**
+## 2 The Study Area and Data
 
 Two data sets will be used in this hands-on exercise, they are:
 
@@ -36,17 +36,58 @@ Two data sets will be used in this hands-on exercise, they are:
 
 ### 2.1 Getting started
 
+First we will install the necessary packages or ensure they are installed.
+
+```{r}
+pacman::p_load(sf, spdep, tmap, tidyverse, knitr)
+```
+
 ### 2.2 Getting data into R environment
 
-#### **2.2.1 Import shapefile into R environment**
+The geospatial data is in **ESRI shapefile** format and the attribute table is in **csv fomat**. We will bring the geospatial data and its associated attribute table into R environment.
 
-#### **2.2.2 Import csv file into R environment**
+#### [**2.2.1 Import shapefile into R environment**]{style="color: #7D8D86;"}
 
-#### **2.2.3 Performing relational join**
+Below we use [*st_read()*](https://r-spatial.github.io/sf/reference/st_read.html) of **sf** package to import Hunan shapefile into R. The imported shapefile will be **simple features** Object of **sf**.
 
-## 3 **Visualising Regional Development Indicator**
+```{r}
+hunan <- st_read(dsn = "data/geospatial", layer = "Hunan")
+```
 
-## 4 **Computing Contiguity Spatial Weights**
+#### [**2.2.2 Import csv file into R environment & Performing relational join**]{style="color: #7D8D86;"}
+
+Use *read_csv()* of **readr** package to import *Hunan_2012.csv*. The output will be R dataframe class.
+
+Then, use *left_join* from **dplyr** package to update the attribute table ofHunan's SpatialPolygonsDataFrame with the attribute fields of *hunan2012* dataframe.
+
+```{r}
+hunan2012 <- read_csv("data/aspatial/Hunan_2012.csv")
+
+hunan <- left_join(hunan, hunan2012) %>% #this match by county
+  select(1:4, 7, 15) #keep county info and GDPPC
+```
+
+## 3 Visualising Regional Development Indicator
+
+Prepare a basemap and a choropleth map that shows the distribution of GDPPC 2012 by using `qtm()` from **tmap** package.
+
+```{r}
+#| fig-width: 12
+#| fig-align: center
+basemap <- tm_shape(hunan) +
+  tm_polygons() +
+  tm_text("NAME_3", size = 0.5) +
+  tm_layout(bg.color = "#BBDCE5", main.title = "Hunan Basemap")
+
+gdppc <- qtm(hunan, "GDPPC") +
+  tm_layout(
+    legend.position = c("left", "bottom"),
+    bg.color = "#BBDCE5", main.title = "GDP Per Capita"
+  )
+tmap_arrange(basemap, gdppc, asp = 1, ncol = 2)
+```
+
+## 4 Computing Contiguity Spatial Weights
 
 ### 4.1 **Computing (QUEEN) contiguity based neighbours**
 
@@ -54,7 +95,7 @@ Two data sets will be used in this hands-on exercise, they are:
 
 ### 4.3 **Visualising contiguity weights**
 
-## 5 **Computing distance based neighbours**
+## 5 Computing distance based neighbours
 
 ### 5.1 **Determine the cut-off distance**
 
@@ -62,11 +103,11 @@ Two data sets will be used in this hands-on exercise, they are:
 
 ### 5.3 **Computing adaptive distance weight matrix**
 
-## 6 **Weights based on IDW**
+## 6 Weights based on IDW
 
-## 7 **Row-standardised Weights Matrix**
+## 7 Row-standardised Weights Matrix
 
-## 8 **Application of Spatial Weight Matrix**
+## 8 Application of Spatial Weight Matrix
 
 ### 8.1 **Spatial lag with row-standardized weights**
 
