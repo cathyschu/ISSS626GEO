@@ -20,7 +20,7 @@ Starting from this, we will work on spatial weights and applications. In this ex
 We will use the the ppropriate function(s) of below packages to achieve various tasks & goals.
 
 | Package   | Task                                                           |
-|----------------------|-------------------------------------------------|
+|-----------------------|-------------------------------------------------|
 | **sf**    | Import geospatial data                                         |
 | **readr** | Import csv file                                                |
 | **dplyr** | Perform relational join                                        |
@@ -165,7 +165,88 @@ str(wm_q)
 
 ### 4.2 **Creating (ROOK) contiguity based neighbours**
 
+Next we will compute Rook contiguity weight matrix.
+
+```{r}
+wm_r <- poly2nb(hunan, queen = FALSE)
+summary(wm_r)
+```
+
+::::: markgoals
+::: markgoals-header
+**Learning**
+:::
+
+::: markgoals-container
+-   The report shows there are 88 areas in Hunan.
+
+-   The most connected area unit has 10 neighbours.
+
+-   There are 2 area units with only one neighbour.
+:::
+:::::
+
 ### 4.3 **Visualising contiguity weights**
+
+To visualise contiguity weights, we use connectivity graph. We will get the longitude and latitude of the Polygon Centroids. We will use a mapping function to get the coordinates in a separate data frame.
+
+The mapping function applies a given function to each element of a vector and returns a vector of the same length. The input is the geometry column of `us.bound` and the function is `st_centroid`.
+
+We will also use `map_dbl` variation of map from the **purrr** package.
+
+1.  Get longitude values: map the st_centroid function over the geometry column of us.bound and access the longitude value through double bracket notation [\[\[\]\] and 1]{style="color: #BA487F;"}. 
+This allows us to get the longitude. 
+2. Use the same method for latitude with [[2]].
+3. Use [cbind]{style="color: #BA487F;"} to put longitude and latitude into the same object.
+
+```{r}
+longitutde <- map_dbl(hunan$geometry, ~st_centroid(.x)[[1]])
+
+latitude <- map_dbl(hunan$geometry, ~st_centroid(.x)[[2]])
+
+coords <- cbind(longitutde, latitude)
+```
+4. Check the first few observations to see if they were formatted correctly.
+```{r}
+head(coords)
+```
+### 4.3.1 Queen contiguity vs Rook contiguity
+Hover over two tabs and click to see the differences.
+
+::: panel-tabset
+## Queen contiguity based neighbours map
+```{r}
+#| fig-width: 12
+#| fig-height: 8
+par(bg = "#D0DDD0")
+plot(hunan$geometry, border = "grey")
+plot(wm_q, coords, pch = 20, cex = 0.6, add = TRUE, col = "red")
+```
+
+## Rook contiguity based neighbours map
+```{r}
+#| fig-width: 12
+#| fig-height: 8
+par(bg = "#D0DDD0")
+plot(hunan$geometry, border = "grey")
+plot(wm_r, coords, pch = 20, cex = 0.6, add = TRUE, col = "red")
+```
+
+:::
+
+### 4.3.1 Queen contiguity vs Rook contiguity Comparison
+
+```{r}
+#| fig-width: 12
+#| fig-height: 8
+#| fig-align: center
+par(mfrow = c(1,2), bg = "#D0DDD0")
+plot(hunan$geometry, border = "grey", main = "Queen Contiguity")
+plot(wm_q, coords, pch = 18, cex = 0.6, add = TRUE, col = "red")
+plot(hunan$geometry, border = "grey", main = "Rook Contiguity")
+plot(wm_r, coords, pch = 18, cex = 0.6, add = TRUE, col = "red")
+
+```
 
 ## 5 Computing distance based neighbours
 
