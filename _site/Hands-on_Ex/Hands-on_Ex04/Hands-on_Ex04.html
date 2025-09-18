@@ -279,7 +279,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">September 18, 2025</p>
+      <p class="date-modified">September 19, 2025</p>
     </div>
   </div>
     
@@ -299,8 +299,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>We will use the the ppropriate function(s) of below packages to achieve various tasks &amp; goals.</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 31%">
-<col style="width: 68%">
+<col style="width: 34%">
+<col style="width: 65%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -708,11 +708,69 @@ Link number distribution:
 </section>
 <section id="computing-distance-based-neighbours" class="level2">
 <h2 class="anchored" data-anchor-id="computing-distance-based-neighbours">5 Computing distance based neighbours</h2>
+<p>In this section, we will derive distance-based weight matrices by using <a href="https://r-spatial.github.io/spdep/reference/dnearneigh.html"><em>dnearneigh()</em></a> of <strong>spdep</strong> package. The function creates <strong>distance-based neighbor relationships</strong> for spatial analysis by identifying which geographic areas are “neighbors” based on distance ranges.</p>
+<ul>
+<li><p>It will set a distance band with <strong>lower (d1)</strong> and <strong>upper (d2)</strong> bounds using the <code>bounds=</code> argument. Areas within this distance range become neighbors.</p></li>
+<li><p>For distance calculation, the <strong>projected coordinates</strong> uses Euclidean (straight-line) distance. The <strong>geographic coordinates</strong> (with <code>longlat=TRUE</code>) uses great circle distance in <strong>km</strong>, accounting for Earth’s curvature via WGS84 ellipsoid.</p></li>
+<li><p>An example is with d1=5 and d2=20, each region considers only areas between 5-20 km away as neighbors.</p></li>
+</ul>
 <section id="determine-the-cut-off-distance" class="level3">
 <h3 class="anchored" data-anchor-id="determine-the-cut-off-distance">5.1 <strong>Determine the cut-off distance</strong></h3>
+<p>This step finds the <strong>maximum distance</strong> for the distance band.</p>
+<p><span style="color: #84994F;"><strong>1: Find k-nearest neighbors</strong></span><br>
+<code>knearneigh()</code> finds the k closest neighbors for each area. Returns a matrix showing which areas are neighbors.</p>
+<p><span style="color: #84994F;"><strong>2: Convert to neighbor list</strong></span><br>
+<code>knn2nb()</code> converts the matrix into a more usable list format. Each area gets a list of its neighbor IDs.</p>
+<p><span style="color: #84994F;"><strong>3: Calculate actual distances</strong></span><br>
+</p>
+<p><code>nbdists()</code> measures the real distances between each area and its neighbors. Units meters/km for projected coordinates, km for lat/lon coordinates.</p>
+<p><span style="color: #84994F;"><strong>4: Flatten the data</strong></span><br>
+<code>unlist()</code> converts the nested list structure into a simple vector of all distances.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>k1 <span class="ot">&lt;-</span> <span class="fu">knn2nb</span>(<span class="fu">knearneigh</span>(coords))</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>k1dists <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">nbdists</span>(k1, coords, <span class="at">longlat =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(k1dists)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  24.79   32.57   38.01   39.07   44.52   61.79 </code></pre>
+</div>
+</div>
+<div class="markgoals">
+<div class="markgoals-header">
+<p><strong>Learning</strong></p>
+</div>
+<div class="markgoals-container">
+<p>Above summary report shows that the largest first nearest neighbour distance is 61.79km, so using this as the upper threshold gives certainty that all units will have at least ONE neighbour.</p>
+</div>
+</div>
 </section>
 <section id="computing-fixed-distance-weight-matrix" class="level3">
 <h3 class="anchored" data-anchor-id="computing-fixed-distance-weight-matrix">5.2 <strong>Computing fixed distance weight matrix</strong></h3>
+<p>Next we use <code>dnearneigh()</code> to compute the distance weight matrix.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>wm_d62 <span class="ot">&lt;-</span> <span class="fu">dnearneigh</span>(coords, <span class="dv">0</span>, <span class="dv">62</span>, <span class="at">longlat =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>wm_d62</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Neighbour list object:
+Number of regions: 88 
+Number of nonzero links: 324 
+Percentage nonzero weights: 4.183884 
+Average number of links: 3.681818 </code></pre>
+</div>
+</div>
+<div class="markgoals">
+<div class="markgoals-header">
+<p><strong>Learning</strong></p>
+</div>
+<div class="markgoals-container">
+<ul>
+<li><p>There are 88 polygons in the dataset.</p></li>
+<li><p>There are 324 pairs of regions that are considered neighbors.</p></li>
+<li><p>Out of all possible pairs of regions (88 × 88 = 7,744 total possible connections), only 4.18% are actually neighbors.</p></li>
+<li><p>On average, each region has about 3.68 neighbors</p></li>
+</ul>
+</div>
+</div>
 </section>
 <section id="computing-adaptive-distance-weight-matrix" class="level3">
 <h3 class="anchored" data-anchor-id="computing-adaptive-distance-weight-matrix">5.3 <strong>Computing adaptive distance weight matrix</strong></h3>

@@ -20,7 +20,7 @@ Starting from this, we will work on spatial weights and applications. In this ex
 We will use the the ppropriate function(s) of below packages to achieve various tasks & goals.
 
 | Package   | Task                                                           |
-|-----------------------|-------------------------------------------------|
+|-------------------------|-----------------------------------------------|
 | **sf**    | Import geospatial data                                         |
 | **readr** | Import csv file                                                |
 | **dplyr** | Perform relational join                                        |
@@ -194,10 +194,9 @@ The mapping function applies a given function to each element of a vector and re
 
 We will also use `map_dbl` variation of map from the **purrr** package.
 
-1.  Get longitude values: map the st_centroid function over the geometry column of us.bound and access the longitude value through double bracket notation [\[\[\]\] and 1]{style="color: #BA487F;"}. 
-This allows us to get the longitude. 
-2. Use the same method for latitude with [[2]].
-3. Use [cbind]{style="color: #BA487F;"} to put longitude and latitude into the same object.
+1.  Get longitude values: map the st_centroid function over the geometry column of us.bound and access the longitude value through double bracket notation [\[\[\]\] and 1]{style="color: #BA487F;"}. This allows us to get the longitude.
+2.  Use the same method for latitude with \[\[2\]\].
+3.  Use [cbind]{style="color: #BA487F;"} to put longitude and latitude into the same object.
 
 ```{r}
 longitutde <- map_dbl(hunan$geometry, ~st_centroid(.x)[[1]])
@@ -206,15 +205,20 @@ latitude <- map_dbl(hunan$geometry, ~st_centroid(.x)[[2]])
 
 coords <- cbind(longitutde, latitude)
 ```
-4. Check the first few observations to see if they were formatted correctly.
+
+4.  Check the first few observations to see if they were formatted correctly.
+
 ```{r}
 head(coords)
 ```
+
 ### 4.3.1 Queen contiguity vs Rook contiguity
+
 Hover over two tabs and click to see the differences.
 
 ::: panel-tabset
 ## Queen contiguity based neighbours map
+
 ```{r}
 #| fig-width: 12
 #| fig-height: 8
@@ -224,6 +228,7 @@ plot(wm_q, coords, pch = 20, cex = 0.6, add = TRUE, col = "red")
 ```
 
 ## Rook contiguity based neighbours map
+
 ```{r}
 #| fig-width: 12
 #| fig-height: 8
@@ -231,7 +236,6 @@ par(bg = "#D0DDD0")
 plot(hunan$geometry, border = "grey")
 plot(wm_r, coords, pch = 20, cex = 0.6, add = TRUE, col = "red")
 ```
-
 :::
 
 ### 4.3.1 Queen contiguity vs Rook contiguity Comparison
@@ -250,9 +254,71 @@ plot(wm_r, coords, pch = 18, cex = 0.6, add = TRUE, col = "red")
 
 ## 5 Computing distance based neighbours
 
+In this section, we will derive distance-based weight matrices by using [*dnearneigh()*](https://r-spatial.github.io/spdep/reference/dnearneigh.html) of **spdep** package. The function creates **distance-based neighbor relationships** for spatial analysis by identifying which geographic areas are "neighbors" based on distance ranges.
+
+-   It will set a distance band with **lower (d1)** and **upper (d2)** bounds using the `bounds=` argument. Areas within this distance range become neighbors.
+
+-   For distance calculation, the **projected coordinates** uses Euclidean (straight-line) distance. The **geographic coordinates** (with `longlat=TRUE`) uses great circle distance in **km**, accounting for Earth's curvature via WGS84 ellipsoid.
+
+-   An example is with d1=5 and d2=20, each region considers only areas between 5-20 km away as neighbors.
+
 ### 5.1 **Determine the cut-off distance**
 
+This step finds the **maximum distance** for the distance band.
+
+[**1: Find k-nearest neighbors**]{style="color: #84994F;"}\
+`knearneigh()` finds the k closest neighbors for each area. Returns a matrix showing which areas are neighbors.
+
+[**2: Convert to neighbor list**]{style="color: #84994F;"}\
+`knn2nb()` converts the matrix into a more usable list format. Each area gets a list of its neighbor IDs.
+
+[**3: Calculate actual distances**]{style="color: #84994F;"}\
+
+`nbdists()` measures the real distances between each area and its neighbors. Units meters/km for projected coordinates, km for lat/lon coordinates.
+
+[**4: Flatten the data**]{style="color: #84994F;"}\
+`unlist()` converts the nested list structure into a simple vector of all distances.
+
+```{r}
+k1 <- knn2nb(knearneigh(coords))
+k1dists <- unlist(nbdists(k1, coords, longlat = TRUE))
+summary(k1dists)
+```
+
+::::: markgoals
+::: markgoals-header
+**Learning**
+:::
+
+::: markgoals-container
+Above summary report shows that the largest first nearest neighbour distance is 61.79km, so using this as the upper threshold gives certainty that all units will have at least ONE neighbour.
+:::
+:::::
+
 ### 5.2 **Computing fixed distance weight matrix**
+
+Next we use `dnearneigh()` to compute the distance weight matrix.
+
+```{r}
+wm_d62 <- dnearneigh(coords, 0, 62, longlat = TRUE)
+wm_d62
+```
+
+::::: markgoals
+::: markgoals-header
+**Learning**
+:::
+
+::: markgoals-container
+-   There are 88 polygons in the dataset.
+
+-   There are 324 pairs of regions that are considered neighbors.
+
+-   Out of all possible pairs of regions (88 × 88 = 7,744 total possible connections), only 4.18% are actually neighbors.
+
+-   On average, each region has about 3.68 neighbors
+:::
+:::::
 
 ### 5.3 **Computing adaptive distance weight matrix**
 
