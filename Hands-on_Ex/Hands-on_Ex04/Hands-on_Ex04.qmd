@@ -726,7 +726,7 @@ hunan %>%
   kable()
 ```
 
-#### Plot lag_sum GDPPC and w_sum_gdppc maps for comparison
+#### **Plot lag_sum GDPPC and w_sum_gdppc maps for comparison**
 
 ```{r}
 #| fig-width: 12
