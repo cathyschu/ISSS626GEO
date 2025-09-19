@@ -20,7 +20,7 @@ Starting from this, we will work on spatial weights and applications. In this ex
 We will use the the ppropriate function(s) of below packages to achieve various tasks & goals.
 
 | Package   | Task                                                           |
-|------------------|------------------------------------------------------|
+|-------------------|-----------------------------------------------------|
 | **sf**    | Import geospatial data                                         |
 | **readr** | Import csv file                                                |
 | **dplyr** | Perform relational join                                        |
@@ -445,7 +445,7 @@ plot(knn6, coords, pch = 9, cex = 0.6, add = TRUE, col = "red")
 
 ## 6 Weights based on IDW
 
-### 6.1 **Inverse distance weights** 
+### 6.1 **Inverse distance weights**
 
 Here we use **Inversed Distance method** to derive a spatial weight matrix. In the first step, we compute the distance between areas by [*nbdists()*](https://r-spatial.github.io/spdep/reference/nbdists.html) of **spdep**.
 
@@ -469,6 +469,7 @@ This approach is simple and intuitive to use. We could explore `style="B"` which
 rswm_q <- nb2listw(wm_q, style="W", zero.policy = TRUE)
 rswm_q
 ```
+
 ::::: markgoals
 ::: markgoals-header
 **Note**
@@ -480,29 +481,32 @@ The `zero.policy=TRUE` option allows for lists of non-neighbors. This should be 
 :::::
 
 **Check the weight of the 8th - 10th polygons' neighbors type:**
+
 ```{r}
 rswm_q$weights[8:10]
 ```
 
 ## 8 Application of Spatial Weight Matrix
-In this section, we want to create four different spatial lagged variables:
-- spatial lag with row-standardized weights
-- spatial lag as a sum of neighbouring values
-- spatial window average
-- spatial window sum
+
+In this section, we want to create four different spatial lagged variables: - spatial lag with row-standardized weights - spatial lag as a sum of neighbouring values - spatial window average - spatial window sum
 
 ### 8.1 **Spatial lag with row-standardized weights**
+
 Let's compute the average neighbor GDPPC value for each polygon. These values are often referred to as [**spatially lagged values**]{style="color: #BA487F;"}.
+
 ```{r}
 GDPPC.lag <- lag.listw(rswm_q, hunan$GDPPC)
 GDPPC.lag
 ```
+
 Recall: Below code is used to retrieve the GDPPC of these 5 counties.
+
 ```{r}
 nb1 <- wm_q[[1]]
 nb1 <- hunan$GDPPC[nb1]
 nb1
 ```
+
 ::::: markgoals
 ::: markgoals-header
 **Learning**
@@ -513,7 +517,8 @@ Spatial lag is a way to summarise the values of neighboring regions into a singl
 :::
 :::::
 
-Next we will append the spatially lag GDPPC values onto hunan sf data frame. 
+Next we will append the spatially lag GDPPC values onto hunan sf data frame.
+
 ```{r}
 lag.list <- list(hunan$NAME_3, lag.listw(rswm_q, hunan$GDPPC))
 lag.res <- as.data.frame(lag.list)
@@ -522,14 +527,214 @@ hunan <- left_join(hunan, lag.res)
 ```
 
 Then the table below shows the average neighboring income values (stored in Inc.lag object) for each county.
+
 ```{r}
 head(hunan)
 ```
 
+#### **Plot GDPPC and spatial lag GDPPC for comparison**
+
+```{r}
+#| fig-width: 12
+#| fig-height: 8
+
+#par(bg = "#D0DDD0")
+gdppc <- qtm(hunan, "GDPPC", title = "GDPPC")
+lag_gdppc <- qtm(hunan, "lag GDPPC", title = "Lag GDPPC")
+tmap_arrange(gdppc, lag_gdppc, asp=1, ncol=2)
+```
+
+::::: markgoals
+::: markgoals-header
+**Learning**
+:::
+
+::: markgoals-container
+-   [GDPPC]{style="color: #BA487F;"} Shows the original GDPPC (GDP per capita) values for each region in Hunan province.
+-   [Lag GDPPC]{style="color: #BA487F;"} shows the spatial lag of GDPPC for each region, which represents the average GDP per capita of neighboring regions.
+-   We can visually assess spatial autocorrelation. If the two maps look very similar, you have strong positive spatial autocorrelation (similar values cluster together). If they look very different, there's weak spatial autocorrelation or more random spatial distribution of GDP per capita values.
+:::
+:::::
+
 ### 8.2 **Spatial lag as a sum of neighboring values**
+
+Instead of averaging neighbors (like with style="W"), we can calculate spatial lag as the **total sum** of all neighboring values. This means a region with more neighbors will naturally have a higher spatial lag value. We need to create binary weights where each neighbor gets a weight of 1 instead of fractional weights. This requires going back to the neighbor list and manually assigning these binary weights rather than using the automatic row standardization. First, we use `lapply` to apply a function across my neighbors structure. This function assigns a value of 1 to each neighbor, creating binary weights. Then we use the `glist = parameter` in `nb2listw` to explicitly tell the function to use these binary weights instead of calculating standardised weights.
+
+[**Insights:**]{style="color: #BA487F;"} When we sum neighboring values instead of averaging them, regions with more neighbors will have higher spatial lag values simply because they're adding up more numbers. This can be useful when we want to measure the total "influence" or "exposure" from neighbors rather than the average neighborhood context.
+
+```{r}
+b_weights <- lapply(wm_q, function(x) 0*x + 1)
+b_weights2 <- nb2listw(wm_q, 
+                       glist = b_weights, 
+                       style = "B")
+b_weights2
+```
+
+With the proper weights assigned, we can use `lag.listw` to compute a lag variable from our weight and GDPPC.
+
+```{r}
+lag_sum <- list(hunan$NAME_3, lag.listw(b_weights2, hunan$GDPPC))
+lag.res <- as.data.frame(lag_sum)
+colnames(lag.res) <- c("NAME_3", "lag_sum GDPPC")
+```
+
+**Examine results:**
+
+```{r}
+lag_sum
+```
+
+Next, we append the [lag_sum GDPPC]{style="color: #BA487F;"} filed into `hunan` sf dataframe.
+
+```{r}
+hunan <- left_join(hunan, lag.res)
+```
+
+#### **Plot GDPPC and Spatial Lag Sum GDPPC for comparison**
+
+```{r}
+#| fig-width: 12
+#| fig-height: 8
+gdppc <- qtm(hunan, "GDPPC", title = "GDPPC")
+lag_sum_gdppc <- qtm(hunan, "lag_sum GDPPC", title = "Lag Sum GDPPC")
+tmap_arrange(gdppc, lag_sum_gdppc, asp=1, ncol=2)
+```
 
 ### 8.3 **Spatial window average**
 
+The spatial window average uses row-standardized weights and **includes the diagonal element**. To do this in R, we need to go back to the neighbors structure and add the diagonal element before assigning weights.
+
+To add the diagonal element to the neighbour list, we just need to use `include.self()` from **spdep**.
+
+```{r}
+wm_qs <- include.self(wm_q)
+wm_qs
+wm_q
+```
+
+| Col1  | WM  | \% nonzero weights | Average \# of links |
+|-------|-----|--------------------|---------------------|
+| wm_qs | 536 | 6.9221488          | 6.090909            |
+| wm_q  | 448 | 5.785124           | 5.090909            |
+
+Look at the neighbour list of area \[1\].
+
+```{r}
+wm_qs[[1]]
+```
+
+Now \[1\] has 6 neighbours instead of 5.
+
+**Step1. obtain weights with `nb2listw()`.**
+
+```{r}
+wm_qs <- nb2listw(wm_qs)
+wm_qs
+```
+
+**Step2.** Create the lag variable from our weight structure and GDPPC variable.
+
+**Step3.** Convert the lag variable listw object into a data.frame by using *`as.data.frame()`*.
+
+**Step4.** Append *lag_window_avg GDPPC* values onto *hunan* sf data.frame by using *`left_join()`* of dplyr package.
+
+```{r}
+
+#step2
+lag_w_avg_gpdpc <- lag.listw(wm_qs, hunan$GDPPC)
+lag_w_avg_gpdpc
+
+#step3
+lag.list.wm_qs <- list(hunan$NAME_3, lag.listw(wm_qs, hunan$GDPPC))
+lag_wm_qs.res <- as.data.frame(lag.list.wm_qs)
+
+#renames the field names of lag_wm_q1.res object into NAME_3 and lag_window_avg GDPPC respectively.
+colnames(lag_wm_qs.res) <- c("NAME_3", "lag_window_avg GDPPC")
+
+#Step4
+hunan <- left_join(hunan, lag_wm_qs.res)
+
+```
+
+use `kable()` from **Knitr** package to prepare a table to compare values of lag GDPPC and Spatial window average.
+
+```{r}
+hunan %>%
+  select("County", "lag GDPPC", "lag_window_avg GDPPC") %>%
+  kable()
+```
+
+#### **Plot lag_gdppc and w_ave_gdppc maps for comparison**
+
+```{r}
+#| fig-width: 12
+#| fig-height: 8
+
+w_avg_gdppc <- qtm(hunan, "lag_window_avg GDPPC", title = "Window Average GDPPC")
+tmap_arrange(lag_gdppc, w_avg_gdppc, asp=1, ncol=2)
+```
+
 ### 8.4 **Spatial window sum**
 
+The spatial window sum is the counterpart of the window average, but **without using row-standardized weights**.
+
+**Step 1.** Add the diagonal element to the neighbour list, use *`include.self()`* from **spdep**.
+
+**Step2.** Assign binary weights to the neighbour structure that includes the diagonal element.
+
+**Step3.** Use *`nb2listw()`* and *`glist()`* to explicitly assign weight values.
+
+**Step4.** Compute the lag variable with *`lag.listw()`*.
+
+**Step5.** Convert lag variable listw object into a data.frame by using *`as.data.frame()`*.
+
+**Step6.** Append *w_sum GDPPC* values onto *hunan* sf data.frame by using *left_join()* of **dplyr** package.
+
+```{r}
+#step1 Add the diagonal element to the neighbour list
+wm_qs <- include.self(wm_q)
+wm_qs
+
+#step2 Assign binary weights to the neighbour structure that includes the diagonal element.
+b_weights <- lapply(wm_qs, function(x) 0*x + 1)
+b_weights[1]
+
+#step3 explicitly assign weight values.
+b_weights2 <- nb2listw(wm_qs, glist = b_weights, style = "B")
+b_weights2
+
+#step4 Compute the lag variable 
+w_sum_gdppc <- list(hunan$NAME_3, lag.listw(b_weights2, hunan$GDPPC))
+w_sum_gdppc
+
+#step5 Convert lag variable listw object into a data.frame
+w_sum_gdppc.res <- as.data.frame(w_sum_gdppc)
+
+#renames the field names of w_sum_gdppc.res object into NAME_3 and w_sum GDPPC respectively.
+colnames(w_sum_gdppc.res) <- c("NAME_3", "w_sum GDPPC")
+
+#step6 Append w_sum GDPPC values onto hunan sf data.frame
+hunan <- left_join(hunan, w_sum_gdppc.res)
+
+```
+
+**Compare values of lag GDPPC and Spatial window average.**
+
+```{r}
+hunan %>%
+  select("County", "lag_sum GDPPC", "w_sum GDPPC") %>%
+  kable()
+```
+
+#### Plot lag_sum GDPPC and w_sum_gdppc maps for comparison
+
+```{r}
+#| fig-width: 12
+#| fig-height: 8
+w_sum_gdppc <- qtm(hunan, "w_sum GDPPC", title = "Window Sum GDPPC")
+tmap_arrange(lag_sum_gdppc, w_sum_gdppc, asp = 1, ncol = 2)
+```
+
 ## 9 References
+
+Kam, T. S. 2025. [*R for Geospatial Data Science and Analytics*](https://r4gdsa.netlify.app/chap08#overview).
