@@ -486,6 +486,7 @@ rswm_q$weights[8:10]
 
 ## 8 Application of Spatial Weight Matrix
 
+
 ### 8.1 **Spatial lag with row-standardized weights**
 
 ### 8.2 **Spatial lag as a sum of neighboring values**
