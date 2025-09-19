@@ -479,15 +479,52 @@ The `zero.policy=TRUE` option allows for lists of non-neighbors. This should be 
 :::
 :::::
 
-### Check the weight of the 8th - 10th polygons' neighbors type:
+**Check the weight of the 8th - 10th polygons' neighbors type:**
 ```{r}
 rswm_q$weights[8:10]
 ```
 
 ## 8 Application of Spatial Weight Matrix
-
+In this section, we want to create four different spatial lagged variables:
+- spatial lag with row-standardized weights
+- spatial lag as a sum of neighbouring values
+- spatial window average
+- spatial window sum
 
 ### 8.1 **Spatial lag with row-standardized weights**
+Let's compute the average neighbor GDPPC value for each polygon. These values are often referred to as [**spatially lagged values**]{style="color: #BA487F;"}.
+```{r}
+GDPPC.lag <- lag.listw(rswm_q, hunan$GDPPC)
+GDPPC.lag
+```
+Recall: Below code is used to retrieve the GDPPC of these 5 counties.
+```{r}
+nb1 <- wm_q[[1]]
+nb1 <- hunan$GDPPC[nb1]
+nb1
+```
+::::: markgoals
+::: markgoals-header
+**Learning**
+:::
+
+::: markgoals-container
+Spatial lag is a way to summarise the values of neighboring regions into a single number. When using row-standardised weights (style="W"), the spatial lag for any region is simply the average value of all its neighboring regions.
+:::
+:::::
+
+Next we will append the spatially lag GDPPC values onto hunan sf data frame. 
+```{r}
+lag.list <- list(hunan$NAME_3, lag.listw(rswm_q, hunan$GDPPC))
+lag.res <- as.data.frame(lag.list)
+colnames(lag.res) <- c("NAME_3", "lag GDPPC")
+hunan <- left_join(hunan, lag.res)
+```
+
+Then the table below shows the average neighboring income values (stored in Inc.lag object) for each county.
+```{r}
+head(hunan)
+```
 
 ### 8.2 **Spatial lag as a sum of neighboring values**
 
