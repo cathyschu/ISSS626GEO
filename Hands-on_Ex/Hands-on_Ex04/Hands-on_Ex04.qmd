@@ -20,7 +20,7 @@ Starting from this, we will work on spatial weights and applications. In this ex
 We will use the the ppropriate function(s) of below packages to achieve various tasks & goals.
 
 | Package   | Task                                                           |
-|-------------------------|-----------------------------------------------|
+|------------------|------------------------------------------------------|
 | **sf**    | Import geospatial data                                         |
 | **readr** | Import csv file                                                |
 | **dplyr** | Perform relational join                                        |
@@ -320,11 +320,169 @@ wm_d62
 :::
 :::::
 
+Next we will display the content of `wm_d62` weight matrix using [str()]{style="color: #BA487F;"} & [*table()*](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/table){style="color: #BA487F;"} and [*card()*](https://r-spatial.github.io/spdep/reference/card.html){style="color: #BA487F;"} of **spdep**.
+
+::: panel-tabset
+## str()
+
+```{r}
+str(wm_d62)
+```
+
+## table() + card()
+
+```{r}
+table(hunan$County, card(wm_d62))
+```
+:::
+
+#### **Connected Components**
+
+1.  `n.comp.nb()` analyzes the neighbor list (`wm_d62`) to identify connected components. The function returns information about how many separate groups/clusters exist in your spatial network.
+
+```{r}
+n_comp <- n.comp.nb(wm_d62)
+n_comp
+```
+
+::::: markgoals
+::: markgoals-header
+**Learning**
+:::
+
+::: markgoals-container
+-   The **outcome 1** shows that all 88 regions form **one connected network**. If 2 or more, it means the spatial data has disconnected clusters.
+
+-   This is an important diagnostic check before proceeding with spatial econometric models or spatial autocorrelation analysis.
+:::
+:::::
+
+2.  Below code uses `table()` to count how many regions are in each component, and show the size distribution of the connected components.
+
+```{r}
+table(n_comp$comp.id)
+```
+
+::::: markgoals
+::: markgoals-header
+**Learning**
+:::
+
+::: markgoals-container
+-   All 88 regions belong to component 1.
+-   There is one fully connected spatial network.
+:::
+:::::
+
+#### **5.2.1 Plot fixed distance weight matrix**
+
+::: panel-tabset
+## Distance weight matrix
+
+The red lines show the links of 1st nearest neighbours and the black lines show the links of neighbours within the cut-off distance of 62km.
+
+```{r}
+#| fig-width: 12
+#| fig-height: 8
+
+par(bg = "#D0DDD0")
+plot(hunan$geometry, border = "grey60")
+plot(wm_d62, coords, add = TRUE)
+plot(k1, coords, add = TRUE, col = "red", length = 0.08)
+```
+
+## Links comparison
+
+We can also plot both nearest neighbours and neighbours within 62km.
+
+```{r}
+#| fig-width: 12
+#| fig-height: 8
+par(mfrow = c(1, 2), bg = "#D0DDD0")
+plot(hunan$geometry, border = "grey60", main = "1st nearest neighbours")
+plot(k1, coords, add = TRUE, col = "red", length = 0.08)
+plot(hunan$geometry, border = "grey60", main = "Distance link")
+plot(wm_d62, coords, add = TRUE, pch = 19, cex = 0.6)
+```
+:::
+
 ### 5.3 **Computing adaptive distance weight matrix**
+
+In fixed distance weight matrix, the more densely settled areas (usually the urban areas) tend to have more neighbours and the less densely settled areas (usually the rural counties) tend to have lesser neighbours. Having many neighbours smoothes the neighbour relationship across more neighbours.
+
+To control the number of neighbours directly using k-nearest neighbours, use 1. accept asymmetric neighbours 2. impose symmatry in the code below
+
+```{r}
+knn6 <- knn2nb(knearneigh(coords, k = 6))
+knn6
+```
+
+**No let's display the matrix:**
+
+```{r}
+str(knn6)
+```
+
+::::: markgoals
+::: markgoals-header
+**Learning**
+:::
+
+::: markgoals-container
+From the outcome we can see each country has exactly **6 neighbours**!
+:::
+:::::
+
+### 5.3.1 Plot distance based neighbours
+
+```{r}
+#| fig-width: 12
+#| fig-height: 8
+par(bg = "#D0DDD0")
+plot(hunan$geometry, border = "grey60")
+plot(knn6, coords, pch = 9, cex = 0.6, add = TRUE, col = "red")
+```
 
 ## 6 Weights based on IDW
 
-## 7 Row-standardised Weights Matrix
+### 6.1 **Inverse distance weights** 
+
+Here we use **Inversed Distance method** to derive a spatial weight matrix. In the first step, we compute the distance between areas by [*nbdists()*](https://r-spatial.github.io/spdep/reference/nbdists.html) of **spdep**.
+
+`lapply()` applies a function to each element in the `dist` list. The function `function(x) 1/(x)` calculates the inverse of each distance. This transforms distances into weights where **closer neighbors get higher weights**
+
+```{r}
+dist <- nbdists(wm_q, coords, longlat = TRUE)
+ids <- lapply(dist, function(x) 1/(x))
+ids
+```
+
+### 6.2 Row-standardised Weights Matrix
+
+We use `nb2listw(wm_q, style="W")`to create a spatial weights matrix where each neighbor gets equal weight calculated as 1 divided by the total number of neighbors. This creates row standardisation where each row sums to 1. If a region has 4 neighbors, each gets 0.25 weight. If another region has 2 neighbors, each gets 0.50 weight. The spatial lag becomes a weighted average of all neighboring values.
+
+**Edge problem:** **Interior regions** have more neighbors which creates stable estimates, while **edge regions** have fewer neighbors and potentially biased estimates. This could lead to over or under-estimating spatial autocorrelation patterns.
+
+This approach is simple and intuitive to use. We could explore `style="B"` which uses binary weights and has different trade-offs. IN a nutshell, style="W" gives us reliable spatial lag calculations, but we should be aware that edge regions might be less reliable in thefinal results.
+
+```{r}
+rswm_q <- nb2listw(wm_q, style="W", zero.policy = TRUE)
+rswm_q
+```
+::::: markgoals
+::: markgoals-header
+**Note**
+:::
+
+::: markgoals-container
+The `zero.policy=TRUE` option allows for lists of non-neighbors. This should be used with caution since the user may not be aware of missing neighbors in their dataset however, a `zero.policy` of FALSE would return an error.
+:::
+:::::
+
+### Check the weight of the 8th - 10th polygons' neighbors type:
+```{r}
+rswm_q$weights[8:10]
+```
 
 ## 8 Application of Spatial Weight Matrix
 
