@@ -43,7 +43,7 @@ hunan_sp <- hunan_sf %>%
 
 ## 4 Compute bandwidth
 ### 4.1 **Cross-validation (CV)**
-Will generate a score. It goes through iterations, and then stops at 76.29123.
+This uses leave-one-out cross-validation to find optimal bandwidth. Will generate a score. It goes through iterations, and then stops at 76.29123.
 The return is 76.29126, in KM.
 ```{r}
 bw_CV <- bw.gwr(GDPPC ~ 1, data = hunan_sp,
@@ -53,7 +53,8 @@ bw_CV
 ```
 
 ### 4.2 AIC
-AIC is the alternative method. Return is bigger: 160.5517, in KM. 
+Another method AIC uses Akaike Information Criterion to find optimal bandwidth.
+Return is bigger: 160.5517, in KM. 
 ```{r}
 bw_AIC <- bw.gwr(GDPPC ~ 1, data = hunan_sp,
                 approach = "AIC", adaptive = FALSE,
@@ -61,7 +62,7 @@ bw_AIC <- bw.gwr(GDPPC ~ 1, data = hunan_sp,
 bw_AIC
 ```
 
-## Compute fixed bandwidth
+## 5 Compute fixed bandwidth
 
 ```{r}
 gwstat <- gwss(data = hunan_sp, vars = "GDPPC",
@@ -69,7 +70,7 @@ gwstat <- gwss(data = hunan_sp, vars = "GDPPC",
                adaptive = FALSE, longlat = T)
 ```
 
-## Convert to a daraframe 
+## 6 Convert to a daraframe 
 Extract **SDF** data table from **gwss** object output from `gwss()`. 
 It will be converted into data.frame using `as.data.frame()`.
 
@@ -94,7 +95,7 @@ summary(hunan_gstat$GDPPC_LCV)
 
 ```
 
-## Visualise geographically weighted statistics
+## 7 Visualise geographically weighted statistics
 ```{r}
 #| fig-width: 12
 #| fig-height: 20

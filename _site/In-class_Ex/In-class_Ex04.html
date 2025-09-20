@@ -227,9 +227,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#cross-validation-cv" id="toc-cross-validation-cv" class="nav-link" data-scroll-target="#cross-validation-cv">4.1 <strong>Cross-validation (CV)</strong></a></li>
   <li><a href="#aic" id="toc-aic" class="nav-link" data-scroll-target="#aic">4.2 AIC</a></li>
   </ul></li>
-  <li><a href="#compute-fixed-bandwidth" id="toc-compute-fixed-bandwidth" class="nav-link" data-scroll-target="#compute-fixed-bandwidth">Compute fixed bandwidth</a></li>
-  <li><a href="#convert-to-a-daraframe" id="toc-convert-to-a-daraframe" class="nav-link" data-scroll-target="#convert-to-a-daraframe">Convert to a daraframe</a></li>
-  <li><a href="#visualise-geographically-weighted-statistics" id="toc-visualise-geographically-weighted-statistics" class="nav-link" data-scroll-target="#visualise-geographically-weighted-statistics">Visualise geographically weighted statistics</a></li>
+  <li><a href="#compute-fixed-bandwidth" id="toc-compute-fixed-bandwidth" class="nav-link" data-scroll-target="#compute-fixed-bandwidth">5 Compute fixed bandwidth</a></li>
+  <li><a href="#convert-to-a-daraframe" id="toc-convert-to-a-daraframe" class="nav-link" data-scroll-target="#convert-to-a-daraframe">6 Convert to a daraframe</a></li>
+  <li><a href="#visualise-geographically-weighted-statistics" id="toc-visualise-geographically-weighted-statistics" class="nav-link" data-scroll-target="#visualise-geographically-weighted-statistics">7 Visualise geographically weighted statistics</a></li>
   </ul>
 </nav>
     </div>
@@ -314,7 +314,7 @@ Geodetic CRS:  WGS 84</code></pre>
 <h2 class="anchored" data-anchor-id="compute-bandwidth">4 Compute bandwidth</h2>
 <section id="cross-validation-cv" class="level3">
 <h3 class="anchored" data-anchor-id="cross-validation-cv">4.1 <strong>Cross-validation (CV)</strong></h3>
-<p>Will generate a score. It goes through iterations, and then stops at 76.29123. The return is 76.29126, in KM.</p>
+<p>This uses leave-one-out cross-validation to find optimal bandwidth. Will generate a score. It goes through iterations, and then stops at 76.29123. The return is 76.29126, in KM.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>bw_CV <span class="ot">&lt;-</span> <span class="fu">bw.gwr</span>(GDPPC <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> hunan_sp,</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">approach =</span> <span class="st">"CV"</span>, <span class="at">adaptive =</span> <span class="cn">FALSE</span>,</span>
@@ -363,7 +363,7 @@ Fixed bandwidth: 76.29123 CV score: 13442844676 </code></pre>
 </section>
 <section id="aic" class="level3">
 <h3 class="anchored" data-anchor-id="aic">4.2 AIC</h3>
-<p>AIC is the alternative method. Return is bigger: 160.5517, in KM.</p>
+<p>Another method AIC uses Akaike Information Criterion to find optimal bandwidth. Return is bigger: 160.5517, in KM.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>bw_AIC <span class="ot">&lt;-</span> <span class="fu">bw.gwr</span>(GDPPC <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> hunan_sp,</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">approach =</span> <span class="st">"AIC"</span>, <span class="at">adaptive =</span> <span class="cn">FALSE</span>,</span>
@@ -391,7 +391,7 @@ Fixed bandwidth: 160.5517 AICc value: 1919.391 </code></pre>
 </section>
 </section>
 <section id="compute-fixed-bandwidth" class="level2">
-<h2 class="anchored" data-anchor-id="compute-fixed-bandwidth">Compute fixed bandwidth</h2>
+<h2 class="anchored" data-anchor-id="compute-fixed-bandwidth">5 Compute fixed bandwidth</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>gwstat <span class="ot">&lt;-</span> <span class="fu">gwss</span>(<span class="at">data =</span> hunan_sp, <span class="at">vars =</span> <span class="st">"GDPPC"</span>,</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">bw =</span> bw_AIC, <span class="at">kernel =</span> <span class="st">"bisquare"</span>,</span>
@@ -399,7 +399,7 @@ Fixed bandwidth: 160.5517 AICc value: 1919.391 </code></pre>
 </div>
 </section>
 <section id="convert-to-a-daraframe" class="level2">
-<h2 class="anchored" data-anchor-id="convert-to-a-daraframe">Convert to a daraframe</h2>
+<h2 class="anchored" data-anchor-id="convert-to-a-daraframe">6 Convert to a daraframe</h2>
 <p>Extract <strong>SDF</strong> data table from <strong>gwss</strong> object output from <code>gwss()</code>. It will be converted into data.frame using <code>as.data.frame()</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>gwstat_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(gwstat<span class="sc">$</span>SDF)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -438,7 +438,7 @@ Fixed bandwidth: 160.5517 AICc value: 1919.391 </code></pre>
 </div>
 </section>
 <section id="visualise-geographically-weighted-statistics" class="level2">
-<h2 class="anchored" data-anchor-id="visualise-geographically-weighted-statistics">Visualise geographically weighted statistics</h2>
+<h2 class="anchored" data-anchor-id="visualise-geographically-weighted-statistics">7 Visualise geographically weighted statistics</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>LM <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(hunan_gstat) <span class="sc">+</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="st">"GDPPC_LM"</span>) <span class="sc">+</span></span>

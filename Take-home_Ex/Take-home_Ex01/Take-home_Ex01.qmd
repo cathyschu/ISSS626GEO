@@ -115,3 +115,9 @@ biz_56111_sf <- st_as_sf(biz_56111,
 ```{r}
 head(biz_56111_sf)
 ```
+
+\*\* planning subzone area \> speed up computation.
+
+\*\* narrow down to study area.
+
+\*\*
