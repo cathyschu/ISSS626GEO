@@ -1,0 +1,131 @@
+---
+title: "In-class exerricse 04"
+author: "Cathy C."
+date: "Sep 20, 2025"
+date-modified: "last-modified" #auto render date
+format: html
+execute: #how YML page work
+  echo: true #will show code
+  eval: true #will run code every time and show output
+  warning: false #dont show warning msg
+  freeze: true #controls rendering - no render if no changes
+---
+
+### 1 Load libraries
+```{r}
+pacman::p_load(sf, ggstatsplot, tmap, tidyverse, knitr, GWmodel)
+```
+
+GWmodel presently is build around the plder sp and not sf formats for handling spatial data in R.
+
+### 2 Importing data
+```{r}
+hunan_sf <- st_read(dsn = "data/geospatial", layer = "Hunan")
+```
+
+
+```{r}
+hunan2012 <- read_csv("data/aspatial/Hunan_2012.csv")
+```
+
+### 3 Join datasets Hunan and Hunan_2012
+
+```{r}
+hunan_sf <- left_join(hunan_sf, hunan2012) %>% #this match by county
+  select(1:3, 7, 15, 16, 31,32)
+```
+
+
+```{r}
+hunan_sp <- hunan_sf %>%
+  as_Spatial()
+```
+
+## 4 Compute bandwidth
+### 4.1 **Cross-validation (CV)**
+Will generate a score. It goes through iterations, and then stops at 76.29123.
+The return is 76.29126, in KM.
+```{r}
+bw_CV <- bw.gwr(GDPPC ~ 1, data = hunan_sp,
+                approach = "CV", adaptive = FALSE,
+                kernel = "bisquare", longlat = T) #input data is in latlong
+bw_CV
+```
+
+### 4.2 AIC
+AIC is the alternative method. Return is bigger: 160.5517, in KM. 
+```{r}
+bw_AIC <- bw.gwr(GDPPC ~ 1, data = hunan_sp,
+                approach = "AIC", adaptive = FALSE,
+                kernel = "bisquare", longlat = T) #input data is in latlong
+bw_AIC
+```
+
+## Compute fixed bandwidth
+
+```{r}
+gwstat <- gwss(data = hunan_sp, vars = "GDPPC",
+               bw = bw_AIC, kernel = "bisquare",
+               adaptive = FALSE, longlat = T)
+```
+
+## Convert to a daraframe 
+Extract **SDF** data table from **gwss** object output from `gwss()`. 
+It will be converted into data.frame using `as.data.frame()`.
+
+```{r}
+gwstat_df <- as.data.frame(gwstat$SDF)
+```
+
+
+Then use `cbind()` to append the newly derived data.frame onto hunan_sf sf data.frame.
+
+```{r}
+hunan_gstat <- cbind(hunan_sf, gwstat_df)
+```
+
+```{r}
+# Summary of LISA results
+summary(hunan_gstat$GDPPC_LM)   # Local Moran's I values
+summary(hunan_gstat$GDPPC_LSD)  # Standard deviation
+summary(hunan_gstat$GDPPC_LVar) # Local variance
+summary(hunan_gstat$GDPPC_LSKe)
+summary(hunan_gstat$GDPPC_LCV)
+
+```
+
+## Visualise geographically weighted statistics
+```{r}
+#| fig-width: 12
+#| fig-height: 20
+
+LM <- tm_shape(hunan_gstat) +
+  tm_polygons("GDPPC_LM") +
+  tm_layout(legend.outside = TRUE) +
+  tm_title("GDPPC Local Moran")
+
+LSD <- tm_shape(hunan_gstat) + 
+  tm_polygons("GDPPC_LSD") +
+  tm_layout(legend.outside = TRUE) +
+  tm_title("Local Standard Deviation")
+
+LSKe <- tm_shape(hunan_gstat) +
+  tm_polygons("GDPPC_LSKe") +
+  tm_layout(legend.outside = TRUE) +
+  tm_title("GDPPC Local Skewness")
+
+LVar <- tm_shape(hunan_gstat) + 
+  tm_polygons("GDPPC_LVar") +
+  tm_layout(legend.outside = TRUE) +
+  tm_title("Local Variance")
+
+LCV <- tm_shape(hunan_gstat) + 
+  tm_polygons("GDPPC_LCV") +
+  tm_layout(legend.outside = TRUE) +
+  tm_title("Local Coefficient of Variation")
+
+tmap_arrange(LM, LSD, LSKe, LVar, LCV, asp = 1, ncol = 1)
+  
+
+```
+

@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Cathy C.">
-<meta name="dcterms.date" content="2025-09-13">
+<meta name="dcterms.date" content="2025-09-20">
 
-<title>03b - Data Wranggling – GeoSpatial</title>
+<title>In-class exerricse 04 – GeoSpatial</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -176,6 +176,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="dropdown-item" href="../In-class_Ex/In-class_Ex03b.html">
  <span class="dropdown-text">Exercise 3b</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../In-class_Ex/In-class_Ex04.html">
+ <span class="dropdown-text">Exercise 04</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
@@ -215,12 +219,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#loading-the-r-package" id="toc-loading-the-r-package" class="nav-link active" data-scroll-target="#loading-the-r-package">1 Loading the R package</a></li>
-  <li><a href="#importing-acra-data" id="toc-importing-acra-data" class="nav-link" data-scroll-target="#importing-acra-data">2 Importing ACRA data</a></li>
-  <li><a href="#tidying-acra-data" id="toc-tidying-acra-data" class="nav-link" data-scroll-target="#tidying-acra-data">3 Tidying ACRA data</a></li>
-  <li><a href="#geocoding" id="toc-geocoding" class="nav-link" data-scroll-target="#geocoding">4 Geocoding</a></li>
-  <li><a href="#appending-the-location-information" id="toc-appending-the-location-information" class="nav-link" data-scroll-target="#appending-the-location-information">5 Appending the location information</a></li>
-  <li><a href="#converting-into-sf-data-frame" id="toc-converting-into-sf-data-frame" class="nav-link" data-scroll-target="#converting-into-sf-data-frame">6 Converting into SF data frame</a></li>
+  <li><a href="#load-libraries" id="toc-load-libraries" class="nav-link active" data-scroll-target="#load-libraries">1 Load libraries</a></li>
+  <li><a href="#importing-data" id="toc-importing-data" class="nav-link" data-scroll-target="#importing-data">2 Importing data</a></li>
+  <li><a href="#join-datasets-hunan-and-hunan_2012" id="toc-join-datasets-hunan-and-hunan_2012" class="nav-link" data-scroll-target="#join-datasets-hunan-and-hunan_2012">3 Join datasets Hunan and Hunan_2012</a></li>
+  <li><a href="#compute-bandwidth" id="toc-compute-bandwidth" class="nav-link" data-scroll-target="#compute-bandwidth">4 Compute bandwidth</a>
+  <ul class="collapse">
+  <li><a href="#cross-validation-cv" id="toc-cross-validation-cv" class="nav-link" data-scroll-target="#cross-validation-cv">4.1 <strong>Cross-validation (CV)</strong></a></li>
+  <li><a href="#aic" id="toc-aic" class="nav-link" data-scroll-target="#aic">4.2 AIC</a></li>
+  </ul></li>
+  <li><a href="#compute-fixed-bandwidth" id="toc-compute-fixed-bandwidth" class="nav-link" data-scroll-target="#compute-fixed-bandwidth">Compute fixed bandwidth</a></li>
+  <li><a href="#convert-to-a-daraframe" id="toc-convert-to-a-daraframe" class="nav-link" data-scroll-target="#convert-to-a-daraframe">Convert to a daraframe</a></li>
+  <li><a href="#visualise-geographically-weighted-statistics" id="toc-visualise-geographically-weighted-statistics" class="nav-link" data-scroll-target="#visualise-geographically-weighted-statistics">Visualise geographically weighted statistics</a></li>
   </ul>
 </nav>
     </div>
@@ -229,7 +238,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">03b - Data Wranggling</h1>
+<h1 class="title">In-class exerricse 04</h1>
 </div>
 
 
@@ -246,7 +255,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">September 13, 2025</p>
+      <p class="date">September 20, 2025</p>
     </div>
   </div>
   
@@ -264,123 +273,205 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>In this exercise, we will go through the steps for preparing data for Take-home exercise one where we will investigate the spatial and spatio-temporal patterns of new businesses and firms established in Singapore.</p>
-<section id="loading-the-r-package" class="level2">
-<h2 class="anchored" data-anchor-id="loading-the-r-package">1 Loading the R package</h2>
-<p>We will use <strong>tidyverse, sf, tmap, tmap,</strong> and <strong>httr</strong> packages for this exercise to process data sets.</p>
+<section id="load-libraries" class="level3">
+<h3 class="anchored" data-anchor-id="load-libraries">1 Load libraries</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, sf, tmap, httr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(sf, ggstatsplot, tmap, tidyverse, knitr, GWmodel)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>GWmodel presently is build around the plder sp and not sf formats for handling spatial data in R.</p>
 </section>
-<section id="importing-acra-data" class="level2">
-<h2 class="anchored" data-anchor-id="importing-acra-data">2 Importing ACRA data</h2>
-<p>We will import the ACRA data and transform them as tibble frame</p>
+<section id="importing-data" class="level3">
+<h3 class="anchored" data-anchor-id="importing-data">2 Importing data</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>folder_path <span class="ot">&lt;-</span> <span class="st">"data/aspatial/acra"</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>file_list <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> folder_path,</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">pattern =</span> <span class="st">"^ACRA*.*</span><span class="sc">\\</span><span class="st">.csv$"</span>,</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>acra_data <span class="ot">&lt;-</span> file_list <span class="sc">%&gt;%</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_dfr</span>(read_csv) <span class="co">#import and append all of them together!!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Then, we will write the data into .rds to store it in the data folder. This is so no need to process data every time.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(acra_data, <span class="st">"data/rds/acra_data.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="tidying-acra-data" class="level2">
-<h2 class="anchored" data-anchor-id="tidying-acra-data">3 Tidying ACRA data</h2>
-<p>With this step, we will extract the business code 56111, rename the columns and transform the data type necessarily.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>biz_56111 <span class="ot">&lt;-</span> acra_data <span class="sc">%&gt;%</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">24</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(primary_ssic_code <span class="sc">==</span> <span class="dv">56111</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">date =</span> registration_incorporation_date) <span class="sc">%&gt;%</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(date),</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">YEAR =</span> <span class="fu">year</span>(date),</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">MONTH_NUM =</span> <span class="fu">month</span>(date),</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">MONTH_ABBR =</span> <span class="fu">month</span>(date, <span class="at">label =</span> <span class="cn">TRUE</span>, <span class="at">abbr =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span> <span class="co">#this gives Jan, Feb, Mar...</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">postal_code =</span> <span class="fu">str_pad</span>(postal_code,</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>                               <span class="at">width =</span> <span class="dv">6</span>, <span class="at">side =</span> <span class="st">"left"</span>, <span class="at">pad =</span> <span class="st">"0"</span>)) <span class="sc">%&gt;%</span> <span class="co">#if missing digits, will replace with zero.</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(YEAR <span class="sc">==</span> <span class="dv">2025</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="geocoding" class="level2">
-<h2 class="anchored" data-anchor-id="geocoding">4 Geocoding</h2>
-<p>(Avoid doing so for &gt; 5K datasets) We will perform the following in this step:</p>
-<ul>
-<li>Extract unique postal code from the poastal_code field of the tidied tibble data frame.</li>
-<li>Perform geocode by submitting the postal code to SLA OneMap Reverse Geocode API.</li>
-<li>Save the return results into 2 data frame namely <em>found</em> and <em>not_found</em>.</li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>postcodes <span class="ot">&lt;-</span> <span class="fu">unique</span>(biz_56111<span class="sc">$</span>postal_code)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">"https://onemap.gov.sg/api/common/elastic/search"</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>found <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>not_found <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">postcode =</span> <span class="fu">character</span>())</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (pc <span class="cf">in</span> postcodes) {</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  query <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">searchVal =</span> pc,</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">returnGeom =</span> <span class="st">"Y"</span>,</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">getAddrDetails =</span> <span class="st">"Y"</span>,</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">pageNum =</span> <span class="st">"1"</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">GET</span>(url, <span class="at">query =</span> query)</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  json <span class="ot">&lt;-</span> <span class="fu">content</span>(res)</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(json<span class="sc">$</span>found <span class="sc">!=</span> <span class="dv">0</span>) {</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(json<span class="sc">$</span>results, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    df<span class="sc">$</span>input_postcode <span class="ot">&lt;-</span> pc</span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    found <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(found, df)</span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span>{</span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    not_found <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(not_found, <span class="fu">data.frame</span>(<span class="at">postcodes =</span> pc))</span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="appending-the-location-information" class="level2">
-<h2 class="anchored" data-anchor-id="appending-the-location-information">5 Appending the location information</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>biz_56111 <span class="ot">=</span> biz_56111 <span class="sc">%&gt;%</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(found,</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">'postal_code'</span> <span class="ot">=</span> <span class="st">'POSTAL'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="converting-into-sf-data-frame" class="level2">
-<h2 class="anchored" data-anchor-id="converting-into-sf-data-frame">6 Converting into SF data frame</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>biz_56111_sf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(biz_56111,</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"X"</span>, <span class="st">"Y"</span>),</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">crs =</span> <span class="dv">3414</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(biz_56111_sf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>hunan_sf <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"data/geospatial"</span>, <span class="at">layer =</span> <span class="st">"Hunan"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Simple feature collection with 6 features and 125 fields
-Geometry type: POINT
+<pre><code>Reading layer `Hunan' from data source 
+  `/Users/cathyc/Documents/cathyschu/ISSS626GEO/In-class_Ex/data/geospatial' 
+  using driver `ESRI Shapefile'
+Simple feature collection with 88 features and 7 fields
+Geometry type: POLYGON
 Dimension:     XY
-Bounding box:  xmin: 27549.59 ymin: 31216.93 xmax: 37390.83 ymax: 46589.95
-Projected CRS: SVY21 / Singapore TM
-# A tibble: 6 × 126
-  uen        issuance_agency_id entity_name               entity_type_descript…¹
-  &lt;chr&gt;      &lt;chr&gt;              &lt;chr&gt;                     &lt;chr&gt;                 
-1 202501136C ACRA               AL ASHIK PTE. LTD.        Local Company         
-2 202501329K ACRA               ARASH LEGACY PTE. LTD.    Local Company         
-3 202502902M ACRA               ADAM'S FAMILY CATERING P… Local Company         
-4 202503682G ACRA               ASWINS VEG RESTAURANT PT… Local Company         
-5 202504143K ACRA               ADIRAI KR BRIYANI PTE. L… Local Company         
-6 202504371R ACRA               AL YASSIN CAFE  (S) PTE.… Local Company         
-# ℹ abbreviated name: ¹​entity_type_description
-# ℹ 122 more variables: business_constitution_description &lt;chr&gt;,
-#   company_type_description &lt;chr&gt;, paf_constitution_description &lt;chr&gt;,
-#   entity_status_description &lt;chr&gt;, date &lt;date&gt;, uen_issue_date &lt;date&gt;,
-#   address_type &lt;chr&gt;, block &lt;chr&gt;, street_name &lt;chr&gt;, level_no &lt;chr&gt;,
-#   unit_no &lt;chr&gt;, building_name &lt;chr&gt;, postal_code &lt;chr&gt;,
-#   other_address_line1 &lt;chr&gt;, other_address_line2 &lt;chr&gt;, …</code></pre>
+Bounding box:  xmin: 108.7831 ymin: 24.6342 xmax: 114.2544 ymax: 30.12812
+Geodetic CRS:  WGS 84</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>hunan2012 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/aspatial/Hunan_2012.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="join-datasets-hunan-and-hunan_2012" class="level3">
+<h3 class="anchored" data-anchor-id="join-datasets-hunan-and-hunan_2012">3 Join datasets Hunan and Hunan_2012</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>hunan_sf <span class="ot">&lt;-</span> <span class="fu">left_join</span>(hunan_sf, hunan2012) <span class="sc">%&gt;%</span> <span class="co">#this match by county</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">15</span>, <span class="dv">16</span>, <span class="dv">31</span>,<span class="dv">32</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>hunan_sp <span class="ot">&lt;-</span> hunan_sf <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_Spatial</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="compute-bandwidth" class="level2">
+<h2 class="anchored" data-anchor-id="compute-bandwidth">4 Compute bandwidth</h2>
+<section id="cross-validation-cv" class="level3">
+<h3 class="anchored" data-anchor-id="cross-validation-cv">4.1 <strong>Cross-validation (CV)</strong></h3>
+<p>Will generate a score. It goes through iterations, and then stops at 76.29123. The return is 76.29126, in KM.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>bw_CV <span class="ot">&lt;-</span> <span class="fu">bw.gwr</span>(GDPPC <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> hunan_sp,</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">approach =</span> <span class="st">"CV"</span>, <span class="at">adaptive =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">kernel =</span> <span class="st">"bisquare"</span>, <span class="at">longlat =</span> T) <span class="co">#input data is in latlong</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Fixed bandwidth: 357.4897 CV score: 16265191728 
+Fixed bandwidth: 220.985 CV score: 14954930931 
+Fixed bandwidth: 136.6204 CV score: 14134185837 
+Fixed bandwidth: 84.48025 CV score: 13693362460 
+Fixed bandwidth: 52.25585 CV score: Inf 
+Fixed bandwidth: 104.396 CV score: 13891052305 
+Fixed bandwidth: 72.17162 CV score: 13577893677 
+Fixed bandwidth: 64.56447 CV score: 14681160609 
+Fixed bandwidth: 76.8731 CV score: 13444716890 
+Fixed bandwidth: 79.77877 CV score: 13503296834 
+Fixed bandwidth: 75.07729 CV score: 13452450771 
+Fixed bandwidth: 77.98296 CV score: 13457916138 
+Fixed bandwidth: 76.18716 CV score: 13442911302 
+Fixed bandwidth: 75.76323 CV score: 13444600639 
+Fixed bandwidth: 76.44916 CV score: 13442994078 
+Fixed bandwidth: 76.02523 CV score: 13443285248 
+Fixed bandwidth: 76.28724 CV score: 13442844774 
+Fixed bandwidth: 76.34909 CV score: 13442864995 
+Fixed bandwidth: 76.24901 CV score: 13442855596 
+Fixed bandwidth: 76.31086 CV score: 13442847019 
+Fixed bandwidth: 76.27264 CV score: 13442846793 
+Fixed bandwidth: 76.29626 CV score: 13442844829 
+Fixed bandwidth: 76.28166 CV score: 13442845238 
+Fixed bandwidth: 76.29068 CV score: 13442844678 
+Fixed bandwidth: 76.29281 CV score: 13442844691 
+Fixed bandwidth: 76.28937 CV score: 13442844698 
+Fixed bandwidth: 76.2915 CV score: 13442844676 
+Fixed bandwidth: 76.292 CV score: 13442844679 
+Fixed bandwidth: 76.29119 CV score: 13442844676 
+Fixed bandwidth: 76.29099 CV score: 13442844676 
+Fixed bandwidth: 76.29131 CV score: 13442844676 
+Fixed bandwidth: 76.29138 CV score: 13442844676 
+Fixed bandwidth: 76.29126 CV score: 13442844676 
+Fixed bandwidth: 76.29123 CV score: 13442844676 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>bw_CV</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 76.29126</code></pre>
+</div>
+</div>
+</section>
+<section id="aic" class="level3">
+<h3 class="anchored" data-anchor-id="aic">4.2 AIC</h3>
+<p>AIC is the alternative method. Return is bigger: 160.5517, in KM.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>bw_AIC <span class="ot">&lt;-</span> <span class="fu">bw.gwr</span>(GDPPC <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> hunan_sp,</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">approach =</span> <span class="st">"AIC"</span>, <span class="at">adaptive =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">kernel =</span> <span class="st">"bisquare"</span>, <span class="at">longlat =</span> T) <span class="co">#input data is in latlong</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Fixed bandwidth: 357.4897 AICc value: 1927.631 
+Fixed bandwidth: 220.985 AICc value: 1921.547 
+Fixed bandwidth: 136.6204 AICc value: 1919.993 
+Fixed bandwidth: 84.48025 AICc value: 1940.603 
+Fixed bandwidth: 168.8448 AICc value: 1919.457 
+Fixed bandwidth: 188.7606 AICc value: 1920.007 
+Fixed bandwidth: 156.5362 AICc value: 1919.41 
+Fixed bandwidth: 148.929 AICc value: 1919.527 
+Fixed bandwidth: 161.2377 AICc value: 1919.392 
+Fixed bandwidth: 164.1433 AICc value: 1919.403 
+Fixed bandwidth: 159.4419 AICc value: 1919.393 
+Fixed bandwidth: 162.3475 AICc value: 1919.394 
+Fixed bandwidth: 160.5517 AICc value: 1919.391 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>bw_AIC</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 160.5517</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="compute-fixed-bandwidth" class="level2">
+<h2 class="anchored" data-anchor-id="compute-fixed-bandwidth">Compute fixed bandwidth</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>gwstat <span class="ot">&lt;-</span> <span class="fu">gwss</span>(<span class="at">data =</span> hunan_sp, <span class="at">vars =</span> <span class="st">"GDPPC"</span>,</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">bw =</span> bw_AIC, <span class="at">kernel =</span> <span class="st">"bisquare"</span>,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">adaptive =</span> <span class="cn">FALSE</span>, <span class="at">longlat =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="convert-to-a-daraframe" class="level2">
+<h2 class="anchored" data-anchor-id="convert-to-a-daraframe">Convert to a daraframe</h2>
+<p>Extract <strong>SDF</strong> data table from <strong>gwss</strong> object output from <code>gwss()</code>. It will be converted into data.frame using <code>as.data.frame()</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>gwstat_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(gwstat<span class="sc">$</span>SDF)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Then use <code>cbind()</code> to append the newly derived data.frame onto hunan_sf sf data.frame.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>hunan_gstat <span class="ot">&lt;-</span> <span class="fu">cbind</span>(hunan_sf, gwstat_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary of LISA results</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(hunan_gstat<span class="sc">$</span>GDPPC_LM)   <span class="co"># Local Moran's I values</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  14259   18172   23683   24724   28169   47833 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(hunan_gstat<span class="sc">$</span>GDPPC_LSD)  <span class="co"># Standard deviation</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   3572    6343    9779   11411   16462   22583 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(hunan_gstat<span class="sc">$</span>GDPPC_LVar) <span class="co"># Local variance</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+ 12760850  40235144  95667969 163260555 271007333 510014012 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(hunan_gstat<span class="sc">$</span>GDPPC_LSKe)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-0.1181  1.0567  1.4006  1.5864  2.0757  3.8782 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(hunan_gstat<span class="sc">$</span>GDPPC_LCV)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.1776  0.3419  0.4443  0.4463  0.5300  0.7427 </code></pre>
+</div>
+</div>
+</section>
+<section id="visualise-geographically-weighted-statistics" class="level2">
+<h2 class="anchored" data-anchor-id="visualise-geographically-weighted-statistics">Visualise geographically weighted statistics</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>LM <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(hunan_gstat) <span class="sc">+</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="st">"GDPPC_LM"</span>) <span class="sc">+</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">legend.outside =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_title</span>(<span class="st">"GDPPC Local Moran"</span>)</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>LSD <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(hunan_gstat) <span class="sc">+</span> </span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="st">"GDPPC_LSD"</span>) <span class="sc">+</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">legend.outside =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_title</span>(<span class="st">"Local Standard Deviation"</span>)</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>LSKe <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(hunan_gstat) <span class="sc">+</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="st">"GDPPC_LSKe"</span>) <span class="sc">+</span></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">legend.outside =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_title</span>(<span class="st">"GDPPC Local Skewness"</span>)</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>LVar <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(hunan_gstat) <span class="sc">+</span> </span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="st">"GDPPC_LVar"</span>) <span class="sc">+</span></span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">legend.outside =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_title</span>(<span class="st">"Local Variance"</span>)</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>LCV <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(hunan_gstat) <span class="sc">+</span> </span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="st">"GDPPC_LCV"</span>) <span class="sc">+</span></span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">legend.outside =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_title</span>(<span class="st">"Local Coefficient of Variation"</span>)</span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_arrange</span>(LM, LSD, LSKe, LVar, LCV, <span class="at">asp =</span> <span class="dv">1</span>, <span class="at">ncol =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="In-class_Ex04_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="1152"></p>
+</figure>
+</div>
 </div>
 </div>
 

@@ -20,7 +20,7 @@ Starting from this, we will work on spatial weights and applications. In this ex
 We will use the the ppropriate function(s) of below packages to achieve various tasks & goals.
 
 | Package   | Task                                                           |
-|-------------------|-----------------------------------------------------|
+|--------------------|----------------------------------------------------|
 | **sf**    | Import geospatial data                                         |
 | **readr** | Import csv file                                                |
 | **dplyr** | Perform relational join                                        |
@@ -100,7 +100,7 @@ The documentation says that you can pass a “queen” argument that takes TRUE 
 Let's compute Queen contiguity weight matrix.
 
 ```{r}
-wm_q <- poly2nb(hunan, queen = TRUE)
+wm_q <- poly2nb(hunan, queen = TRUE) #create nb list. can save first so won't run again.
 summary(wm_q)
 ```
 
@@ -335,6 +335,8 @@ str(wm_d62)
 table(hunan$County, card(wm_d62))
 ```
 :::
+
+Dislays the number of neighbours each county has within the distance of 62. For example, Zixing has 3.
 
 #### **Connected Components**
 
@@ -674,6 +676,16 @@ w_avg_gdppc <- qtm(hunan, "lag_window_avg GDPPC", title = "Window Average GDPPC"
 tmap_arrange(lag_gdppc, w_avg_gdppc, asp=1, ncol=2)
 ```
 
+::::: markgoals
+::: markgoals-header
+**Learning**
+:::
+
+::: markgoals-container
+This method allows us to generalise the areas, to see the that east side is more developed than the west side.
+:::
+:::::
+
 ### 8.4 **Spatial window sum**
 
 The spatial window sum is the counterpart of the window average, but **without using row-standardized weights**.
@@ -734,6 +746,19 @@ hunan %>%
 w_sum_gdppc <- qtm(hunan, "w_sum GDPPC", title = "Window Sum GDPPC")
 tmap_arrange(lag_sum_gdppc, w_sum_gdppc, asp = 1, ncol = 2)
 ```
+::::: markgoals
+::: markgoals-header
+**Learning**
+:::
+
+::: markgoals-container
+Added surrounding plus itself.
+
+If we want to build up housing market. How do I know where people have more purchasing power? The cx could come from the surrounding area, so looking at the sum data it would be more obvious. 
+With a threshold determined, then can identify the locations.
+
+:::
+:::::
 
 ## 9 References
 

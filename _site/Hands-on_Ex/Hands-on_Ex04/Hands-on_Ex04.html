@@ -283,7 +283,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">September 19, 2025</p>
+      <p class="date-modified">September 20, 2025</p>
     </div>
   </div>
     
@@ -303,8 +303,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>We will use the the ppropriate function(s) of below packages to achieve various tasks &amp; goals.</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 26%">
-<col style="width: 73%">
+<col style="width: 27%">
+<col style="width: 72%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -412,7 +412,7 @@ Geodetic CRS:  WGS 84</code></pre>
 <h3 class="anchored" data-anchor-id="computing-queen-contiguity-based-neighbours">4.1 <strong>Computing (QUEEN) contiguity based neighbours</strong></h3>
 <p>Let’s compute Queen contiguity weight matrix.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>wm_q <span class="ot">&lt;-</span> <span class="fu">poly2nb</span>(hunan, <span class="at">queen =</span> <span class="cn">TRUE</span>)</span>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>wm_q <span class="ot">&lt;-</span> <span class="fu">poly2nb</span>(hunan, <span class="at">queen =</span> <span class="cn">TRUE</span>) <span class="co">#create nb list. can save first so won't run again.</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(wm_q)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Neighbour list object:
@@ -984,6 +984,7 @@ Average number of links: 3.681818 </code></pre>
 </div>
 </div>
 </div>
+<p>Dislays the number of neighbours each county has within the distance of 62. For example, Zixing has 3.</p>
 <section id="connected-components" class="level4">
 <h4 class="anchored" data-anchor-id="connected-components"><strong>Connected Components</strong></h4>
 <ol type="1">
@@ -2415,6 +2416,14 @@ W 88 7744 88 30.90265 357.5308</code></pre>
 </div>
 </div>
 </div>
+<div class="markgoals">
+<div class="markgoals-header">
+<p><strong>Learning</strong></p>
+</div>
+<div class="markgoals-container">
+<p>This method allows us to generalise the areas, to see the that east side is more developed than the west side.</p>
+</div>
+</div>
 </section>
 </section>
 <section id="spatial-window-sum" class="level3">
@@ -3073,6 +3082,15 @@ B 88 7744 536 1072 14160</code></pre>
 <p><img src="Hands-on_Ex04_files/figure-html/unnamed-chunk-49-1.png" class="img-fluid figure-img" width="1152"></p>
 </figure>
 </div>
+</div>
+</div>
+<div class="markgoals">
+<div class="markgoals-header">
+<p><strong>Learning</strong></p>
+</div>
+<div class="markgoals-container">
+<p>Added surrounding plus itself.</p>
+<p>If we want to build up housing market. How do I know where people have more purchasing power? The cx could come from the surrounding area, so looking at the sum data it would be more obvious. With a threshold determined, then can identify the locations.</p>
 </div>
 </div>
 </section>
