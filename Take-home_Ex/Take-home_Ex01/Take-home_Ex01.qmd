@@ -21,11 +21,13 @@ We will use **tidyverse, sf, tmap, tmap,** and **httr** packages for this exerci
 pacman::p_load(tidyverse, sf, tmap, httr, knitr)
 ```
 
-## 2 Importing ACRA data
+## 2 Data Wrangling
+### 2.1 Importing ACRA data
 
 We will import the ACRA data and transform them as tibble frame
 
 ```{r}
+
 folder_path <- "data/aspatial/acra"
 file_list <- list.files(path = folder_path,
                         pattern = "^ACRA*.*\\.csv$",
@@ -38,11 +40,11 @@ acra_data <- file_list %>%
 Then, we will write the data into .rds to store it in the data folder. This is so no need to process data every time.
 
 ```{r}
-#| eval: false
+
 write_rds(acra_data, "data/rds/acra_data.rds")
 ```
 
-## 3 Tidying ACRA data
+### 2.2 Tidying ACRA data
 
 With this step, we will extract the business codes 9601, 9602, and 86204, then rename the columns and transform the data type necessarily.
 
@@ -91,26 +93,24 @@ There are 150 observations we have retrieved for this analysis.
 **Hairdressing, Beauty and Other Personal Care Services**
 Business Code 9602 includes hair dressing, beauty salons and manicure & pedicure services.
 ```{r}
+biz_9602 <- acra_data %>%
+  select(1:24) %>%
+  filter(primary_ssic_code == 96021 | primary_ssic_code == 96022 | primary_ssic_code == 96023) %>%
+  rename(date = registration_incorporation_date) %>%
+  mutate(date = as.Date(date),
+         YEAR = year(date),
+         MONTH_NUM = month(date),
+         MONTH_ABBR = month(date, label = TRUE, abbr = TRUE)) %>% #this gives Jan, Feb, Mar...
+  mutate(postal_code = str_pad(postal_code,
+                               width = 6, side = "left", pad = "0")) %>% #if missing digits, will replace with zero.
+filter(YEAR == 2024 | YEAR == 2025 & MONTH_NUM <= 6)
 
-# 
-# biz_9602 <- acra_data %>%
-#   select(1:24) %>%
-#   filter(primary_ssic_code == 96021 | primary_ssic_code == 96022 | primary_ssic_code == 96023) %>%
-#   rename(date = registration_incorporation_date) %>%
-#   mutate(date = as.Date(date),
-#          YEAR = year(date),
-#          MONTH_NUM = month(date),
-#          MONTH_ABBR = month(date, label = TRUE, abbr = TRUE)) %>% #this gives Jan, Feb, Mar...
-#   mutate(postal_code = str_pad(postal_code,
-#                                width = 6, side = "left", pad = "0")) %>% #if missing digits, will replace with zero.
-# filter(YEAR == 2024 | YEAR == 2025 & MONTH_NUM <= 6)
-# 
-# glimpse(biz_9602)
+glimpse(biz_9602)
 ```
 
 There are 1762 observations we have retrieved for this analysis.
 
-## 86024
+## 86204
 **Dental services**
 ```{r}
 biz_86204 <- acra_data %>%
@@ -131,7 +131,7 @@ glimpse(biz_86204)
 There are 81 observations we have retrieved for this analysis.
 :::
 
-## 4 Geocoding
+### 2.3 Geocoding
 
 (Avoid doing so for \> 5K datasets) We will perform the following in this step:
 
@@ -139,57 +139,166 @@ There are 81 observations we have retrieved for this analysis.
 -   Perform geocode by submitting the postal code to SLA OneMap Reverse Geocode API.
 -   Save the return results into 2 data frame namely *found* and *not_found*.
 
+::: panel-tabset
+## 9601
+
 ```{r}
-#| eval: false
-postcodes <- unique(biz_56111$postal_code)
+
+postcodes_9601 <- unique(biz_9601$postal_code)
 
 url <- "https://onemap.gov.sg/api/common/elastic/search"
 
-found <- data.frame()
-not_found <- data.frame(postcode = character())
+found_9601 <- data.frame()
+not_found_9601 <- data.frame(postcode_9601 = character())
 
-for (pc in postcodes) {
-  query <- list(
-    searchVal = pc,
+for (pc_9601 in postcodes_9601) {
+  query_9601 <- list(
+    searchVal = pc_9601,
     returnGeom = "Y",
     getAddrDetails = "Y",
     pageNum = "1"
   )
   
-  res <- GET(url, query = query)
-  json <- content(res)
+  res_9601 <- GET(url, query = query_9601)
+  json_9601 <- content(res_9601)
   
-  if(json$found != 0) {
-    df <- as.data.frame(json$results, stringsAsFactors = FALSE)
-    df$input_postcode <- pc
-    found <- bind_rows(found, df)
+  if(json_9601$found != 0) {
+    df_9601 <- as.data.frame(json_9601$results, stringsAsFactors = FALSE)
+    df_9601$input_postcode_9601 <- pc_9601
+    found_9601 <- bind_rows(found_9601, df_9601)
   } else{
-    not_found <- bind_rows(not_found, data.frame(postcodes = pc))
+    not_found_9601 <- bind_rows(not_found_9601, data.frame(postcode_9601 = pc_9601))
   }
 }
 ```
 
-## 5 Appending the location information
+## 9602
 
 ```{r}
-#| eval: false
-biz_56111 = biz_56111 %>%
-  left_join(found,
+
+postcodes_9602 <- unique(biz_9602$postal_code)
+
+url <- "https://onemap.gov.sg/api/common/elastic/search"
+
+found_9602 <- data.frame()
+not_found_9602 <- data.frame(postcode_9602 = character())
+
+for (pc_9602 in postcodes_9602) {
+  query_9602 <- list(
+    searchVal = pc_9602,
+    returnGeom = "Y",
+    getAddrDetails = "Y",
+    pageNum = "1"
+  )
+  
+  res_9602 <- GET(url, query = query_9602)
+  json_9602 <- content(res_9602)
+  
+  if(json_9602$found != 0) {
+    df_9602 <- as.data.frame(json_9602$results, stringsAsFactors = FALSE)
+    df_9602$input_postcode_9602 <- pc_9602
+    found_9602 <- bind_rows(found_9602, df_9602)
+  } else{
+    not_found_9602 <- bind_rows(not_found_9602, data.frame(postcode_9602 = pc_9602))
+  }
+}
+```
+
+## 86204
+
+```{r}
+
+postcodes_86204 <- unique(biz_86204$postal_code)
+
+url <- "https://onemap.gov.sg/api/common/elastic/search"
+
+found_86204 <- data.frame()
+not_found_86204 <- data.frame(postcode_86204 = character())
+
+for (pc_86204 in postcodes_86204) {
+  query_86204 <- list(
+    searchVal = pc_86204,
+    returnGeom = "Y",
+    getAddrDetails = "Y",
+    pageNum = "1"
+  )
+  
+  res_86204 <- GET(url, query = query_86204)
+  json_86204 <- content(res_86204)
+  
+  if(json_86204$found != 0) {
+    df_86204 <- as.data.frame(json_86204$results, stringsAsFactors = FALSE)
+    df_86204$input_postcode_86204 <- pc_86204
+    found_86204 <- bind_rows(found_86204, df_86204)
+  } else{
+    not_found_86204 <- bind_rows(not_found_86204, data.frame(postcode_86204 = pc_86204))
+  }
+}
+```
+
+:::
+### 2.4 Appending the location information
+::: panel-tabset
+
+## 9601
+```{r}
+
+biz_9601 = biz_9601 %>%
+  left_join(found_9601,
             by = c('postal_code' = 'POSTAL'))
 ```
 
-## 6 Converting into SF data frame
+## 9602
+```{r}
+
+biz_9602 = biz_9602 %>%
+  left_join(found_9602,
+            by = c('postal_code' = 'POSTAL'))
+```
+
+
+## 86204
+```{r}
+
+biz_86204 = biz_86204 %>%
+  left_join(found_86204,
+            by = c('postal_code' = 'POSTAL'))
+```
+
+:::
+### 2.5 Converting into SF data frame
+::: panel-tabset
+## 9601
 
 ```{r}
-#| eval: false
-biz_56111_sf <- st_as_sf(biz_56111,
+
+biz_9601_sf <- st_as_sf(biz_9601,
                          coords = c("X", "Y"),
                          crs = 3414)
 ```
 
+
+## 9602
 ```{r}
-#| eval: false
-kable(head(biz_56111_sf))
+
+biz_9602_sf <- st_as_sf(biz_9602,
+                         coords = c("X", "Y"),
+                         crs = 3414)
+```
+
+## 86204
+```{r}
+
+biz_86204_sf <- st_as_sf(biz_86204,
+                         coords = c("X", "Y"),
+                         crs = 3414)
+```
+
+::: 
+
+```{r}
+
+kable(head(biz_9601_sf))
 ```
 
 \*\* planning subzone area \> speed up computation.

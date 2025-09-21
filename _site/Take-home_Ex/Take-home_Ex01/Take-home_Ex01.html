@@ -220,11 +220,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#loading-the-r-package" id="toc-loading-the-r-package" class="nav-link active" data-scroll-target="#loading-the-r-package">1 Loading the R package</a></li>
-  <li><a href="#importing-acra-data" id="toc-importing-acra-data" class="nav-link" data-scroll-target="#importing-acra-data">2 Importing ACRA data</a></li>
-  <li><a href="#tidying-acra-data" id="toc-tidying-acra-data" class="nav-link" data-scroll-target="#tidying-acra-data">3 Tidying ACRA data</a></li>
-  <li><a href="#geocoding" id="toc-geocoding" class="nav-link" data-scroll-target="#geocoding">4 Geocoding</a></li>
-  <li><a href="#appending-the-location-information" id="toc-appending-the-location-information" class="nav-link" data-scroll-target="#appending-the-location-information">5 Appending the location information</a></li>
-  <li><a href="#converting-into-sf-data-frame" id="toc-converting-into-sf-data-frame" class="nav-link" data-scroll-target="#converting-into-sf-data-frame">6 Converting into SF data frame</a></li>
+  <li><a href="#data-wrangling" id="toc-data-wrangling" class="nav-link" data-scroll-target="#data-wrangling">2 Data Wrangling</a>
+  <ul class="collapse">
+  <li><a href="#importing-acra-data" id="toc-importing-acra-data" class="nav-link" data-scroll-target="#importing-acra-data">2.1 Importing ACRA data</a></li>
+  <li><a href="#tidying-acra-data" id="toc-tidying-acra-data" class="nav-link" data-scroll-target="#tidying-acra-data">2.2 Tidying ACRA data</a></li>
+  <li><a href="#geocoding" id="toc-geocoding" class="nav-link" data-scroll-target="#geocoding">2.3 Geocoding</a></li>
+  <li><a href="#appending-the-location-information" id="toc-appending-the-location-information" class="nav-link" data-scroll-target="#appending-the-location-information">2.4 Appending the location information</a></li>
+  <li><a href="#converting-into-sf-data-frame" id="toc-converting-into-sf-data-frame" class="nav-link" data-scroll-target="#converting-into-sf-data-frame">2.5 Converting into SF data frame</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -276,8 +279,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, sf, tmap, httr, knitr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="importing-acra-data" class="level2">
-<h2 class="anchored" data-anchor-id="importing-acra-data">2 Importing ACRA data</h2>
+<section id="data-wrangling" class="level2">
+<h2 class="anchored" data-anchor-id="data-wrangling">2 Data Wrangling</h2>
+<section id="importing-acra-data" class="level3">
+<h3 class="anchored" data-anchor-id="importing-acra-data">2.1 Importing ACRA data</h3>
 <p>We will import the ACRA data and transform them as tibble frame</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>folder_path <span class="ot">&lt;-</span> <span class="st">"data/aspatial/acra"</span></span>
@@ -292,8 +297,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(acra_data, <span class="st">"data/rds/acra_data.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="tidying-acra-data" class="level2">
-<h2 class="anchored" data-anchor-id="tidying-acra-data">3 Tidying ACRA data</h2>
+<section id="tidying-acra-data" class="level3">
+<h3 class="anchored" data-anchor-id="tidying-acra-data">2.2 Tidying ACRA data</h3>
 <p>With this step, we will extract the business codes 9601, 9602, and 86204, then rename the columns and transform the data type necessarily.</p>
 <p>The business types chosen are:</p>
 <table class="caption-top table">
@@ -345,7 +350,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <p>We use below code to retrieve the data between Jan 1, 2024 to June 30, 2025 for the 3 different major business types.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">9601</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">9602</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">86024</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">9601</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">9602</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">86204</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <p><strong>Washing and (Dry-) Cleaning of Textile and Fur Products</strong> Business Code 9601 emcompasses Laundry cleaning and self-operated laundries (96011 &amp; 96012)</p>
@@ -400,39 +405,69 @@ $ MONTH_ABBR                        &lt;ord&gt; Jan, Mar, Feb, Jun, Jul, Apr, No
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <p><strong>Hairdressing, Beauty and Other Personal Care Services</strong> Business Code 9602 includes hair dressing, beauty salons and manicure &amp; pedicure services.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># biz_9602 &lt;- acra_data %&gt;%</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   select(1:24) %&gt;%</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   filter(primary_ssic_code == 96021 | primary_ssic_code == 96022 | primary_ssic_code == 96023) %&gt;%</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   rename(date = registration_incorporation_date) %&gt;%</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#   mutate(date = as.Date(date),</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#          YEAR = year(date),</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#          MONTH_NUM = month(date),</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#          MONTH_ABBR = month(date, label = TRUE, abbr = TRUE)) %&gt;% #this gives Jan, Feb, Mar...</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">#   mutate(postal_code = str_pad(postal_code,</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">#                                width = 6, side = "left", pad = "0")) %&gt;% #if missing digits, will replace with zero.</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co"># filter(YEAR == 2024 | YEAR == 2025 &amp; MONTH_NUM &lt;= 6)</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co"># glimpse(biz_9602)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>biz_9602 <span class="ot">&lt;-</span> acra_data <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">24</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(primary_ssic_code <span class="sc">==</span> <span class="dv">96021</span> <span class="sc">|</span> primary_ssic_code <span class="sc">==</span> <span class="dv">96022</span> <span class="sc">|</span> primary_ssic_code <span class="sc">==</span> <span class="dv">96023</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">date =</span> registration_incorporation_date) <span class="sc">%&gt;%</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(date),</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">YEAR =</span> <span class="fu">year</span>(date),</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">MONTH_NUM =</span> <span class="fu">month</span>(date),</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">MONTH_ABBR =</span> <span class="fu">month</span>(date, <span class="at">label =</span> <span class="cn">TRUE</span>, <span class="at">abbr =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span> <span class="co">#this gives Jan, Feb, Mar...</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">postal_code =</span> <span class="fu">str_pad</span>(postal_code,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>                               <span class="at">width =</span> <span class="dv">6</span>, <span class="at">side =</span> <span class="st">"left"</span>, <span class="at">pad =</span> <span class="st">"0"</span>)) <span class="sc">%&gt;%</span> <span class="co">#if missing digits, will replace with zero.</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(YEAR <span class="sc">==</span> <span class="dv">2024</span> <span class="sc">|</span> YEAR <span class="sc">==</span> <span class="dv">2025</span> <span class="sc">&amp;</span> MONTH_NUM <span class="sc">&lt;=</span> <span class="dv">6</span>)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(biz_9602)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 1,762
+Columns: 27
+$ uen                               &lt;chr&gt; "202400273N", "202400385D", "2024010…
+$ issuance_agency_id                &lt;chr&gt; "ACRA", "ACRA", "ACRA", "ACRA", "ACR…
+$ entity_name                       &lt;chr&gt; "A-VINZ (KV) PTE. LTD.", "ACTINIC VE…
+$ entity_type_description           &lt;chr&gt; "Local Company", "Local Company", "L…
+$ business_constitution_description &lt;chr&gt; "na", "na", "na", "na", "na", "na", …
+$ company_type_description          &lt;chr&gt; "Exempt Private Company Limited by S…
+$ paf_constitution_description      &lt;chr&gt; "na", "na", "na", "na", "na", "na", …
+$ entity_status_description         &lt;chr&gt; "Live Company", "Struck Off", "Live …
+$ date                              &lt;date&gt; 2024-01-02, 2024-01-02, 2024-01-06,…
+$ uen_issue_date                    &lt;date&gt; 2024-01-02, 2024-01-02, 2024-01-06,…
+$ address_type                      &lt;chr&gt; "LOCAL", "LOCAL", "LOCAL", "LOCAL", …
+$ block                             &lt;chr&gt; "7030", "9", "67", "250", "1", "371"…
+$ street_name                       &lt;chr&gt; "ANG MO KIO AVENUE 5", "RAFFLES PLAC…
+$ level_no                          &lt;chr&gt; "07", "19", "01", "19", "01", "B1", …
+$ unit_no                           &lt;chr&gt; "36", "21", "459", "03", "20", "60",…
+$ building_name                     &lt;chr&gt; "NORTHSTAR @ AMK", "REPUBLIC PLAZA",…
+$ postal_code                       &lt;chr&gt; "569880", "048619", "330067", "17910…
+$ other_address_line1               &lt;chr&gt; "na", "na", "na", "na", "na", "na", …
+$ other_address_line2               &lt;chr&gt; "na", "na", "na", "na", "na", "na", …
+$ account_due_date                  &lt;chr&gt; "2026-07-31", "2025-07-31", "2026-07…
+$ annual_return_date                &lt;chr&gt; "2025-07-30", "na", "2025-07-10", "2…
+$ primary_ssic_code                 &lt;dbl&gt; 96021, 96021, 96022, 96021, 96021, 9…
+$ primary_ssic_description          &lt;chr&gt; "na", "na", "na", "na", "na", "BEAUT…
+$ primary_user_described_activity   &lt;chr&gt; "na", "na", "na", "na", "na", "na", …
+$ YEAR                              &lt;dbl&gt; 2024, 2024, 2024, 2024, 2024, 2024, …
+$ MONTH_NUM                         &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, …
+$ MONTH_ABBR                        &lt;ord&gt; Jan, Jan, Jan, Jan, Jan, Jan, Feb, F…</code></pre>
+</div>
 </div>
 <p>There are 1762 observations we have retrieved for this analysis.</p>
 </div>
 <div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
 <p><strong>Dental services</strong></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>biz_86204 <span class="ot">&lt;-</span> acra_data <span class="sc">%&gt;%</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">24</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(primary_ssic_code <span class="sc">==</span> <span class="dv">86204</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">date =</span> registration_incorporation_date) <span class="sc">%&gt;%</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(date),</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">YEAR =</span> <span class="fu">year</span>(date),</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">MONTH_NUM =</span> <span class="fu">month</span>(date),</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">MONTH_ABBR =</span> <span class="fu">month</span>(date, <span class="at">label =</span> <span class="cn">TRUE</span>, <span class="at">abbr =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span> <span class="co">#this gives Jan, Feb, Mar...</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">postal_code =</span> <span class="fu">str_pad</span>(postal_code,</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>                               <span class="at">width =</span> <span class="dv">6</span>, <span class="at">side =</span> <span class="st">"left"</span>, <span class="at">pad =</span> <span class="st">"0"</span>)) <span class="sc">%&gt;%</span> <span class="co">#if missing digits, will replace with zero.</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(YEAR <span class="sc">==</span> <span class="dv">2024</span> <span class="sc">|</span> YEAR <span class="sc">==</span> <span class="dv">2025</span> <span class="sc">&amp;</span> MONTH_NUM <span class="sc">&lt;=</span> <span class="dv">6</span>)</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(biz_86204)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>biz_86204 <span class="ot">&lt;-</span> acra_data <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">24</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(primary_ssic_code <span class="sc">==</span> <span class="dv">86204</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">date =</span> registration_incorporation_date) <span class="sc">%&gt;%</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(date),</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">YEAR =</span> <span class="fu">year</span>(date),</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">MONTH_NUM =</span> <span class="fu">month</span>(date),</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">MONTH_ABBR =</span> <span class="fu">month</span>(date, <span class="at">label =</span> <span class="cn">TRUE</span>, <span class="at">abbr =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span> <span class="co">#this gives Jan, Feb, Mar...</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">postal_code =</span> <span class="fu">str_pad</span>(postal_code,</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>                               <span class="at">width =</span> <span class="dv">6</span>, <span class="at">side =</span> <span class="st">"left"</span>, <span class="at">pad =</span> <span class="st">"0"</span>)) <span class="sc">%&gt;%</span> <span class="co">#if missing digits, will replace with zero.</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(YEAR <span class="sc">==</span> <span class="dv">2024</span> <span class="sc">|</span> YEAR <span class="sc">==</span> <span class="dv">2025</span> <span class="sc">&amp;</span> MONTH_NUM <span class="sc">&lt;=</span> <span class="dv">6</span>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(biz_86204)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 81
 Columns: 27
@@ -470,66 +505,1208 @@ $ MONTH_ABBR                        &lt;ord&gt; Jan, Jan, Jan, Feb, Mar, Mar, Ap
 </div>
 </div>
 </section>
-<section id="geocoding" class="level2">
-<h2 class="anchored" data-anchor-id="geocoding">4 Geocoding</h2>
+<section id="geocoding" class="level3">
+<h3 class="anchored" data-anchor-id="geocoding">2.3 Geocoding</h3>
 <p>(Avoid doing so for &gt; 5K datasets) We will perform the following in this step:</p>
 <ul>
 <li>Extract unique postal code from the poastal_code field of the tidied tibble data frame.</li>
 <li>Perform geocode by submitting the postal code to SLA OneMap Reverse Geocode API.</li>
 <li>Save the return results into 2 data frame namely <em>found</em> and <em>not_found</em>.</li>
 </ul>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">9601</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">9602</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false">86204</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>postcodes <span class="ot">&lt;-</span> <span class="fu">unique</span>(biz_56111<span class="sc">$</span>postal_code)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">"https://onemap.gov.sg/api/common/elastic/search"</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>found <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>not_found <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">postcode =</span> <span class="fu">character</span>())</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (pc <span class="cf">in</span> postcodes) {</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  query <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">searchVal =</span> pc,</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">returnGeom =</span> <span class="st">"Y"</span>,</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">getAddrDetails =</span> <span class="st">"Y"</span>,</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">pageNum =</span> <span class="st">"1"</span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">GET</span>(url, <span class="at">query =</span> query)</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  json <span class="ot">&lt;-</span> <span class="fu">content</span>(res)</span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(json<span class="sc">$</span>found <span class="sc">!=</span> <span class="dv">0</span>) {</span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>    df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(json<span class="sc">$</span>results, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>    df<span class="sc">$</span>input_postcode <span class="ot">&lt;-</span> pc</span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>    found <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(found, df)</span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span>{</span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>    not_found <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(not_found, <span class="fu">data.frame</span>(<span class="at">postcodes =</span> pc))</span>
-<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>postcodes_9601 <span class="ot">&lt;-</span> <span class="fu">unique</span>(biz_9601<span class="sc">$</span>postal_code)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">"https://onemap.gov.sg/api/common/elastic/search"</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>found_9601 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>not_found_9601 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">postcode_9601 =</span> <span class="fu">character</span>())</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (pc_9601 <span class="cf">in</span> postcodes_9601) {</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  query_9601 <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">searchVal =</span> pc_9601,</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">returnGeom =</span> <span class="st">"Y"</span>,</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">getAddrDetails =</span> <span class="st">"Y"</span>,</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">pageNum =</span> <span class="st">"1"</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  res_9601 <span class="ot">&lt;-</span> <span class="fu">GET</span>(url, <span class="at">query =</span> query_9601)</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>  json_9601 <span class="ot">&lt;-</span> <span class="fu">content</span>(res_9601)</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(json_9601<span class="sc">$</span>found <span class="sc">!=</span> <span class="dv">0</span>) {</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    df_9601 <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(json_9601<span class="sc">$</span>results, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    df_9601<span class="sc">$</span>input_postcode_9601 <span class="ot">&lt;-</span> pc_9601</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    found_9601 <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(found_9601, df_9601)</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span>{</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>    not_found_9601 <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(not_found_9601, <span class="fu">data.frame</span>(<span class="at">postcode_9601 =</span> pc_9601))</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>postcodes_9602 <span class="ot">&lt;-</span> <span class="fu">unique</span>(biz_9602<span class="sc">$</span>postal_code)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">"https://onemap.gov.sg/api/common/elastic/search"</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>found_9602 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>not_found_9602 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">postcode_9602 =</span> <span class="fu">character</span>())</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (pc_9602 <span class="cf">in</span> postcodes_9602) {</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  query_9602 <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">searchVal =</span> pc_9602,</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">returnGeom =</span> <span class="st">"Y"</span>,</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">getAddrDetails =</span> <span class="st">"Y"</span>,</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">pageNum =</span> <span class="st">"1"</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  res_9602 <span class="ot">&lt;-</span> <span class="fu">GET</span>(url, <span class="at">query =</span> query_9602)</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>  json_9602 <span class="ot">&lt;-</span> <span class="fu">content</span>(res_9602)</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(json_9602<span class="sc">$</span>found <span class="sc">!=</span> <span class="dv">0</span>) {</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>    df_9602 <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(json_9602<span class="sc">$</span>results, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>    df_9602<span class="sc">$</span>input_postcode_9602 <span class="ot">&lt;-</span> pc_9602</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>    found_9602 <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(found_9602, df_9602)</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span>{</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>    not_found_9602 <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(not_found_9602, <span class="fu">data.frame</span>(<span class="at">postcode_9602 =</span> pc_9602))</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>postcodes_86204 <span class="ot">&lt;-</span> <span class="fu">unique</span>(biz_86204<span class="sc">$</span>postal_code)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">"https://onemap.gov.sg/api/common/elastic/search"</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>found_86204 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>not_found_86204 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">postcode_86204 =</span> <span class="fu">character</span>())</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (pc_86204 <span class="cf">in</span> postcodes_86204) {</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  query_86204 <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">searchVal =</span> pc_86204,</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">returnGeom =</span> <span class="st">"Y"</span>,</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">getAddrDetails =</span> <span class="st">"Y"</span>,</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">pageNum =</span> <span class="st">"1"</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  res_86204 <span class="ot">&lt;-</span> <span class="fu">GET</span>(url, <span class="at">query =</span> query_86204)</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  json_86204 <span class="ot">&lt;-</span> <span class="fu">content</span>(res_86204)</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(json_86204<span class="sc">$</span>found <span class="sc">!=</span> <span class="dv">0</span>) {</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    df_86204 <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(json_86204<span class="sc">$</span>results, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    df_86204<span class="sc">$</span>input_postcode_86204 <span class="ot">&lt;-</span> pc_86204</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>    found_86204 <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(found_86204, df_86204)</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span>{</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>    not_found_86204 <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(not_found_86204, <span class="fu">data.frame</span>(<span class="at">postcode_86204 =</span> pc_86204))</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
 </div>
 </section>
-<section id="appending-the-location-information" class="level2">
-<h2 class="anchored" data-anchor-id="appending-the-location-information">5 Appending the location information</h2>
+<section id="appending-the-location-information" class="level3">
+<h3 class="anchored" data-anchor-id="appending-the-location-information">2.4 Appending the location information</h3>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">9601</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">9602</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-3" role="tab" aria-controls="tabset-3-3" aria-selected="false">86204</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>biz_56111 <span class="ot">=</span> biz_56111 <span class="sc">%&gt;%</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(found,</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">'postal_code'</span> <span class="ot">=</span> <span class="st">'POSTAL'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>biz_9601 <span class="ot">=</span> biz_9601 <span class="sc">%&gt;%</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(found_9601,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">'postal_code'</span> <span class="ot">=</span> <span class="st">'POSTAL'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>biz_9602 <span class="ot">=</span> biz_9602 <span class="sc">%&gt;%</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(found_9602,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">'postal_code'</span> <span class="ot">=</span> <span class="st">'POSTAL'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-3-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-3-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>biz_86204 <span class="ot">=</span> biz_86204 <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(found_86204,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">'postal_code'</span> <span class="ot">=</span> <span class="st">'POSTAL'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
 </div>
 </section>
-<section id="converting-into-sf-data-frame" class="level2">
-<h2 class="anchored" data-anchor-id="converting-into-sf-data-frame">6 Converting into SF data frame</h2>
+<section id="converting-into-sf-data-frame" class="level3">
+<h3 class="anchored" data-anchor-id="converting-into-sf-data-frame">2.5 Converting into SF data frame</h3>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true">9601</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false">9602</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-3" role="tab" aria-controls="tabset-4-3" aria-selected="false">86204</a></li></ul>
+<div class="tab-content">
+<div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>biz_56111_sf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(biz_56111,</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"X"</span>, <span class="st">"Y"</span>),</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">crs =</span> <span class="dv">3414</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>biz_9601_sf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(biz_9601,</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"X"</span>, <span class="st">"Y"</span>),</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">crs =</span> <span class="dv">3414</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>biz_9602_sf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(biz_9602,</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"X"</span>, <span class="st">"Y"</span>),</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">crs =</span> <span class="dv">3414</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-4-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-3-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>biz_86204_sf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(biz_86204,</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"X"</span>, <span class="st">"Y"</span>),</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">crs =</span> <span class="dv">3414</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(biz_56111_sf))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(biz_9601_sf))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 1%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 2%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 2%">
+<col style="width: 3%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 1%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 1%">
+<col style="width: 3%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 1%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 1%">
+<col style="width: 3%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 1%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 1%">
+<col style="width: 3%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 1%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 1%">
+<col style="width: 3%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 2%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 1%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">uen</th>
+<th style="text-align: left;">issuance_agency_id</th>
+<th style="text-align: left;">entity_name</th>
+<th style="text-align: left;">entity_type_description</th>
+<th style="text-align: left;">business_constitution_description</th>
+<th style="text-align: left;">company_type_description</th>
+<th style="text-align: left;">paf_constitution_description</th>
+<th style="text-align: left;">entity_status_description</th>
+<th style="text-align: left;">date</th>
+<th style="text-align: left;">uen_issue_date</th>
+<th style="text-align: left;">address_type</th>
+<th style="text-align: left;">block</th>
+<th style="text-align: left;">street_name</th>
+<th style="text-align: left;">level_no</th>
+<th style="text-align: left;">unit_no</th>
+<th style="text-align: left;">building_name</th>
+<th style="text-align: left;">postal_code</th>
+<th style="text-align: left;">other_address_line1</th>
+<th style="text-align: left;">other_address_line2</th>
+<th style="text-align: left;">account_due_date</th>
+<th style="text-align: left;">annual_return_date</th>
+<th style="text-align: right;">primary_ssic_code</th>
+<th style="text-align: left;">primary_ssic_description</th>
+<th style="text-align: left;">primary_user_described_activity</th>
+<th style="text-align: right;">YEAR</th>
+<th style="text-align: right;">MONTH_NUM</th>
+<th style="text-align: left;">MONTH_ABBR</th>
+<th style="text-align: left;">SEARCHVAL</th>
+<th style="text-align: left;">BLK_NO</th>
+<th style="text-align: left;">ROAD_NAME</th>
+<th style="text-align: left;">BUILDING</th>
+<th style="text-align: left;">ADDRESS</th>
+<th style="text-align: left;">LATITUDE</th>
+<th style="text-align: left;">LONGITUDE</th>
+<th style="text-align: left;">input_postcode_9601</th>
+<th style="text-align: left;">SEARCHVAL.1</th>
+<th style="text-align: left;">BLK_NO.1</th>
+<th style="text-align: left;">ROAD_NAME.1</th>
+<th style="text-align: left;">BUILDING.1</th>
+<th style="text-align: left;">ADDRESS.1</th>
+<th style="text-align: left;">POSTAL.1</th>
+<th style="text-align: left;">X.1</th>
+<th style="text-align: left;">Y.1</th>
+<th style="text-align: left;">LATITUDE.1</th>
+<th style="text-align: left;">LONGITUDE.1</th>
+<th style="text-align: left;">SEARCHVAL.2</th>
+<th style="text-align: left;">BLK_NO.2</th>
+<th style="text-align: left;">ROAD_NAME.2</th>
+<th style="text-align: left;">BUILDING.2</th>
+<th style="text-align: left;">ADDRESS.2</th>
+<th style="text-align: left;">POSTAL.2</th>
+<th style="text-align: left;">X.2</th>
+<th style="text-align: left;">Y.2</th>
+<th style="text-align: left;">LATITUDE.2</th>
+<th style="text-align: left;">LONGITUDE.2</th>
+<th style="text-align: left;">SEARCHVAL.3</th>
+<th style="text-align: left;">BLK_NO.3</th>
+<th style="text-align: left;">ROAD_NAME.3</th>
+<th style="text-align: left;">BUILDING.3</th>
+<th style="text-align: left;">ADDRESS.3</th>
+<th style="text-align: left;">POSTAL.3</th>
+<th style="text-align: left;">X.3</th>
+<th style="text-align: left;">Y.3</th>
+<th style="text-align: left;">LATITUDE.3</th>
+<th style="text-align: left;">LONGITUDE.3</th>
+<th style="text-align: left;">SEARCHVAL.4</th>
+<th style="text-align: left;">BLK_NO.4</th>
+<th style="text-align: left;">ROAD_NAME.4</th>
+<th style="text-align: left;">BUILDING.4</th>
+<th style="text-align: left;">ADDRESS.4</th>
+<th style="text-align: left;">POSTAL.4</th>
+<th style="text-align: left;">X.4</th>
+<th style="text-align: left;">Y.4</th>
+<th style="text-align: left;">LATITUDE.4</th>
+<th style="text-align: left;">LONGITUDE.4</th>
+<th style="text-align: left;">SEARCHVAL.5</th>
+<th style="text-align: left;">BLK_NO.5</th>
+<th style="text-align: left;">ROAD_NAME.5</th>
+<th style="text-align: left;">BUILDING.5</th>
+<th style="text-align: left;">ADDRESS.5</th>
+<th style="text-align: left;">POSTAL.5</th>
+<th style="text-align: left;">X.5</th>
+<th style="text-align: left;">Y.5</th>
+<th style="text-align: left;">LATITUDE.5</th>
+<th style="text-align: left;">LONGITUDE.5</th>
+<th style="text-align: left;">SEARCHVAL.6</th>
+<th style="text-align: left;">BLK_NO.6</th>
+<th style="text-align: left;">ROAD_NAME.6</th>
+<th style="text-align: left;">BUILDING.6</th>
+<th style="text-align: left;">ADDRESS.6</th>
+<th style="text-align: left;">POSTAL.6</th>
+<th style="text-align: left;">X.6</th>
+<th style="text-align: left;">Y.6</th>
+<th style="text-align: left;">LATITUDE.6</th>
+<th style="text-align: left;">LONGITUDE.6</th>
+<th style="text-align: left;">SEARCHVAL.7</th>
+<th style="text-align: left;">BLK_NO.7</th>
+<th style="text-align: left;">ROAD_NAME.7</th>
+<th style="text-align: left;">BUILDING.7</th>
+<th style="text-align: left;">ADDRESS.7</th>
+<th style="text-align: left;">POSTAL.7</th>
+<th style="text-align: left;">X.7</th>
+<th style="text-align: left;">Y.7</th>
+<th style="text-align: left;">LATITUDE.7</th>
+<th style="text-align: left;">LONGITUDE.7</th>
+<th style="text-align: left;">SEARCHVAL.8</th>
+<th style="text-align: left;">BLK_NO.8</th>
+<th style="text-align: left;">ROAD_NAME.8</th>
+<th style="text-align: left;">BUILDING.8</th>
+<th style="text-align: left;">ADDRESS.8</th>
+<th style="text-align: left;">POSTAL.8</th>
+<th style="text-align: left;">X.8</th>
+<th style="text-align: left;">Y.8</th>
+<th style="text-align: left;">LATITUDE.8</th>
+<th style="text-align: left;">LONGITUDE.8</th>
+<th style="text-align: left;">SEARCHVAL.9</th>
+<th style="text-align: left;">BLK_NO.9</th>
+<th style="text-align: left;">ROAD_NAME.9</th>
+<th style="text-align: left;">BUILDING.9</th>
+<th style="text-align: left;">ADDRESS.9</th>
+<th style="text-align: left;">POSTAL.9</th>
+<th style="text-align: left;">X.9</th>
+<th style="text-align: left;">Y.9</th>
+<th style="text-align: left;">LATITUDE.9</th>
+<th style="text-align: left;">LONGITUDE.9</th>
+<th style="text-align: left;">geometry</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">202401518M</td>
+<td style="text-align: left;">ACRA</td>
+<td style="text-align: left;">ALL DAY EVERYDAY PTE. LTD.</td>
+<td style="text-align: left;">Local Company</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">Exempt Private Company Limited by Shares</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">Live Company</td>
+<td style="text-align: left;">2024-01-10</td>
+<td style="text-align: left;">2024-01-10</td>
+<td style="text-align: left;">LOCAL</td>
+<td style="text-align: left;">105</td>
+<td style="text-align: left;">BISHAN STREET 12</td>
+<td style="text-align: left;">05</td>
+<td style="text-align: left;">242</td>
+<td style="text-align: left;">BISHAN VIEW</td>
+<td style="text-align: left;">570105</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">2026-07-31</td>
+<td style="text-align: left;">2025-06-29</td>
+<td style="text-align: right;">96012</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: right;">2024</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Jan</td>
+<td style="text-align: left;">BISHAN VIEW</td>
+<td style="text-align: left;">105</td>
+<td style="text-align: left;">BISHAN STREET 12</td>
+<td style="text-align: left;">BISHAN VIEW</td>
+<td style="text-align: left;">105 BISHAN STREET 12 BISHAN VIEW SINGAPORE 570105</td>
+<td style="text-align: left;">1.34589493632505</td>
+<td style="text-align: left;">103.847365252767</td>
+<td style="text-align: left;">570105</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">POINT (29563.24 36447.74)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">202409043N</td>
+<td style="text-align: left;">ACRA</td>
+<td style="text-align: left;">ABENDANCE PTE. LTD.</td>
+<td style="text-align: left;">Local Company</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">Exempt Private Company Limited by Shares</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">Live Company</td>
+<td style="text-align: left;">2024-03-07</td>
+<td style="text-align: left;">2024-03-07</td>
+<td style="text-align: left;">LOCAL</td>
+<td style="text-align: left;">138</td>
+<td style="text-align: left;">JOO SENG ROAD</td>
+<td style="text-align: left;">02</td>
+<td style="text-align: left;">02</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">368361</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">2026-07-31</td>
+<td style="text-align: left;">2025-07-01</td>
+<td style="text-align: right;">96011</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: right;">2024</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">Mar</td>
+<td style="text-align: left;">138 JOO SENG ROAD SINGAPORE 368361</td>
+<td style="text-align: left;">138</td>
+<td style="text-align: left;">JOO SENG ROAD</td>
+<td style="text-align: left;">NIL</td>
+<td style="text-align: left;">138 JOO SENG ROAD SINGAPORE 368361</td>
+<td style="text-align: left;">1.3377756933485</td>
+<td style="text-align: left;">103.884646509523</td>
+<td style="text-align: left;">368361</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">POINT (33712.25 35550.02)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">202507525N</td>
+<td style="text-align: left;">ACRA</td>
+<td style="text-align: left;">AWESOME LAUNDRY PTE. LTD.</td>
+<td style="text-align: left;">Local Company</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">Exempt Private Company Limited by Shares</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">Live Company</td>
+<td style="text-align: left;">2025-02-20</td>
+<td style="text-align: left;">2025-02-20</td>
+<td style="text-align: left;">LOCAL</td>
+<td style="text-align: left;">7030</td>
+<td style="text-align: left;">ANG MO KIO AVENUE 5</td>
+<td style="text-align: left;">02</td>
+<td style="text-align: left;">11</td>
+<td style="text-align: left;">NORTHSTAR @ AMK</td>
+<td style="text-align: left;">569880</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">2026-08-31</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: right;">96011</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: right;">2025</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Feb</td>
+<td style="text-align: left;">BANYAN TREE EDUCATION @ AMK</td>
+<td style="text-align: left;">7030</td>
+<td style="text-align: left;">ANG MO KIO AVENUE 5</td>
+<td style="text-align: left;">BANYAN TREE EDUCATION @ AMK</td>
+<td style="text-align: left;">7030 ANG MO KIO AVENUE 5 BANYAN TREE EDUCATION @ AMK SINGAPORE 569880</td>
+<td style="text-align: left;">1.37792345221534</td>
+<td style="text-align: left;">103.875389838376</td>
+<td style="text-align: left;">569880</td>
+<td style="text-align: left;">DISCOVERY PLANET LIMITED PARTNERSHIP</td>
+<td style="text-align: left;">7030</td>
+<td style="text-align: left;">ANG MO KIO AVENUE 5</td>
+<td style="text-align: left;">DISCOVERY PLANET LIMITED PARTNERSHIP</td>
+<td style="text-align: left;">7030 ANG MO KIO AVENUE 5 DISCOVERY PLANET LIMITED PARTNERSHIP SINGAPORE 569880</td>
+<td style="text-align: left;">569880</td>
+<td style="text-align: left;">32682.0063954461</td>
+<td style="text-align: left;">39989.3313855752</td>
+<td style="text-align: left;">1.37792345221534</td>
+<td style="text-align: left;">103.875389838376</td>
+<td style="text-align: left;">ESHKOL VALLEY @ NORTHSTAR PTE. LTD.</td>
+<td style="text-align: left;">7030</td>
+<td style="text-align: left;">ANG MO KIO AVENUE 5</td>
+<td style="text-align: left;">ESHKOL VALLEY @ NORTHSTAR PTE. LTD.</td>
+<td style="text-align: left;">7030 ANG MO KIO AVENUE 5 ESHKOL VALLEY @ NORTHSTAR PTE. LTD. SINGAPORE 569880</td>
+<td style="text-align: left;">569880</td>
+<td style="text-align: left;">32682.0063954461</td>
+<td style="text-align: left;">39989.3313855752</td>
+<td style="text-align: left;">1.37792345221534</td>
+<td style="text-align: left;">103.875389838376</td>
+<td style="text-align: left;">LITTLE FOOTPRINTS SCHOOLHOUSE (AMK) PTE. LTD.</td>
+<td style="text-align: left;">7030</td>
+<td style="text-align: left;">ANG MO KIO AVENUE 5</td>
+<td style="text-align: left;">LITTLE FOOTPRINTS SCHOOLHOUSE (AMK) PTE. LTD.</td>
+<td style="text-align: left;">7030 ANG MO KIO AVENUE 5 LITTLE FOOTPRINTS SCHOOLHOUSE (AMK) PTE. LTD. SINGAPORE 569880</td>
+<td style="text-align: left;">569880</td>
+<td style="text-align: left;">32682.0063954461</td>
+<td style="text-align: left;">39989.3313855752</td>
+<td style="text-align: left;">1.37792345221534</td>
+<td style="text-align: left;">103.875389838376</td>
+<td style="text-align: left;">LUCAS CHILDREN ACADEMY PTE. LTD.</td>
+<td style="text-align: left;">7030</td>
+<td style="text-align: left;">ANG MO KIO AVENUE 5</td>
+<td style="text-align: left;">LUCAS CHILDREN ACADEMY PTE. LTD.</td>
+<td style="text-align: left;">7030 ANG MO KIO AVENUE 5 LUCAS CHILDREN ACADEMY PTE. LTD. SINGAPORE 569880</td>
+<td style="text-align: left;">569880</td>
+<td style="text-align: left;">32682.0063954461</td>
+<td style="text-align: left;">39989.3313855752</td>
+<td style="text-align: left;">1.37792345221534</td>
+<td style="text-align: left;">103.875389838376</td>
+<td style="text-align: left;">NORTHSTAR @ AMK</td>
+<td style="text-align: left;">7030</td>
+<td style="text-align: left;">ANG MO KIO AVENUE 5</td>
+<td style="text-align: left;">NORTHSTAR @ AMK</td>
+<td style="text-align: left;">7030 ANG MO KIO AVENUE 5 NORTHSTAR @ AMK SINGAPORE 569880</td>
+<td style="text-align: left;">569880</td>
+<td style="text-align: left;">32700.5844903681</td>
+<td style="text-align: left;">39939.0796920396</td>
+<td style="text-align: left;">1.37746899102804</td>
+<td style="text-align: left;">103.875556768146</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">POINT (32682.01 39989.33)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">202527692C</td>
+<td style="text-align: left;">ACRA</td>
+<td style="text-align: left;">ASH + EVE PTE. LTD.</td>
+<td style="text-align: left;">Local Company</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">Private Company Limited by Shares</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">Live Company</td>
+<td style="text-align: left;">2025-06-26</td>
+<td style="text-align: left;">2025-06-26</td>
+<td style="text-align: left;">LOCAL</td>
+<td style="text-align: left;">160</td>
+<td style="text-align: left;">ROBINSON ROAD</td>
+<td style="text-align: left;">14</td>
+<td style="text-align: left;">04</td>
+<td style="text-align: left;">SINGAPORE BUSINESS FEDERATION CENTER</td>
+<td style="text-align: left;">068914</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">2026-12-31</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: right;">96012</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: right;">2025</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: left;">Jun</td>
+<td style="text-align: left;">SINGAPORE BUSINESS FEDERATION CENTER (SBF CENTER)</td>
+<td style="text-align: left;">160</td>
+<td style="text-align: left;">ROBINSON ROAD</td>
+<td style="text-align: left;">SINGAPORE BUSINESS FEDERATION CENTER (SBF CENTER)</td>
+<td style="text-align: left;">160 ROBINSON ROAD SINGAPORE BUSINESS FEDERATION CENTER (SBF CENTER) SINGAPORE 068914</td>
+<td style="text-align: left;">1.27812790985944</td>
+<td style="text-align: left;">103.847854628243</td>
+<td style="text-align: left;">068914</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">POINT (29617.75 28954.42)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">53489069E</td>
+<td style="text-align: left;">ACRA</td>
+<td style="text-align: left;">AQUAFRESH EXPRESS</td>
+<td style="text-align: left;">Sole Proprietorship/ Partnership</td>
+<td style="text-align: left;">Sole-Proprietor</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">Ceased Registration</td>
+<td style="text-align: left;">2024-07-24</td>
+<td style="text-align: left;">2024-07-24</td>
+<td style="text-align: left;">LOCAL</td>
+<td style="text-align: left;">842G</td>
+<td style="text-align: left;">TAMPINES STREET 82</td>
+<td style="text-align: left;">14</td>
+<td style="text-align: left;">86</td>
+<td style="text-align: left;">TAMPINES ARCADIA</td>
+<td style="text-align: left;">527842</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: right;">96012</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: right;">2024</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">Jul</td>
+<td style="text-align: left;">TAMPINES ARCADIA</td>
+<td style="text-align: left;">842G</td>
+<td style="text-align: left;">TAMPINES STREET 82</td>
+<td style="text-align: left;">TAMPINES ARCADIA</td>
+<td style="text-align: left;">842G TAMPINES STREET 82 TAMPINES ARCADIA SINGAPORE 527842</td>
+<td style="text-align: left;">1.35207674741611</td>
+<td style="text-align: left;">103.937111715862</td>
+<td style="text-align: left;">527842</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">POINT (39551.01 37131.54)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">53503312E</td>
+<td style="text-align: left;">ACRA</td>
+<td style="text-align: left;">A &amp; B LAUNDRY</td>
+<td style="text-align: left;">Sole Proprietorship/ Partnership</td>
+<td style="text-align: left;">Partnership</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">Live</td>
+<td style="text-align: left;">2025-04-30</td>
+<td style="text-align: left;">2025-04-30</td>
+<td style="text-align: left;">LOCAL</td>
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">KIM CHUAN TERRACE</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">537028</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: right;">96012</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: right;">2025</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">Apr</td>
+<td style="text-align: left;">5 KIM CHUAN TERRACE SINGAPORE 537028</td>
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">KIM CHUAN TERRACE</td>
+<td style="text-align: left;">NIL</td>
+<td style="text-align: left;">5 KIM CHUAN TERRACE SINGAPORE 537028</td>
+<td style="text-align: left;">1.33932059888709</td>
+<td style="text-align: left;">103.890529559767</td>
+<td style="text-align: left;">537028</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">POINT (34366.97 35720.86)</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <p>** planning subzone area &gt; speed up computation.</p>
 <p>** narrow down to study area.</p>
 <p>**</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
