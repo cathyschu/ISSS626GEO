@@ -257,7 +257,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">September 20, 2025</p>
+      <p class="date-modified">September 22, 2025</p>
     </div>
   </div>
     
@@ -273,7 +273,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="loading-the-r-package">1 Loading the R package</h2>
 <p>We will use <strong>tidyverse, sf, tmap, tmap,</strong> and <strong>httr</strong> packages for this exercise to process data sets.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, sf, tmap, httr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, sf, tmap, httr, knitr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="importing-acra-data" class="level2">
@@ -294,11 +294,65 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="tidying-acra-data" class="level2">
 <h2 class="anchored" data-anchor-id="tidying-acra-data">3 Tidying ACRA data</h2>
-<p>With this step, we will extract the business code 56111, rename the columns and transform the data type necessarily.</p>
+<p>With this step, we will extract the business codes 9601, 9602, and 86204, then rename the columns and transform the data type necessarily.</p>
+<p>The business types chosen are:</p>
+<table class="caption-top table">
+<caption>Business Code &amp; Types</caption>
+<colgroup>
+<col style="width: 25%">
+<col style="width: 75%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Business Code</th>
+<th>Types / subtypes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>9601</strong></td>
+<td><strong>Washing and (Dry-) Cleaning of Textile and Fur Products</strong></td>
+</tr>
+<tr class="even">
+<td>96011</td>
+<td>Laundry and dry cleaning services except self-operated laundries</td>
+</tr>
+<tr class="odd">
+<td>96012</td>
+<td>Self-operated laundries</td>
+</tr>
+<tr class="even">
+<td><strong>9602</strong></td>
+<td><strong>Hairdressing, Beauty and Other Personal Care Services</strong></td>
+</tr>
+<tr class="odd">
+<td>96021</td>
+<td>Hairdressing salons/shops (including barber shops)</td>
+</tr>
+<tr class="even">
+<td>96022</td>
+<td>Beauty salons and spas (including slimming, skin care and hair care centres)</td>
+</tr>
+<tr class="odd">
+<td>96023</td>
+<td>Manicure and pedicure services</td>
+</tr>
+<tr class="even">
+<td><strong>86024</strong></td>
+<td><strong>Dental services</strong></td>
+</tr>
+</tbody>
+</table>
+<p>We use below code to retrieve the data between Jan 1, 2024 to June 30, 2025 for the 3 different major business types.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">9601</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">9602</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">86024</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p><strong>Washing and (Dry-) Cleaning of Textile and Fur Products</strong> Business Code 9601 emcompasses Laundry cleaning and self-operated laundries (96011 &amp; 96012)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>biz_56111 <span class="ot">&lt;-</span> acra_data <span class="sc">%&gt;%</span></span>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>biz_9601 <span class="ot">&lt;-</span> acra_data <span class="sc">%&gt;%</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">24</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(primary_ssic_code <span class="sc">==</span> <span class="dv">56111</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(primary_ssic_code <span class="sc">==</span> <span class="dv">96011</span> <span class="sc">|</span> primary_ssic_code <span class="sc">==</span> <span class="dv">96012</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">date =</span> registration_incorporation_date) <span class="sc">%&gt;%</span></span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(date),</span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">YEAR =</span> <span class="fu">year</span>(date),</span>
@@ -306,7 +360,114 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">MONTH_ABBR =</span> <span class="fu">month</span>(date, <span class="at">label =</span> <span class="cn">TRUE</span>, <span class="at">abbr =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span> <span class="co">#this gives Jan, Feb, Mar...</span></span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">postal_code =</span> <span class="fu">str_pad</span>(postal_code,</span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>                               <span class="at">width =</span> <span class="dv">6</span>, <span class="at">side =</span> <span class="st">"left"</span>, <span class="at">pad =</span> <span class="st">"0"</span>)) <span class="sc">%&gt;%</span> <span class="co">#if missing digits, will replace with zero.</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(YEAR <span class="sc">==</span> <span class="dv">2025</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(YEAR <span class="sc">==</span> <span class="dv">2024</span> <span class="sc">|</span> YEAR <span class="sc">==</span> <span class="dv">2025</span> <span class="sc">&amp;</span> MONTH_NUM <span class="sc">&lt;=</span> <span class="dv">6</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(biz_9601)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 150
+Columns: 27
+$ uen                               &lt;chr&gt; "202401518M", "202409043N", "2025075…
+$ issuance_agency_id                &lt;chr&gt; "ACRA", "ACRA", "ACRA", "ACRA", "ACR…
+$ entity_name                       &lt;chr&gt; "ALL DAY EVERYDAY PTE. LTD.", "ABEND…
+$ entity_type_description           &lt;chr&gt; "Local Company", "Local Company", "L…
+$ business_constitution_description &lt;chr&gt; "na", "na", "na", "na", "Sole-Propri…
+$ company_type_description          &lt;chr&gt; "Exempt Private Company Limited by S…
+$ paf_constitution_description      &lt;chr&gt; "na", "na", "na", "na", "na", "na", …
+$ entity_status_description         &lt;chr&gt; "Live Company", "Live Company", "Liv…
+$ date                              &lt;date&gt; 2024-01-10, 2024-03-07, 2025-02-20,…
+$ uen_issue_date                    &lt;date&gt; 2024-01-10, 2024-03-07, 2025-02-20,…
+$ address_type                      &lt;chr&gt; "LOCAL", "LOCAL", "LOCAL", "LOCAL", …
+$ block                             &lt;chr&gt; "105", "138", "7030", "160", "842G",…
+$ street_name                       &lt;chr&gt; "BISHAN STREET 12", "JOO SENG ROAD",…
+$ level_no                          &lt;chr&gt; "05", "02", "02", "14", "14", "na", …
+$ unit_no                           &lt;chr&gt; "242", "02", "11", "04", "86", "na",…
+$ building_name                     &lt;chr&gt; "BISHAN VIEW", "na", "NORTHSTAR @ AM…
+$ postal_code                       &lt;chr&gt; "570105", "368361", "569880", "06891…
+$ other_address_line1               &lt;chr&gt; "na", "na", "na", "na", "na", "na", …
+$ other_address_line2               &lt;chr&gt; "na", "na", "na", "na", "na", "na", …
+$ account_due_date                  &lt;chr&gt; "2026-07-31", "2026-07-31", "2026-08…
+$ annual_return_date                &lt;chr&gt; "2025-06-29", "2025-07-01", "na", "n…
+$ primary_ssic_code                 &lt;dbl&gt; 96012, 96011, 96011, 96012, 96012, 9…
+$ primary_ssic_description          &lt;chr&gt; "na", "na", "na", "na", "na", "na", …
+$ primary_user_described_activity   &lt;chr&gt; "na", "na", "na", "na", "na", "na", …
+$ YEAR                              &lt;dbl&gt; 2024, 2024, 2025, 2025, 2024, 2025, …
+$ MONTH_NUM                         &lt;dbl&gt; 1, 3, 2, 6, 7, 4, 11, 1, 2, 5, 4, 4,…
+$ MONTH_ABBR                        &lt;ord&gt; Jan, Mar, Feb, Jun, Jul, Apr, Nov, J…</code></pre>
+</div>
+</div>
+<p>There are 150 observations we have retrieved for this analysis.</p>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p><strong>Hairdressing, Beauty and Other Personal Care Services</strong> Business Code 9602 includes hair dressing, beauty salons and manicure &amp; pedicure services.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># biz_9602 &lt;- acra_data %&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   select(1:24) %&gt;%</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   filter(primary_ssic_code == 96021 | primary_ssic_code == 96022 | primary_ssic_code == 96023) %&gt;%</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   rename(date = registration_incorporation_date) %&gt;%</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#   mutate(date = as.Date(date),</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#          YEAR = year(date),</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#          MONTH_NUM = month(date),</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#          MONTH_ABBR = month(date, label = TRUE, abbr = TRUE)) %&gt;% #this gives Jan, Feb, Mar...</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">#   mutate(postal_code = str_pad(postal_code,</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">#                                width = 6, side = "left", pad = "0")) %&gt;% #if missing digits, will replace with zero.</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co"># filter(YEAR == 2024 | YEAR == 2025 &amp; MONTH_NUM &lt;= 6)</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co"># glimpse(biz_9602)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>There are 1762 observations we have retrieved for this analysis.</p>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<p><strong>Dental services</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>biz_86204 <span class="ot">&lt;-</span> acra_data <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">24</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(primary_ssic_code <span class="sc">==</span> <span class="dv">86204</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">date =</span> registration_incorporation_date) <span class="sc">%&gt;%</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(date),</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">YEAR =</span> <span class="fu">year</span>(date),</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">MONTH_NUM =</span> <span class="fu">month</span>(date),</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">MONTH_ABBR =</span> <span class="fu">month</span>(date, <span class="at">label =</span> <span class="cn">TRUE</span>, <span class="at">abbr =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span> <span class="co">#this gives Jan, Feb, Mar...</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">postal_code =</span> <span class="fu">str_pad</span>(postal_code,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>                               <span class="at">width =</span> <span class="dv">6</span>, <span class="at">side =</span> <span class="st">"left"</span>, <span class="at">pad =</span> <span class="st">"0"</span>)) <span class="sc">%&gt;%</span> <span class="co">#if missing digits, will replace with zero.</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(YEAR <span class="sc">==</span> <span class="dv">2024</span> <span class="sc">|</span> YEAR <span class="sc">==</span> <span class="dv">2025</span> <span class="sc">&amp;</span> MONTH_NUM <span class="sc">&lt;=</span> <span class="dv">6</span>)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(biz_86204)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 81
+Columns: 27
+$ uen                               &lt;chr&gt; "202401990E", "202402057R", "2024020…
+$ issuance_agency_id                &lt;chr&gt; "ACRA", "ACRA", "ACRA", "ACRA", "ACR…
+$ entity_name                       &lt;chr&gt; "AZURE DENTAL PTE. LTD.", "ASTER DEN…
+$ entity_type_description           &lt;chr&gt; "Local Company", "Local Company", "L…
+$ business_constitution_description &lt;chr&gt; "na", "na", "na", "na", "na", "na", …
+$ company_type_description          &lt;chr&gt; "Exempt Private Company Limited by S…
+$ paf_constitution_description      &lt;chr&gt; "na", "na", "na", "na", "na", "na", …
+$ entity_status_description         &lt;chr&gt; "Struck Off", "Live Company", "Live …
+$ date                              &lt;date&gt; 2024-01-12, 2024-01-13, 2024-01-13,…
+$ uen_issue_date                    &lt;date&gt; 2024-01-12, 2024-01-13, 2024-01-13,…
+$ address_type                      &lt;chr&gt; "LOCAL", "LOCAL", "LOCAL", "LOCAL", …
+$ block                             &lt;chr&gt; "781", "111", "111", "239", "1", "60…
+$ street_name                       &lt;chr&gt; "BUKIT TIMAH ROAD", "SOMERSET ROAD",…
+$ level_no                          &lt;chr&gt; "na", "04", "04", "na", "04", "15", …
+$ unit_no                           &lt;chr&gt; "na", "01", "01", "na", "08", "01", …
+$ building_name                     &lt;chr&gt; "na", "111 SOMERSET", "111 SOMERSET"…
+$ postal_code                       &lt;chr&gt; "269759", "238164", "238164", "79946…
+$ other_address_line1               &lt;chr&gt; "na", "na", "na", "na", "na", "na", …
+$ other_address_line2               &lt;chr&gt; "na", "na", "na", "na", "na", "na", …
+$ account_due_date                  &lt;chr&gt; "2026-07-31", "2026-07-31", "2026-07…
+$ annual_return_date                &lt;chr&gt; "2025-04-07", "2025-07-14", "2025-07…
+$ primary_ssic_code                 &lt;dbl&gt; 86204, 86204, 86204, 86204, 86204, 8…
+$ primary_ssic_description          &lt;chr&gt; "na", "na", "na", "na", "na", "DEALI…
+$ primary_user_described_activity   &lt;chr&gt; "na", "na", "na", "na", "na", "na", …
+$ YEAR                              &lt;dbl&gt; 2024, 2024, 2024, 2024, 2024, 2024, …
+$ MONTH_NUM                         &lt;dbl&gt; 1, 1, 1, 2, 3, 3, 4, 4, 2, 2, 4, 5, …
+$ MONTH_ABBR                        &lt;ord&gt; Jan, Jan, Jan, Feb, Mar, Mar, Apr, A…</code></pre>
+</div>
+</div>
+<p>There are 81 observations we have retrieved for this analysis.</p>
+</div>
+</div>
 </div>
 </section>
 <section id="geocoding" class="level2">
@@ -318,75 +479,55 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Save the return results into 2 data frame namely <em>found</em> and <em>not_found</em>.</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>postcodes <span class="ot">&lt;-</span> <span class="fu">unique</span>(biz_56111<span class="sc">$</span>postal_code)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">"https://onemap.gov.sg/api/common/elastic/search"</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>found <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>not_found <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">postcode =</span> <span class="fu">character</span>())</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (pc <span class="cf">in</span> postcodes) {</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  query <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">searchVal =</span> pc,</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">returnGeom =</span> <span class="st">"Y"</span>,</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">getAddrDetails =</span> <span class="st">"Y"</span>,</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">pageNum =</span> <span class="st">"1"</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">GET</span>(url, <span class="at">query =</span> query)</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  json <span class="ot">&lt;-</span> <span class="fu">content</span>(res)</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(json<span class="sc">$</span>found <span class="sc">!=</span> <span class="dv">0</span>) {</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(json<span class="sc">$</span>results, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    df<span class="sc">$</span>input_postcode <span class="ot">&lt;-</span> pc</span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    found <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(found, df)</span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span>{</span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    not_found <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(not_found, <span class="fu">data.frame</span>(<span class="at">postcodes =</span> pc))</span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>postcodes <span class="ot">&lt;-</span> <span class="fu">unique</span>(biz_56111<span class="sc">$</span>postal_code)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">"https://onemap.gov.sg/api/common/elastic/search"</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>found <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>not_found <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">postcode =</span> <span class="fu">character</span>())</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (pc <span class="cf">in</span> postcodes) {</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  query <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">searchVal =</span> pc,</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">returnGeom =</span> <span class="st">"Y"</span>,</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">getAddrDetails =</span> <span class="st">"Y"</span>,</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">pageNum =</span> <span class="st">"1"</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">GET</span>(url, <span class="at">query =</span> query)</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  json <span class="ot">&lt;-</span> <span class="fu">content</span>(res)</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(json<span class="sc">$</span>found <span class="sc">!=</span> <span class="dv">0</span>) {</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>    df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(json<span class="sc">$</span>results, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>    df<span class="sc">$</span>input_postcode <span class="ot">&lt;-</span> pc</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>    found <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(found, df)</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span>{</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>    not_found <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(not_found, <span class="fu">data.frame</span>(<span class="at">postcodes =</span> pc))</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="appending-the-location-information" class="level2">
 <h2 class="anchored" data-anchor-id="appending-the-location-information">5 Appending the location information</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>biz_56111 <span class="ot">=</span> biz_56111 <span class="sc">%&gt;%</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(found,</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">'postal_code'</span> <span class="ot">=</span> <span class="st">'POSTAL'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>biz_56111 <span class="ot">=</span> biz_56111 <span class="sc">%&gt;%</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(found,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">'postal_code'</span> <span class="ot">=</span> <span class="st">'POSTAL'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="converting-into-sf-data-frame" class="level2">
 <h2 class="anchored" data-anchor-id="converting-into-sf-data-frame">6 Converting into SF data frame</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>biz_56111_sf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(biz_56111,</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"X"</span>, <span class="st">"Y"</span>),</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">crs =</span> <span class="dv">3414</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>biz_56111_sf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(biz_56111,</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"X"</span>, <span class="st">"Y"</span>),</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">crs =</span> <span class="dv">3414</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(biz_56111_sf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Simple feature collection with 6 features and 125 fields
-Geometry type: POINT
-Dimension:     XY
-Bounding box:  xmin: 27549.59 ymin: 31216.93 xmax: 37390.83 ymax: 46589.95
-Projected CRS: SVY21 / Singapore TM
-# A tibble: 6 × 126
-  uen        issuance_agency_id entity_name               entity_type_descript…¹
-  &lt;chr&gt;      &lt;chr&gt;              &lt;chr&gt;                     &lt;chr&gt;                 
-1 202501136C ACRA               AL ASHIK PTE. LTD.        Local Company         
-2 202501329K ACRA               ARASH LEGACY PTE. LTD.    Local Company         
-3 202502902M ACRA               ADAM'S FAMILY CATERING P… Local Company         
-4 202503682G ACRA               ASWINS VEG RESTAURANT PT… Local Company         
-5 202504143K ACRA               ADIRAI KR BRIYANI PTE. L… Local Company         
-6 202504371R ACRA               AL YASSIN CAFE  (S) PTE.… Local Company         
-# ℹ abbreviated name: ¹​entity_type_description
-# ℹ 122 more variables: business_constitution_description &lt;chr&gt;,
-#   company_type_description &lt;chr&gt;, paf_constitution_description &lt;chr&gt;,
-#   entity_status_description &lt;chr&gt;, date &lt;date&gt;, uen_issue_date &lt;date&gt;,
-#   address_type &lt;chr&gt;, block &lt;chr&gt;, street_name &lt;chr&gt;, level_no &lt;chr&gt;,
-#   unit_no &lt;chr&gt;, building_name &lt;chr&gt;, postal_code &lt;chr&gt;,
-#   other_address_line1 &lt;chr&gt;, other_address_line2 &lt;chr&gt;, …</code></pre>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(biz_56111_sf))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
+<p>** planning subzone area &gt; speed up computation.</p>
+<p>** narrow down to study area.</p>
+<p>**</p>
 
 
 </section>
