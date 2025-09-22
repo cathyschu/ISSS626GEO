@@ -219,7 +219,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#loading-the-r-package" id="toc-loading-the-r-package" class="nav-link active" data-scroll-target="#loading-the-r-package">1 Loading the R package</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#loading-the-r-package" id="toc-loading-the-r-package" class="nav-link" data-scroll-target="#loading-the-r-package">1 Loading the R package</a></li>
   <li><a href="#data-wrangling" id="toc-data-wrangling" class="nav-link" data-scroll-target="#data-wrangling">2 Data Wrangling</a>
   <ul class="collapse">
   <li><a href="#importing-acra-data" id="toc-importing-acra-data" class="nav-link" data-scroll-target="#importing-acra-data">2.1 Importing ACRA data</a></li>
@@ -227,6 +228,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#geocoding" id="toc-geocoding" class="nav-link" data-scroll-target="#geocoding">2.3 Geocoding</a></li>
   <li><a href="#appending-the-location-information" id="toc-appending-the-location-information" class="nav-link" data-scroll-target="#appending-the-location-information">2.4 Appending the location information</a></li>
   <li><a href="#converting-into-sf-data-frame" id="toc-converting-into-sf-data-frame" class="nav-link" data-scroll-target="#converting-into-sf-data-frame">2.5 Converting into SF data frame</a></li>
+  <li><a href="#import-geospatial-data-into-r" id="toc-import-geospatial-data-into-r" class="nav-link" data-scroll-target="#import-geospatial-data-into-r">2.6 Import Geospatial data into R</a></li>
+  </ul></li>
+  <li><a href="#first-order-analysis" id="toc-first-order-analysis" class="nav-link" data-scroll-target="#first-order-analysis">3 First-order Analysis</a>
+  <ul class="collapse">
+  <li><a href="#spatial-kde" id="toc-spatial-kde" class="nav-link" data-scroll-target="#spatial-kde">3.1 Spatial KDE</a></li>
+  <li><a href="#spatio-temporal-kde" id="toc-spatio-temporal-kde" class="nav-link" data-scroll-target="#spatio-temporal-kde">3.2 Spatio-Temporal KDE</a></li>
+  </ul></li>
+  <li><a href="#second-order-analysis" id="toc-second-order-analysis" class="nav-link" data-scroll-target="#second-order-analysis">4 Second-order Analysis</a>
+  <ul class="collapse">
+  <li><a href="#spatial-analysis" id="toc-spatial-analysis" class="nav-link" data-scroll-target="#spatial-analysis">4.1 Spatial analysis</a></li>
+  <li><a href="#spatio-temporal-analysis" id="toc-spatio-temporal-analysis" class="nav-link" data-scroll-target="#spatio-temporal-analysis">4.2 Spatio-Temporal analysis</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -271,12 +283,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>In this exercise, we will go through the steps for preparing data for Take-home exercise one where we will investigate the spatial and spatio-temporal patterns of new businesses and firms established in Singapore.</p>
+</section>
 <section id="loading-the-r-package" class="level2">
 <h2 class="anchored" data-anchor-id="loading-the-r-package">1 Loading the R package</h2>
 <p>We will use <strong>tidyverse, sf, tmap, tmap,</strong> and <strong>httr</strong> packages for this exercise to process data sets.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, sf, tmap, httr, knitr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, sf, tmap, httr, knitr, rvest, spatstat, terra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="data-wrangling" class="level2">
@@ -1701,9 +1716,681 @@ $ MONTH_ABBR                        &lt;ord&gt; Jan, Jan, Jan, Feb, Mar, Mar, Ap
 </table>
 </div>
 </div>
-<p>** planning subzone area &gt; speed up computation.</p>
-<p>** narrow down to study area.</p>
-<p>**</p>
+</section>
+<section id="import-geospatial-data-into-r" class="level3">
+<h3 class="anchored" data-anchor-id="import-geospatial-data-into-r">2.6 Import Geospatial data into R</h3>
+<p>The Master Plan 2019 Boundary (No Sea) (KML) was downloaded from data.gov.sg that consists of the geographical boundary of Singapore at the planning subzone level. The data is based on URA Master Plan 2019. We will use this to plot the boundaries of the subzones.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true">Import data</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false">Tidy data</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-3" role="tab" aria-controls="tabset-5-3" aria-selected="false">Check data</a></li></ul>
+<div class="tab-content">
+<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>mpsz <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"data/geospatial/MasterPlan2019SubzoneBoundaryNoSeaKML.kml"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_zm</span>(<span class="at">drop =</span> <span class="cn">TRUE</span>, <span class="at">what =</span> <span class="st">"ZM"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="at">crs =</span> <span class="dv">3414</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reading layer `URA_MP19_SUBZONE_NO_SEA_PL' from data source 
+  `/Users/cathyc/Documents/cathyschu/ISSS626GEO/Take-home_Ex/Take-home_Ex01/data/geospatial/MasterPlan2019SubzoneBoundaryNoSeaKML.kml' 
+  using driver `KML'
+Simple feature collection with 332 features and 2 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY, XYZ
+Bounding box:  xmin: 103.6057 ymin: 1.158699 xmax: 104.0885 ymax: 1.470775
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>extract_kml_field <span class="ot">&lt;-</span> <span class="cf">function</span>(html_text, field_name) {</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.na</span>(html_text) <span class="sc">||</span> html_text <span class="sc">==</span> <span class="st">""</span>) <span class="fu">return</span>(<span class="cn">NA_character_</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  page <span class="ot">&lt;-</span> <span class="fu">read_html</span>(html_text)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  rows <span class="ot">&lt;-</span> page <span class="sc">%&gt;%</span> <span class="fu">html_elements</span>(<span class="st">"tr"</span>)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  value <span class="ot">&lt;-</span> rows <span class="sc">%&gt;%</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">keep</span>(<span class="sc">~</span> <span class="fu">html_text2</span>(<span class="fu">html_element</span>(.x, <span class="st">"th"</span>)) <span class="sc">==</span> field_name) <span class="sc">%&gt;%</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_element</span>(<span class="st">"td"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_text2</span>()</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(value) <span class="sc">==</span> <span class="dv">0</span>) <span class="cn">NA_character_</span> <span class="cf">else</span> value</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>mpsz <span class="ot">&lt;-</span> mpsz <span class="sc">%&gt;%</span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">REGION_N =</span> <span class="fu">map_chr</span>(Description, extract_kml_field, <span class="st">"REGION_N"</span>),</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">PLN_AREA_N =</span> <span class="fu">map_chr</span>(Description, extract_kml_field, <span class="st">"PLN_AREA_N"</span>),</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">SUBZONE_N =</span> <span class="fu">map_chr</span>(Description, extract_kml_field, <span class="st">"SUBZONE_N"</span>),</span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">SUBZONE_C =</span> <span class="fu">map_chr</span>(Description, extract_kml_field, <span class="st">"SUBZONE_C"</span>)</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>Name, <span class="sc">-</span>Description) <span class="sc">%&gt;%</span></span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(geometry, <span class="at">.after =</span> <span class="fu">last_col</span>())</span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>mpsz_cl <span class="ot">&lt;-</span> mpsz <span class="sc">%&gt;%</span></span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(SUBZONE_N <span class="sc">!=</span> <span class="st">"SOUTHERN GROUP"</span>,</span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>         PLN_AREA_N <span class="sc">!=</span> <span class="st">"WESTERN ISLANDS"</span>,</span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>         PLN_AREA_N <span class="sc">!=</span> <span class="st">"NORTH-EASTERN ISLANDS"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-5-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-3-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>mpsz</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simple feature collection with 332 features and 4 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 2667.538 ymin: 15748.72 xmax: 56396.44 ymax: 50256.33
+Projected CRS: SVY21 / Singapore TM
+First 10 features:
+         REGION_N    PLN_AREA_N           SUBZONE_N SUBZONE_C
+1  CENTRAL REGION   BUKIT MERAH          DEPOT ROAD    BMSZ12
+2  CENTRAL REGION   BUKIT MERAH         BUKIT MERAH    BMSZ02
+3  CENTRAL REGION        OUTRAM           CHINATOWN    OTSZ03
+4  CENTRAL REGION DOWNTOWN CORE             PHILLIP    DTSZ04
+5  CENTRAL REGION DOWNTOWN CORE       RAFFLES PLACE    DTSZ05
+6  CENTRAL REGION        OUTRAM        CHINA SQUARE    OTSZ04
+7  CENTRAL REGION   BUKIT MERAH         TIONG BAHRU    BMSZ10
+8  CENTRAL REGION DOWNTOWN CORE    BAYFRONT SUBZONE    DTSZ12
+9  CENTRAL REGION   BUKIT MERAH TIONG BAHRU STATION    BMSZ04
+10 CENTRAL REGION DOWNTOWN CORE       CLIFFORD PIER    DTSZ06
+                         geometry
+1  MULTIPOLYGON (((25910.34 29...
+2  MULTIPOLYGON (((26750.09 29...
+3  MULTIPOLYGON (((29161.2 297...
+4  MULTIPOLYGON (((29814.11 29...
+5  MULTIPOLYGON (((30137.77 29...
+6  MULTIPOLYGON (((29699.44 29...
+7  MULTIPOLYGON (((27748.04 29...
+8  MULTIPOLYGON (((30844.87 29...
+9  MULTIPOLYGON (((27444.04 29...
+10 MULTIPOLYGON (((30436.73 29...</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(mpsz_cl, <span class="st">"data/rds/mpsz_cl.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="first-order-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="first-order-analysis">3 First-order Analysis</h2>
+<summary for="" first-order="" analysis="">
+<p><visualisation of="" the="" spatial="" pattern=""></visualisation></p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true">Laundry Services</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false">Beauty Services</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-3" role="tab" aria-controls="tabset-6-3" aria-selected="false">Dental Services</a></li></ul>
+<div class="tab-content">
+<div id="tabset-6-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-6-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(mpsz_cl))</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(biz_9601_sf), <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">col =</span> <span class="st">"#476EAE"</span>, <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">cex =</span> <span class="fl">0.8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex01_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="1152"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-6-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(mpsz_cl))</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(biz_9602_sf), <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">col =</span> <span class="st">"#BA487F"</span>, <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">cex =</span> <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex01_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="1152"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-6-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-3-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(mpsz_cl))</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(biz_86204_sf), <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">col =</span> <span class="st">"#EF7722"</span>, <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">cex =</span> <span class="fl">0.8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex01_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="1152"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<section id="spatial-kde" class="level3">
+<h3 class="anchored" data-anchor-id="spatial-kde">3.1 Spatial KDE</h3>
+<summary of="" spatial="" kde="">
+<section id="geospatial-data-wrangling" class="level4">
+<h4 class="anchored" data-anchor-id="geospatial-data-wrangling">3.1.1 Geospatial data wrangling</h4>
+<p>In this section, we will convert the sf objects to spatstat ppp and owin object.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-7-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-1" role="tab" aria-controls="tabset-7-1" aria-selected="true">Laundry Services</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-2" role="tab" aria-controls="tabset-7-2" aria-selected="false">Beauty Services</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-3" role="tab" aria-controls="tabset-7-3" aria-selected="false">Dental Services</a></li></ul>
+<div class="tab-content">
+<div id="tabset-7-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-7-1-tab">
+<p><strong>Convert sf data frames to ppp class</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>biz_9601_ppp <span class="ot">&lt;-</span> <span class="fu">as.ppp</span>(biz_9601_sf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(biz_9601_ppp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Marked planar point pattern:  150 points
+Average intensity 2.250502e-07 points per square unit
+
+Coordinates are given to 11 decimal places
+
+Mark variables: uen, issuance_agency_id, entity_name, entity_type_description, 
+business_constitution_description, company_type_description, 
+paf_constitution_description, entity_status_description, date, uen_issue_date, 
+address_type, block, street_name, level_no, unit_no, building_name, 
+postal_code, other_address_line1, other_address_line2, account_due_date, 
+annual_return_date, primary_ssic_code, primary_ssic_description, 
+primary_user_described_activity, YEAR, MONTH_NUM, MONTH_ABBR, SEARCHVAL, 
+BLK_NO, ROAD_NAME, BUILDING, ADDRESS, LATITUDE, LONGITUDE, input_postcode_9601, 
+SEARCHVAL.1, BLK_NO.1, ROAD_NAME.1, BUILDING.1, ADDRESS.1, POSTAL.1, X.1, Y.1, 
+LATITUDE.1, LONGITUDE.1, SEARCHVAL.2, BLK_NO.2, ROAD_NAME.2, BUILDING.2, 
+ADDRESS.2, POSTAL.2, X.2, Y.2, LATITUDE.2, LONGITUDE.2, SEARCHVAL.3, BLK_NO.3, 
+ROAD_NAME.3, BUILDING.3, ADDRESS.3, POSTAL.3, X.3, Y.3, LATITUDE.3, 
+LONGITUDE.3, SEARCHVAL.4, BLK_NO.4, ROAD_NAME.4, BUILDING.4, ADDRESS.4, 
+POSTAL.4, X.4, Y.4, LATITUDE.4, LONGITUDE.4, SEARCHVAL.5, BLK_NO.5, 
+ROAD_NAME.5, BUILDING.5, ADDRESS.5, POSTAL.5, X.5, Y.5, LATITUDE.5, 
+LONGITUDE.5, SEARCHVAL.6, BLK_NO.6, ROAD_NAME.6, BUILDING.6, ADDRESS.6, 
+POSTAL.6, X.6, Y.6, LATITUDE.6, LONGITUDE.6, SEARCHVAL.7, BLK_NO.7, 
+ROAD_NAME.7, BUILDING.7, ADDRESS.7, POSTAL.7, X.7, Y.7, LATITUDE.7, 
+LONGITUDE.7, SEARCHVAL.8, BLK_NO.8, ROAD_NAME.8, BUILDING.8, ADDRESS.8, 
+POSTAL.8, X.8, Y.8, LATITUDE.8, LONGITUDE.8, SEARCHVAL.9, BLK_NO.9, 
+ROAD_NAME.9, BUILDING.9, ADDRESS.9, POSTAL.9, X.9, Y.9, LATITUDE.9, LONGITUDE.9
+Summary:
+     uen            issuance_agency_id entity_name       
+ Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character  
+                                                         
+                                                         
+                                                         
+                                                         
+ entity_type_description business_constitution_description
+ Length:150              Length:150                       
+ Class :character        Class :character                 
+ Mode  :character        Mode  :character                 
+                                                          
+                                                          
+                                                          
+                                                          
+ company_type_description paf_constitution_description
+ Length:150               Length:150                  
+ Class :character         Class :character            
+ Mode  :character         Mode  :character            
+                                                      
+                                                      
+                                                      
+                                                      
+ entity_status_description      date            uen_issue_date      
+ Length:150                Min.   :2024-01-03   Min.   :2024-01-03  
+ Class :character          1st Qu.:2024-05-14   1st Qu.:2024-05-14  
+ Mode  :character          Median :2024-09-17   Median :2024-09-17  
+                           Mean   :2024-09-26   Mean   :2024-09-27  
+                           3rd Qu.:2025-02-18   3rd Qu.:2025-02-18  
+                           Max.   :2025-06-26   Max.   :2025-06-26  
+                                                                    
+ address_type          block           street_name          level_no        
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+   unit_no          building_name      postal_code        other_address_line1
+ Length:150         Length:150         Length:150         Length:150         
+ Class :character   Class :character   Class :character   Class :character   
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character   
+                                                                             
+                                                                             
+                                                                             
+                                                                             
+ other_address_line2 account_due_date   annual_return_date primary_ssic_code
+ Length:150          Length:150         Length:150         Min.   :96011    
+ Class :character    Class :character   Class :character   1st Qu.:96011    
+ Mode  :character    Mode  :character   Mode  :character   Median :96012    
+                                                           Mean   :96012    
+                                                           3rd Qu.:96012    
+                                                           Max.   :96012    
+                                                                            
+ primary_ssic_description primary_user_described_activity      YEAR     
+ Length:150               Length:150                      Min.   :2024  
+ Class :character         Class :character                1st Qu.:2024  
+ Mode  :character         Mode  :character                Median :2024  
+                                                          Mean   :2024  
+                                                          3rd Qu.:2025  
+                                                          Max.   :2025  
+                                                                        
+   MONTH_NUM        MONTH_ABBR  SEARCHVAL            BLK_NO         
+ Min.   : 1.000   Jan    :23   Length:150         Length:150        
+ 1st Qu.: 3.000   Mar    :21   Class :character   Class :character  
+ Median : 5.000   May    :16   Mode  :character   Mode  :character  
+ Mean   : 5.073   Apr    :15                                        
+ 3rd Qu.: 7.000   Jun    :15                                        
+ Max.   :12.000   Feb    :13                                        
+                  (Other):47                                        
+  ROAD_NAME           BUILDING           ADDRESS            LATITUDE        
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+  LONGITUDE         input_postcode_9601 SEARCHVAL.1          BLK_NO.1        
+ Length:150         Length:150          Length:150         Length:150        
+ Class :character   Class :character    Class :character   Class :character  
+ Mode  :character   Mode  :character    Mode  :character   Mode  :character  
+                                                                             
+                                                                             
+                                                                             
+                                                                             
+ ROAD_NAME.1         BUILDING.1         ADDRESS.1           POSTAL.1        
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+     X.1                Y.1             LATITUDE.1        LONGITUDE.1       
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+ SEARCHVAL.2          BLK_NO.2         ROAD_NAME.2         BUILDING.2       
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+  ADDRESS.2           POSTAL.2             X.2                Y.2           
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+  LATITUDE.2        LONGITUDE.2        SEARCHVAL.3          BLK_NO.3        
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+ ROAD_NAME.3         BUILDING.3         ADDRESS.3           POSTAL.3        
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+     X.3                Y.3             LATITUDE.3        LONGITUDE.3       
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+ SEARCHVAL.4          BLK_NO.4         ROAD_NAME.4         BUILDING.4       
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+  ADDRESS.4           POSTAL.4             X.4                Y.4           
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+  LATITUDE.4        LONGITUDE.4        SEARCHVAL.5          BLK_NO.5        
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+ ROAD_NAME.5         BUILDING.5         ADDRESS.5           POSTAL.5        
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+     X.5                Y.5             LATITUDE.5        LONGITUDE.5       
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+ SEARCHVAL.6          BLK_NO.6         ROAD_NAME.6         BUILDING.6       
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+  ADDRESS.6           POSTAL.6             X.6                Y.6           
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+  LATITUDE.6        LONGITUDE.6        SEARCHVAL.7          BLK_NO.7        
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+ ROAD_NAME.7         BUILDING.7         ADDRESS.7           POSTAL.7        
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+     X.7                Y.7             LATITUDE.7        LONGITUDE.7       
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+ SEARCHVAL.8          BLK_NO.8         ROAD_NAME.8         BUILDING.8       
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+  ADDRESS.8           POSTAL.8             X.8                Y.8           
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+  LATITUDE.8        LONGITUDE.8        SEARCHVAL.9          BLK_NO.9        
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+ ROAD_NAME.9         BUILDING.9         ADDRESS.9           POSTAL.9        
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+     X.9                Y.9             LATITUDE.9        LONGITUDE.9       
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+
+Window: rectangle = [9649.27, 43229.92] x [28689.89, 48538.17] units
+                    (33580 x 19850 units)
+Window area = 666518000 square units</code></pre>
+</div>
+</div>
+<p><strong>Create Owin object</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>sg_owin <span class="ot">&lt;-</span> <span class="fu">as.owin</span>(mpsz_cl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Combine point events object and owin object</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>biz_9601_ppp <span class="ot">=</span> biz_9601_ppp[sg_owin]</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>biz_9601_ppp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Marked planar point pattern: 150 points
+Mark variables: 
+   uen issuance_agency_id entity_name entity_type_description 
+business_constitution_description company_type_description 
+paf_constitution_description entity_status_description date uen_issue_date 
+address_type block street_name level_no unit_no building_name postal_code 
+other_address_line1 other_address_line2 account_due_date annual_return_date 
+primary_ssic_code primary_ssic_description primary_user_described_activity YEAR 
+MONTH_NUM MONTH_ABBR SEARCHVAL BLK_NO ROAD_NAME BUILDING ADDRESS LATITUDE 
+LONGITUDE input_postcode_9601 SEARCHVAL.1 BLK_NO.1 ROAD_NAME.1 BUILDING.1 
+ADDRESS.1 POSTAL.1 X.1 Y.1 LATITUDE.1 LONGITUDE.1 SEARCHVAL.2 BLK_NO.2 
+ROAD_NAME.2 BUILDING.2 ADDRESS.2 POSTAL.2 X.2 Y.2 LATITUDE.2 LONGITUDE.2 
+SEARCHVAL.3 BLK_NO.3 ROAD_NAME.3 BUILDING.3 ADDRESS.3 POSTAL.3 X.3 Y.3 
+LATITUDE.3 LONGITUDE.3 SEARCHVAL.4 BLK_NO.4 ROAD_NAME.4 BUILDING.4 ADDRESS.4 
+POSTAL.4 X.4 Y.4 LATITUDE.4 LONGITUDE.4 SEARCHVAL.5 BLK_NO.5 ROAD_NAME.5 
+BUILDING.5 ADDRESS.5 POSTAL.5 X.5 Y.5 LATITUDE.5 LONGITUDE.5 SEARCHVAL.6 
+BLK_NO.6 ROAD_NAME.6 BUILDING.6 ADDRESS.6 POSTAL.6 X.6 Y.6 LATITUDE.6 
+LONGITUDE.6 SEARCHVAL.7 BLK_NO.7 ROAD_NAME.7 BUILDING.7 ADDRESS.7 POSTAL.7 X.7 
+Y.7 LATITUDE.7 LONGITUDE.7 SEARCHVAL.8 BLK_NO.8 ROAD_NAME.8 BUILDING.8 
+ADDRESS.8 POSTAL.8 X.8 Y.8 LATITUDE.8 LONGITUDE.8 SEARCHVAL.9 BLK_NO.9 
+ROAD_NAME.9 BUILDING.9 ADDRESS.9 POSTAL.9 X.9 Y.9 LATITUDE.9 LONGITUDE.9
+window: polygonal boundary
+enclosing rectangle: [2667.54, 55941.94] x [21448.47, 50256.33] units</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-7-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-2-tab">
+<p><strong>Convert sf data frames to ppp class</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>biz_9602_ppp <span class="ot">&lt;-</span> <span class="fu">as.ppp</span>(biz_9602_sf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Combine point events object and owin object</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>biz_9602_ppp <span class="ot">=</span> biz_9602_ppp[sg_owin]</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>biz_9602_ppp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Marked planar point pattern: 1762 points
+Mark variables: 
+   uen issuance_agency_id entity_name entity_type_description 
+business_constitution_description company_type_description 
+paf_constitution_description entity_status_description date uen_issue_date 
+address_type block street_name level_no unit_no building_name postal_code 
+other_address_line1 other_address_line2 account_due_date annual_return_date 
+primary_ssic_code primary_ssic_description primary_user_described_activity YEAR 
+MONTH_NUM MONTH_ABBR SEARCHVAL BLK_NO ROAD_NAME BUILDING ADDRESS LATITUDE 
+LONGITUDE SEARCHVAL.1 BLK_NO.1 ROAD_NAME.1 BUILDING.1 ADDRESS.1 POSTAL.1 X.1 
+Y.1 LATITUDE.1 LONGITUDE.1 SEARCHVAL.2 BLK_NO.2 ROAD_NAME.2 BUILDING.2 
+ADDRESS.2 POSTAL.2 X.2 Y.2 LATITUDE.2 LONGITUDE.2 SEARCHVAL.3 BLK_NO.3 
+ROAD_NAME.3 BUILDING.3 ADDRESS.3 POSTAL.3 X.3 Y.3 LATITUDE.3 LONGITUDE.3 
+SEARCHVAL.4 BLK_NO.4 ROAD_NAME.4 BUILDING.4 ADDRESS.4 POSTAL.4 X.4 Y.4 
+LATITUDE.4 LONGITUDE.4 SEARCHVAL.5 BLK_NO.5 ROAD_NAME.5 BUILDING.5 ADDRESS.5 
+POSTAL.5 X.5 Y.5 LATITUDE.5 LONGITUDE.5 input_postcode_9602 SEARCHVAL.6 
+BLK_NO.6 ROAD_NAME.6 BUILDING.6 ADDRESS.6 POSTAL.6 X.6 Y.6 LATITUDE.6 
+LONGITUDE.6 SEARCHVAL.7 BLK_NO.7 ROAD_NAME.7 BUILDING.7 ADDRESS.7 POSTAL.7 X.7 
+Y.7 LATITUDE.7 LONGITUDE.7 SEARCHVAL.8 BLK_NO.8 ROAD_NAME.8 BUILDING.8 
+ADDRESS.8 POSTAL.8 X.8 Y.8 LATITUDE.8 LONGITUDE.8 SEARCHVAL.9 BLK_NO.9 
+ROAD_NAME.9 BUILDING.9 ADDRESS.9 POSTAL.9 X.9 Y.9 LATITUDE.9 LONGITUDE.9
+window: polygonal boundary
+enclosing rectangle: [2667.54, 55941.94] x [21448.47, 50256.33] units</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-7-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-3-tab">
+<p><strong>Convert sf data frames to ppp class</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>biz_86204_ppp <span class="ot">&lt;-</span> <span class="fu">as.ppp</span>(biz_86204_sf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Combine point events object and owin object</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>biz_86204_ppp <span class="ot">=</span> biz_86204_ppp[sg_owin]</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>biz_86204_ppp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Marked planar point pattern: 81 points
+Mark variables: 
+   uen issuance_agency_id entity_name entity_type_description 
+business_constitution_description company_type_description 
+paf_constitution_description entity_status_description date uen_issue_date 
+address_type block street_name level_no unit_no building_name postal_code 
+other_address_line1 other_address_line2 account_due_date annual_return_date 
+primary_ssic_code primary_ssic_description primary_user_described_activity YEAR 
+MONTH_NUM MONTH_ABBR SEARCHVAL BLK_NO ROAD_NAME BUILDING ADDRESS LATITUDE 
+LONGITUDE input_postcode_86204 SEARCHVAL.1 BLK_NO.1 ROAD_NAME.1 BUILDING.1 
+ADDRESS.1 POSTAL.1 X.1 Y.1 LATITUDE.1 LONGITUDE.1 SEARCHVAL.2 BLK_NO.2 
+ROAD_NAME.2 BUILDING.2 ADDRESS.2 POSTAL.2 X.2 Y.2 LATITUDE.2 LONGITUDE.2 
+SEARCHVAL.3 BLK_NO.3 ROAD_NAME.3 BUILDING.3 ADDRESS.3 POSTAL.3 X.3 Y.3 
+LATITUDE.3 LONGITUDE.3 SEARCHVAL.4 BLK_NO.4 ROAD_NAME.4 BUILDING.4 ADDRESS.4 
+POSTAL.4 X.4 Y.4 LATITUDE.4 LONGITUDE.4 SEARCHVAL.5 BLK_NO.5 ROAD_NAME.5 
+BUILDING.5 ADDRESS.5 POSTAL.5 X.5 Y.5 LATITUDE.5 LONGITUDE.5
+window: polygonal boundary
+enclosing rectangle: [2667.54, 55941.94] x [21448.47, 50256.33] units</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="clark-evans-test" class="level4">
+<h4 class="anchored" data-anchor-id="clark-evans-test">3.1.2 Clark-Evans test</h4>
+<p>In this section, we will perform Clark-Evans tests for the 3 business entities separately, to quantify whether a point pattern is clustered, random, or uniformly spaced. The result will help us understand the underlying spatial patterns of each business type. This will inform our interpretation of the subsequent KDE analysis.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-8-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-1" role="tab" aria-controls="tabset-8-1" aria-selected="true">Laundry Services</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-8-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-2" role="tab" aria-controls="tabset-8-2" aria-selected="false">Beauty Services</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-8-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-3" role="tab" aria-controls="tabset-8-3" aria-selected="false">Dental Services</a></li></ul>
+<div class="tab-content">
+<div id="tabset-8-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-8-1-tab">
+<p>The test hypotheses are: Ho = The distribution of laundry services are randomly distributed. H1 = The distribution of laundry services are not randomly distributed. The 95% confident interval will be used.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">clarkevans.test</span>(biz_9601_ppp,</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">correction=</span><span class="st">"none"</span>,</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">clipregion=</span><span class="st">"sg_owin"</span>,</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">alternative=</span><span class="fu">c</span>(<span class="st">"clustered"</span>),</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">method=</span><span class="st">"MonteCarlo"</span>,</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">nsim=</span><span class="dv">999</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Clark-Evans test
+    No edge correction
+    Monte Carlo test based on 999 simulations of CSR with fixed n
+
+data:  biz_9601_ppp
+R = 0.59189, p-value = 0.001
+alternative hypothesis: clustered (R &lt; 1)</code></pre>
+</div>
+</div>
+<p>Laundry service R = 0.59189 shows there are some clustering in residential areas. It is more dispersed to serve neighbourhood needs, but it is not random.</p>
+</div>
+<div id="tabset-8-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-8-2-tab">
+<p>The test hypotheses are: Ho = The distribution of beauty services are randomly distributed. H1 = The distribution of beauty services are not randomly distributed. The 95% confident interval will be used.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">clarkevans.test</span>(biz_9602_ppp,</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">correction=</span><span class="st">"none"</span>,</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">clipregion=</span><span class="st">"sg_owin"</span>,</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">alternative=</span><span class="fu">c</span>(<span class="st">"clustered"</span>),</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">method=</span><span class="st">"MonteCarlo"</span>,</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">nsim=</span><span class="dv">999</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Clark-Evans test
+    No edge correction
+    Monte Carlo test based on 999 simulations of CSR with fixed n
+
+data:  biz_9602_ppp
+R = 0.35903, p-value = 0.001
+alternative hypothesis: clustered (R &lt; 1)</code></pre>
+</div>
+</div>
+<p>Beauty services (R = 0.36) indicates that they are most clustered.</p>
+</div>
+<div id="tabset-8-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-8-3-tab">
+<p>The test hypotheses are: Ho = The distribution of dental services are randomly distributed. H1 = The distribution of dental services are not randomly distributed. The 95% confident interval will be used.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">clarkevans.test</span>(biz_86204_ppp,</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">correction=</span><span class="st">"none"</span>,</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">clipregion=</span><span class="st">"sg_owin"</span>,</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">alternative=</span><span class="fu">c</span>(<span class="st">"clustered"</span>),</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">method=</span><span class="st">"MonteCarlo"</span>,</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">nsim=</span><span class="dv">999</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Clark-Evans test
+    No edge correction
+    Monte Carlo test based on 999 simulations of CSR with fixed n
+
+data:  biz_86204_ppp
+R = 0.49043, p-value = 0.001
+alternative hypothesis: clustered (R &lt; 1)</code></pre>
+</div>
+</div>
+<p>Dental service R = 0.49043 shows moderate clustering. This is possibily due to medical professional buildigs or proximity to hospitals.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="compute-kde-with-adaptivefixed-bandwith" class="level4">
+<h4 class="anchored" data-anchor-id="compute-kde-with-adaptivefixed-bandwith">3.1.3 Compute KDE with adaptive/fixed bandwith</h4>
+<p>(maybe)The spatial patterns we observed in the plots above show that in the central areas there are higher density.</p>
+<p>Laundry Services Beauty Services Dental Services</p>
+</section>
+</summary></section>
+<section id="spatio-temporal-kde" class="level3">
+<h3 class="anchored" data-anchor-id="spatio-temporal-kde">3.2 Spatio-Temporal KDE</h3>
+<p>Laundry Services Beauty Services Dental Services</p>
+<section id="visualise-business-entity-points" class="level4">
+<h4 class="anchored" data-anchor-id="visualise-business-entity-points">3.21 Visualise business entity points</h4>
+<p>Laundry Services Beauty Services Dental Services</p>
+</section>
+<section id="compute-spatio-temporal-stkde-by-month" class="level4">
+<h4 class="anchored" data-anchor-id="compute-spatio-temporal-stkde-by-month">3.2.2 Compute Spatio-Temporal STKDE by month</h4>
+<p>Laundry Services Beauty Services Dental Services</p>
+</section>
+</section>
+</summary></section>
+<section id="second-order-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="second-order-analysis">4 Second-order Analysis</h2>
+<p>Laundry Services - F-function Beauty Services - G-function, K-function Dental Services - F-function</p>
+<section id="spatial-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="spatial-analysis">4.1 Spatial analysis</h3>
+<p>Laundry Services - F-function Beauty Services - G-function, K-function Dental Services - F-function</p>
+</section>
+<section id="spatio-temporal-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="spatio-temporal-analysis">4.2 Spatio-Temporal analysis</h3>
+<p>Laundry Services H12024, H22024, H12025</p>
+<p>Beauty Services - G-function, K-function H12024, H22024, H12025</p>
+<p>Dental Services - F-function H12024, H22024, H12025</p>
 
 
 </section>
