@@ -18,7 +18,7 @@ In this exercise, we will go through the steps for preparing data for Take-home 
 We will use **tidyverse, sf, tmap, tmap,** and **httr** packages for this exercise to process data sets.
 
 ```{r}
-pacman::p_load(tidyverse, sf, tmap, httr, knitr, rvest, spatstat, terra)
+pacman::p_load(tidyverse, sf, tmap, httr, knitr, rvest, spatstat, terra, raster, sparr)
 ```
 
 ## 2 Data Wrangling
@@ -73,7 +73,7 @@ Business Code 9601 emcompasses Laundry cleaning and self-operated laundries (960
 
 ```{r}
 biz_9601 <- acra_data %>%
-  select(1:24) %>%
+  dplyr::select(1:24) %>%
   filter(primary_ssic_code == 96011 | primary_ssic_code == 96012) %>%
   rename(date = registration_incorporation_date) %>%
   mutate(date = as.Date(date),
@@ -94,7 +94,7 @@ There are 150 observations we have retrieved for this analysis.
 Business Code 9602 includes hair dressing, beauty salons and manicure & pedicure services.
 ```{r}
 biz_9602 <- acra_data %>%
-  select(1:24) %>%
+  dplyr::select(1:24) %>%
   filter(primary_ssic_code == 96021 | primary_ssic_code == 96022 | primary_ssic_code == 96023) %>%
   rename(date = registration_incorporation_date) %>%
   mutate(date = as.Date(date),
@@ -114,7 +114,7 @@ There are 1762 observations we have retrieved for this analysis.
 **Dental services**
 ```{r}
 biz_86204 <- acra_data %>%
-  select(1:24) %>%
+  dplyr::select(1:24) %>%
   filter(primary_ssic_code == 86204) %>%
   rename(date = registration_incorporation_date) %>%
   mutate(date = as.Date(date),
@@ -336,7 +336,7 @@ mpsz <- mpsz %>%
     SUBZONE_N = map_chr(Description, extract_kml_field, "SUBZONE_N"),
     SUBZONE_C = map_chr(Description, extract_kml_field, "SUBZONE_C")
   ) %>%
-  select(-Name, -Description) %>%
+  dplyr::select(-Name, -Description) %>%
   relocate(geometry, .after = last_col())
 
 mpsz_cl <- mpsz %>%
@@ -502,29 +502,270 @@ clarkevans.test(biz_86204_ppp,
 Dental service R = 0.49043 shows moderate clustering. This is possibily due to medical professional buildigs or proximity to hospitals. 
 :::
 #### 3.1.3 Compute KDE with adaptive/fixed bandwith
+We will compute Kernel Density Estimation (KDE) to visualise and analye first-order spatial point patterns. We use adaptive bandwidth because all 3 business types show significant clustering with varying intensities, and adaptive approach handles multi-scale density variations beter than fixed bandwidth by using finer resolution in high-density areas and broader smoothing in sparse regions.
 
-(maybe)The spatial patterns we observed in the plots above show that in the central areas there are higher density. 
+:::panel-tabset
+
+## Laundry Services
+
+```{r}
+par(bg = "#EEEEEE")
+biz_9601_ppp_km <- rescale.ppp(biz_9601_ppp, 1000, "km")
+kde_biz_9601_ab <- adaptive.density(
+  biz_9601_ppp_km, method = "kernel"
+)
+plot(kde_biz_9601_ab)
+```
 
 
-Laundry Services
-Beauty Services 
-Dental Services 
+## Beauty Services 
+
+```{r}
+par(bg = "#EEEEEE")
+biz_9602_ppp_km <- rescale.ppp(biz_9602_ppp, 1000, "km")
+kde_biz_9602_ab <- adaptive.density(
+  biz_9602_ppp_km, method = "kernel"
+)
+plot(kde_biz_9602_ab)
+```
+
+## Dental Services 
+
+```{r}
+par(bg = "#EEEEEE")
+biz_86204_ppp_km <- rescale.ppp(biz_86204_ppp, 1000, "km")
+kde_biz_86204_ab <- adaptive.density(
+  biz_86204_ppp_km, method = "kernel"
+)
+plot(kde_biz_86204_ab)
+```
+
+
+:::
 
 ### 3.2 Spatio-Temporal KDE
-Laundry Services 
-Beauty Services 
-Dental Services 
+Jaundry, Beauty, and Dental business types have 150, 1762 and 81 points respectively during Jan 2024 - June 2025. In this study, we will slice the data compute quarterly spatio-temporal KDE for analysis to see seasonal patterns. 
 
-#### 3.21 Visualise business entity points
-Laundry Services 
-Beauty Services 
-Dental Services 
+#### 3.2.1 Visualise business entity points by month/quarter
 
-#### 3.2.2 Compute Spatio-Temporal STKDE by month
-Laundry Services 
-Beauty Services 
-Dental Services 
+:::panel-tabset
 
+## Laundry Services 
+```{r}
+#| fig-width: 12
+#| fig-height: 12
+
+biz_9601_quarter <- biz_9601_sf %>%
+  mutate(
+    quarter = case_when(
+      MONTH_NUM %in% c(1, 2, 3) ~ "Q1",
+      MONTH_NUM %in% c(4, 5, 6) ~ "Q2",
+      MONTH_NUM %in% c(7, 8, 9) ~ "Q3",
+      MONTH_NUM %in% c(10, 11, 12) ~ "Q4"
+    ),
+    year_quarter = paste(YEAR, quarter, sep = "-")
+  )
+
+tmap_options(bg.color = "#EEEEEE")
+tm_shape(mpsz_cl) + 
+  tm_polygons(fill = "#FFF2F2", col = "grey80") +
+tm_shape(biz_9601_quarter) +
+  tm_dots(fill = "#476EAE", size = 0.4) +
+  tm_facets(by = "year_quarter", free.coords = FALSE, drop.units = TRUE,
+            ncol = 2) +
+tm_layout(
+    main.title = "Laundry Services - Quarterly Density",
+    bg.color = "#EED3D9")
+```
+
+
+## Beauty Services 
+
+```{r}
+#| fig-width: 12
+#| fig-height: 32
+
+biz_9602_my <- biz_9602_sf %>%
+  mutate(
+    date = as.Date(paste(YEAR, MONTH_NUM, "01", sep = "-")),
+    month_year = format(date, "%Y-%m"),
+    month_year_label = format(date, "%b %Y")
+  )
+
+tmap_options(bg.color = "#EEEEEE")
+tm_shape(mpsz_cl) + 
+  tm_polygons(fill = "#FFF2F2", col = "grey80") +
+  tm_shape(biz_9602_my) +
+  tm_dots(fill = "#BA487F", size = 0.2) +
+  tm_facets(by = "month_year", free.coords = FALSE, drop.units = TRUE,
+            ncol = 2) +
+tm_layout(
+    main.title = "Beauty Services - Monthly Density",
+    bg.color = "#CADABF")
+```
+
+
+## Dental Services 
+
+```{r}
+#| fig-width: 12
+#| fig-height: 12
+
+biz_86204_quarter <- biz_86204_sf %>%
+  mutate(
+    quarter = case_when(
+      MONTH_NUM %in% c(1, 2, 3) ~ "Q1",
+      MONTH_NUM %in% c(4, 5, 6) ~ "Q2",
+      MONTH_NUM %in% c(7, 8, 9) ~ "Q3",
+      MONTH_NUM %in% c(10, 11, 12) ~ "Q4"
+    ),
+    year_quarter = paste(YEAR, quarter, sep = "-")
+  )
+
+tmap_options(bg.color = "#EEEEEE")
+tm_shape(mpsz_cl) + 
+  tm_polygons(fill = "#FFF2F2", col = "grey80") +
+  tm_shape(biz_86204_quarter) +
+  tm_dots(fill = "#EF7722", size = 0.4) +
+  tm_facets(by = "year_quarter", free.coords = FALSE, drop.units = TRUE,
+            ncol = 2) +
+tm_layout(
+    main.title = "Dental Services - Quarterly Density",
+    bg.color = "#B5C0D0")
+```
+
+
+:::
+
+#### 3.2.2 Compute Spatio-Temporal STKDE by month/quarter
+
+
+:::panel-tabset
+
+## Laundry Services 
+
+```{r}
+# extract laundry data by quarter
+kde_biz_9601_quarter <- biz_9601_quarter %>%
+  dplyr::select(year_quarter)
+
+# create ppp
+biz_9601_quarter_ppp <- as.ppp(kde_biz_9601_quarter)
+  
+
+# include owin object
+biz_9601_quarter_owin <- biz_9601_quarter_ppp[sg_owin]
+
+```
+
+```{r}
+par(bg = "#EEEEEE")
+plot(biz_9601_quarter_owin)
+```
+
+### Compute STKDE
+```{r}
+#convert year_quarter to numeric
+marks(biz_9601_quarter_owin) <- case_when(
+  marks(biz_9601_quarter_owin) == "2024-Q1" ~ 1,
+  marks(biz_9601_quarter_owin) == "2024-Q2" ~ 2,
+  marks(biz_9601_quarter_owin) == "2024-Q3" ~ 3,
+  marks(biz_9601_quarter_owin) == "2024-Q4" ~ 4,
+  marks(biz_9601_quarter_owin) == "2025-Q1" ~ 5,
+  marks(biz_9601_quarter_owin) == "2025-Q2" ~ 6
+)
+
+st_kde_9601 <- spattemp.density(biz_9601_quarter_owin)
+summary(st_kde_9601)
+```
+
+### Plot STKDE object
+```{r}
+#| fig-width: 12
+#| fig-height: 8
+tims <- c(1,2,3,4,5,6)
+par(mfcol = c(2,3), bg = "#EEEEEE")
+for(i in tims){
+  plot(st_kde_9601, i,
+       override.par = FALSE,
+       fix.range = TRUE, main = paste("KDE at Quarter", i))
+}
+
+```
+
+
+## Beauty Services 
+
+```{r}
+# extract laundry data by quarter
+kde_biz_9602_month <- biz_9602_my %>%
+  dplyr::select(month_year)
+
+# create ppp
+biz_9602_month_ppp <- as.ppp(kde_biz_9602_month)
+  
+
+# include owin object
+biz_9602_month_owin <- biz_9602_month_ppp[sg_owin]
+
+```
+
+```{r}
+par(bg = "#EEEEEE")
+plot(biz_9602_month_owin)
+```
+
+### Compute STKDE
+```{r}
+
+#convert year_quarter to numeric
+marks(biz_9602_month_owin) <- case_when(
+  marks(biz_9602_month_owin) == "2024-01" ~ 1,
+  marks(biz_9602_month_owin) == "2024-02" ~ 2,
+  marks(biz_9602_month_owin) == "2024-03" ~ 3,
+  marks(biz_9602_month_owin) == "2024-04" ~ 4,
+  marks(biz_9602_month_owin) == "2024-05" ~ 5,
+  marks(biz_9602_month_owin) == "2024-06" ~ 6,
+  marks(biz_9602_month_owin) == "2024-07" ~ 7,
+  marks(biz_9602_month_owin) == "2024-08" ~ 8,
+  marks(biz_9602_month_owin) == "2024-09" ~ 9,
+  marks(biz_9602_month_owin) == "2024-10" ~ 10,
+  marks(biz_9602_month_owin) == "2024-11" ~ 11,
+  marks(biz_9602_month_owin) == "2024-12" ~ 12,  
+  marks(biz_9602_month_owin) == "2025-01" ~ 13,
+  marks(biz_9602_month_owin) == "2025-02" ~ 14,
+  marks(biz_9602_month_owin) == "2025-03" ~ 15,
+  marks(biz_9602_month_owin) == "2025-04" ~ 16,
+  marks(biz_9602_month_owin) == "2025-05" ~ 17,
+  marks(biz_9602_month_owin) == "2025-06" ~ 18
+  )
+
+st_kde_9602 <- spattemp.density(biz_9602_month_owin)
+summary(st_kde_9602)
+```
+
+
+### Plot STKDE object
+```{r}
+#| fig-width: 12
+#| fig-height: 12
+
+tims <- c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18)
+par(mfcol = c(3,2), bg = "#EEEEEE")
+for(i in tims){
+  plot(st_kde_9602, i,
+       override.par = FALSE,
+       fix.range = TRUE, main = paste("KDE at Month", i))
+}
+
+```
+
+
+## Dental Services 
+
+
+
+:::
 ## 4 Second-order Analysis
 Laundry Services - F-function
 Beauty Services - G-function, K-function
