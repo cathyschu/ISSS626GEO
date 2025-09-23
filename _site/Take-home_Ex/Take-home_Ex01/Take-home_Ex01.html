@@ -2595,16 +2595,23 @@ Evaluation
 <h3 class="anchored" data-anchor-id="plot-stkde-object">Plot STKDE object</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>tims <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>)</span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfcol =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>), <span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfcol =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>), <span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
 <span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> tims){</span>
 <span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(st_kde_9601, i,</span>
 <span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">override.par =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">fix.range =</span> <span class="cn">TRUE</span>, <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"KDE at Quarter"</span>, i))</span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">fix.range =</span> <span class="cn">TRUE</span>, <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Laundry Services KDE at Quarter"</span>, i))</span>
 <span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
 <p><img src="Take-home_Ex01_files/figure-html/unnamed-chunk-44-1.png" class="img-fluid figure-img" width="1152"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex01_files/figure-html/unnamed-chunk-44-2.png" class="img-fluid figure-img" width="1152"></p>
 </figure>
 </div>
 </div>
@@ -2689,11 +2696,11 @@ Evaluation
 <h3 class="anchored" data-anchor-id="plot-stkde-object-1">Plot STKDE object</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>tims <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">8</span>,<span class="dv">9</span>,<span class="dv">10</span>,<span class="dv">11</span>,<span class="dv">12</span>,<span class="dv">13</span>,<span class="dv">14</span>,<span class="dv">15</span>,<span class="dv">16</span>,<span class="dv">17</span>,<span class="dv">18</span>)</span>
-<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfcol =</span> <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">2</span>), <span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfcol =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
 <span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> tims){</span>
 <span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(st_kde_9602, i,</span>
 <span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">override.par =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">fix.range =</span> <span class="cn">TRUE</span>, <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"KDE at Month"</span>, i))</span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">fix.range =</span> <span class="cn">TRUE</span>, <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Beauty Services KDE at Month"</span>, i))</span>
 <span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
@@ -2716,11 +2723,139 @@ Evaluation
 </figure>
 </div>
 </div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex01_files/figure-html/unnamed-chunk-48-4.png" class="img-fluid figure-img" width="1152"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex01_files/figure-html/unnamed-chunk-48-5.png" class="img-fluid figure-img" width="1152"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex01_files/figure-html/unnamed-chunk-48-6.png" class="img-fluid figure-img" width="1152"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex01_files/figure-html/unnamed-chunk-48-7.png" class="img-fluid figure-img" width="1152"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex01_files/figure-html/unnamed-chunk-48-8.png" class="img-fluid figure-img" width="1152"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex01_files/figure-html/unnamed-chunk-48-9.png" class="img-fluid figure-img" width="1152"></p>
+</figure>
+</div>
+</div>
 </div>
 </section>
 </div>
 <div id="tabset-11-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-11-3-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co"># extract laundry data by quarter</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>kde_biz_86204_quarter <span class="ot">&lt;-</span> biz_86204_quarter <span class="sc">%&gt;%</span></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(year_quarter)</span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a><span class="co"># create ppp</span></span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>biz_86204_quarter_ppp <span class="ot">&lt;-</span> <span class="fu">as.ppp</span>(kde_biz_86204_quarter)</span>
+<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-9"><a href="#cb63-9" aria-hidden="true" tabindex="-1"></a><span class="co"># include owin object</span></span>
+<span id="cb63-10"><a href="#cb63-10" aria-hidden="true" tabindex="-1"></a>biz_86204_quarter_owin <span class="ot">&lt;-</span> biz_86204_quarter_ppp[sg_owin]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(biz_86204_quarter_owin)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex01_files/figure-html/unnamed-chunk-50-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="compute-stkde-2" class="level3">
+<h3 class="anchored" data-anchor-id="compute-stkde-2">Compute STKDE</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co">#convert year_quarter to numeric</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="fu">marks</span>(biz_86204_quarter_owin) <span class="ot">&lt;-</span> <span class="fu">case_when</span>(</span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">marks</span>(biz_86204_quarter_owin) <span class="sc">==</span> <span class="st">"2024-Q1"</span> <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">marks</span>(biz_86204_quarter_owin) <span class="sc">==</span> <span class="st">"2024-Q2"</span> <span class="sc">~</span> <span class="dv">2</span>,</span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">marks</span>(biz_86204_quarter_owin) <span class="sc">==</span> <span class="st">"2024-Q3"</span> <span class="sc">~</span> <span class="dv">3</span>,</span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">marks</span>(biz_86204_quarter_owin) <span class="sc">==</span> <span class="st">"2024-Q4"</span> <span class="sc">~</span> <span class="dv">4</span>,</span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">marks</span>(biz_86204_quarter_owin) <span class="sc">==</span> <span class="st">"2025-Q1"</span> <span class="sc">~</span> <span class="dv">5</span>,</span>
+<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">marks</span>(biz_86204_quarter_owin) <span class="sc">==</span> <span class="st">"2025-Q2"</span> <span class="sc">~</span> <span class="dv">6</span></span>
+<span id="cb65-9"><a href="#cb65-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb65-10"><a href="#cb65-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-11"><a href="#cb65-11" aria-hidden="true" tabindex="-1"></a>st_kde_86204 <span class="ot">&lt;-</span> <span class="fu">spattemp.density</span>(biz_86204_quarter_owin)</span>
+<span id="cb65-12"><a href="#cb65-12" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(st_kde_9601)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Spatiotemporal Kernel Density Estimate
 
+Bandwidths
+  h = 2692.247 (spatial)
+  lambda = 0.0882 (temporal)
+
+No. of observations
+  150 
+
+Spatial bound
+  Type: polygonal
+  2D enclosure: [2667.538, 55941.94] x [21448.47, 50256.33]
+
+Temporal bound
+  [1, 6]
+
+Evaluation
+  128 x 128 x 6 trivariate lattice
+  Density range: [2.767051e-23, 1.279663e-08]</code></pre>
+</div>
+</div>
+</section>
+<section id="plot-stkde-object-2" class="level3">
+<h3 class="anchored" data-anchor-id="plot-stkde-object-2">Plot STKDE object</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>tims <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>)</span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfcol =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>), <span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> tims){</span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(st_kde_86204, i,</span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">override.par =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">fix.range =</span> <span class="cn">TRUE</span>, <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Dental Services KDE at Quarter"</span>, i))</span>
+<span id="cb67-7"><a href="#cb67-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex01_files/figure-html/unnamed-chunk-52-1.png" class="img-fluid figure-img" width="1152"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex01_files/figure-html/unnamed-chunk-52-2.png" class="img-fluid figure-img" width="1152"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
 </div>
 </div>
 </div>
