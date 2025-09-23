@@ -2806,16 +2806,16 @@ Evaluation
 <span id="cb65-9"><a href="#cb65-9" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb65-10"><a href="#cb65-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb65-11"><a href="#cb65-11" aria-hidden="true" tabindex="-1"></a>st_kde_86204 <span class="ot">&lt;-</span> <span class="fu">spattemp.density</span>(biz_86204_quarter_owin)</span>
-<span id="cb65-12"><a href="#cb65-12" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(st_kde_9601)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb65-12"><a href="#cb65-12" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(st_kde_86204)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Spatiotemporal Kernel Density Estimate
 
 Bandwidths
-  h = 2692.247 (spatial)
-  lambda = 0.0882 (temporal)
+  h = 2190.678 (spatial)
+  lambda = 0.1279 (temporal)
 
 No. of observations
-  150 
+  81 
 
 Spatial bound
   Type: polygonal
@@ -2826,7 +2826,7 @@ Temporal bound
 
 Evaluation
   128 x 128 x 6 trivariate lattice
-  Density range: [2.767051e-23, 1.279663e-08]</code></pre>
+  Density range: [9.274425e-36, 1.450286e-08]</code></pre>
 </div>
 </div>
 </section>
@@ -2864,16 +2864,104 @@ Evaluation
 </summary></section>
 <section id="second-order-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="second-order-analysis">4 Second-order Analysis</h2>
-<p>Laundry Services - F-function Beauty Services - G-function, K-function Dental Services - F-function</p>
+<p><overview></overview></p>
 <section id="spatial-analysis" class="level3">
 <h3 class="anchored" data-anchor-id="spatial-analysis">4.1 Spatial analysis</h3>
-<p>Laundry Services - F-function Beauty Services - G-function, K-function Dental Services - F-function</p>
+<p>In this section, we will compute spatial point patterns</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-12-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-12-1" role="tab" aria-controls="tabset-12-1" aria-selected="true">Laundry Services - F-function</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-12-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-12-2" role="tab" aria-controls="tabset-12-2" aria-selected="false">Beauty Services - G-function, K-function</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-12-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-12-3" role="tab" aria-controls="tabset-12-3" aria-selected="false">Dental Services - F-function</a></li></ul>
+<div class="tab-content">
+<div id="tabset-12-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-12-1-tab">
+<p>For laundry services, we will use F-function to analyse spatial point process.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1222</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="f-function-estimation" class="level3">
+<h3 class="anchored" data-anchor-id="f-function-estimation">F-function estimation</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>F_9601 <span class="ot">=</span> <span class="fu">Fest</span>(biz_9601_ppp)</span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(F_9601)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex01_files/figure-html/unnamed-chunk-54-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="complete-spatial-randomness-test" class="level3">
+<h3 class="anchored" data-anchor-id="complete-spatial-randomness-test">Complete spatial randomness test</h3>
+<p>We use the hypothesis test below to confirm the spatial patterns above. Ho = The distribution of laundry services are randomly distributed. H1= The distribution of laundry services are not randomly distributed. The null hypothesis will be rejected is p-value is smaller than alpha value of 0.001.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>F_9601.csr <span class="ot">&lt;-</span> <span class="fu">envelope</span>(biz_9601_ppp, Fest, <span class="at">correction =</span> <span class="st">"all"</span>, <span class="at">nsim =</span> <span class="dv">999</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Generating 999 simulations of CSR  ...
+1, 2, 3, ......10.........20.........30.........40.........50.........60..
+.......70.........80.........90.........100.........110.........120.........130
+.........140.........150.........160.........170.........180.........190........
+.200.........210.........220.........230.........240.........250.........260......
+...270.........280.........290.........300.........310.........320.........330....
+.....340.........350.........360.........370.........380.........390.........400..
+.......410.........420.........430.........440.........450.........460.........470
+.........480.........490.........500.........510.........520.........530........
+.540.........550.........560.........570.........580.........590.........600......
+...610.........620.........630.........640.........650.........660.........670....
+.....680.........690.........700.........710.........720.........730.........740..
+.......750.........760.........770.........780.........790.........800.........810
+.........820.........830.........840.........850.........860.........870........
+.880.........890.........900.........910.........920.........930.........940......
+...950.........960.........970.........980.........990........
+999.
+
+Done.</code></pre>
+</div>
+</div>
+</section>
+<section id="plot-simulation" class="level3">
+<h3 class="anchored" data-anchor-id="plot-simulation">Plot simulation</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(F_9601.csr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex01_files/figure-html/unnamed-chunk-56-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="section-12" class="level3">
+<h3 class="anchored" data-anchor-id="section-12"></h3>
+</section>
+</div>
+<div id="tabset-12-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-12-2-tab">
+
+</div>
+<div id="tabset-12-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-12-3-tab">
+
+</div>
+</div>
+</div>
 </section>
 <section id="spatio-temporal-analysis" class="level3">
 <h3 class="anchored" data-anchor-id="spatio-temporal-analysis">4.2 Spatio-Temporal analysis</h3>
-<p>Laundry Services H12024, H22024, H12025</p>
-<p>Beauty Services - G-function, K-function H12024, H22024, H12025</p>
-<p>Dental Services - F-function H12024, H22024, H12025</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-13-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-13-1" role="tab" aria-controls="tabset-13-1" aria-selected="true">Laundry Services</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-13-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-13-2" role="tab" aria-controls="tabset-13-2" aria-selected="false">Beauty Services - G-function, K-function</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-13-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-13-3" role="tab" aria-controls="tabset-13-3" aria-selected="false">Dental Services - F-function</a></li></ul>
+<div class="tab-content">
+<div id="tabset-13-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-13-1-tab">
+<p>H12024, H22024, H12025</p>
+</div>
+<div id="tabset-13-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-13-2-tab">
+<p>H12024, H22024, H12025</p>
+</div>
+<div id="tabset-13-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-13-3-tab">
+<p>H12024, H22024, H12025</p>
+</div>
+</div>
+</div>
 
 
 </section>
