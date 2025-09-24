@@ -87,3 +87,73 @@ body {
   background-color: #EBD9D1;
   border-bottom-right-radius: 10px;  
 }
+
+/* style take-home blocks */
+.homegoals {
+  margin: 1em 0;
+  border: 1.5px solid #e4f4f5;
+  border-radius: 10px;
+  background-color: #A7C1A8;
+}
+
+.homegoals-header {
+  margin-left: 0em;
+  padding-left: 80px;
+  padding-top: 20px;
+  padding-bottom: 0.1em;
+  color: #819A91;
+  font-size: 1.2em;
+  font-weight: bold;
+  background-size: 60px;
+  background-color: #A7C1A8;
+  background-repeat: no-repeat;
+  background-position: 15px center;
+  background-image: url("images/catgeo_g.png");
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.homegoals-container {
+  padding-top: 5px;
+  padding-left: 10px;
+  padding-right: 20px;
+  color: #343738;
+  background-color: #A7C1A8;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+/* style analysis blocks */
+.notegoals {
+  margin: 1em 0;
+  border: 1.5px solid #CCD3CA;
+  border-radius: 10px;
+  background-color: #F5E8DD;
+}
+
+.notegoals-header {
+  margin-left: 0em;
+  padding-left: 80px;
+  padding-top: 20px;
+  padding-bottom: 0.1em;
+  color: #ECB159;
+  font-size: 1.2em;
+  font-weight: bold;
+  background-size: 60px;
+  background-color: #F5E8DD;
+  background-repeat: no-repeat;
+  background-position: 15px center;
+  background-image: url("images/catgeo_g.png");
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.notegoals-container {
+  padding-top: 5px;
+  padding-left: 20px;
+  padding-right: 20px;
+  color: #343738;
+  background-color: #F5E8DD;
+  border-bottom-right-radius: 10px;  
+  border-bottom-left-radius: 10px;
+}

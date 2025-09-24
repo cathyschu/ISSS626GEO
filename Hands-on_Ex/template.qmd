@@ -10,3 +10,23 @@ execute: #how YML page work
   warning: false #dont show warning msg
   freeze: true #controls rendering - no render if no changes
 ---
+
+::::: notegoals
+::: notegoals-header
+**Insight**
+:::
+
+::: notegoals-container
+xyafdgfeg
+:::
+:::::
+
+::::: markgoals
+::: markgoals-header
+**Learning**
+:::
+
+::: markgoals-container
+12332524542
+:::
+:::::
