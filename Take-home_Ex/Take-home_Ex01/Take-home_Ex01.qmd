@@ -10,7 +10,9 @@ execute: #how YML page work
   warning: false #dont show warning msg
   freeze: true #controls rendering - no render if no changes
 ---
+
 ## Introduction
+
 In this exercise, we will go through the steps for preparing data for Take-home exercise one where we will investigate the spatial and spatio-temporal patterns of new businesses and firms established in Singapore.
 
 ## 1 Loading the R package
@@ -22,6 +24,7 @@ pacman::p_load(tidyverse, sf, tmap, httr, knitr, rvest, spatstat, terra, raster,
 ```
 
 ## 2 Data Wrangling
+
 ### 2.1 Importing ACRA data
 
 We will import the ACRA data and transform them as tibble frame
@@ -40,7 +43,7 @@ acra_data <- file_list %>%
 Then, we will write the data into .rds to store it in the data folder. This is so no need to process data every time.
 
 ```{r}
-
+#| eval: false
 write_rds(acra_data, "data/rds/acra_data.rds")
 ```
 
@@ -51,7 +54,7 @@ With this step, we will extract the business codes 9601, 9602, and 86204, then r
 The business types chosen are:
 
 | Business Code | Types / subtypes |
-|------------------|------------------------------------------------------|
+|--------------------|----------------------------------------------------|
 | **9601** | **Washing and (Dry-) Cleaning of Textile and Fur Products** |
 | 96011 | Laundry and dry cleaning services except self-operated laundries |
 | 96012 | Self-operated laundries |
@@ -63,13 +66,12 @@ The business types chosen are:
 
 : Business Code & Types
 
-
-We use below code to retrieve the data between Jan 1, 2024 to June 30, 2025 for the 3 different major business types. 
+We use below code to retrieve the data between Jan 1, 2024 to June 30, 2025 for the 3 different major business types.
 
 ::: panel-tabset
 ## 9601
-**Washing and (Dry-) Cleaning of Textile and Fur Products**
-Business Code 9601 emcompasses Laundry cleaning and self-operated laundries (96011 & 96012)
+
+**Washing and (Dry-) Cleaning of Textile and Fur Products** Business Code 9601 encompasses Laundry cleaning and self-operated laundries (96011 & 96012)
 
 ```{r}
 biz_9601 <- acra_data %>%
@@ -90,8 +92,9 @@ glimpse(biz_9601)
 There are 150 observations we have retrieved for this analysis.
 
 ## 9602
-**Hairdressing, Beauty and Other Personal Care Services**
-Business Code 9602 includes hair dressing, beauty salons and manicure & pedicure services.
+
+**Hairdressing, Beauty and Other Personal Care Services** Business Code 9602 includes hair dressing, beauty salons and manicure & pedicure services.
+
 ```{r}
 biz_9602 <- acra_data %>%
   dplyr::select(1:24) %>%
@@ -111,7 +114,9 @@ glimpse(biz_9602)
 There are 1762 observations we have retrieved for this analysis.
 
 ## 86204
+
 **Dental services**
+
 ```{r}
 biz_86204 <- acra_data %>%
   dplyr::select(1:24) %>%
@@ -234,12 +239,13 @@ for (pc_86204 in postcodes_86204) {
   }
 }
 ```
-
 :::
-### 2.4 Appending the location information
-::: panel-tabset
 
+### 2.4 Appending the location information
+
+::: panel-tabset
 ## 9601
+
 ```{r}
 
 biz_9601 = biz_9601 %>%
@@ -248,6 +254,7 @@ biz_9601 = biz_9601 %>%
 ```
 
 ## 9602
+
 ```{r}
 
 biz_9602 = biz_9602 %>%
@@ -255,17 +262,18 @@ biz_9602 = biz_9602 %>%
             by = c('postal_code' = 'POSTAL'))
 ```
 
-
 ## 86204
+
 ```{r}
 
 biz_86204 = biz_86204 %>%
   left_join(found_86204,
             by = c('postal_code' = 'POSTAL'))
 ```
-
 :::
+
 ### 2.5 Converting into SF data frame
+
 ::: panel-tabset
 ## 9601
 
@@ -276,8 +284,8 @@ biz_9601_sf <- st_as_sf(biz_9601,
                          crs = 3414)
 ```
 
-
 ## 9602
+
 ```{r}
 
 biz_9602_sf <- st_as_sf(biz_9602,
@@ -286,14 +294,14 @@ biz_9602_sf <- st_as_sf(biz_9602,
 ```
 
 ## 86204
+
 ```{r}
 
 biz_86204_sf <- st_as_sf(biz_86204,
                          coords = c("X", "Y"),
                          crs = 3414)
 ```
-
-::: 
+:::
 
 ```{r}
 
@@ -301,11 +309,12 @@ kable(head(biz_9601_sf))
 ```
 
 ### 2.6 Import Geospatial data into R
-The Master Plan 2019 Boundary (No Sea) (KML) was downloaded from data.gov.sg that consists of the geographical boundary of Singapore at the planning subzone level. The data is based on URA Master Plan 2019.
-We will use this to plot the boundaries of the subzones.
 
-:::panel-tabset
+The Master Plan 2019 Boundary (No Sea) (KML) was downloaded from data.gov.sg that consists of the geographical boundary of Singapore at the planning subzone level. The data is based on URA Master Plan 2019. We will use this to plot the boundaries of the subzones.
+
+::: panel-tabset
 ## Import data
+
 ```{r}
 mpsz <- st_read("data/geospatial/MasterPlan2019SubzoneBoundaryNoSeaKML.kml") %>%
   st_zm(drop = TRUE, what = "ZM") %>%
@@ -313,6 +322,7 @@ mpsz <- st_read("data/geospatial/MasterPlan2019SubzoneBoundaryNoSeaKML.kml") %>%
 ```
 
 ## Tidy data
+
 ```{r}
 extract_kml_field <- function(html_text, field_name) {
   if (is.na(html_text) || html_text == "") return(NA_character_)
@@ -345,23 +355,26 @@ mpsz_cl <- mpsz %>%
 ```
 
 ## Check data
+
 ```{r}
 mpsz
 ```
 
 ```{r}
-
+#| eval: false
 write_rds(mpsz_cl, "data/rds/mpsz_cl.rds")
 ```
-
 :::
+
 ## 3 First-order Analysis
+
 <summary for first-order analysis>
 
 <visualisation of the spatial pattern>
 
-:::panel-tabset
+::: panel-tabset
 ## Laundry Services
+
 ```{r}
 #| fig-width: 12
 #| fig-height: 8
@@ -369,7 +382,6 @@ par(bg = "#EEEEEE")
 plot(st_geometry(mpsz_cl))
 plot(st_geometry(biz_9601_sf), add = TRUE, col = "#476EAE", pch = 16, cex = 0.8)
 ```
-
 
 ## Beauty Services
 
@@ -381,8 +393,8 @@ plot(st_geometry(mpsz_cl))
 plot(st_geometry(biz_9602_sf), add = TRUE, col = "#BA487F", pch = 16, cex = 0.5)
 ```
 
-
 ## Dental Services
+
 ```{r}
 #| fig-width: 12
 #| fig-height: 8
@@ -390,15 +402,17 @@ par(bg = "#EEEEEE")
 plot(st_geometry(mpsz_cl))
 plot(st_geometry(biz_86204_sf), add = TRUE, col = "#EF7722", pch = 16, cex = 0.8)
 ```
-
 :::
+
 ### 3.1 Spatial KDE
+
 <summary of spatial KDE>
 
 #### 3.1.1 Geospatial data wrangling
+
 In this section, we will convert the sf objects to spatstat ppp and owin object.
 
-:::panel-tabset
+::: panel-tabset
 ## Laundry Services
 
 **Convert sf data frames to ppp class**
@@ -411,54 +425,58 @@ biz_9601_ppp <- as.ppp(biz_9601_sf)
 summary(biz_9601_ppp)
 ```
 
-
 **Create Owin object**
+
 ```{r}
 sg_owin <- as.owin(mpsz_cl)
 ```
 
 **Combine point events object and owin object**
+
 ```{r}
 biz_9601_ppp = biz_9601_ppp[sg_owin]
 biz_9601_ppp
 ```
 
 ## Beauty Services
+
 **Convert sf data frames to ppp class**
+
 ```{r}
 biz_9602_ppp <- as.ppp(biz_9602_sf)
 ```
 
-
 **Combine point events object and owin object**
+
 ```{r}
 biz_9602_ppp = biz_9602_ppp[sg_owin]
 biz_9602_ppp
 ```
 
 ## Dental Services
+
 **Convert sf data frames to ppp class**
+
 ```{r}
 biz_86204_ppp <- as.ppp(biz_86204_sf)
 ```
 
-
 **Combine point events object and owin object**
+
 ```{r}
 biz_86204_ppp = biz_86204_ppp[sg_owin]
 biz_86204_ppp
 ```
-
 :::
+
 #### 3.1.2 Clark-Evans test
+
 In this section, we will perform Clark-Evans tests for the 3 business entities separately, to quantify whether a point pattern is clustered, random, or uniformly spaced. The result will help us understand the underlying spatial patterns of each business type. This will inform our interpretation of the subsequent KDE analysis.
 
-:::panel-tabset
+::: panel-tabset
 ## Laundry Services
-The test hypotheses are:
-Ho = The distribution of laundry services are randomly distributed.
-H1 = The distribution of laundry services are not randomly distributed.
-The 95% confident interval will be used.
+
+The test hypotheses are: Ho = The distribution of laundry services are randomly distributed. H1 = The distribution of laundry services are not randomly distributed. The 95% confident interval will be used.
 
 ```{r}
 clarkevans.test(biz_9601_ppp,
@@ -468,13 +486,12 @@ clarkevans.test(biz_9601_ppp,
                 method="MonteCarlo",
                 nsim=999)
 ```
+
 Laundry service R = 0.59189 shows there are some clustering in residential areas. It is more dispersed to serve neighbourhood needs, but it is not random.
 
 ## Beauty Services
-The test hypotheses are:
-Ho = The distribution of beauty services are randomly distributed.
-H1 = The distribution of beauty services are not randomly distributed.
-The 95% confident interval will be used.
+
+The test hypotheses are: Ho = The distribution of beauty services are randomly distributed. H1 = The distribution of beauty services are not randomly distributed. The 95% confident interval will be used.
 
 ```{r}
 clarkevans.test(biz_9602_ppp,
@@ -484,13 +501,16 @@ clarkevans.test(biz_9602_ppp,
                 method="MonteCarlo",
                 nsim=999)
 ```
-Beauty services (R = 0.36) indicates that they are most clustered. 
+
+Beauty services (R = 0.36) indicates that they are most clustered.
 
 ## Dental Services
+
 The test hypotheses are:
+
 Ho = The distribution of dental services are randomly distributed.
-H1 = The distribution of dental services are not randomly distributed.
-The 95% confident interval will be used.
+
+H1 = The distribution of dental services are not randomly distributed. The 95% confident interval will be used.
 
 ```{r}
 clarkevans.test(biz_86204_ppp,
@@ -500,13 +520,15 @@ clarkevans.test(biz_86204_ppp,
                 method="MonteCarlo",
                 nsim=999)
 ```
-Dental service R = 0.49043 shows moderate clustering. This is possibily due to medical professional buildigs or proximity to hospitals. 
+
+Dental service R = 0.49043 shows moderate clustering. This is possibily due to medical professional buildigs or proximity to hospitals.
 :::
-#### 3.1.3 Compute KDE with adaptive bandwith
-We will compute Kernel Density Estimation (KDE) to visualise and analye first-order spatial point patterns. We use adaptive bandwidth because all 3 business types show significant clustering with varying intensities, and adaptive approach handles multi-scale density variations beter than fixed bandwidth by using finer resolution in high-density areas and broader smoothing in sparse regions.
 
-:::panel-tabset
+#### 3.1.3 Compute KDE with adaptive bandwidth
 
+We will compute Kernel Density Estimation (KDE) to visualise and analyse first-order spatial point patterns. We use adaptive bandwidth because all 3 business types show significant clustering with varying intensities, and adaptive approach handles multi-scale density variations beter than fixed bandwidth by using finer resolution in high-density areas and broader smoothing in sparse regions.
+
+::: panel-tabset
 ## Laundry Services
 
 ```{r}
@@ -519,8 +541,7 @@ plot(kde_biz_9601_ab,
      col = terrain.colors(256)) 
 ```
 
-
-## Beauty Services 
+## Beauty Services
 
 ```{r}
 par(bg = "#EEEEEE")
@@ -532,7 +553,7 @@ plot(kde_biz_9602_ab,
      col = terrain.colors(256))
 ```
 
-## Dental Services 
+## Dental Services
 
 ```{r}
 par(bg = "#EEEEEE")
@@ -543,18 +564,17 @@ kde_biz_86204_ab <- adaptive.density(
 plot(kde_biz_86204_ab,
      col = terrain.colors(256))
 ```
-
-
 :::
 
 ### 3.2 Spatio-Temporal KDE
-Jaundry, Beauty, and Dental business types have 150, 1762 and 81 points respectively during Jan 2024 - June 2025. In this study, we will slice the data compute quarterly spatio-temporal KDE for analysis to see seasonal patterns. 
+
+Jaundry, Beauty, and Dental business types have 150, 1762 and 81 points respectively during Jan 2024 - June 2025. In this study, we will slice the data compute quarterly spatio-temporal KDE for analysis to see seasonal patterns.
 
 #### 3.2.1 Visualise business entity points by month/quarter
 
-:::panel-tabset
+::: panel-tabset
+## Laundry Services
 
-## Laundry Services 
 ```{r}
 #| fig-width: 12
 #| fig-height: 12
@@ -582,8 +602,7 @@ tm_layout(
     bg.color = "#EED3D9")
 ```
 
-
-## Beauty Services 
+## Beauty Services
 
 ```{r}
 #| fig-width: 12
@@ -608,8 +627,7 @@ tm_layout(
     bg.color = "#CADABF")
 ```
 
-
-## Dental Services 
+## Dental Services
 
 ```{r}
 #| fig-width: 12
@@ -637,16 +655,12 @@ tm_layout(
     main.title = "Dental Services - Quarterly Density",
     bg.color = "#B5C0D0")
 ```
-
-
 :::
 
 #### 3.2.2 Compute Spatio-Temporal STKDE by month/quarter
 
-
-:::panel-tabset
-
-## Laundry Services 
+::: panel-tabset
+## Laundry Services
 
 ```{r}
 # extract laundry data by quarter
@@ -668,6 +682,7 @@ plot(biz_9601_quarter_owin)
 ```
 
 ### Compute STKDE
+
 ```{r}
 #convert year_quarter to numeric
 marks(biz_9601_quarter_owin) <- case_when(
@@ -684,11 +699,12 @@ summary(st_kde_9601)
 ```
 
 ### Plot STKDE object
+
 ```{r}
 #| fig-width: 12
-#| fig-height: 4
+#| fig-height: 8
 tims <- c(1,2,3,4,5,6)
-par(mfcol = c(1,3), bg = "#EEEEEE")
+par(mfrow = c(2,3), bg = "#EEEEEE")
 for(i in tims){
   plot(st_kde_9601, i,
        override.par = FALSE,
@@ -698,8 +714,7 @@ for(i in tims){
 
 ```
 
-
-## Beauty Services 
+## Beauty Services
 
 ```{r}
 # extract laundry data by quarter
@@ -721,6 +736,7 @@ plot(biz_9602_month_owin)
 ```
 
 ### Compute STKDE
+
 ```{r}
 
 #convert year_quarter to numeric
@@ -749,14 +765,14 @@ st_kde_9602 <- spattemp.density(biz_9602_month_owin)
 summary(st_kde_9602)
 ```
 
-
 ### Plot STKDE object
+
 ```{r}
 #| fig-width: 12
-#| fig-height: 4
+#| fig-height: 36
 
 tims <- c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18)
-par(mfcol = c(1,2), bg = "#EEEEEE")
+par(mfrow = c(9,2), bg = "#EEEEEE")
 for(i in tims){
   plot(st_kde_9602, i,
        override.par = FALSE,
@@ -766,8 +782,7 @@ for(i in tims){
 
 ```
 
-
-## Dental Services 
+## Dental Services
 
 ```{r}
 # extract laundry data by quarter
@@ -789,6 +804,7 @@ plot(biz_86204_quarter_owin)
 ```
 
 ### Compute STKDE
+
 ```{r}
 #convert year_quarter to numeric
 marks(biz_86204_quarter_owin) <- case_when(
@@ -805,11 +821,12 @@ summary(st_kde_86204)
 ```
 
 ### Plot STKDE object
+
 ```{r}
 #| fig-width: 12
-#| fig-height: 4
+#| fig-height: 8
 tims <- c(1,2,3,4,5,6)
-par(mfcol = c(1,3), bg = "#EEEEEE")
+par(mfrow = c(2,3), bg = "#EEEEEE")
 for(i in tims){
   plot(st_kde_86204, i,
        override.par = FALSE,
@@ -818,53 +835,56 @@ for(i in tims){
 }
 
 ```
-
 :::
+
 ## 4 Second-order Analysis
 
 <overview>
 
 ### 4.1 Spatial analysis
+
 In this section, we will compute spatial point patterns
 
-:::panel-tabset
-
+::: panel-tabset
 ## Laundry Services
-For laundry services, we will use F-function to analyse spatial point process as this function is best for random locations to nearest business. Laundry services may be important to residents, be it dry cleaning or self-operated. We want to observe its distribution whether the placement is random or follows specific spatial strategy. 
+
+For laundry services, we will use F-function to analyse spatial point process as this function is best for random locations to nearest business. Laundry services may be important to residents, be it dry cleaning or self-operated. We want to observe its distribution whether the placement is random or follows specific spatial strategy.
 
 ```{r}
 set.seed(1222)
 ```
 
 ### F-function estimation
+
 ```{r}
 par(bg = "#EEEEEE")
 F_9601 = Fest(biz_9601_ppp)
 plot(F_9601)
 ```
 
-
 ### Complete spatial randomness test
-We use the hypothesis test below to confirm the spatial patterns above.
-Ho = The distribution of laundry services are randomly distributed.
-H1= The distribution of laundry services are not randomly distributed.
-The null hypothesis will be rejected is p-value is smaller than alpha value of 0.001.
+
+We use the hypothesis test below to confirm the spatial patterns above. Ho = The distribution of laundry services are randomly distributed. H1= The distribution of laundry services are not randomly distributed. The null hypothesis will be rejected is p-value is smaller than alpha value of 0.01.
 
 ```{r}
-F_9601.csr <- envelope(biz_9601_ppp, Fest, correction = "all", nsim = 999)
+F_9601.csr <- envelope(biz_9601_ppp, Fest, correction = "all", nsim = 99)
 ```
+
 ### Plot simulation
+
 ```{r}
 par(bg = "#EEEEEE")
 plot(F_9601.csr)
 ```
+
 <under envelope>
 
-
 ## Beauty Services
+
 For beauty services such as hair salons, manicure and pedicure, personal care services, we will use K-function to analyze clustering patterns by examining the expected number of neighboring businesses within given distances. The intention is to identify and quantify clustering at multiple spatial scales.
 
 ### L-function estimate
+
 ```{r}
 L_9602 = Lest(biz_9602_ppp, correction = "Ripley")
 plot(L_9602, . -r ~ r, ylab = "L(d)-r", xlab = "d(m)")
@@ -875,13 +895,17 @@ plot(L_9602, . -r ~ r, ylab = "L(d)-r", xlab = "d(m)")
 The hypothesis and test are as follows:
 
 Ho = The distribution of Beauty services are randomly distributed.
+
 H1= The distribution of Beauty services are not randomly distributed.
-The null hypothesis will be rejected if p-value is smaller than alpha value of 0.01.
+
+The null hypothesis will be rejected if p-value is smaller than alpha value of 0.05.
+
 ```{r}
-L_9602.csr <- envelope(biz_9602_ppp, Lest, nsim = 99, rank = 1, glocal = TRUE)
+L_9602.csr <- envelope(biz_9602_ppp, Lest, nsim = 39, rank = 1)
 ```
 
 ### Plot L-function test
+
 ```{r}
 plot(L_9602.csr, . - r ~ r, xlab = "d", ylab = "L(d)-r")
 ```
@@ -889,62 +913,165 @@ plot(L_9602.csr, . - r ~ r, xlab = "d", ylab = "L(d)-r")
 ## Dental Services - G-function
 
 ### G-function estimate
+
 ```{r}
 G_86204 = Lest(biz_86204_ppp, correction = "border")
-plot(G_9602)
+plot(G_86204, xlim = c(0, 500))
 ```
 
 ### Spatial randomness test
 
 The hypothesis and test are as follows:
 
-Ho = The distribution of Beauty services are randomly distributed.
-H1= The distribution of Beauty services are not randomly distributed.
-The null hypothesis will be rejected if p-value is smaller than alpha value of 0.01.
+Ho = The distribution of Beauty services are randomly distributed. H1= The distribution of Beauty services are not randomly distributed. The null hypothesis will be rejected if p-value is smaller than alpha value of 0.01.
+
 ```{r}
 G_86204.csr <- envelope(biz_86204_ppp, Gest, nsim = 99)
 ```
 
 ### Plot G-function test
+
 ```{r}
-plot(G_9602.csr)
+plot(G_86204.csr)
 ```
-
-
-
 :::
 
 ### 4.2 Spatio-Temporal analysis
-:::panel-tabset
 
-## Laundry Services - quarter/F
+::: panel-tabset
+## Laundry Services
+
+### Perform F-function estimation
 
 ```{r}
-F_9601 = Fest(biz_9601_ppp)
-plot(F_9601)
-
 #| fig-width: 12
-#| fig-height: 4
+#| fig-height: 12
+biz_9601_quarter_split <- split(biz_9601_quarter_owin, f = as.factor(marks(biz_9601_quarter_owin)))
 
-F_9601_quarter = Fest(biz_9601_quarter_ppp)
-tims <- c(1,2,3,4,5,6)
-par(mfcol = c(1,3), bg = "#EEEEEE")
-for(i in tims){
-  plot(F_9601, i,
-       override.par = FALSE,
-       fix.range = TRUE, main = paste("Laundry Services Spatial Point Process at Quarter", i
-     ), col = terrain.colors(256))
+F_9601_quarter <- lapply(biz_9601_quarter_split, Fest)
+
+par(mfrow = c(3,2), bg = "#EEEEEE")
+biz_9601_quarter_names <- c("2024-Q1", "2024-Q2", "2024-Q3", "2024-Q4", "2025-Q1", "2025-Q2")
+
+for (i in 1:6) {
+  plot(F_9601_quarter[[i]],
+       main = paste("Laundry Services F-function -", biz_9601_quarter_names[i]))
 }
+
 
 ```
 
+### Perform spatial randomness test for each quarter
+
+Hypothesis test: H₀ = The distribution of laundry services is randomly distributed. H₁= The distribution of laundry services is not randomly distributed.
+
+Alpha value = 0.01.
+
+```{r}
+F_9601_quarter.csr <- lapply(biz_9601_quarter_split, function(x) envelope(x, Fest, nsim = 99))
+```
+
+### Plot result of test
+
+```{r}
+#| fig-width: 12
+#| fig-height: 12
+par(mfrow = c(3, 2), bg = "#EEEEEE")
+biz_9601_quarter_labels <- c(paste0("2024-Q", 1:4), paste0("2025-Q", 1:2))
+
+for (i in 1:6) {
+  plot(F_9601_quarter.csr[[i]], main = paste("Laundry F-function:", biz_9601_quarter_labels[i]))
+}
+```
+
+## Beauty Services
+
+### Perform L-function estimation by month
+
+```{r}
+#| fig-width: 12
+#| fig-height: 32
+biz_9602_month_split <- split(biz_9602_month_owin, f = as.factor(marks(biz_9602_month_owin)))
+
+L_9602_month <- lapply(biz_9602_month_split, Lest)
+
+par(mfcol = c(9,2), bg = "#EEEEEE")
+biz_9602_month_names <- c("2024-1", "2024-2", "2024-3", "2024-4", "2024-5","2024-6","2024-7","2024-8","2024-9","2024-10","2024-11","2024-12", "2025-1", "2025-2", "2025-3", "2025-4", "2025-5", "2025-6")
+
+for (i in 1:18) {
+  plot(L_9602_month[[i]],
+       main = paste("Beauty Services L-function -", biz_9602_month_names[i]))
+}
 
 
-## Beauty Services - month/G-function
+```
+
+### Perform spatial randomness test for each quarter
+
+Hypothesis test: H₀ = The distribution of laundry services is randomly distributed. H₁= The distribution of laundry services is not randomly distributed.
+
+Alpha value = 0.01.
+
+```{r}
+L_9602_month.csr <- lapply(biz_9602_month_split, function(x) envelope(x, Fest, nsim = 39))
+```
+
+### Plot result of test
+
+```{r}
+#| fig-width: 12
+#| fig-height: 36
+
+par(mfrow = c(9, 2), bg = "#EEEEEE")
+biz_9602_month_labels <- c(paste0("2024-", 1:12), paste0("2025-", 1:6))
+
+for (i in 1:18) {
+  plot(L_9602_month.csr[[i]], main = paste("Beauty L-function:", biz_9602_month_labels[i]))
+}
+```
+
+## Dental Services
+
+### Perform G-function estimation by quarter
+
+```{r}
+#| fig-width: 12
+#| fig-height: 12
+biz_86204_quarter_split <- split(biz_86204_quarter_owin, f = as.factor(marks(biz_86204_quarter_owin)))
+
+G_86204_quarter <- lapply(biz_86204_quarter_split, Gest)
+
+par(mfrow = c(3,2), bg = "#EEEEEE")
+biz_86204_quarter_names <- c("2024-Q1", "2024-Q2", "2024-Q3", "2024-Q4", "2025-Q1", "2025-Q2", "2025-Q3", "2025-Q4")
+
+for (i in 1:6) {
+  plot(G_86204_quarter[[i]], xlim = c(0, 3000),
+       main = paste("Dental Services G-function -", biz_86204_quarter_names[i]))
+}
 
 
-## Dental Services - quarter/L
+```
 
+### Perform spatial randomness test for each quarter
 
+Hypothesis test: H₀ = The distribution of laundry services is randomly distributed. H₁= The distribution of laundry services is not randomly distributed.
 
+Alpha value = 0.01.
+
+```{r}
+G_86204_quarter.csr <- lapply(biz_86204_quarter_split, function(x) envelope(x, Gest, nsim = 99))
+```
+
+### Plot result of test
+
+```{r}
+#| fig-width: 12
+#| fig-height: 12
+par(mfrow = c(3, 2), bg = "#EEEEEE")
+biz_86204_quarter_labels <- c(paste0("2024-Q", 1:4), paste0("2025-Q", 1:2))
+
+for (i in 1:6) {
+  plot(G_86204_quarter.csr[[i]], xlim = c(0,3000), main = paste("Dental G-function:", biz_86204_quarter_labels[i]))
+}
+```
 :::
