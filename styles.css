@@ -128,7 +128,7 @@ body {
   margin: 1em 0;
   border: 1.5px solid #CCD3CA;
   border-radius: 10px;
-  background-color: #F5E8DD;
+  background-color: #F7E2E2;
 }
 
 .notegoals-header {
@@ -140,7 +140,7 @@ body {
   font-size: 1.2em;
   font-weight: bold;
   background-size: 60px;
-  background-color: #F5E8DD;
+  background-color: #F7E2E2;
   background-repeat: no-repeat;
   background-position: 15px center;
   background-image: url("images/catgeo_g.png");
@@ -153,7 +153,7 @@ body {
   padding-left: 20px;
   padding-right: 20px;
   color: #343738;
-  background-color: #F5E8DD;
+  background-color: #F7E2E2;
   border-bottom-right-radius: 10px;  
   border-bottom-left-radius: 10px;
 }

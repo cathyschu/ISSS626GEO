@@ -58,6 +58,7 @@ There are mainly two raw public datasets used in this study.
 We downloaded the ACRA (Accounting and Corporate Regulatory Authority) Information on Corporate Entities datasets from data.gov.sg, and will import the ACRA data and transform them as tibble frame.
 
 ```{r}
+#| eval: false
 folder_path <- "data/aspatial/acra"
 file_list <- list.files(path = folder_path,
                         pattern = "^ACRA*.*\\.csv$",
@@ -105,6 +106,7 @@ We use below code to retrieve the data between Jan 1, 2024 to June 30, 2025 for 
 **Washing and (Dry-) Cleaning of Textile and Fur Products** Business Code 9601 encompasses Laundry cleaning and self-operated laundries (96011 & 96012)
 
 ```{r}
+#| eval: false
 biz_9601 <- acra_data %>%
   dplyr::select(1:24) %>%
   filter(primary_ssic_code == 96011 | primary_ssic_code == 96012) %>%
@@ -127,6 +129,7 @@ glimpse(biz_9601)
 **Hairdressing, Beauty and Other Personal Care Services** Business Code 9602 includes hair dressing, beauty salons and manicure & pedicure services.
 
 ```{r}
+#| eval: false
 biz_9602 <- acra_data %>%
   dplyr::select(1:24) %>%
   filter(primary_ssic_code == 96021 | primary_ssic_code == 96022 | primary_ssic_code == 96023) %>%
@@ -139,6 +142,15 @@ biz_9602 <- acra_data %>%
                                width = 6, side = "left", pad = "0")) %>% #if missing digits, will replace with zero.
 filter(YEAR == 2024 | YEAR == 2025 & MONTH_NUM <= 6)
 
+```
+
+```{r}
+#| eval: false
+biz_9602 <- write_rds(biz_9602, "data/rds/biz_9602.rds")
+```
+
+```{r}
+biz_9602 <- read_rds("data/rds/biz_9602.rds")
 glimpse(biz_9602)
 ```
 
@@ -149,6 +161,7 @@ glimpse(biz_9602)
 **Dental services**
 
 ```{r}
+#| eval: false
 biz_86204 <- acra_data %>%
   dplyr::select(1:24) %>%
   filter(primary_ssic_code == 86204) %>%
@@ -161,6 +174,15 @@ biz_86204 <- acra_data %>%
                                width = 6, side = "left", pad = "0")) %>% #if missing digits, will replace with zero.
 filter(YEAR == 2024 | YEAR == 2025 & MONTH_NUM <= 6)
 
+```
+
+```{r}
+#| eval: false
+biz_86204 <- write_rds(biz_86204, "data/rds/biz_86204.rds")
+```
+
+```{r}
+biz_86204 <- read_rds("data/rds/biz_86204.rds")
 glimpse(biz_86204)
 ```
 
@@ -181,7 +203,7 @@ We will perform the following in this step: (Avoid doing so for \> 5K datasets)
 Below is to perform geocoding for the Laundry Services type.
 
 ```{r}
-
+#| eval: false
 postcodes_9601 <- unique(biz_9601$postal_code)
 
 url <- "https://onemap.gov.sg/api/common/elastic/search"
@@ -215,7 +237,7 @@ for (pc_9601 in postcodes_9601) {
 Below is to perform geocoding for the Beauty Services type.
 
 ```{r}
-
+#| eval: false
 postcodes_9602 <- unique(biz_9602$postal_code)
 
 url <- "https://onemap.gov.sg/api/common/elastic/search"
@@ -248,7 +270,7 @@ for (pc_9602 in postcodes_9602) {
 Below is to perform geocoding for the Dental Services type.
 
 ```{r}
-
+#| eval: false
 postcodes_86204 <- unique(biz_86204$postal_code)
 
 url <- "https://onemap.gov.sg/api/common/elastic/search"
@@ -288,7 +310,7 @@ In this step, we will append the location information to the business entities b
 Below is to perform location appendix for the Laundry Services type.
 
 ```{r}
-
+#| eval: false
 biz_9601 = biz_9601 %>%
   left_join(found_9601,
             by = c('postal_code' = 'POSTAL'))
@@ -299,7 +321,7 @@ biz_9601 = biz_9601 %>%
 Below is to perform location appendix for the Beauty Services type.
 
 ```{r}
-
+#| eval: false
 biz_9602 = biz_9602 %>%
   left_join(found_9602,
             by = c('postal_code' = 'POSTAL'))
@@ -310,7 +332,7 @@ biz_9602 = biz_9602 %>%
 Below is to perform location appendix for the Dental Services type.
 
 ```{r}
-
+#| eval: false
 biz_86204 = biz_86204 %>%
   left_join(found_86204,
             by = c('postal_code' = 'POSTAL'))
@@ -326,10 +348,15 @@ Now we will convert the tibble data frame to a `sf` object.
 Below is to convert data type for the Laundry Services type.
 
 ```{r}
-
+#| eval: false
 biz_9601_sf <- st_as_sf(biz_9601,
                          coords = c("X", "Y"),
                          crs = 3414)
+write_rds(biz_9601_sf, "data/rds/biz_9601_sf.rds")
+```
+
+```{r}
+biz_9601_sf <- read_rds("data/rds/biz_9601_sf.rds")
 ```
 
 ## 9602
@@ -337,10 +364,15 @@ biz_9601_sf <- st_as_sf(biz_9601,
 Below is to convert data type for the Beauty Services type.
 
 ```{r}
-
+#| eval: false
 biz_9602_sf <- st_as_sf(biz_9602,
                          coords = c("X", "Y"),
                          crs = 3414)
+write_rds(biz_9602_sf, "data/rds/biz_9602_sf.rds")
+```
+
+```{r}
+biz_9602_sf <- read_rds("data/rds/biz_9602_sf.rds")
 ```
 
 ## 86204
@@ -348,12 +380,16 @@ biz_9602_sf <- st_as_sf(biz_9602,
 Below is to convert data type for the Dental Services type.
 
 ```{r}
-
+#| eval: false
 biz_86204_sf <- st_as_sf(biz_86204,
                          coords = c("X", "Y"),
                          crs = 3414)
+write_rds(biz_86204_sf, "data/rds/biz_86204_sf.rds")
 ```
 
+```{r}
+biz_86204_sf <- read_rds("data/rds/biz_86204_sf.rds")
+```
 :::
 
 **Take a look at the simple feature data (Laundry service).**
@@ -413,14 +449,16 @@ mpsz_cl <- mpsz %>%
 
 ## Check data
 
-```{r}
-mpsz_cl
-```
 
 ```{r}
 #| eval: false
 write_rds(mpsz_cl, "data/rds/mpsz_cl.rds")
 ```
+
+```{r}
+mpsz_cl <- read_rds("data/rds/mpsz_cl.rds")
+```
+
 :::
 
 ### 2.7 Prepare population data
@@ -429,25 +467,35 @@ write_rds(mpsz_cl, "data/rds/mpsz_cl.rds")
 ## Import data
 
 ```{r}
+#| eval: false
 popdata <- read_csv("data/aspatial/respopagesextod2024.csv")
-
 ```
 
 ## Data wrangling
 
 ```{r}
+#| eval: false
 popdata2024 <- popdata %>%
   group_by(PA, SZ) %>%
   summarise(TOTAL_POP = sum(`Pop`)) %>%
   ungroup() 
 
-kable(head(popdata2024))
+```
 
+
+```{r}
+#| eval: false
+write_rds(popdata2024, "data/rds/popdata2024.rds")
+```
+
+```{r}
+popdata2024 <- read_rds("data/rds/popdata2024.rds")
+kable(head(popdata2024))
 ```
 
 ## Join population and geospatial data
 
-Use left_join to join the population data and geospatial data.
+Use `left_join` to join the population data and geospatial data.
 
 ```{r}
 #| eval: false
@@ -515,7 +563,7 @@ tm_layout(bg.color =  "#EEEEEE",
 ```
 
 ::::: notegoals
-::: noterkgoals-header
+::: notegoals-header
 **Insight**
 :::
 
@@ -565,7 +613,7 @@ tm_layout(bg.color =  "#EEEEEE",
 ```
 
 ::::: notegoals
-::: noterkgoals-header
+::: notegoals-header
 **Insight**
 :::
 
@@ -615,7 +663,7 @@ tm_layout(bg.color =  "#EEEEEE",
 ```
 
 ::::: notegoals
-::: noterkgoals-header
+::: notegoals-header
 **Insight**
 :::
 
@@ -633,7 +681,7 @@ Dental service establishments display a distinctly different spatial pattern com
 
 ### 3.1 Spatial KDE
 
-<summary of spatial KDE>
+To compute the businesses' spatial KDE, we will first perform data wrangling before we compute KDE and plot the results. 
 
 #### 3.1.1 Geospatial data wrangling
 
@@ -705,9 +753,9 @@ In this section, we will perform Clark-Evans tests for the 3 business entities s
 
 The test hypotheses are:
 
-Ho = The distribution of laundry services are randomly distributed.
+H₀ = The distribution of laundry services are randomly distributed.
 
-H1 = The distribution of laundry services are not randomly distributed.
+H₁ = The distribution of laundry services are not randomly distributed.
 
 The 95% confident interval will be used.
 
@@ -721,12 +769,12 @@ clarkevans.test(biz_9601_ppp,
 ```
 
 ::::: notegoals
-::: noterkgoals-header
+::: notegoals-header
 **Insight**
 :::
 
 ::: notegoals-container
-Laundry service R = 0.59189 & p-value = 0.01 shows there are some clustering in residential areas. It is more dispersed to serve neighbourhood needs, but it is not random.
+Laundry service R = 0.59189 & p-value = 0.01 shows **the distribution is not random**. As R value is between 0.5-1.0, there are some clustering in residential areas. It is more dispersed to serve neighbourhood needs, but it is not random.
 :::
 :::::
 
@@ -734,9 +782,9 @@ Laundry service R = 0.59189 & p-value = 0.01 shows there are some clustering in 
 
 The test hypotheses are:
 
-Ho = The distribution of beauty services are randomly distributed.
+H₀ = The distribution of beauty services are randomly distributed.
 
-H1 = The distribution of beauty services are not randomly distributed. '
+H₁ = The distribution of beauty services are not randomly distributed. '
 
 The 95% confident interval will be used.
 
@@ -750,12 +798,12 @@ clarkevans.test(biz_9602_ppp,
 ```
 
 ::::: notegoals
-::: noterkgoals-header
+::: notegoals-header
 **Insight**
 :::
 
 ::: notegoals-container
-Beauty services R = 0.36 & p-value = 0.01 indicates that they are not random.
+Beauty services R = 0.36 & p-value = 0.01 indicates that they are not random. The R value is 0.0-0.5, showing **strong clustering**, meaning that the points are very close together. 
 :::
 :::::
 
@@ -763,9 +811,9 @@ Beauty services R = 0.36 & p-value = 0.01 indicates that they are not random.
 
 The test hypotheses are:
 
-Ho = The distribution of dental services are randomly distributed.
+H₀ = The distribution of dental services are randomly distributed.
 
-H1 = The distribution of dental services are not randomly distributed.
+H₁ = The distribution of dental services are not randomly distributed.
 
 The 95% confident interval will be used.
 
@@ -779,19 +827,19 @@ clarkevans.test(biz_86204_ppp,
 ```
 
 ::::: notegoals
-::: noterkgoals-header
+::: notegoals-header
 **Insight**
 :::
 
 ::: notegoals-container
-Dental service R = 0.49043 & p-value = 0.01 shows moderate clustering. This is possibly due to medical professional buildings or proximity to hospitals.
+Dental service R = 0.49043 & p-value = 0.01, so the distribution of dental businesses are not random. As R value is around 0.5, it shows moderate to strong clustering. This is possibly due to medical professional buildings or proximity to hospitals.
 :::
 :::::
 ::: 
 
-#### 3.1.3 Compute KDE with adaptive bandwidth
+#### 3.1.3 Compute KDE with automatic bandwidth
 
-We will compute Kernel Density Estimation (KDE) to visualise and analyse first-order spatial point patterns. We use adaptive bandwidth because all 3 business types show clustering with varying intensities, and adaptive approach handles multi-scale density variations beter than fixed bandwidth by using finer resolution in high-density areas and broader smoothing in sparse regions.
+Now we will compute KDE to visualise and analyse first-order spatial point patterns. We use automatic bandwidth and smoothing kernel "gaussian" to derive the results.
 
 ::: panel-tabset
 ## Laundry Services
@@ -813,12 +861,12 @@ plot(kde_biz_9601_ab, main = "bw.ppl",
 ```
 
 ::::: notegoals
-::: noterkgoals-header
+::: notegoals-header
 **Insight**
 :::
 
 ::: notegoals-container
-The adaptive KDE output reveals a clustered spatial pattern with distinct concentration hierarchies across Singapore.
+The KDE output reveals a clustered spatial pattern with distinct concentration hierarchies across Singapore.
 
 Two major clusters dominate the distribution pattern. **The highest density cluster is located in the city center area**, coinciding with areas of intense commercial activity. A secondary major cluster is still within the central area (Chinatown, Boat Quay) with lower but still significant density values. Other clusters of much lower density are distributed across northern, eastern, and western Singapore. 
 
@@ -844,7 +892,7 @@ plot(kde_biz_9602_ab, main = "bw.ppl",
 ```
 
 ::::: notegoals
-::: noterkgoals-header
+::: notegoals-header
 **Insight**
 :::
 
@@ -875,12 +923,14 @@ plot(kde_biz_86204_ab, main = "bw.ppl",
 ```
 
 ::::: notegoals
-::: noterkgoals-header
+::: notegoals-header
 **Insight**
 :::
 
 ::: notegoals-container
+The dental services KDE output reveals very concentrated clustered pattern with only few major concentration areas of varying intensities. The largest cluster is located at the central region, followed by a few satellite clusters in residential areas. 
 
+This shows that the overall new dental services employ a central-focused strategy for location, with most clinics located in large medical, commercial, or office buildings, rather than neighborhood buildings. Since residents normally visit dental clinics 1-2 times a year, dental businesses likely locate centrally to cater the service to a broader customers base, so as to ensrure the location is conveniently accessible by the majority of customers. 
 
 :::
 :::::
@@ -889,9 +939,9 @@ plot(kde_biz_86204_ab, main = "bw.ppl",
 
 ### 3.2 Spatio-Temporal KDE
 
-Jaundry, Beauty, and Dental business types have 150, 1762 and 81 points respectively during Jan 2024 - June 2025. In this study, we will slice the data compute quarterly spatio-temporal KDE for analysis to see seasonal patterns.
+Jaundry, Beauty, and Dental business types have 150, 1762 and 81 points respectively during Jan 2024 - June 2025. In this study, we will slice the data compute quarterly spatio-temporal KDE to understand seasonal patterns.
 
-#### 3.2.1 Visualise business entity points by month/quarter
+#### 3.2.1 Visualise business entity points by quarter
 
 ::: panel-tabset
 ## Laundry Services
@@ -924,50 +974,59 @@ tm_layout(
 ```
 
 ::::: notegoals
-::: noterkgoals-header
+::: notegoals-header
 **Insight**
 :::
 
 ::: notegoals-container
+The visualisation above shows the new laundry businesses spatial patters by quarter from 2024-Q1 to 2025-Q2. Several dustubct temporal trends are evident.
+- **Northern areas**: After notable laundry service establishments in northern Singapore during the first half of 2024 (Q1-Q2), new business openings in this region significantly decreased, with zero to very few establishments in subsequent quarters.
+
+- **Other areas**: On the other hand, the central and eastern regions show sustained business growth throughout the study period and maintained consistent establishment patterns across all quarters.
+
 :::
 :::::
 
 ## Beauty Services
 
 ```{r}
-packageVersion("tmap")
-```
-
-```{r}
 #| fig-width: 12
-#| fig-height: 32
+#| fig-height: 12
 
-biz_9602_my <- biz_9602_sf %>%
+biz_9602_quarter <- biz_9602_sf %>%
   mutate(
-    date = as.Date(paste(YEAR, MONTH_NUM, "01", sep = "-")),
-    month_year = format(date, "%Y-%m"),
-    month_year_label = format(date, "%b %Y")
+    quarter = case_when(
+      MONTH_NUM %in% c(1, 2, 3) ~ "Q1",
+      MONTH_NUM %in% c(4, 5, 6) ~ "Q2",
+      MONTH_NUM %in% c(7, 8, 9) ~ "Q3",
+      MONTH_NUM %in% c(10, 11, 12) ~ "Q4"
+    ),
+    year_quarter = paste(YEAR, quarter, sep = "-")
   )
 
 tmap_options(bg.color = "#EEEEEE")
 tm_shape(mpsz_pop2024) + 
   tm_polygons(fill = "#FFF2F2", col = "grey80") +
-  tm_shape(biz_9602_my) +
-  tm_dots(fill = "#BA487F", size = 0.2) +
-  tm_facets(by = "month_year", free.coords = FALSE, drop.units = TRUE,
+tm_shape(biz_9602_quarter) +
+  tm_dots(fill ="#BA487F", size = 0.2) +
+  tm_facets(by = "year_quarter", free.coords = FALSE, drop.units = TRUE,
             ncol = 2) +
 tm_layout(
-    main.title = "Beauty Services - Monthly Density",
+    main.title = "Beauty Services - Quarterly Density",
     bg.color = "#CADABF")
 ```
 
+
 ::::: notegoals
-::: noterkgoals-header
+::: notegoals-header
 **Insight**
 :::
 
 ::: notegoals-container
 :::
+The point patterns revealed in the 6 plots above explains **consistent growth** of the beauty services in both residential and commercial areas, with more density in the city center. Similar to other businesses, the beauty salons or shops may concentrate in commercial / shopping centers in the city center, hence the higher density. There are also beauty services catering to residential areas for easy access at customers' convenience. 
+
+
 :::::
 
 ## Dental Services
@@ -1000,18 +1059,26 @@ tm_layout(
 ```
 
 ::::: notegoals
-::: noterkgoals-header
+::: notegoals-header
 **Insight**
 :::
 
 ::: notegoals-container
+Dental service establishments demonstrate a distinctly concentrated spatial strategy with consistent temporal patterns throughout the six quarters from January 2024 to June 2025.
+
+**Central Region Dominance**: New dental services show persistent clustering in central Singapore across all quarters, indicating this area's strategic importance for dental practice viability. This central concentration likely reflects proximity to medical districts and commercial centers that maximize patient accessibility.
+
+**Regional Distribution Patterns:** For northern Singapore, it consistently shows minimal to zero new establishments, suggesting either market saturation or unfavorable conditions for dental practice development. In wester areas, there is very imited expansion and indicates geographic constraints on viable dental service locations. Only in the eastern region it shows moderate but consistent activity - this may suggest emerging opportunities in this specific residential areas. 
+
+This pattern also shows that **dental healthcare accessibility gaps** do exist in northern and outer western areas. Future urban planning should consider medical service corridors to improve healthcare distribution in underserved areas.
+
 :::
 :::::
-::::::::::::
+:::
 
-#### 3.2.2 Compute Spatio-Temporal STKDE by month/quarter
+#### 3.2.2 Compute Spatio-Temporal STKDE by quarter
 
-:::::::::::: panel-tabset
+::: panel-tabset
 ## Laundry Services
 
 ```{r}
@@ -1067,11 +1134,19 @@ for(i in tims){
 ```
 
 ::::: notegoals
-::: noterkgoals-header
+::: notegoals-header
 **Insight**
 :::
 
 ::: notegoals-container
+-   The KDE results reveal dynamic spatial-temporal patterns in new laundry service establishments across six quarters, showing both consistency and strategic shifts in location preferences.
+
+-   **Central Region Stability**: Throughout most quarters, the central region maintains consistent high-density concentrations. This indicates this area's sustained viability as a core service hub. This persistence suggests stable demand patterns and favorable business conditions in Singapore's commercial center.
+
+-   **Temporal Variations**: 2024-Q1 shows pronounced northern clustering alongside central concentration, indicating initial market exploration in residential areas. 2024-Q2 ~2025-Q2 demonstrates market rationalisation with reduced northern activity and strengthened central focus. It is notable that the eastern region has intermittent activity. This may suggest emerging opportunities in this residential areas
+
+-   Based on the spatial-temporal KDE results above, new laundry services do not have consistent density across the 6 quarters. There may be other factors that influence business decisions to expand the service. This also shows that the density consistently concentrate in central region most of the time, except the first quarter in 2024 there was a pronounced growth in the north and east region.
+
 :::
 :::::
 
@@ -1079,76 +1154,68 @@ for(i in tims){
 
 ```{r}
 # extract laundry data by quarter
-kde_biz_9602_month <- biz_9602_my %>%
-  dplyr::select(month_year)
+kde_biz_9602_quarter <- biz_9602_quarter %>%
+  dplyr::select(year_quarter)
 
 # create ppp
-biz_9602_month_ppp <- as.ppp(kde_biz_9602_month)
+biz_9602_quarter_ppp <- as.ppp(kde_biz_9602_quarter)
   
 
 # include owin object
-biz_9602_month_owin <- biz_9602_month_ppp[sg_owin]
+biz_9602_quarter_owin <- biz_9602_quarter_ppp[sg_owin]
 
 ```
 
 ```{r}
 par(bg = "#EEEEEE")
-plot(biz_9602_month_owin)
+plot(biz_9602_quarter_owin)
 ```
 
 ### Compute STKDE
 
 ```{r}
-
 #convert year_quarter to numeric
-marks(biz_9602_month_owin) <- case_when(
-  marks(biz_9602_month_owin) == "2024-01" ~ 1,
-  marks(biz_9602_month_owin) == "2024-02" ~ 2,
-  marks(biz_9602_month_owin) == "2024-03" ~ 3,
-  marks(biz_9602_month_owin) == "2024-04" ~ 4,
-  marks(biz_9602_month_owin) == "2024-05" ~ 5,
-  marks(biz_9602_month_owin) == "2024-06" ~ 6,
-  marks(biz_9602_month_owin) == "2024-07" ~ 7,
-  marks(biz_9602_month_owin) == "2024-08" ~ 8,
-  marks(biz_9602_month_owin) == "2024-09" ~ 9,
-  marks(biz_9602_month_owin) == "2024-10" ~ 10,
-  marks(biz_9602_month_owin) == "2024-11" ~ 11,
-  marks(biz_9602_month_owin) == "2024-12" ~ 12,  
-  marks(biz_9602_month_owin) == "2025-01" ~ 13,
-  marks(biz_9602_month_owin) == "2025-02" ~ 14,
-  marks(biz_9602_month_owin) == "2025-03" ~ 15,
-  marks(biz_9602_month_owin) == "2025-04" ~ 16,
-  marks(biz_9602_month_owin) == "2025-05" ~ 17,
-  marks(biz_9602_month_owin) == "2025-06" ~ 18
-  )
+marks(biz_9602_quarter_owin) <- case_when(
+  marks(biz_9602_quarter_owin) == "2024-Q1" ~ 1,
+  marks(biz_9602_quarter_owin) == "2024-Q2" ~ 2,
+  marks(biz_9602_quarter_owin) == "2024-Q3" ~ 3,
+  marks(biz_9602_quarter_owin) == "2024-Q4" ~ 4,
+  marks(biz_9602_quarter_owin) == "2025-Q1" ~ 5,
+  marks(biz_9602_quarter_owin) == "2025-Q2" ~ 6
+)
 
-st_kde_9602 <- spattemp.density(biz_9602_month_owin)
+st_kde_9602 <- spattemp.density(biz_9602_quarter_owin)
 summary(st_kde_9602)
+
 ```
 
 ### Plot STKDE object
 
 ```{r}
 #| fig-width: 12
-#| fig-height: 36
-
-tims <- c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18)
-par(mfrow = c(9,2), bg = "#EEEEEE")
+#| fig-height: 8
+tims <- c(1,2,3,4,5,6)
+par(mfrow = c(2,3), bg = "#EEEEEE")
 for(i in tims){
   plot(st_kde_9602, i,
        override.par = FALSE,
-       fix.range = TRUE, main = paste("Beauty Services KDE at Month", i),
-       col = terrain.colors(256))
+       fix.range = TRUE, main = paste("Beauty Services KDE at Quarter", i
+     ), col = terrain.colors(256))
 }
 
 ```
 
 ::::: notegoals
-::: noterkgoals-header
+::: notegoals-header
 **Insight**
 :::
 
 ::: notegoals-container
+The KDE analysis reveals dynamic expansion patterns in beauty service establishments with notable temporal variations across six quarters. 
+
+**Central Region Dominance**: Beauty services maintain consistently high density concentrations in the central region throughout all quarters. This persistent central clustering reflects the strategic importance of commercial districts and shopping areas for beauty businesses.
+
+**Temporal Growth Patterns**: 2024-Q1 shows strong initial central concentration. 2024-Q2&Q3 demonstrates market consolidation with maintained central focus. 2024-Q4 onwards exhibits notable expansion into residential areas, particularly in eastern and northeastern regions. The most significant development is the progressive density increase in eastern and northeastern residential areas from 2024-Q4 through 2025-Q2. This expansion suggests market maturation enabling viable residential location strategies, increased demand in these areas, and business model evolution toward neighborhood-based services. 
 :::
 :::::
 
@@ -1207,22 +1274,30 @@ for(i in tims){
 ```
 
 ::::: notegoals
-::: noterkgoals-header
+::: notegoals-header
 **Insight**
 :::
 
 ::: notegoals-container
+The dental services KDE reveals a highly concentrated spatial strategy that differs markedly from both laundry and beauty services in its focus and temporal stability.
+
+**Central Region Concentration**: New dental services demonstrate central clustering during 2024-Q1, 2024-Q3 and 2025-Q2. This concentration reflects the specialised nature of dental healthcare services and their dependence on medical districts, accessibility, and infrastructure. Western Region (Holland area) shows sporadic activity only in Q1, with no subsequent expansion, suggesting either market testing or unsuccessful location strategy.
+
+**Limited Spatial Distribution**: Unlike beauty services' multi-hub strategy, dental services show highly focused clustering patterns with minimal spatial expansion in peripheral areas. This concentration is influenced by 1/ lower establishment numbers compared to other service types and 2/ higher capital requirements for dental practice setup.
+
+**Service Distribution Pattern**: The concentrated pattern indicates that dental services operate fundamentally differently from daily-use services, requiring strategic central locations to serve customers from across Singapore rather than neighborhood-based provision.
+
 :::
 :::::
-::::::::::::
+:::
 
 ## 4 Second-order Analysis
 
-<overview>
+With the second-order analysis, we will examine the spatial relationships between points in a pattern. 
 
 ### 4.1 Spatial analysis
 
-In this section, we will compute spatial point patterns
+In this section, we will compute spatial point patterns using randomness tests. 
 
 :::::::::::: panel-tabset
 ## Laundry Services
@@ -1243,7 +1318,11 @@ plot(F_9601)
 
 ### Complete spatial randomness test
 
-We use the hypothesis test below to confirm the spatial patterns above. Ho = The distribution of laundry services are randomly distributed. H1= The distribution of laundry services are not randomly distributed. The null hypothesis will be rejected is p-value is smaller than alpha value of 0.05.
+We use the hypothesis test below to confirm the spatial patterns above. 
+
+H₀ = The distribution of laundry services are randomly distributed. 
+
+H₁ = The distribution of laundry services are not randomly distributed. The null hypothesis will be rejected is p-value is smaller than alpha value of 0.05.
 
 ```{r}
 F_9601.csr <- envelope(biz_9601_ppp, Fest, correction = "all", nsim = 99)
@@ -1257,7 +1336,7 @@ plot(F_9601.csr)
 ```
 
 ::::: notegoals
-::: noterkgoals-header
+::: notegoals-header
 **Insight**
 :::
 
@@ -1282,9 +1361,9 @@ plot(L_9602, . -r ~ r, ylab = "L(d)-r", xlab = "d(m)")
 
 The hypothesis and test are as follows:
 
-Ho = The distribution of Beauty services are randomly distributed.
+H₀ = The distribution of Beauty services are randomly distributed.
 
-H1= The distribution of Beauty services are not randomly distributed.
+H₁= The distribution of Beauty services are not randomly distributed.
 
 The null hypothesis will be rejected if p-value is smaller than alpha value of 0.05.
 
@@ -1299,7 +1378,7 @@ plot(L_9602.csr, . - r ~ r, xlab = "d", ylab = "L(d)-r")
 ```
 
 ::::: notegoals
-::: noterkgoals-header
+::: notegoals-header
 **Insight**
 :::
 
@@ -1320,7 +1399,11 @@ plot(G_86204, xlim = c(0, 500))
 
 The hypothesis and test are as follows:
 
-Ho = The distribution of Beauty services are randomly distributed. H1= The distribution of Beauty services are not randomly distributed. The null hypothesis will be rejected if p-value is smaller than alpha value of 0.05.
+H₀ = The distribution of Beauty services are randomly distributed. 
+
+H₁ = The distribution of Beauty services are not randomly distributed. 
+
+The null hypothesis will be rejected if p-value is smaller than alpha value of 0.05.
 
 ```{r}
 G_86204.csr <- envelope(biz_86204_ppp, Gest, nsim = 99)
@@ -1333,7 +1416,7 @@ plot(G_86204.csr)
 ```
 
 ::::: notegoals
-::: noterkgoals-header
+::: notegoals-header
 **Insight**
 :::
 
@@ -1391,7 +1474,7 @@ for (i in 1:6) {
 ```
 
 ::::: notegoals
-::: noterkgoals-header
+::: notegoals-header
 **Insight**
 :::
 
@@ -1401,21 +1484,21 @@ for (i in 1:6) {
 
 ## Beauty Services
 
-### Perform L-function estimation by month
+### Perform L-function estimation by quarter
 
 ```{r}
 #| fig-width: 12
 #| fig-height: 32
-biz_9602_month_split <- split(biz_9602_month_owin, f = as.factor(marks(biz_9602_month_owin)))
+biz_9602_quarter_split <- split(biz_9602_quarter_owin, f = as.factor(marks(biz_9602_quarter_owin)))
 
-L_9602_month <- lapply(biz_9602_month_split, Lest)
+L_9602_quarter <- lapply(biz_9602_quarter_split, Lest)
 
 par(mfcol = c(9,2), bg = "#EEEEEE")
-biz_9602_month_names <- c("2024-1", "2024-2", "2024-3", "2024-4", "2024-5","2024-6","2024-7","2024-8","2024-9","2024-10","2024-11","2024-12", "2025-1", "2025-2", "2025-3", "2025-4", "2025-5", "2025-6")
+biz_9602_quarter_names <- c("2024-Q1", "2024-Q2", "2024-Q3", "2024-Q4","2025-Q1", "2025-Q2")
 
 for (i in 1:18) {
-  plot(L_9602_month[[i]],
-       main = paste("Beauty Services L-function -", biz_9602_month_names[i]))
+  plot(L_9602_quarter[[i]],
+       main = paste("Beauty Services L-function -", biz_9602_quarter_names[i]))
 }
 
 
@@ -1428,7 +1511,7 @@ Hypothesis test: H₀ = The distribution of laundry services is randomly distrib
 Alpha value = 0.05.
 
 ```{r}
-L_9602_month.csr <- lapply(biz_9602_month_split, function(x) envelope(x, Fest, nsim = 99))
+L_9602_quarter.csr <- lapply(biz_9602_quarter_split, function(x) envelope(x, Lest, nsim = 99))
 ```
 
 ### Plot result of test
@@ -1438,15 +1521,15 @@ L_9602_month.csr <- lapply(biz_9602_month_split, function(x) envelope(x, Fest, n
 #| fig-height: 36
 
 par(mfrow = c(9, 2), bg = "#EEEEEE")
-biz_9602_month_labels <- c(paste0("2024-", 1:12), paste0("2025-", 1:6))
+biz_9602_quarter_labels <- c(paste0("2024-", 1:12), paste0("2025-", 1:6))
 
 for (i in 1:18) {
-  plot(L_9602_month.csr[[i]], main = paste("Beauty L-function:", biz_9602_month_labels[i]))
+  plot(L_9602_quarter.csr[[i]], main = paste("Beauty L-function:", biz_9602_quarter_labels[i]))
 }
 ```
 
 ::::: notegoals
-::: noterkgoals-header
+::: notegoals-header
 **Insight**
 :::
 
@@ -1500,7 +1583,7 @@ for (i in 1:6) {
 ```
 
 ::::: notegoals
-::: noterkgoals-header
+::: notegoals-header
 **Insight**
 :::
 
