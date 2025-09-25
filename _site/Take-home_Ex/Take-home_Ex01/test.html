@@ -2653,6 +2653,120 @@ alternative hypothesis: clustered (R &lt; 1)</code></pre>
 </div>
 </div>
 </div>
+</section>
+<section id="compute-kde-with-automatic-bandwidth" class="level4">
+<h4 class="anchored" data-anchor-id="compute-kde-with-automatic-bandwidth">3.1.3 Compute KDE with automatic bandwidth</h4>
+<p>Now we will compute KDE to visualise and analyse first-order spatial point patterns. We use automatic bandwidth and smoothing kernel “gaussian” to derive the results.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-10-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-10-1" role="tab" aria-controls="tabset-10-1" aria-selected="true">Laundry Services</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-10-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-10-2" role="tab" aria-controls="tabset-10-2" aria-selected="false">Beauty Services</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-10-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-10-3" role="tab" aria-controls="tabset-10-3" aria-selected="false">Dental Services</a></li></ul>
+<div class="tab-content">
+<div id="tabset-10-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-10-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>biz_9601_ppp_km <span class="ot">&lt;-</span> <span class="fu">rescale.ppp</span>(biz_9601_ppp, <span class="dv">1000</span>, <span class="st">"km"</span>)</span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="fu">bw.ppl</span>(biz_9601_ppp_km)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   sigma 
+1.247144 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>kde_biz_9601_ab <span class="ot">&lt;-</span> <span class="fu">density</span>(</span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>  biz_9601_ppp_km, <span class="at">sigma =</span> bw.ppl, <span class="at">edge =</span> <span class="cn">TRUE</span>, <span class="at">kernel =</span> <span class="st">"gaussian"</span></span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(kde_biz_9601_ab, <span class="at">main =</span> <span class="st">"bw.ppl"</span>,</span>
+<span id="cb67-7"><a href="#cb67-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">terrain.colors</span>(<span class="dv">256</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="test_files/figure-html/unnamed-chunk-56-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="notegoals">
+<div class="notegoals-header">
+<p><strong>Insight</strong></p>
+</div>
+<div class="notegoals-container">
+<p>The KDE output reveals a clustered spatial pattern with distinct concentration hierarchies across Singapore.</p>
+<p>Two major clusters dominate the distribution pattern. <strong>The highest density cluster is located in the city center area</strong>, coinciding with areas of intense commercial activity. A secondary major cluster is still within the central area (Chinatown, Boat Quay) with lower but still significant density values. Other clusters of much lower density are distributed across northern, eastern, and western Singapore.</p>
+<p>Interestingly, these density areas show <strong>connectivity patterns</strong>, forming corridors or networks that link different concentration areas. This creates an integrated service network rather than isolated hot spots. The overall pattern suggests that the laundry services concentrate heavily in commercial centers for maximum accessibility, while maintaining smaller service nodes throughout residential areas to ensure neighborhood-level coverage.</p>
+</div>
+</div>
+</div>
+<div id="tabset-10-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-10-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>biz_9602_ppp_km <span class="ot">&lt;-</span> <span class="fu">rescale.ppp</span>(biz_9602_ppp, <span class="dv">1000</span>, <span class="st">"km"</span>)</span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="fu">bw.ppl</span>(biz_9602_ppp_km)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    sigma 
+0.4404606 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>kde_biz_9602_ab <span class="ot">&lt;-</span> <span class="fu">density</span>(</span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>  biz_9602_ppp_km, <span class="at">sigma =</span> bw.ppl, <span class="at">edge =</span> <span class="cn">TRUE</span>, <span class="at">kernel =</span> <span class="st">"gaussian"</span></span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(kde_biz_9602_ab, <span class="at">main =</span> <span class="st">"bw.ppl"</span>,</span>
+<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">terrain.colors</span>(<span class="dv">256</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="test_files/figure-html/unnamed-chunk-58-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="notegoals">
+<div class="notegoals-header">
+<p><strong>Insight</strong></p>
+</div>
+<div class="notegoals-container">
+<p>The automatic bandwidth KDE output reveals a clustered pattern with multiple major concentration areas of varying intensities. Several highest density clusters (with density values reaching 60+) are located in the central region, where both commercial and residential activities converge. These hot spots show much higher density values compared to laundry services, indicating greater market concentration.</p>
+<p>Additional clustering of lower density is distributed across northern, eastern, and western Singapore. These smaller clusters maintain strategic proximity to residential areas, serving both living and working communities.</p>
+<p>The overall pattern suggests that beauty services are heavily concentrated in commercial/shopping centers with many other satellite clusters in residential areas to serve nearby residents.</p>
+</div>
+</div>
+</div>
+<div id="tabset-10-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-10-3-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>biz_86204_ppp_km <span class="ot">&lt;-</span> <span class="fu">rescale.ppp</span>(biz_86204_ppp, <span class="dv">1000</span>, <span class="st">"km"</span>)</span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="fu">bw.ppl</span>(biz_86204_ppp_km)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   sigma 
+1.519248 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>kde_biz_86204_ab <span class="ot">&lt;-</span> <span class="fu">density</span>(</span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>  biz_86204_ppp_km, <span class="at">sigma =</span> bw.ppl, <span class="at">edge =</span> <span class="cn">TRUE</span>, <span class="at">kernel =</span> <span class="st">"gaussian"</span></span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(kde_biz_86204_ab, <span class="at">main =</span> <span class="st">"bw.ppl"</span>,</span>
+<span id="cb73-6"><a href="#cb73-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">terrain.colors</span>(<span class="dv">256</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="test_files/figure-html/unnamed-chunk-60-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="notegoals">
+<div class="notegoals-header">
+<p><strong>Insight</strong></p>
+</div>
+<div class="notegoals-container">
+<p>The dental services KDE output reveals very concentrated clustered pattern with only few major concentration areas of varying intensities. The largest cluster is located at the central region, followed by a few satellite clusters in residential areas.</p>
+<p>This shows that the overall new dental services employ a central-focused strategy for location, with most clinics located in large medical, commercial, or office buildings, rather than neighborhood buildings. Since residents normally visit dental clinics 1-2 times a year, dental businesses likely locate centrally to cater the service to a broader customers base, so as to ensrure the location is conveniently accessible by the majority of customers.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
 
 
 </section>
