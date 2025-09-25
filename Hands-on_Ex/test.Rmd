@@ -1,0 +1,19 @@
+---
+title: "test"
+author: "Cathy C."
+date: "2025-09-21"
+output: html_document
+---
+
+```{r}
+pacman::p_load(tidyverse, knitr)
+```
+
+```{r}
+amz <- read_tsv("amazon_reviews_us_Beauty_v1_00.tsv")
+```
+
+```{r}
+head(amz)
+```
+
