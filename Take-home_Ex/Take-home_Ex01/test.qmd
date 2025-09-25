@@ -942,3 +942,350 @@ This shows that the overall new dental services employ a central-focused strateg
 :::
 :::::
 ::::::::::::
+
+### 3.2 Spatio-Temporal KDE
+
+Jaundry, Beauty, and Dental business types have 150, 1762 and 81 points respectively during Jan 2024 - June 2025. In this study, we will slice the data compute quarterly spatio-temporal KDE to understand seasonal patterns.
+
+#### 3.2.1 Visualise business entity points by quarter
+
+:::::::::::: panel-tabset
+## Laundry Services
+
+```{r}
+#| fig-width: 12
+#| fig-height: 12
+
+biz_9601_quarter <- biz_9601_sf %>%
+  mutate(
+    quarter = case_when(
+      MONTH_NUM %in% c(1, 2, 3) ~ "Q1",
+      MONTH_NUM %in% c(4, 5, 6) ~ "Q2",
+      MONTH_NUM %in% c(7, 8, 9) ~ "Q3",
+      MONTH_NUM %in% c(10, 11, 12) ~ "Q4"
+    ),
+    year_quarter = paste(YEAR, quarter, sep = "-")
+  )
+
+tmap_options(bg.color = "#EEEEEE")
+tm_shape(mpsz_pop2024) + 
+  tm_polygons(fill = "#FFF2F2", col = "grey80") +
+tm_shape(biz_9601_quarter) +
+  tm_dots(fill ="#476EAE", size = 0.4) +
+  tm_facets(by = "year_quarter", free.coords = FALSE, drop.units = TRUE,
+            ncol = 2) +
+tm_layout(
+    main.title = "Laundry Services - Quarterly Density",
+    bg.color = "#EED3D9")
+```
+
+::::: notegoals
+::: notegoals-header
+**Insight**
+:::
+
+::: notegoals-container
+The visualisation above shows the new laundry businesses spatial patters by quarter from 2024-Q1 to 2025-Q2. Several dustubct temporal trends are evident. - **Northern areas**: After notable laundry service establishments in northern Singapore during the first half of 2024 (Q1-Q2), new business openings in this region significantly decreased, with zero to very few establishments in subsequent quarters.
+
+-   **Other areas**: On the other hand, the central and eastern regions show sustained business growth throughout the study period and maintained consistent establishment patterns across all quarters.
+:::
+:::::
+
+## Beauty Services
+
+```{r}
+#| fig-width: 12
+#| fig-height: 12
+
+biz_9602_quarter <- biz_9602_sf %>%
+  mutate(
+    quarter = case_when(
+      MONTH_NUM %in% c(1, 2, 3) ~ "Q1",
+      MONTH_NUM %in% c(4, 5, 6) ~ "Q2",
+      MONTH_NUM %in% c(7, 8, 9) ~ "Q3",
+      MONTH_NUM %in% c(10, 11, 12) ~ "Q4"
+    ),
+    year_quarter = paste(YEAR, quarter, sep = "-")
+  )
+
+tmap_options(bg.color = "#EEEEEE")
+tm_shape(mpsz_pop2024) + 
+  tm_polygons(fill = "#FFF2F2", col = "grey80") +
+tm_shape(biz_9602_quarter) +
+  tm_dots(fill ="#BA487F", size = 0.2) +
+  tm_facets(by = "year_quarter", free.coords = FALSE, drop.units = TRUE,
+            ncol = 2) +
+tm_layout(
+    main.title = "Beauty Services - Quarterly Density",
+    bg.color = "#CADABF")
+```
+
+::::: notegoals
+::: notegoals-header
+**Insight**
+:::
+
+::: notegoals-container
+:::
+
+The point patterns revealed in the 6 plots above explains **consistent growth** of the beauty services in both residential and commercial areas, with more density in the city center. Similar to other businesses, the beauty salons or shops may concentrate in commercial / shopping centers in the city center, hence the higher density. There are also beauty services catering to residential areas for easy access at customers' convenience.
+:::::
+
+## Dental Services
+
+```{r}
+#| fig-width: 12
+#| fig-height: 12
+
+biz_86204_quarter <- biz_86204_sf %>%
+  mutate(
+    quarter = case_when(
+      MONTH_NUM %in% c(1, 2, 3) ~ "Q1",
+      MONTH_NUM %in% c(4, 5, 6) ~ "Q2",
+      MONTH_NUM %in% c(7, 8, 9) ~ "Q3",
+      MONTH_NUM %in% c(10, 11, 12) ~ "Q4"
+    ),
+    year_quarter = paste(YEAR, quarter, sep = "-")
+  )
+
+tmap_options(bg.color = "#EEEEEE")
+tm_shape(mpsz_pop2024) + 
+  tm_polygons(fill = "#FFF2F2", col = "grey80") +
+  tm_shape(biz_86204_quarter) +
+  tm_dots(fill = "#EF7722", size = 0.4) +
+  tm_facets(by = "year_quarter", free.coords = FALSE, drop.units = TRUE,
+            ncol = 2) +
+tm_layout(
+    main.title = "Dental Services - Quarterly Density",
+    bg.color = "#B5C0D0")
+```
+
+::::: notegoals
+::: notegoals-header
+**Insight**
+:::
+
+::: notegoals-container
+Dental service establishments demonstrate a distinctly concentrated spatial strategy with consistent temporal patterns throughout the six quarters from January 2024 to June 2025.
+
+**Central Region Dominance**: New dental services show persistent clustering in central Singapore across all quarters, indicating this area's strategic importance for dental practice viability. This central concentration likely reflects proximity to medical districts and commercial centers that maximize patient accessibility.
+
+**Regional Distribution Patterns:** For northern Singapore, it consistently shows minimal to zero new establishments, suggesting either market saturation or unfavorable conditions for dental practice development. In wester areas, there is very imited expansion and indicates geographic constraints on viable dental service locations. Only in the eastern region it shows moderate but consistent activity - this may suggest emerging opportunities in this specific residential areas.
+
+This pattern also shows that **dental healthcare accessibility gaps** do exist in northern and outer western areas. Future urban planning should consider medical service corridors to improve healthcare distribution in underserved areas.
+:::
+:::::
+::::::::::::
+
+#### 3.2.2 Compute Spatio-Temporal STKDE by quarter
+
+:::::::::::: panel-tabset
+## Laundry Services
+
+```{r}
+# extract laundry data by quarter
+kde_biz_9601_quarter <- biz_9601_quarter %>%
+  dplyr::select(year_quarter)
+
+# create ppp
+biz_9601_quarter_ppp <- as.ppp(kde_biz_9601_quarter)
+  
+
+# include owin object
+biz_9601_quarter_owin <- biz_9601_quarter_ppp[sg_owin]
+
+```
+
+```{r}
+par(bg = "#EEEEEE")
+plot(biz_9601_quarter_owin)
+```
+
+### Compute STKDE
+
+```{r}
+#convert year_quarter to numeric
+marks(biz_9601_quarter_owin) <- case_when(
+  marks(biz_9601_quarter_owin) == "2024-Q1" ~ 1,
+  marks(biz_9601_quarter_owin) == "2024-Q2" ~ 2,
+  marks(biz_9601_quarter_owin) == "2024-Q3" ~ 3,
+  marks(biz_9601_quarter_owin) == "2024-Q4" ~ 4,
+  marks(biz_9601_quarter_owin) == "2025-Q1" ~ 5,
+  marks(biz_9601_quarter_owin) == "2025-Q2" ~ 6
+)
+
+st_kde_9601 <- spattemp.density(biz_9601_quarter_owin)
+summary(st_kde_9601)
+```
+
+### Plot STKDE object
+
+```{r}
+#| fig-width: 12
+#| fig-height: 8
+tims <- c(1,2,3,4,5,6)
+par(mfrow = c(2,3), bg = "#EEEEEE")
+for(i in tims){
+  plot(st_kde_9601, i,
+       override.par = FALSE,
+       fix.range = TRUE, main = paste("Laundry Services KDE at Quarter", i
+     ), col = terrain.colors(256))
+}
+
+```
+
+::::: notegoals
+::: notegoals-header
+**Insight**
+:::
+
+::: notegoals-container
+-   The KDE results reveal dynamic spatial-temporal patterns in new laundry service establishments across six quarters, showing both consistency and strategic shifts in location preferences.
+
+-   **Central Region Stability**: Throughout most quarters, the central region maintains consistent high-density concentrations. This indicates this area's sustained viability as a core service hub. This persistence suggests stable demand patterns and favorable business conditions in Singapore's commercial center.
+
+-   **Temporal Variations**: 2024-Q1 shows pronounced northern clustering alongside central concentration, indicating initial market exploration in residential areas. 2024-Q2 \~2025-Q2 demonstrates market rationalisation with reduced northern activity and strengthened central focus. It is notable that the eastern region has intermittent activity. This may suggest emerging opportunities in this residential areas
+
+-   Based on the spatial-temporal KDE results above, new laundry services do not have consistent density across the 6 quarters. There may be other factors that influence business decisions to expand the service. This also shows that the density consistently concentrate in central region most of the time, except the first quarter in 2024 there was a pronounced growth in the north and east region.
+:::
+:::::
+
+## Beauty Services
+
+```{r}
+# extract laundry data by quarter
+kde_biz_9602_quarter <- biz_9602_quarter %>%
+  dplyr::select(year_quarter)
+
+# create ppp
+biz_9602_quarter_ppp <- as.ppp(kde_biz_9602_quarter)
+  
+
+# include owin object
+biz_9602_quarter_owin <- biz_9602_quarter_ppp[sg_owin]
+
+```
+
+```{r}
+par(bg = "#EEEEEE")
+plot(biz_9602_quarter_owin)
+```
+
+### Compute STKDE
+
+```{r}
+#convert year_quarter to numeric
+marks(biz_9602_quarter_owin) <- case_when(
+  marks(biz_9602_quarter_owin) == "2024-Q1" ~ 1,
+  marks(biz_9602_quarter_owin) == "2024-Q2" ~ 2,
+  marks(biz_9602_quarter_owin) == "2024-Q3" ~ 3,
+  marks(biz_9602_quarter_owin) == "2024-Q4" ~ 4,
+  marks(biz_9602_quarter_owin) == "2025-Q1" ~ 5,
+  marks(biz_9602_quarter_owin) == "2025-Q2" ~ 6
+)
+
+st_kde_9602 <- spattemp.density(biz_9602_quarter_owin)
+summary(st_kde_9602)
+
+```
+
+### Plot STKDE object
+
+```{r}
+#| fig-width: 12
+#| fig-height: 8
+tims <- c(1,2,3,4,5,6)
+par(mfrow = c(2,3), bg = "#EEEEEE")
+for(i in tims){
+  plot(st_kde_9602, i,
+       override.par = FALSE,
+       fix.range = TRUE, main = paste("Beauty Services KDE at Quarter", i
+     ), col = terrain.colors(256))
+}
+
+```
+
+::::: notegoals
+::: notegoals-header
+**Insight**
+:::
+
+::: notegoals-container
+The KDE analysis reveals dynamic expansion patterns in beauty service establishments with notable temporal variations across six quarters.
+
+**Central Region Dominance**: Beauty services maintain consistently high density concentrations in the central region throughout all quarters. This persistent central clustering reflects the strategic importance of commercial districts and shopping areas for beauty businesses.
+
+**Temporal Growth Patterns**: 2024-Q1 shows strong initial central concentration. 2024-Q2&Q3 demonstrates market consolidation with maintained central focus. 2024-Q4 onwards exhibits notable expansion into residential areas, particularly in eastern and northeastern regions. The most significant development is the progressive density increase in eastern and northeastern residential areas from 2024-Q4 through 2025-Q2. This expansion suggests market maturation enabling viable residential location strategies, increased demand in these areas, and business model evolution toward neighborhood-based services.
+:::
+:::::
+
+## Dental Services
+
+```{r}
+# extract laundry data by quarter
+kde_biz_86204_quarter <- biz_86204_quarter %>%
+  dplyr::select(year_quarter)
+
+# create ppp
+biz_86204_quarter_ppp <- as.ppp(kde_biz_86204_quarter)
+  
+
+# include owin object
+biz_86204_quarter_owin <- biz_86204_quarter_ppp[sg_owin]
+
+```
+
+```{r}
+par(bg = "#EEEEEE")
+plot(biz_86204_quarter_owin)
+```
+
+### Compute STKDE
+
+```{r}
+#convert year_quarter to numeric
+marks(biz_86204_quarter_owin) <- case_when(
+  marks(biz_86204_quarter_owin) == "2024-Q1" ~ 1,
+  marks(biz_86204_quarter_owin) == "2024-Q2" ~ 2,
+  marks(biz_86204_quarter_owin) == "2024-Q3" ~ 3,
+  marks(biz_86204_quarter_owin) == "2024-Q4" ~ 4,
+  marks(biz_86204_quarter_owin) == "2025-Q1" ~ 5,
+  marks(biz_86204_quarter_owin) == "2025-Q2" ~ 6
+)
+
+st_kde_86204 <- spattemp.density(biz_86204_quarter_owin)
+summary(st_kde_86204)
+```
+
+### Plot STKDE object
+
+```{r}
+#| fig-width: 12
+#| fig-height: 8
+tims <- c(1,2,3,4,5,6)
+par(mfrow = c(2,3), bg = "#EEEEEE")
+for(i in tims){
+  plot(st_kde_86204, i,
+       override.par = FALSE,
+       fix.range = TRUE, main = paste("Dental Services KDE at Quarter", i),
+       col = terrain.colors(256))
+}
+
+```
+
+::::: notegoals
+::: notegoals-header
+**Insight**
+:::
+
+::: notegoals-container
+The dental services KDE reveals a highly concentrated spatial strategy that differs markedly from both laundry and beauty services in its focus and temporal stability.
+
+**Central Region Concentration**: New dental services demonstrate central clustering during 2024-Q1, 2024-Q3 and 2025-Q2. This concentration reflects the specialised nature of dental healthcare services and their dependence on medical districts, accessibility, and infrastructure. Western Region (Holland area) shows sporadic activity only in Q1, with no subsequent expansion, suggesting either market testing or unsuccessful location strategy.
+
+**Limited Spatial Distribution**: Unlike beauty services' multi-hub strategy, dental services show highly focused clustering patterns with minimal spatial expansion in peripheral areas. This concentration is influenced by 1/ lower establishment numbers compared to other service types and 2/ higher capital requirements for dental practice setup.
+
+**Service Distribution Pattern**: The concentrated pattern indicates that dental services operate fundamentally differently from daily-use services, requiring strategic central locations to serve customers from across Singapore rather than neighborhood-based provision.
+:::
+:::::
+::::::::::::
