@@ -236,6 +236,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#spatial-kde" id="toc-spatial-kde" class="nav-link" data-scroll-target="#spatial-kde">3.1 Spatial KDE</a></li>
   <li><a href="#spatio-temporal-kde" id="toc-spatio-temporal-kde" class="nav-link" data-scroll-target="#spatio-temporal-kde">3.2 Spatio-Temporal KDE</a></li>
   </ul></li>
+  <li><a href="#second-order-analysis" id="toc-second-order-analysis" class="nav-link" data-scroll-target="#second-order-analysis">4 Second-order Analysis</a>
+  <ul class="collapse">
+  <li><a href="#spatial-analysis" id="toc-spatial-analysis" class="nav-link" data-scroll-target="#spatial-analysis">4.1 Spatial analysis</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -3198,11 +3202,264 @@ Evaluation
 </div>
 </div>
 </div>
-
-
 </section>
 </section>
 </summary></section>
+<section id="second-order-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="second-order-analysis">4 Second-order Analysis</h2>
+<p>With the second-order analysis, we will examine the spatial relationships between points in a pattern.</p>
+<section id="spatial-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="spatial-analysis">4.1 Spatial analysis</h3>
+<p>In this section, we will compute spatial point patterns using randomness tests.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-13-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-13-1" role="tab" aria-controls="tabset-13-1" aria-selected="true">Laundry Services</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-13-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-13-2" role="tab" aria-controls="tabset-13-2" aria-selected="false">Beauty Services</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-13-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-13-3" role="tab" aria-controls="tabset-13-3" aria-selected="false">Dental Services - G-function</a></li></ul>
+<div class="tab-content">
+<div id="tabset-13-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-13-1-tab">
+<p>For laundry services, we will use F-function to analyse spatial point process as this function is best for random locations to nearest business. Laundry services may be important to residents, be it dry cleaning or self-operated. We want to observe its distribution whether the placement is random or follows specific spatial strategy.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1222</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="f-function-estimation" class="level3">
+<h3 class="anchored" data-anchor-id="f-function-estimation">F-function estimation</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
+<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a>F_9601 <span class="ot">=</span> <span class="fu">Fest</span>(biz_9601_ppp)</span>
+<span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(F_9601)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="test_files/figure-html/unnamed-chunk-77-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="complete-spatial-randomness-test" class="level3">
+<h3 class="anchored" data-anchor-id="complete-spatial-randomness-test">Complete spatial randomness test</h3>
+<p>We use the hypothesis test below to confirm the spatial patterns above.</p>
+<p>H₀ = The distribution of laundry services are randomly distributed.</p>
+<p>H₁ = The distribution of laundry services are not randomly distributed. The null hypothesis will be rejected is p-value is smaller than alpha value of 0.05.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a>F_9601.csr <span class="ot">&lt;-</span> <span class="fu">envelope</span>(biz_9601_ppp, Fest, <span class="at">correction =</span> <span class="st">"all"</span>, <span class="at">nsim =</span> <span class="dv">39</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Generating 39 simulations of CSR  ...
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 
+39.
+
+Done.</code></pre>
+</div>
+</div>
+</section>
+<section id="plot-simulation" class="level3">
+<h3 class="anchored" data-anchor-id="plot-simulation">Plot simulation</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(F_9601.csr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="test_files/figure-html/unnamed-chunk-79-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="notegoals">
+<div class="notegoals-header">
+<p><strong>Insight</strong></p>
+</div>
+<div class="notegoals-container">
+<p>The plot shows the observed line falls below the theoretical line and at or near the lower boundary of the envelope at the shorter distance, indicating clustering that is statistically significant. The clustering effect is strongest at distances of 500-2000. This indicates that the laundry businesses tend to cluster together with empty areas between.</p>
+</div>
+</div>
+</section>
+</div>
+<div id="tabset-13-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-13-2-tab">
+<p>For beauty services such as hair salons, manicure and pedicure, personal care services, we will use K-function to analyze clustering patterns by examining the expected number of neighboring businesses within given distances. The intention is to identify and quantify clustering at multiple spatial scales.</p>
+<section id="l-function-estimate" class="level3">
+<h3 class="anchored" data-anchor-id="l-function-estimate">L-function estimate</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a>L_9602 <span class="ot">=</span> <span class="fu">Lest</span>(biz_9602_ppp, <span class="at">correction =</span> <span class="st">"Ripley"</span>)</span>
+<span id="cb97-2"><a href="#cb97-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(L_9602, . <span class="sc">-</span>r <span class="sc">~</span> r, <span class="at">ylab =</span> <span class="st">"L(d)-r"</span>, <span class="at">xlab =</span> <span class="st">"d(m)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="test_files/figure-html/unnamed-chunk-80-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="spatial-randomness-test" class="level3">
+<h3 class="anchored" data-anchor-id="spatial-randomness-test">Spatial randomness test</h3>
+<p>The hypothesis and test are as follows:</p>
+<p>H₀ = The distribution of Beauty services are randomly distributed.</p>
+<p>H₁= The distribution of Beauty services are not randomly distributed.</p>
+<p>The null hypothesis will be rejected if p-value is smaller than alpha value of 0.05.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a>L_9602.csr <span class="ot">&lt;-</span> <span class="fu">envelope</span>(biz_9602_ppp, Lest, <span class="at">nsim =</span> <span class="dv">39</span>, <span class="at">rank =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Generating 39 simulations of CSR  ...
+1, 2, 
+[1:22:46 remaining, estimate finish 2025-09-26 01:08:09]
+3, 
+[1:25:02 remaining, estimate finish 2025-09-26 01:12:54]
+4, 
+[1:23:08 remaining, estimate finish 2025-09-26 01:13:24]
+5, 
+[1:21:00 remaining, estimate finish 2025-09-26 01:13:40]
+6, 
+[1:17:56 remaining, estimate finish 2025-09-26 01:12:53]
+7, 
+[1:17:00 remaining, estimate finish 2025-09-26 01:14:35]
+8, 
+[1:13:47 remaining, estimate finish 2025-09-26 01:13:35]
+9, 
+[1:11:13 remaining, estimate finish 2025-09-26 01:13:21]
+10, 
+[1:08:49 remaining, estimate finish 2025-09-26 01:13:19]
+11, 
+[1:06:31 remaining, estimate finish 2025-09-26 01:13:25]
+12, 
+[1:03:41 remaining, estimate finish 2025-09-26 01:12:46]
+13, 
+[1:01:26 remaining, estimate finish 2025-09-26 01:12:55]
+14, 
+[59:18 remaining, estimate finish 2025-09-26 01:13:17]
+15, 
+[56:37 remaining, estimate finish 2025-09-26 01:12:47]
+16, 
+[54:04 remaining, estimate finish 2025-09-26 01:12:28]
+17, 
+[51:40 remaining, estimate finish 2025-09-26 01:12:24]
+18, 
+[49:12 remaining, estimate finish 2025-09-26 01:12:10]
+19, 
+[47:03 remaining, estimate finish 2025-09-26 01:12:33]
+20, 
+[44:53 remaining, estimate finish 2025-09-26 01:12:55]
+21, 
+[42:30 remaining, estimate finish 2025-09-26 01:12:51]
+22, 
+[40:08 remaining, estimate finish 2025-09-26 01:12:51]
+23, 
+[37:57 remaining, estimate finish 2025-09-26 01:13:16]
+24, 
+[35:28 remaining, estimate finish 2025-09-26 01:12:59]
+25, 
+[33:00 remaining, estimate finish 2025-09-26 01:12:42]
+26, 
+[30:36 remaining, estimate finish 2025-09-26 01:12:37]
+27, 
+[28:14 remaining, estimate finish 2025-09-26 01:12:34]
+28, 
+[25:55 remaining, estimate finish 2025-09-26 01:12:40]
+29, 
+[23:33 remaining, estimate finish 2025-09-26 01:12:38]
+30, 
+[21:12 remaining, estimate finish 2025-09-26 01:12:37]
+31, 
+[18:52 remaining, estimate finish 2025-09-26 01:12:48]
+32, 
+[16:31 remaining, estimate finish 2025-09-26 01:12:48]
+33, 
+[14:08 remaining, estimate finish 2025-09-26 01:12:39]
+34, 
+[11:46 remaining, estimate finish 2025-09-26 01:12:34]
+35,  [9:25 remaining] 36,  [7:04 remaining] 37,  [4:42 remaining] 38,  [2:21 remaining] 
+39.
+
+Done.</code></pre>
+</div>
+</div>
+</section>
+<section id="plot-l-function-test" class="level3">
+<h3 class="anchored" data-anchor-id="plot-l-function-test">Plot L-function test</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(L_9602.csr, . <span class="sc">-</span> r <span class="sc">~</span> r, <span class="at">xlab =</span> <span class="st">"d"</span>, <span class="at">ylab =</span> <span class="st">"L(d)-r"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="test_files/figure-html/unnamed-chunk-82-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="notegoals">
+<div class="notegoals-header">
+<p><strong>Insight</strong></p>
+</div>
+<div class="notegoals-container">
+<ul>
+<li><p>Beauty services show the strongest clustering pattern of all 3 business types. The very thin gray envelope means there’s very little uncertainty about randomness. They likely cluster in beauty districts, shopping malls, or commercial strips.</p></li>
+<li><p>The clustering is so strong it suggests very specific location requirements, which could be high foot traffic areas, fashion/shopping districts, or areas with complementary businesses (like clothing, restaurants), or is easy to access with parking, public transport, near large residences.</p></li>
+<li><p>The clustering likely creates agglomeration economies with shared customers, referrals, comparison shopping.</p></li>
+</ul>
+</div>
+</div>
+</section>
+</div>
+<div id="tabset-13-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-13-3-tab">
+<section id="g-function-estimate" class="level3">
+<h3 class="anchored" data-anchor-id="g-function-estimate">G-function estimate</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb101"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a>G_86204 <span class="ot">=</span> <span class="fu">Lest</span>(biz_86204_ppp, <span class="at">correction =</span> <span class="st">"border"</span>)</span>
+<span id="cb101-2"><a href="#cb101-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(G_86204, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">500</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="test_files/figure-html/unnamed-chunk-83-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="spatial-randomness-test-1" class="level3">
+<h3 class="anchored" data-anchor-id="spatial-randomness-test-1">Spatial randomness test</h3>
+<p>The hypothesis and test are as follows:</p>
+<p>H₀ = The distribution of Beauty services are randomly distributed.</p>
+<p>H₁ = The distribution of Beauty services are not randomly distributed.</p>
+<p>The null hypothesis will be rejected if p-value is smaller than alpha value of 0.05.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a>G_86204.csr <span class="ot">&lt;-</span> <span class="fu">envelope</span>(biz_86204_ppp, Gest, <span class="at">nsim =</span> <span class="dv">39</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Generating 39 simulations of CSR  ...
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 
+39.
+
+Done.</code></pre>
+</div>
+</div>
+</section>
+<section id="plot-g-function-test" class="level3">
+<h3 class="anchored" data-anchor-id="plot-g-function-test">Plot G-function test</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(G_86204.csr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="test_files/figure-html/unnamed-chunk-85-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="notegoals">
+<div class="notegoals-header">
+<p><strong>Insight</strong></p>
+</div>
+<div class="notegoals-container">
+<p>The observed line is completely above the envelope, and shows a very strong clustering pattern with highly statistically significant. With out obervation earlier on the density of dental businesses in the maps, the pattern suggests dental services form tight professional clusters rather than being distributed based on residential density alone.</p>
+</div>
+</div>
+</section>
+</div>
+</div>
+</div>
+
+
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
