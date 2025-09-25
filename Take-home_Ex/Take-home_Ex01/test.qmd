@@ -577,7 +577,9 @@ tm_layout(bg.color =  "#EEEEEE",
 :::
 
 ::: notegoals-container
-New laundry businesses show a clear spatial pattern that aligns with both residential density and commercial activity. **Residential Area Patterns**: Laundry businesses concentrate in high-density residential areas. Areas with lower population density show correspondingly fewer or no new laundry establishments, which suggests a strong relationship between residential demand and business location decisions.
+New laundry businesses show a clear spatial pattern that aligns with both residential density and commercial activity. 
+
+**Residential Area Patterns**: Laundry businesses concentrate in high-density residential areas. Areas with lower population density show correspondingly fewer or no new laundry establishments, which suggests a strong relationship between residential demand and business location decisions.
 
 **Commercial District Concentration**: The Central Business District (CBD) exhibits high concentrations of new laundry businesses. It likely serves the large working population who require convenient dry cleaning services near their workplaces.
 
@@ -684,6 +686,164 @@ Dental service establishments display a distinctly different spatial pattern com
 **Central Location Dominance**: The majority of new dental services concentrate in central Singapore, significantly outnumbering those in residential areas. This pattern suggests that dental practices strategically locate in medical or commercial buildingswhere they can serve a broader catchment area.
 
 **Limited Residential Presence**: While some new dental services do establish in residential neighborhoods, these are relatively few and appear in select subzones only. This selective distribution indicates that residential areas are not the preferred location type for new dental businesses. This is likely due to different service requirements and patient accessibility needs compared to laundry and beauty services.
+:::
+:::::
+::::::::::::
+
+### 3.1 Spatial KDE
+
+To compute the businesses' spatial KDE, we will first perform data wrangling before we compute KDE and plot the results.
+
+#### 3.1.1 Geospatial data wrangling
+
+In this section, we will convert the sf objects to spatstat ppp and owin object.
+
+::: panel-tabset
+## Laundry Services
+
+**Convert sf data frames to ppp class**
+
+```{r}
+biz_9601_ppp <- as.ppp(biz_9601_sf)
+```
+
+```{r}
+summary(biz_9601_ppp)
+```
+
+**Create Owin object**
+
+```{r}
+sg_owin <- as.owin(mpsz_cl)
+```
+
+**Combine point events object and owin object**
+
+```{r}
+biz_9601_ppp = biz_9601_ppp[sg_owin]
+biz_9601_ppp
+```
+
+## Beauty Services
+
+**Convert sf data frames to ppp class**
+
+```{r}
+biz_9602_ppp <- as.ppp(biz_9602_sf)
+```
+
+**Combine point events object and owin object**
+
+```{r}
+biz_9602_ppp = biz_9602_ppp[sg_owin]
+biz_9602_ppp
+```
+
+## Dental Services
+
+**Convert sf data frames to ppp class**
+
+```{r}
+biz_86204_ppp <- as.ppp(biz_86204_sf)
+```
+
+**Combine point events object and owin object**
+
+```{r}
+biz_86204_ppp = biz_86204_ppp[sg_owin]
+biz_86204_ppp
+```
+:::
+
+#### 3.1.2 Clark-Evans test
+
+In this section, we will perform Clark-Evans tests for the 3 business entities separately, to quantify whether a point pattern is clustered, random, or uniformly spaced. The result will help us understand the underlying spatial patterns of each business type. This will inform our interpretation of the subsequent KDE analysis.
+
+:::::::::::: panel-tabset
+## Laundry Services
+
+The test hypotheses are:
+
+H₀ = The distribution of laundry services are randomly distributed.
+
+H₁ = The distribution of laundry services are not randomly distributed.
+
+The 95% confident interval will be used.
+
+```{r}
+clarkevans.test(biz_9601_ppp,
+                correction="none",
+                clipregion="sg_owin",
+                alternative=c("clustered"),
+                method="MonteCarlo",
+                nsim=99)
+```
+
+::::: notegoals
+::: notegoals-header
+**Insight**
+:::
+
+::: notegoals-container
+Laundry service R = 0.59189 & p-value = 0.01 shows **the distribution is not random**. As R value is between 0.5-1.0, there are some clustering in residential areas. It is more dispersed to serve neighbourhood needs, but it is not random.
+:::
+:::::
+
+## Beauty Services
+
+The test hypotheses are:
+
+H₀ = The distribution of beauty services are randomly distributed.
+
+H₁ = The distribution of beauty services are not randomly distributed. '
+
+The 95% confident interval will be used.
+
+```{r}
+clarkevans.test(biz_9602_ppp,
+                correction="none",
+                clipregion="sg_owin",
+                alternative=c("clustered"),
+                method="MonteCarlo",
+                nsim=99)
+```
+
+::::: notegoals
+::: notegoals-header
+**Insight**
+:::
+
+::: notegoals-container
+Beauty services R = 0.36 & p-value = 0.01 indicates that they are not random. The R value is 0.0-0.5, showing **strong clustering**, meaning that the points are very close together.
+:::
+:::::
+
+## Dental Services
+
+The test hypotheses are:
+
+H₀ = The distribution of dental services are randomly distributed.
+
+H₁ = The distribution of dental services are not randomly distributed.
+
+The 95% confident interval will be used.
+
+```{r}
+clarkevans.test(biz_86204_ppp,
+                correction="none",
+                clipregion="sg_owin",
+                alternative=c("clustered"),
+                method="MonteCarlo",
+                nsim=99)
+```
+
+::::: notegoals
+::: notegoals-header
+**Insight**
+:::
+
+::: notegoals-container
+Dental service R = 0.49043 & p-value = 0.01, so the distribution of dental businesses are not random. As R value is around 0.5, it shows moderate to strong clustering. This is possibly due to medical professional buildings or proximity to hospitals.
 :::
 :::::
 ::::::::::::

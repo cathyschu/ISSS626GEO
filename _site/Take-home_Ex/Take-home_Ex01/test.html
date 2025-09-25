@@ -231,7 +231,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#import-geospatial-data-into-r" id="toc-import-geospatial-data-into-r" class="nav-link" data-scroll-target="#import-geospatial-data-into-r">2.6 Import geospatial data into R</a></li>
   <li><a href="#prepare-population-data" id="toc-prepare-population-data" class="nav-link" data-scroll-target="#prepare-population-data">2.7 Prepare population data</a></li>
   </ul></li>
-  <li><a href="#first-order-analysis" id="toc-first-order-analysis" class="nav-link" data-scroll-target="#first-order-analysis">3 First-order Analysis</a></li>
+  <li><a href="#first-order-analysis" id="toc-first-order-analysis" class="nav-link" data-scroll-target="#first-order-analysis">3 First-order Analysis</a>
+  <ul class="collapse">
+  <li><a href="#spatial-kde" id="toc-spatial-kde" class="nav-link" data-scroll-target="#spatial-kde">3.1 Spatial KDE</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -2012,7 +2015,8 @@ $ MONTH_ABBR                        &lt;ord&gt; Jan, Jan, Jan, Feb, Mar, Mar, Ap
 <p><strong>Insight</strong></p>
 </div>
 <div class="notegoals-container">
-<p>New laundry businesses show a clear spatial pattern that aligns with both residential density and commercial activity. <strong>Residential Area Patterns</strong>: Laundry businesses concentrate in high-density residential areas. Areas with lower population density show correspondingly fewer or no new laundry establishments, which suggests a strong relationship between residential demand and business location decisions.</p>
+<p>New laundry businesses show a clear spatial pattern that aligns with both residential density and commercial activity.</p>
+<p><strong>Residential Area Patterns</strong>: Laundry businesses concentrate in high-density residential areas. Areas with lower population density show correspondingly fewer or no new laundry establishments, which suggests a strong relationship between residential demand and business location decisions.</p>
 <p><strong>Commercial District Concentration</strong>: The Central Business District (CBD) exhibits high concentrations of new laundry businesses. It likely serves the large working population who require convenient dry cleaning services near their workplaces.</p>
 <p><strong>Spatial Distribution</strong>: This dual pattern - clustering in both high-density residential areas and the CBD, indicates that laundry services strategically locate to serve both residential neighborhoods and working professionals.</p>
 </div>
@@ -2126,8 +2130,533 @@ $ MONTH_ABBR                        &lt;ord&gt; Jan, Jan, Jan, Feb, Mar, Mar, Ap
 </div>
 </div>
 </div>
+<section id="spatial-kde" class="level3">
+<h3 class="anchored" data-anchor-id="spatial-kde">3.1 Spatial KDE</h3>
+<p>To compute the businesses’ spatial KDE, we will first perform data wrangling before we compute KDE and plot the results.</p>
+<section id="geospatial-data-wrangling" class="level4">
+<h4 class="anchored" data-anchor-id="geospatial-data-wrangling">3.1.1 Geospatial data wrangling</h4>
+<p>In this section, we will convert the sf objects to spatstat ppp and owin object.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-8-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-1" role="tab" aria-controls="tabset-8-1" aria-selected="true">Laundry Services</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-8-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-2" role="tab" aria-controls="tabset-8-2" aria-selected="false">Beauty Services</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-8-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-3" role="tab" aria-controls="tabset-8-3" aria-selected="false">Dental Services</a></li></ul>
+<div class="tab-content">
+<div id="tabset-8-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-8-1-tab">
+<p><strong>Convert sf data frames to ppp class</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>biz_9601_ppp <span class="ot">&lt;-</span> <span class="fu">as.ppp</span>(biz_9601_sf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(biz_9601_ppp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Marked planar point pattern:  150 points
+Average intensity 2.25107e-07 points per square unit
+
+Coordinates are given to 11 decimal places
+
+Mark variables: uen, issuance_agency_id, entity_name, entity_type_description, 
+business_constitution_description, company_type_description, 
+paf_constitution_description, entity_status_description, date, uen_issue_date, 
+address_type, block, street_name, level_no, unit_no, building_name, 
+postal_code, other_address_line1, other_address_line2, account_due_date, 
+annual_return_date, primary_ssic_code, primary_ssic_description, 
+primary_user_described_activity, YEAR, MONTH_NUM, MONTH_ABBR, SEARCHVAL, 
+BLK_NO, ROAD_NAME, BUILDING, ADDRESS, LATITUDE, LONGITUDE, input_postcode_9601, 
+SEARCHVAL.1, BLK_NO.1, ROAD_NAME.1, BUILDING.1, ADDRESS.1, POSTAL.1, X.1, Y.1, 
+LATITUDE.1, LONGITUDE.1, SEARCHVAL.2, BLK_NO.2, ROAD_NAME.2, BUILDING.2, 
+ADDRESS.2, POSTAL.2, X.2, Y.2, LATITUDE.2, LONGITUDE.2, SEARCHVAL.3, BLK_NO.3, 
+ROAD_NAME.3, BUILDING.3, ADDRESS.3, POSTAL.3, X.3, Y.3, LATITUDE.3, 
+LONGITUDE.3, SEARCHVAL.4, BLK_NO.4, ROAD_NAME.4, BUILDING.4, ADDRESS.4, 
+POSTAL.4, X.4, Y.4, LATITUDE.4, LONGITUDE.4, SEARCHVAL.5, BLK_NO.5, 
+ROAD_NAME.5, BUILDING.5, ADDRESS.5, POSTAL.5, X.5, Y.5, LATITUDE.5, 
+LONGITUDE.5, SEARCHVAL.6, BLK_NO.6, ROAD_NAME.6, BUILDING.6, ADDRESS.6, 
+POSTAL.6, X.6, Y.6, LATITUDE.6, LONGITUDE.6, SEARCHVAL.7, BLK_NO.7, 
+ROAD_NAME.7, BUILDING.7, ADDRESS.7, POSTAL.7, X.7, Y.7, LATITUDE.7, 
+LONGITUDE.7, SEARCHVAL.8, BLK_NO.8, ROAD_NAME.8, BUILDING.8, ADDRESS.8, 
+POSTAL.8, X.8, Y.8, LATITUDE.8, LONGITUDE.8, SEARCHVAL.9, BLK_NO.9, 
+ROAD_NAME.9, BUILDING.9, ADDRESS.9, POSTAL.9, X.9, Y.9, LATITUDE.9, LONGITUDE.9
+Summary:
+     uen            issuance_agency_id entity_name       
+ Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character  
+                                                         
+                                                         
+                                                         
+                                                         
+ entity_type_description business_constitution_description
+ Length:150              Length:150                       
+ Class :character        Class :character                 
+ Mode  :character        Mode  :character                 
+                                                          
+                                                          
+                                                          
+                                                          
+ company_type_description paf_constitution_description
+ Length:150               Length:150                  
+ Class :character         Class :character            
+ Mode  :character         Mode  :character            
+                                                      
+                                                      
+                                                      
+                                                      
+ entity_status_description      date            uen_issue_date      
+ Length:150                Min.   :2024-01-03   Min.   :2024-01-03  
+ Class :character          1st Qu.:2024-05-14   1st Qu.:2024-05-14  
+ Mode  :character          Median :2024-09-17   Median :2024-09-17  
+                           Mean   :2024-09-26   Mean   :2024-09-27  
+                           3rd Qu.:2025-02-18   3rd Qu.:2025-02-18  
+                           Max.   :2025-06-26   Max.   :2025-06-26  
+                                                                    
+ address_type          block           street_name          level_no        
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+   unit_no          building_name      postal_code        other_address_line1
+ Length:150         Length:150         Length:150         Length:150         
+ Class :character   Class :character   Class :character   Class :character   
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character   
+                                                                             
+                                                                             
+                                                                             
+                                                                             
+ other_address_line2 account_due_date   annual_return_date primary_ssic_code
+ Length:150          Length:150         Length:150         Min.   :96011    
+ Class :character    Class :character   Class :character   1st Qu.:96011    
+ Mode  :character    Mode  :character   Mode  :character   Median :96012    
+                                                           Mean   :96012    
+                                                           3rd Qu.:96012    
+                                                           Max.   :96012    
+                                                                            
+ primary_ssic_description primary_user_described_activity      YEAR     
+ Length:150               Length:150                      Min.   :2024  
+ Class :character         Class :character                1st Qu.:2024  
+ Mode  :character         Mode  :character                Median :2024  
+                                                          Mean   :2024  
+                                                          3rd Qu.:2025  
+                                                          Max.   :2025  
+                                                                        
+   MONTH_NUM        MONTH_ABBR  SEARCHVAL            BLK_NO         
+ Min.   : 1.000   Jan    :23   Length:150         Length:150        
+ 1st Qu.: 3.000   Mar    :21   Class :character   Class :character  
+ Median : 5.000   May    :16   Mode  :character   Mode  :character  
+ Mean   : 5.073   Apr    :15                                        
+ 3rd Qu.: 7.000   Jun    :15                                        
+ Max.   :12.000   Feb    :13                                        
+                  (Other):47                                        
+  ROAD_NAME           BUILDING           ADDRESS            LATITUDE        
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+  LONGITUDE         input_postcode_9601 SEARCHVAL.1          BLK_NO.1        
+ Length:150         Length:150          Length:150         Length:150        
+ Class :character   Class :character    Class :character   Class :character  
+ Mode  :character   Mode  :character    Mode  :character   Mode  :character  
+                                                                             
+                                                                             
+                                                                             
+                                                                             
+ ROAD_NAME.1         BUILDING.1         ADDRESS.1           POSTAL.1        
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+     X.1                Y.1             LATITUDE.1        LONGITUDE.1       
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+ SEARCHVAL.2          BLK_NO.2         ROAD_NAME.2         BUILDING.2       
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+  ADDRESS.2           POSTAL.2             X.2                Y.2           
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+  LATITUDE.2        LONGITUDE.2        SEARCHVAL.3          BLK_NO.3        
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+ ROAD_NAME.3         BUILDING.3         ADDRESS.3           POSTAL.3        
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+     X.3                Y.3             LATITUDE.3        LONGITUDE.3       
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+ SEARCHVAL.4          BLK_NO.4         ROAD_NAME.4         BUILDING.4       
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+  ADDRESS.4           POSTAL.4             X.4                Y.4           
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+  LATITUDE.4        LONGITUDE.4        SEARCHVAL.5          BLK_NO.5        
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+ ROAD_NAME.5         BUILDING.5         ADDRESS.5           POSTAL.5        
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+     X.5                Y.5             LATITUDE.5        LONGITUDE.5       
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+ SEARCHVAL.6          BLK_NO.6         ROAD_NAME.6         BUILDING.6       
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+  ADDRESS.6           POSTAL.6             X.6                Y.6           
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+  LATITUDE.6        LONGITUDE.6        SEARCHVAL.7          BLK_NO.7        
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+ ROAD_NAME.7         BUILDING.7         ADDRESS.7           POSTAL.7        
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+     X.7                Y.7             LATITUDE.7        LONGITUDE.7       
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+ SEARCHVAL.8          BLK_NO.8         ROAD_NAME.8         BUILDING.8       
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+  ADDRESS.8           POSTAL.8             X.8                Y.8           
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+  LATITUDE.8        LONGITUDE.8        SEARCHVAL.9          BLK_NO.9        
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+ ROAD_NAME.9         BUILDING.9         ADDRESS.9           POSTAL.9        
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+     X.9                Y.9             LATITUDE.9        LONGITUDE.9       
+ Length:150         Length:150         Length:150         Length:150        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+
+Window: rectangle = [9649.27, 43221.45] x [28689.89, 48538.17] units
+                    (33570 x 19850 units)
+Window area = 666350000 square units</code></pre>
+</div>
+</div>
+<p><strong>Create Owin object</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>sg_owin <span class="ot">&lt;-</span> <span class="fu">as.owin</span>(mpsz_cl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Combine point events object and owin object</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>biz_9601_ppp <span class="ot">=</span> biz_9601_ppp[sg_owin]</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>biz_9601_ppp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Marked planar point pattern: 150 points
+Mark variables: 
+   uen issuance_agency_id entity_name entity_type_description 
+business_constitution_description company_type_description 
+paf_constitution_description entity_status_description date uen_issue_date 
+address_type block street_name level_no unit_no building_name postal_code 
+other_address_line1 other_address_line2 account_due_date annual_return_date 
+primary_ssic_code primary_ssic_description primary_user_described_activity YEAR 
+MONTH_NUM MONTH_ABBR SEARCHVAL BLK_NO ROAD_NAME BUILDING ADDRESS LATITUDE 
+LONGITUDE input_postcode_9601 SEARCHVAL.1 BLK_NO.1 ROAD_NAME.1 BUILDING.1 
+ADDRESS.1 POSTAL.1 X.1 Y.1 LATITUDE.1 LONGITUDE.1 SEARCHVAL.2 BLK_NO.2 
+ROAD_NAME.2 BUILDING.2 ADDRESS.2 POSTAL.2 X.2 Y.2 LATITUDE.2 LONGITUDE.2 
+SEARCHVAL.3 BLK_NO.3 ROAD_NAME.3 BUILDING.3 ADDRESS.3 POSTAL.3 X.3 Y.3 
+LATITUDE.3 LONGITUDE.3 SEARCHVAL.4 BLK_NO.4 ROAD_NAME.4 BUILDING.4 ADDRESS.4 
+POSTAL.4 X.4 Y.4 LATITUDE.4 LONGITUDE.4 SEARCHVAL.5 BLK_NO.5 ROAD_NAME.5 
+BUILDING.5 ADDRESS.5 POSTAL.5 X.5 Y.5 LATITUDE.5 LONGITUDE.5 SEARCHVAL.6 
+BLK_NO.6 ROAD_NAME.6 BUILDING.6 ADDRESS.6 POSTAL.6 X.6 Y.6 LATITUDE.6 
+LONGITUDE.6 SEARCHVAL.7 BLK_NO.7 ROAD_NAME.7 BUILDING.7 ADDRESS.7 POSTAL.7 X.7 
+Y.7 LATITUDE.7 LONGITUDE.7 SEARCHVAL.8 BLK_NO.8 ROAD_NAME.8 BUILDING.8 
+ADDRESS.8 POSTAL.8 X.8 Y.8 LATITUDE.8 LONGITUDE.8 SEARCHVAL.9 BLK_NO.9 
+ROAD_NAME.9 BUILDING.9 ADDRESS.9 POSTAL.9 X.9 Y.9 LATITUDE.9 LONGITUDE.9
+window: polygonal boundary
+enclosing rectangle: [2667.54, 55941.94] x [21448.47, 50256.33] units</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-8-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-8-2-tab">
+<p><strong>Convert sf data frames to ppp class</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>biz_9602_ppp <span class="ot">&lt;-</span> <span class="fu">as.ppp</span>(biz_9602_sf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Combine point events object and owin object</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>biz_9602_ppp <span class="ot">=</span> biz_9602_ppp[sg_owin]</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>biz_9602_ppp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Marked planar point pattern: 1762 points
+Mark variables: 
+   uen issuance_agency_id entity_name entity_type_description 
+business_constitution_description company_type_description 
+paf_constitution_description entity_status_description date uen_issue_date 
+address_type block street_name level_no unit_no building_name postal_code 
+other_address_line1 other_address_line2 account_due_date annual_return_date 
+primary_ssic_code primary_ssic_description primary_user_described_activity YEAR 
+MONTH_NUM MONTH_ABBR SEARCHVAL BLK_NO ROAD_NAME BUILDING ADDRESS LATITUDE 
+LONGITUDE SEARCHVAL.1 BLK_NO.1 ROAD_NAME.1 BUILDING.1 ADDRESS.1 POSTAL.1 X.1 
+Y.1 LATITUDE.1 LONGITUDE.1 SEARCHVAL.2 BLK_NO.2 ROAD_NAME.2 BUILDING.2 
+ADDRESS.2 POSTAL.2 X.2 Y.2 LATITUDE.2 LONGITUDE.2 SEARCHVAL.3 BLK_NO.3 
+ROAD_NAME.3 BUILDING.3 ADDRESS.3 POSTAL.3 X.3 Y.3 LATITUDE.3 LONGITUDE.3 
+SEARCHVAL.4 BLK_NO.4 ROAD_NAME.4 BUILDING.4 ADDRESS.4 POSTAL.4 X.4 Y.4 
+LATITUDE.4 LONGITUDE.4 SEARCHVAL.5 BLK_NO.5 ROAD_NAME.5 BUILDING.5 ADDRESS.5 
+POSTAL.5 X.5 Y.5 LATITUDE.5 LONGITUDE.5 input_postcode_9602 SEARCHVAL.6 
+BLK_NO.6 ROAD_NAME.6 BUILDING.6 ADDRESS.6 POSTAL.6 X.6 Y.6 LATITUDE.6 
+LONGITUDE.6 SEARCHVAL.7 BLK_NO.7 ROAD_NAME.7 BUILDING.7 ADDRESS.7 POSTAL.7 X.7 
+Y.7 LATITUDE.7 LONGITUDE.7 SEARCHVAL.8 BLK_NO.8 ROAD_NAME.8 BUILDING.8 
+ADDRESS.8 POSTAL.8 X.8 Y.8 LATITUDE.8 LONGITUDE.8 SEARCHVAL.9 BLK_NO.9 
+ROAD_NAME.9 BUILDING.9 ADDRESS.9 POSTAL.9 X.9 Y.9 LATITUDE.9 LONGITUDE.9
+window: polygonal boundary
+enclosing rectangle: [2667.54, 55941.94] x [21448.47, 50256.33] units</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-8-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-8-3-tab">
+<p><strong>Convert sf data frames to ppp class</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>biz_86204_ppp <span class="ot">&lt;-</span> <span class="fu">as.ppp</span>(biz_86204_sf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Combine point events object and owin object</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>biz_86204_ppp <span class="ot">=</span> biz_86204_ppp[sg_owin]</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>biz_86204_ppp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Marked planar point pattern: 81 points
+Mark variables: 
+   uen issuance_agency_id entity_name entity_type_description 
+business_constitution_description company_type_description 
+paf_constitution_description entity_status_description date uen_issue_date 
+address_type block street_name level_no unit_no building_name postal_code 
+other_address_line1 other_address_line2 account_due_date annual_return_date 
+primary_ssic_code primary_ssic_description primary_user_described_activity YEAR 
+MONTH_NUM MONTH_ABBR SEARCHVAL BLK_NO ROAD_NAME BUILDING ADDRESS LATITUDE 
+LONGITUDE input_postcode_86204 SEARCHVAL.1 BLK_NO.1 ROAD_NAME.1 BUILDING.1 
+ADDRESS.1 POSTAL.1 X.1 Y.1 LATITUDE.1 LONGITUDE.1 SEARCHVAL.2 BLK_NO.2 
+ROAD_NAME.2 BUILDING.2 ADDRESS.2 POSTAL.2 X.2 Y.2 LATITUDE.2 LONGITUDE.2 
+SEARCHVAL.3 BLK_NO.3 ROAD_NAME.3 BUILDING.3 ADDRESS.3 POSTAL.3 X.3 Y.3 
+LATITUDE.3 LONGITUDE.3 SEARCHVAL.4 BLK_NO.4 ROAD_NAME.4 BUILDING.4 ADDRESS.4 
+POSTAL.4 X.4 Y.4 LATITUDE.4 LONGITUDE.4 SEARCHVAL.5 BLK_NO.5 ROAD_NAME.5 
+BUILDING.5 ADDRESS.5 POSTAL.5 X.5 Y.5 LATITUDE.5 LONGITUDE.5
+window: polygonal boundary
+enclosing rectangle: [2667.54, 55941.94] x [21448.47, 50256.33] units</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="clark-evans-test" class="level4">
+<h4 class="anchored" data-anchor-id="clark-evans-test">3.1.2 Clark-Evans test</h4>
+<p>In this section, we will perform Clark-Evans tests for the 3 business entities separately, to quantify whether a point pattern is clustered, random, or uniformly spaced. The result will help us understand the underlying spatial patterns of each business type. This will inform our interpretation of the subsequent KDE analysis.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-9-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-1" role="tab" aria-controls="tabset-9-1" aria-selected="true">Laundry Services</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-9-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-2" role="tab" aria-controls="tabset-9-2" aria-selected="false">Beauty Services</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-9-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-3" role="tab" aria-controls="tabset-9-3" aria-selected="false">Dental Services</a></li></ul>
+<div class="tab-content">
+<div id="tabset-9-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-9-1-tab">
+<p>The test hypotheses are:</p>
+<p>H₀ = The distribution of laundry services are randomly distributed.</p>
+<p>H₁ = The distribution of laundry services are not randomly distributed.</p>
+<p>The 95% confident interval will be used.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">clarkevans.test</span>(biz_9601_ppp,</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">correction=</span><span class="st">"none"</span>,</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">clipregion=</span><span class="st">"sg_owin"</span>,</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">alternative=</span><span class="fu">c</span>(<span class="st">"clustered"</span>),</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">method=</span><span class="st">"MonteCarlo"</span>,</span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">nsim=</span><span class="dv">99</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Clark-Evans test
+    No edge correction
+    Monte Carlo test based on 99 simulations of CSR with fixed n
+
+data:  biz_9601_ppp
+R = 0.59183, p-value = 0.01
+alternative hypothesis: clustered (R &lt; 1)</code></pre>
+</div>
+</div>
+<div class="notegoals">
+<div class="notegoals-header">
+<p><strong>Insight</strong></p>
+</div>
+<div class="notegoals-container">
+<p>Laundry service R = 0.59189 &amp; p-value = 0.01 shows <strong>the distribution is not random</strong>. As R value is between 0.5-1.0, there are some clustering in residential areas. It is more dispersed to serve neighbourhood needs, but it is not random.</p>
+</div>
+</div>
+</div>
+<div id="tabset-9-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-9-2-tab">
+<p>The test hypotheses are:</p>
+<p>H₀ = The distribution of beauty services are randomly distributed.</p>
+<p>H₁ = The distribution of beauty services are not randomly distributed. ’</p>
+<p>The 95% confident interval will be used.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">clarkevans.test</span>(biz_9602_ppp,</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">correction=</span><span class="st">"none"</span>,</span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">clipregion=</span><span class="st">"sg_owin"</span>,</span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">alternative=</span><span class="fu">c</span>(<span class="st">"clustered"</span>),</span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">method=</span><span class="st">"MonteCarlo"</span>,</span>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">nsim=</span><span class="dv">99</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Clark-Evans test
+    No edge correction
+    Monte Carlo test based on 99 simulations of CSR with fixed n
+
+data:  biz_9602_ppp
+R = 0.35901, p-value = 0.01
+alternative hypothesis: clustered (R &lt; 1)</code></pre>
+</div>
+</div>
+<div class="notegoals">
+<div class="notegoals-header">
+<p><strong>Insight</strong></p>
+</div>
+<div class="notegoals-container">
+<p>Beauty services R = 0.36 &amp; p-value = 0.01 indicates that they are not random. The R value is 0.0-0.5, showing <strong>strong clustering</strong>, meaning that the points are very close together.</p>
+</div>
+</div>
+</div>
+<div id="tabset-9-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-9-3-tab">
+<p>The test hypotheses are:</p>
+<p>H₀ = The distribution of dental services are randomly distributed.</p>
+<p>H₁ = The distribution of dental services are not randomly distributed.</p>
+<p>The 95% confident interval will be used.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">clarkevans.test</span>(biz_86204_ppp,</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">correction=</span><span class="st">"none"</span>,</span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">clipregion=</span><span class="st">"sg_owin"</span>,</span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">alternative=</span><span class="fu">c</span>(<span class="st">"clustered"</span>),</span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">method=</span><span class="st">"MonteCarlo"</span>,</span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">nsim=</span><span class="dv">99</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Clark-Evans test
+    No edge correction
+    Monte Carlo test based on 99 simulations of CSR with fixed n
+
+data:  biz_86204_ppp
+R = 0.49038, p-value = 0.01
+alternative hypothesis: clustered (R &lt; 1)</code></pre>
+</div>
+</div>
+<div class="notegoals">
+<div class="notegoals-header">
+<p><strong>Insight</strong></p>
+</div>
+<div class="notegoals-container">
+<p>Dental service R = 0.49043 &amp; p-value = 0.01, so the distribution of dental businesses are not random. As R value is around 0.5, it shows moderate to strong clustering. This is possibly due to medical professional buildings or proximity to hospitals.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
 
 
+</section>
+</section>
 </summary></section>
 
 </main> <!-- /main -->
