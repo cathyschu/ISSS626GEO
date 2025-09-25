@@ -1,0 +1,310 @@
+---
+title: "03 - Spatio-Temporal Point Patterns Analysis"
+author: "Cathy C."
+date: "Sep 9, 2025"
+date-modified: "last-modified" #auto render date
+format: html
+execute: #how YML page work
+  echo: true #will show code
+  eval: true #will run code every time and show output
+  warning: false #dont show warning msg
+  freeze: true #controls rendering - no render if no changes
+---
+## Introduction
+
+In this study, we are interested in understanding the spatial and spatio-temporal patterns of new businesses and firms established in Singapore. Based on the Singapore Standard Industrial Classification 2020, there are over 1,500 business types. Among these, we will focus on **Laundry services** (including Laundry and dry cleaning services and self-operated laundries), **Beauty services** (including Hairdressing salons/shops, beauty salons and spas, as well as manicure and pedicure services, and **Dental services**.
+
+The 3 chosen businesses are essential for working adults / professionals to take care of self for outlook and health. We would like to observe how these activities evolve and potentially to enhance quality of life and well-being.
+
+We will start from processing the data, perform Kernel Density Estimation, Clarke-Evans test, and then conduct analysis with visualisation and test results. First-order and second-order spatial and spatio-temporal analyses are conducted to understand the overall new businesses and their temporal patterns during the period of time Jan 2024 to June 2025.
+
+Due to data set sizes, we will analyse spatial patterns by quarter for Laundry Services and Dental Services, and by month for Beauty Services. Different spatial point pattern testing menthods are used to analyse the 3 business types: G-function for Dental Services, L-function for Beauty Services, and F-function for Laundry Services.
+
+## 1 Loading the R package
+
+We will use **tidyverse, sf, tmap, tmap,** and **httr** packages to process data sets, along with other packages for computing KDE and plotting visualisations.
+
+| R Package | Purpose |
+|--------------------|----------------------------------------------------|
+| **tidyverse** | the **tidyverse** package is designed to make it easy to install and load core packages from the tidyverse in a single command. There are ggplot2, dplyr, tidyr, readr, purrr, and tibble, etc to manipulate, tidy, import, visualise data. |
+| **sf** | provides support for working with simple features, a standardized way to represent geographic vector data. It serves as a comprehensive tool for handling spatial data within the R environment. |
+| **tmap** | serves the purpose of creating thematic maps, offering a flexible and intuitive way to visualize spatial data. It is designed to produce both static and interactive maps using a consistent, layer-based syntax similar to `ggplot2`. |
+| **httr** | serves as a tool for interacting with web APIs and performing HTTP requests within the R environment. |
+| **knitr** | seamlessly integrate R code, its output (including text, tables, and graphics), and narrative text within a single document. |
+| **rvest** | simplify the process of scraping and manipulating web data. It allows for the extraction of information from websites and transforms it into a format suitable for analysis in R. |
+| **spatstat** | provides functions for spatial statistics with a strong focus on analysing spatial point patterns. |
+| **terra** | provides methods for manipulating geographic (spatial) data in both raster and vector formats. |
+| **raster** | provides functions which reads, writes, manipulates, analyses and model of gridded spatial data (i.e. raster). In this hands-on exercise, it will be used to convert image output generate by spatstat into raster format. |
+| **sparr** | provides a suite of functions for analyzing spatial and spatiotemporal point patterns, particularly focusing on the estimation and inference of relative risk surfaces. |
+
+: R Packages
+
+```{r}
+pacman::p_load(tidyverse, sf, tmap, httr, knitr, rvest, spatstat, terra, raster, sparr)
+```
+
+## 2 The Data
+
+There are mainly two raw public datasets used in this study.
+
+-   **ACRA (Accounting and Corporate Regulatory Authority) Information on Corporate Entities datasets**: contains the business entities information, including their names, registration, status, and location.
+-   **The Master Plan 2019 Boundary**: consists of the geographical boundary of Singapore at the planning subzone level. The data is based on URA Master Plan 2019.
+-   **Singapore Residents by Planning Area / Subzone, Age Group, Sex and Type of Dwelling, June 2024**: *respopagesextod2024.csv* is an aspatial data fie. It can be downloaded at Department of Statistics, Singapore.
+
+### 2.1 Importing ACRA data
+
+We downloaded the ACRA (Accounting and Corporate Regulatory Authority) Information on Corporate Entities datasets from data.gov.sg, and will import the ACRA data and transform them as tibble frame.
+
+```{r}
+
+folder_path <- "data/aspatial/acra"
+file_list <- list.files(path = folder_path,
+                        pattern = "^ACRA*.*\\.csv$",
+                        full.names = TRUE)
+acra_data <- file_list %>%
+  map_dfr(read_csv) #import and append all of them together!!
+  
+```
+
+Then, we will write the data into .rds to store it in the data folder. This is so no need to process data every time.
+
+```{r}
+#| eval: false
+write_rds(acra_data, "data/rds/acra_data.rds")
+```
+
+```{r}
+acra_data <- read_rds("data/rds/acra_data.rds")
+```
+
+### 2.2 Tidying ACRA data
+
+With this step, we will extract the business codes 9601, 9602, and 86204, then rename the columns and transform the data type necessarily.
+
+The business types chosen are:
+
+| Business Code | Types / subtypes |
+|-----------------------|-------------------------------------------------|
+| **9601** | **Washing and (Dry-) Cleaning of Textile and Fur Products** |
+| 96011 | Laundry and dry cleaning services except self-operated laundries |
+| 96012 | Self-operated laundries |
+| **9602** | **Hairdressing, Beauty and Other Personal Care Services** |
+| 96021 | Hairdressing salons/shops (including barber shops) |
+| 96022 | Beauty salons and spas (including slimming, skin care and hair care centres) |
+| 96023 | Manicure and pedicure services |
+| **86024** | **Dental services** |
+
+: Business Code & Types
+
+We use below code to retrieve the data between Jan 1, 2024 to June 30, 2025 for the 3 different major business types.
+
+::: panel-tabset
+## 9601
+
+**Washing and (Dry-) Cleaning of Textile and Fur Products** Business Code 9601 encompasses Laundry cleaning and self-operated laundries (96011 & 96012)
+
+```{r}
+#| eval: false
+biz_9601 <- acra_data %>%
+  dplyr::select(1:24) %>%
+  filter(primary_ssic_code == 96011 | primary_ssic_code == 96012) %>%
+  rename(date = registration_incorporation_date) %>%
+  mutate(date = as.Date(date),
+         YEAR = year(date),
+         MONTH_NUM = month(date),
+         MONTH_ABBR = month(date, label = TRUE, abbr = TRUE)) %>% #this gives Jan, Feb, Mar...
+  mutate(postal_code = str_pad(postal_code,
+                               width = 6, side = "left", pad = "0")) %>% #if missing digits, will replace with zero.
+filter(YEAR == 2024 | YEAR == 2025 & MONTH_NUM <= 6)
+
+```
+
+```{r}
+#| eval: false
+biz_9601 <- write_rds(biz_9601, "data/rds/biz_9601.rds")
+```
+
+```{r}
+biz_9601 <- read_rds("data/rds/biz_9601.rds")
+glimpse(biz_9601)
+```
+
+**There are 150 observations we have retrieved for this analysis.**
+
+## 9602
+
+**Hairdressing, Beauty and Other Personal Care Services** Business Code 9602 includes hair dressing, beauty salons and manicure & pedicure services.
+
+```{r}
+#| eval: false
+biz_9602 <- acra_data %>%
+  dplyr::select(1:24) %>%
+  filter(primary_ssic_code == 96021 | primary_ssic_code == 96022 | primary_ssic_code == 96023) %>%
+  rename(date = registration_incorporation_date) %>%
+  mutate(date = as.Date(date),
+         YEAR = year(date),
+         MONTH_NUM = month(date),
+         MONTH_ABBR = month(date, label = TRUE, abbr = TRUE)) %>% #this gives Jan, Feb, Mar...
+  mutate(postal_code = str_pad(postal_code,
+                               width = 6, side = "left", pad = "0")) %>% #if missing digits, will replace with zero.
+filter(YEAR == 2024 | YEAR == 2025 & MONTH_NUM <= 6)
+
+```
+
+```{r}
+#| eval: false
+biz_9602 <- write_rds(biz_9602, "data/rds/biz_9602.rds")
+```
+
+```{r}
+biz_9602 <- read_rds("data/rds/biz_9602.rds")
+glimpse(biz_9602)
+```
+
+**There are 1762 observations we have retrieved for this analysis.**
+
+## 86204
+
+**Dental services**
+
+```{r}
+#| eval: false
+biz_86204 <- acra_data %>%
+  dplyr::select(1:24) %>%
+  filter(primary_ssic_code == 86204) %>%
+  rename(date = registration_incorporation_date) %>%
+  mutate(date = as.Date(date),
+         YEAR = year(date),
+         MONTH_NUM = month(date),
+         MONTH_ABBR = month(date, label = TRUE, abbr = TRUE)) %>% #this gives Jan, Feb, Mar...
+  mutate(postal_code = str_pad(postal_code,
+                               width = 6, side = "left", pad = "0")) %>% #if missing digits, will replace with zero.
+filter(YEAR == 2024 | YEAR == 2025 & MONTH_NUM <= 6)
+
+```
+
+```{r}
+#| eval: false
+biz_86204 <- write_rds(biz_86204, "data/rds/biz_86204.rds")
+```
+
+```{r}
+biz_86204 <- read_rds("data/rds/biz_86204.rds")
+glimpse(biz_86204)
+```
+
+**There are 81 observations we have retrieved for this analysis.**
+:::
+
+
+### 2.3 Geocoding
+
+We will perform the following in this step: (Avoid doing so for \> 5K datasets)
+
+-   Extract unique postal code from the poastal_code field of the tidied tibble data frame.
+-   Perform geocode by submitting the postal code to SLA OneMap Reverse Geocode API.
+-   Save the return results into 2 data frame namely *found* and *not_found*.
+
+::: panel-tabset
+## 9601
+
+Below is to perform geocoding for the Laundry Services type.
+
+```{r}
+#| eval: false
+postcodes_9601 <- unique(biz_9601$postal_code)
+
+url <- "https://onemap.gov.sg/api/common/elastic/search"
+
+found_9601 <- data.frame()
+not_found_9601 <- data.frame(postcode_9601 = character())
+
+for (pc_9601 in postcodes_9601) {
+  query_9601 <- list(
+    searchVal = pc_9601,
+    returnGeom = "Y",
+    getAddrDetails = "Y",
+    pageNum = "1"
+  )
+  
+  res_9601 <- GET(url, query = query_9601)
+  json_9601 <- content(res_9601)
+  
+  if(json_9601$found != 0) {
+    df_9601 <- as.data.frame(json_9601$results, stringsAsFactors = FALSE)
+    df_9601$input_postcode_9601 <- pc_9601
+    found_9601 <- bind_rows(found_9601, df_9601)
+  } else{
+    not_found_9601 <- bind_rows(not_found_9601, data.frame(postcode_9601 = pc_9601))
+  }
+}
+```
+
+## 9602
+
+Below is to perform geocoding for the Beauty Services type.
+
+```{r}
+#| eval: false
+postcodes_9602 <- unique(biz_9602$postal_code)
+
+url <- "https://onemap.gov.sg/api/common/elastic/search"
+
+found_9602 <- data.frame()
+not_found_9602 <- data.frame(postcode_9602 = character())
+
+for (pc_9602 in postcodes_9602) {
+  query_9602 <- list(
+    searchVal = pc_9602,
+    returnGeom = "Y",
+    getAddrDetails = "Y",
+    pageNum = "1"
+  )
+  res_9602 <- GET(url, query = query_9602)
+  json_9602 <- content(res_9602)
+  
+  if(json_9602$found != 0) {
+    df_9602 <- as.data.frame(json_9602$results, stringsAsFactors = FALSE)
+    df_9602$input_postcode_9602 <- pc_9602
+    found_9602 <- bind_rows(found_9602, df_9602)
+  } else{
+    not_found_9602 <- bind_rows(not_found_9602, data.frame(postcode_9602 = pc_9602))
+  }
+}
+```
+
+## 86204
+
+Below is to perform geocoding for the Dental Services type.
+
+```{r}
+#| eval: false
+postcodes_86204 <- unique(biz_86204$postal_code)
+
+url <- "https://onemap.gov.sg/api/common/elastic/search"
+
+found_86204 <- data.frame()
+not_found_86204 <- data.frame(postcode_86204 = character())
+
+for (pc_86204 in postcodes_86204) {
+  query_86204 <- list(
+    searchVal = pc_86204,
+    returnGeom = "Y",
+    getAddrDetails = "Y",
+    pageNum = "1"
+  )
+  
+  res_86204 <- GET(url, query = query_86204)
+  json_86204 <- content(res_86204)
+  
+  if(json_86204$found != 0) {
+    df_86204 <- as.data.frame(json_86204$results, stringsAsFactors = FALSE)
+    df_86204$input_postcode_86204 <- pc_86204
+    found_86204 <- bind_rows(found_86204, df_86204)
+  } else{
+    not_found_86204 <- bind_rows(not_found_86204, data.frame(postcode_86204 = pc_86204))
+  }
+}
+```
+:::
+
