@@ -308,3 +308,223 @@ for (pc_86204 in postcodes_86204) {
 ```
 :::
 
+### 2.4 Appending the location information
+
+In this step, we will append the location information to the business entities based on their postal code.
+
+::: panel-tabset
+## 9601
+
+Below is to perform location appendix for the Laundry Services type.
+
+```{r}
+#| eval: false
+biz_9601 = biz_9601 %>%
+  left_join(found_9601,
+            by = c('postal_code' = 'POSTAL'))
+```
+
+## 9602
+
+Below is to perform location appendix for the Beauty Services type.
+
+```{r}
+#| eval: false
+biz_9602 = biz_9602 %>%
+  left_join(found_9602,
+            by = c('postal_code' = 'POSTAL'))
+```
+
+## 86204
+
+Below is to perform location appendix for the Dental Services type.
+
+```{r}
+#| eval: false
+biz_86204 = biz_86204 %>%
+  left_join(found_86204,
+            by = c('postal_code' = 'POSTAL'))
+```
+:::
+
+### 2.5 Converting into SF data frame
+
+Now we will convert the tibble data frame to a `sf` object. 
+
+::: panel-tabset
+
+## 9601
+
+Below is to convert data type for the Laundry Services type.
+
+```{r}
+#| eval: false
+biz_9601_sf <- st_as_sf(biz_9601,
+                         coords = c("X", "Y"),
+                         crs = 3414)
+write_rds(biz_9601_sf, "data/rds/biz_9601_sf.rds")
+```
+
+```{r}
+biz_9601_sf <- read_rds("data/rds/biz_9601_sf.rds")
+```
+
+## 9602
+
+Below is to convert data type for the Beauty Services type.
+
+```{r}
+#| eval: false
+biz_9602_sf <- st_as_sf(biz_9602,
+                         coords = c("X", "Y"),
+                         crs = 3414)
+write_rds(biz_9602_sf, "data/rds/biz_9602_sf.rds")
+```
+
+```{r}
+biz_9602_sf <- read_rds("data/rds/biz_9602_sf.rds")
+```
+
+## 86204
+
+Below is to convert data type for the Dental Services type.
+
+```{r}
+#| eval: false
+biz_86204_sf <- st_as_sf(biz_86204,
+                         coords = c("X", "Y"),
+                         crs = 3414)
+write_rds(biz_86204_sf, "data/rds/biz_86204_sf.rds")
+```
+
+```{r}
+biz_86204_sf <- read_rds("data/rds/biz_86204_sf.rds")
+```
+
+::: 
+
+**Take a look at the simple feature data (Laundry service).**
+
+```{r}
+
+kable(head(biz_9601_sf))
+```
+
+### 2.6 Import geospatial data into R
+
+*The Master Plan 2019 Boundary (No Sea) (KML)* was downloaded from data.gov.sg that consists of the geographical boundary of Singapore at the planning subzone level. The data is based on URA Master Plan 2019. We will use this to plot the boundaries of the subzones.
+
+::: panel-tabset
+## Import data
+
+```{r}
+#| eval: false
+mpsz <- st_read("data/geospatial/MasterPlan2019SubzoneBoundaryNoSeaKML.kml") %>%
+  st_zm(drop = TRUE, what = "ZM") %>%
+  st_transform(crs = 3414)
+```
+
+## Tidy data
+
+```{r}
+#| eval: false
+extract_kml_field <- function(html_text, field_name) {
+  if (is.na(html_text) || html_text == "") return(NA_character_)
+  
+  page <- read_html(html_text)
+  rows <- page %>% html_elements("tr")
+  
+  value <- rows %>%
+    keep(~ html_text2(html_element(.x, "th")) == field_name) %>%
+    html_element("td") %>%
+    html_text2()
+  
+  if (length(value) == 0) NA_character_ else value
+}
+
+mpsz <- mpsz %>%
+  mutate(
+    REGION_N = map_chr(Description, extract_kml_field, "REGION_N"),
+    PLN_AREA_N = map_chr(Description, extract_kml_field, "PLN_AREA_N"),
+    SUBZONE_N = map_chr(Description, extract_kml_field, "SUBZONE_N"),
+    SUBZONE_C = map_chr(Description, extract_kml_field, "SUBZONE_C")
+  ) %>%
+  dplyr::select(-Name, -Description) %>%
+  relocate(geometry, .after = last_col())
+
+mpsz_cl <- mpsz %>%
+  filter(SUBZONE_N != "SOUTHERN GROUP",
+         PLN_AREA_N != "WESTERN ISLANDS",
+         PLN_AREA_N != "NORTH-EASTERN ISLANDS")
+```
+
+## Check data
+
+```{r}
+#| eval: false
+write_rds(mpsz_cl, "data/rds/mpsz_cl.rds")
+```
+
+```{r}
+mpsz_cl <- read_rds("data/rds/mpsz_cl.rds")
+```
+:::
+
+### 2.7 Prepare population data
+
+::: panel-tabset
+## Import data
+
+```{r}
+#| eval: false
+popdata <- read_csv("data/aspatial/respopagesextod2024.csv")
+```
+
+## Data wrangling
+
+```{r}
+#| eval: false
+popdata2024 <- popdata %>%
+  group_by(PA, SZ) %>%
+  summarise(TOTAL_POP = sum(`Pop`)) %>%
+  ungroup() 
+
+```
+
+```{r}
+#| eval: false
+write_rds(popdata2024, "data/rds/popdata2024.rds")
+```
+
+```{r}
+popdata2024 <- read_rds("data/rds/popdata2024.rds")
+kable(head(popdata2024))
+```
+
+## Join population and geospatial data
+
+Use `left_join` to join the population data and geospatial data.
+
+```{r}
+#| eval: false
+popdata2024 <- popdata2024 %>%
+  mutate_at(.vars = vars(PA, SZ),
+            .funs = list(toupper)) %>%
+  filter(`TOTAL_POP` > 0)
+mpsz_pop2024 <- left_join(mpsz_cl, popdata2024,
+                          by = c("SUBZONE_N" = "SZ"))
+```
+
+Then write it into a rds file.
+
+```{r}
+#| eval: false
+write_rds(mpsz_pop2024, "data/rds/mpsz_pop2024.rds")
+```
+
+We will call it from rds file to save computation.
+
+```{r}
+mpsz_pop2024 <- read_rds("data/rds/mpsz_pop2024.rds")
+```
+:::

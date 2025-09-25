@@ -226,6 +226,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#importing-acra-data" id="toc-importing-acra-data" class="nav-link" data-scroll-target="#importing-acra-data">2.1 Importing ACRA data</a></li>
   <li><a href="#tidying-acra-data" id="toc-tidying-acra-data" class="nav-link" data-scroll-target="#tidying-acra-data">2.2 Tidying ACRA data</a></li>
   <li><a href="#geocoding" id="toc-geocoding" class="nav-link" data-scroll-target="#geocoding">2.3 Geocoding</a></li>
+  <li><a href="#appending-the-location-information" id="toc-appending-the-location-information" class="nav-link" data-scroll-target="#appending-the-location-information">2.4 Appending the location information</a></li>
+  <li><a href="#converting-into-sf-data-frame" id="toc-converting-into-sf-data-frame" class="nav-link" data-scroll-target="#converting-into-sf-data-frame">2.5 Converting into SF data frame</a></li>
+  <li><a href="#import-geospatial-data-into-r" id="toc-import-geospatial-data-into-r" class="nav-link" data-scroll-target="#import-geospatial-data-into-r">2.6 Import geospatial data into R</a></li>
+  <li><a href="#prepare-population-data" id="toc-prepare-population-data" class="nav-link" data-scroll-target="#prepare-population-data">2.7 Prepare population data</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -690,6 +694,1266 @@ $ MONTH_ABBR                        &lt;ord&gt; Jan, Jan, Jan, Feb, Mar, Mar, Ap
 <span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>    not_found_86204 <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(not_found_86204, <span class="fu">data.frame</span>(<span class="at">postcode_86204 =</span> pc_86204))</span>
 <span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="appending-the-location-information" class="level3">
+<h3 class="anchored" data-anchor-id="appending-the-location-information">2.4 Appending the location information</h3>
+<p>In this step, we will append the location information to the business entities based on their postal code.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">9601</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">9602</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-3" role="tab" aria-controls="tabset-3-3" aria-selected="false">86204</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<p>Below is to perform location appendix for the Laundry Services type.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>biz_9601 <span class="ot">=</span> biz_9601 <span class="sc">%&gt;%</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(found_9601,</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">'postal_code'</span> <span class="ot">=</span> <span class="st">'POSTAL'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<p>Below is to perform location appendix for the Beauty Services type.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>biz_9602 <span class="ot">=</span> biz_9602 <span class="sc">%&gt;%</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(found_9602,</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">'postal_code'</span> <span class="ot">=</span> <span class="st">'POSTAL'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-3-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-3-tab">
+<p>Below is to perform location appendix for the Dental Services type.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>biz_86204 <span class="ot">=</span> biz_86204 <span class="sc">%&gt;%</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(found_86204,</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">'postal_code'</span> <span class="ot">=</span> <span class="st">'POSTAL'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="converting-into-sf-data-frame" class="level3">
+<h3 class="anchored" data-anchor-id="converting-into-sf-data-frame">2.5 Converting into SF data frame</h3>
+<p>Now we will convert the tibble data frame to a <code>sf</code> object.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true">9601</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false">9602</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-3" role="tab" aria-controls="tabset-4-3" aria-selected="false">86204</a></li></ul>
+<div class="tab-content">
+<div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
+<p>Below is to convert data type for the Laundry Services type.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>biz_9601_sf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(biz_9601,</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"X"</span>, <span class="st">"Y"</span>),</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">crs =</span> <span class="dv">3414</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(biz_9601_sf, <span class="st">"data/rds/biz_9601_sf.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>biz_9601_sf <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/biz_9601_sf.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
+<p>Below is to convert data type for the Beauty Services type.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>biz_9602_sf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(biz_9602,</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"X"</span>, <span class="st">"Y"</span>),</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">crs =</span> <span class="dv">3414</span>)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(biz_9602_sf, <span class="st">"data/rds/biz_9602_sf.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>biz_9602_sf <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/biz_9602_sf.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-4-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-3-tab">
+<p>Below is to convert data type for the Dental Services type.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>biz_86204_sf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(biz_86204,</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"X"</span>, <span class="st">"Y"</span>),</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">crs =</span> <span class="dv">3414</span>)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(biz_86204_sf, <span class="st">"data/rds/biz_86204_sf.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>biz_86204_sf <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/biz_86204_sf.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+<p><strong>Take a look at the simple feature data (Laundry service).</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(biz_9601_sf))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 1%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 2%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 2%">
+<col style="width: 3%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 1%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 1%">
+<col style="width: 3%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 1%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 1%">
+<col style="width: 3%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 1%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 1%">
+<col style="width: 3%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 1%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 1%">
+<col style="width: 3%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 2%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 1%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">uen</th>
+<th style="text-align: left;">issuance_agency_id</th>
+<th style="text-align: left;">entity_name</th>
+<th style="text-align: left;">entity_type_description</th>
+<th style="text-align: left;">business_constitution_description</th>
+<th style="text-align: left;">company_type_description</th>
+<th style="text-align: left;">paf_constitution_description</th>
+<th style="text-align: left;">entity_status_description</th>
+<th style="text-align: left;">date</th>
+<th style="text-align: left;">uen_issue_date</th>
+<th style="text-align: left;">address_type</th>
+<th style="text-align: left;">block</th>
+<th style="text-align: left;">street_name</th>
+<th style="text-align: left;">level_no</th>
+<th style="text-align: left;">unit_no</th>
+<th style="text-align: left;">building_name</th>
+<th style="text-align: left;">postal_code</th>
+<th style="text-align: left;">other_address_line1</th>
+<th style="text-align: left;">other_address_line2</th>
+<th style="text-align: left;">account_due_date</th>
+<th style="text-align: left;">annual_return_date</th>
+<th style="text-align: right;">primary_ssic_code</th>
+<th style="text-align: left;">primary_ssic_description</th>
+<th style="text-align: left;">primary_user_described_activity</th>
+<th style="text-align: right;">YEAR</th>
+<th style="text-align: right;">MONTH_NUM</th>
+<th style="text-align: left;">MONTH_ABBR</th>
+<th style="text-align: left;">SEARCHVAL</th>
+<th style="text-align: left;">BLK_NO</th>
+<th style="text-align: left;">ROAD_NAME</th>
+<th style="text-align: left;">BUILDING</th>
+<th style="text-align: left;">ADDRESS</th>
+<th style="text-align: left;">LATITUDE</th>
+<th style="text-align: left;">LONGITUDE</th>
+<th style="text-align: left;">input_postcode_9601</th>
+<th style="text-align: left;">SEARCHVAL.1</th>
+<th style="text-align: left;">BLK_NO.1</th>
+<th style="text-align: left;">ROAD_NAME.1</th>
+<th style="text-align: left;">BUILDING.1</th>
+<th style="text-align: left;">ADDRESS.1</th>
+<th style="text-align: left;">POSTAL.1</th>
+<th style="text-align: left;">X.1</th>
+<th style="text-align: left;">Y.1</th>
+<th style="text-align: left;">LATITUDE.1</th>
+<th style="text-align: left;">LONGITUDE.1</th>
+<th style="text-align: left;">SEARCHVAL.2</th>
+<th style="text-align: left;">BLK_NO.2</th>
+<th style="text-align: left;">ROAD_NAME.2</th>
+<th style="text-align: left;">BUILDING.2</th>
+<th style="text-align: left;">ADDRESS.2</th>
+<th style="text-align: left;">POSTAL.2</th>
+<th style="text-align: left;">X.2</th>
+<th style="text-align: left;">Y.2</th>
+<th style="text-align: left;">LATITUDE.2</th>
+<th style="text-align: left;">LONGITUDE.2</th>
+<th style="text-align: left;">SEARCHVAL.3</th>
+<th style="text-align: left;">BLK_NO.3</th>
+<th style="text-align: left;">ROAD_NAME.3</th>
+<th style="text-align: left;">BUILDING.3</th>
+<th style="text-align: left;">ADDRESS.3</th>
+<th style="text-align: left;">POSTAL.3</th>
+<th style="text-align: left;">X.3</th>
+<th style="text-align: left;">Y.3</th>
+<th style="text-align: left;">LATITUDE.3</th>
+<th style="text-align: left;">LONGITUDE.3</th>
+<th style="text-align: left;">SEARCHVAL.4</th>
+<th style="text-align: left;">BLK_NO.4</th>
+<th style="text-align: left;">ROAD_NAME.4</th>
+<th style="text-align: left;">BUILDING.4</th>
+<th style="text-align: left;">ADDRESS.4</th>
+<th style="text-align: left;">POSTAL.4</th>
+<th style="text-align: left;">X.4</th>
+<th style="text-align: left;">Y.4</th>
+<th style="text-align: left;">LATITUDE.4</th>
+<th style="text-align: left;">LONGITUDE.4</th>
+<th style="text-align: left;">SEARCHVAL.5</th>
+<th style="text-align: left;">BLK_NO.5</th>
+<th style="text-align: left;">ROAD_NAME.5</th>
+<th style="text-align: left;">BUILDING.5</th>
+<th style="text-align: left;">ADDRESS.5</th>
+<th style="text-align: left;">POSTAL.5</th>
+<th style="text-align: left;">X.5</th>
+<th style="text-align: left;">Y.5</th>
+<th style="text-align: left;">LATITUDE.5</th>
+<th style="text-align: left;">LONGITUDE.5</th>
+<th style="text-align: left;">SEARCHVAL.6</th>
+<th style="text-align: left;">BLK_NO.6</th>
+<th style="text-align: left;">ROAD_NAME.6</th>
+<th style="text-align: left;">BUILDING.6</th>
+<th style="text-align: left;">ADDRESS.6</th>
+<th style="text-align: left;">POSTAL.6</th>
+<th style="text-align: left;">X.6</th>
+<th style="text-align: left;">Y.6</th>
+<th style="text-align: left;">LATITUDE.6</th>
+<th style="text-align: left;">LONGITUDE.6</th>
+<th style="text-align: left;">SEARCHVAL.7</th>
+<th style="text-align: left;">BLK_NO.7</th>
+<th style="text-align: left;">ROAD_NAME.7</th>
+<th style="text-align: left;">BUILDING.7</th>
+<th style="text-align: left;">ADDRESS.7</th>
+<th style="text-align: left;">POSTAL.7</th>
+<th style="text-align: left;">X.7</th>
+<th style="text-align: left;">Y.7</th>
+<th style="text-align: left;">LATITUDE.7</th>
+<th style="text-align: left;">LONGITUDE.7</th>
+<th style="text-align: left;">SEARCHVAL.8</th>
+<th style="text-align: left;">BLK_NO.8</th>
+<th style="text-align: left;">ROAD_NAME.8</th>
+<th style="text-align: left;">BUILDING.8</th>
+<th style="text-align: left;">ADDRESS.8</th>
+<th style="text-align: left;">POSTAL.8</th>
+<th style="text-align: left;">X.8</th>
+<th style="text-align: left;">Y.8</th>
+<th style="text-align: left;">LATITUDE.8</th>
+<th style="text-align: left;">LONGITUDE.8</th>
+<th style="text-align: left;">SEARCHVAL.9</th>
+<th style="text-align: left;">BLK_NO.9</th>
+<th style="text-align: left;">ROAD_NAME.9</th>
+<th style="text-align: left;">BUILDING.9</th>
+<th style="text-align: left;">ADDRESS.9</th>
+<th style="text-align: left;">POSTAL.9</th>
+<th style="text-align: left;">X.9</th>
+<th style="text-align: left;">Y.9</th>
+<th style="text-align: left;">LATITUDE.9</th>
+<th style="text-align: left;">LONGITUDE.9</th>
+<th style="text-align: left;">geometry</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">202401518M</td>
+<td style="text-align: left;">ACRA</td>
+<td style="text-align: left;">ALL DAY EVERYDAY PTE. LTD.</td>
+<td style="text-align: left;">Local Company</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">Exempt Private Company Limited by Shares</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">Live Company</td>
+<td style="text-align: left;">2024-01-10</td>
+<td style="text-align: left;">2024-01-10</td>
+<td style="text-align: left;">LOCAL</td>
+<td style="text-align: left;">105</td>
+<td style="text-align: left;">BISHAN STREET 12</td>
+<td style="text-align: left;">05</td>
+<td style="text-align: left;">242</td>
+<td style="text-align: left;">BISHAN VIEW</td>
+<td style="text-align: left;">570105</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">2026-07-31</td>
+<td style="text-align: left;">2025-06-29</td>
+<td style="text-align: right;">96012</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: right;">2024</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Jan</td>
+<td style="text-align: left;">BISHAN VIEW</td>
+<td style="text-align: left;">105</td>
+<td style="text-align: left;">BISHAN STREET 12</td>
+<td style="text-align: left;">BISHAN VIEW</td>
+<td style="text-align: left;">105 BISHAN STREET 12 BISHAN VIEW SINGAPORE 570105</td>
+<td style="text-align: left;">1.34589493632505</td>
+<td style="text-align: left;">103.847365252767</td>
+<td style="text-align: left;">570105</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">POINT (29563.24 36447.74)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">202409043N</td>
+<td style="text-align: left;">ACRA</td>
+<td style="text-align: left;">ABENDANCE PTE. LTD.</td>
+<td style="text-align: left;">Local Company</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">Exempt Private Company Limited by Shares</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">Live Company</td>
+<td style="text-align: left;">2024-03-07</td>
+<td style="text-align: left;">2024-03-07</td>
+<td style="text-align: left;">LOCAL</td>
+<td style="text-align: left;">138</td>
+<td style="text-align: left;">JOO SENG ROAD</td>
+<td style="text-align: left;">02</td>
+<td style="text-align: left;">02</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">368361</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">2026-07-31</td>
+<td style="text-align: left;">2025-07-01</td>
+<td style="text-align: right;">96011</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: right;">2024</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">Mar</td>
+<td style="text-align: left;">138 JOO SENG ROAD SINGAPORE 368361</td>
+<td style="text-align: left;">138</td>
+<td style="text-align: left;">JOO SENG ROAD</td>
+<td style="text-align: left;">NIL</td>
+<td style="text-align: left;">138 JOO SENG ROAD SINGAPORE 368361</td>
+<td style="text-align: left;">1.3377756933485</td>
+<td style="text-align: left;">103.884646509523</td>
+<td style="text-align: left;">368361</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">POINT (33712.25 35550.02)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">202507525N</td>
+<td style="text-align: left;">ACRA</td>
+<td style="text-align: left;">AWESOME LAUNDRY PTE. LTD.</td>
+<td style="text-align: left;">Local Company</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">Exempt Private Company Limited by Shares</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">Live Company</td>
+<td style="text-align: left;">2025-02-20</td>
+<td style="text-align: left;">2025-02-20</td>
+<td style="text-align: left;">LOCAL</td>
+<td style="text-align: left;">7030</td>
+<td style="text-align: left;">ANG MO KIO AVENUE 5</td>
+<td style="text-align: left;">02</td>
+<td style="text-align: left;">11</td>
+<td style="text-align: left;">NORTHSTAR @ AMK</td>
+<td style="text-align: left;">569880</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">2026-08-31</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: right;">96011</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: right;">2025</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Feb</td>
+<td style="text-align: left;">BANYAN TREE EDUCATION @ AMK</td>
+<td style="text-align: left;">7030</td>
+<td style="text-align: left;">ANG MO KIO AVENUE 5</td>
+<td style="text-align: left;">BANYAN TREE EDUCATION @ AMK</td>
+<td style="text-align: left;">7030 ANG MO KIO AVENUE 5 BANYAN TREE EDUCATION @ AMK SINGAPORE 569880</td>
+<td style="text-align: left;">1.37792345221534</td>
+<td style="text-align: left;">103.875389838376</td>
+<td style="text-align: left;">569880</td>
+<td style="text-align: left;">DISCOVERY PLANET LIMITED PARTNERSHIP</td>
+<td style="text-align: left;">7030</td>
+<td style="text-align: left;">ANG MO KIO AVENUE 5</td>
+<td style="text-align: left;">DISCOVERY PLANET LIMITED PARTNERSHIP</td>
+<td style="text-align: left;">7030 ANG MO KIO AVENUE 5 DISCOVERY PLANET LIMITED PARTNERSHIP SINGAPORE 569880</td>
+<td style="text-align: left;">569880</td>
+<td style="text-align: left;">32682.0063954461</td>
+<td style="text-align: left;">39989.3313855752</td>
+<td style="text-align: left;">1.37792345221534</td>
+<td style="text-align: left;">103.875389838376</td>
+<td style="text-align: left;">ESHKOL VALLEY @ NORTHSTAR PTE. LTD.</td>
+<td style="text-align: left;">7030</td>
+<td style="text-align: left;">ANG MO KIO AVENUE 5</td>
+<td style="text-align: left;">ESHKOL VALLEY @ NORTHSTAR PTE. LTD.</td>
+<td style="text-align: left;">7030 ANG MO KIO AVENUE 5 ESHKOL VALLEY @ NORTHSTAR PTE. LTD. SINGAPORE 569880</td>
+<td style="text-align: left;">569880</td>
+<td style="text-align: left;">32682.0063954461</td>
+<td style="text-align: left;">39989.3313855752</td>
+<td style="text-align: left;">1.37792345221534</td>
+<td style="text-align: left;">103.875389838376</td>
+<td style="text-align: left;">LITTLE FOOTPRINTS SCHOOLHOUSE (AMK) PTE. LTD.</td>
+<td style="text-align: left;">7030</td>
+<td style="text-align: left;">ANG MO KIO AVENUE 5</td>
+<td style="text-align: left;">LITTLE FOOTPRINTS SCHOOLHOUSE (AMK) PTE. LTD.</td>
+<td style="text-align: left;">7030 ANG MO KIO AVENUE 5 LITTLE FOOTPRINTS SCHOOLHOUSE (AMK) PTE. LTD. SINGAPORE 569880</td>
+<td style="text-align: left;">569880</td>
+<td style="text-align: left;">32682.0063954461</td>
+<td style="text-align: left;">39989.3313855752</td>
+<td style="text-align: left;">1.37792345221534</td>
+<td style="text-align: left;">103.875389838376</td>
+<td style="text-align: left;">LUCAS CHILDREN ACADEMY PTE. LTD.</td>
+<td style="text-align: left;">7030</td>
+<td style="text-align: left;">ANG MO KIO AVENUE 5</td>
+<td style="text-align: left;">LUCAS CHILDREN ACADEMY PTE. LTD.</td>
+<td style="text-align: left;">7030 ANG MO KIO AVENUE 5 LUCAS CHILDREN ACADEMY PTE. LTD. SINGAPORE 569880</td>
+<td style="text-align: left;">569880</td>
+<td style="text-align: left;">32682.0063954461</td>
+<td style="text-align: left;">39989.3313855752</td>
+<td style="text-align: left;">1.37792345221534</td>
+<td style="text-align: left;">103.875389838376</td>
+<td style="text-align: left;">NORTHSTAR @ AMK</td>
+<td style="text-align: left;">7030</td>
+<td style="text-align: left;">ANG MO KIO AVENUE 5</td>
+<td style="text-align: left;">NORTHSTAR @ AMK</td>
+<td style="text-align: left;">7030 ANG MO KIO AVENUE 5 NORTHSTAR @ AMK SINGAPORE 569880</td>
+<td style="text-align: left;">569880</td>
+<td style="text-align: left;">32700.5844903681</td>
+<td style="text-align: left;">39939.0796920396</td>
+<td style="text-align: left;">1.37746899102804</td>
+<td style="text-align: left;">103.875556768146</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">POINT (32682.01 39989.33)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">202527692C</td>
+<td style="text-align: left;">ACRA</td>
+<td style="text-align: left;">ASH + EVE PTE. LTD.</td>
+<td style="text-align: left;">Local Company</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">Private Company Limited by Shares</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">Live Company</td>
+<td style="text-align: left;">2025-06-26</td>
+<td style="text-align: left;">2025-06-26</td>
+<td style="text-align: left;">LOCAL</td>
+<td style="text-align: left;">160</td>
+<td style="text-align: left;">ROBINSON ROAD</td>
+<td style="text-align: left;">14</td>
+<td style="text-align: left;">04</td>
+<td style="text-align: left;">SINGAPORE BUSINESS FEDERATION CENTER</td>
+<td style="text-align: left;">068914</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">2026-12-31</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: right;">96012</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: right;">2025</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: left;">Jun</td>
+<td style="text-align: left;">SINGAPORE BUSINESS FEDERATION CENTER (SBF CENTER)</td>
+<td style="text-align: left;">160</td>
+<td style="text-align: left;">ROBINSON ROAD</td>
+<td style="text-align: left;">SINGAPORE BUSINESS FEDERATION CENTER (SBF CENTER)</td>
+<td style="text-align: left;">160 ROBINSON ROAD SINGAPORE BUSINESS FEDERATION CENTER (SBF CENTER) SINGAPORE 068914</td>
+<td style="text-align: left;">1.27812790985944</td>
+<td style="text-align: left;">103.847854628243</td>
+<td style="text-align: left;">068914</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">POINT (29617.75 28954.42)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">53489069E</td>
+<td style="text-align: left;">ACRA</td>
+<td style="text-align: left;">AQUAFRESH EXPRESS</td>
+<td style="text-align: left;">Sole Proprietorship/ Partnership</td>
+<td style="text-align: left;">Sole-Proprietor</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">Ceased Registration</td>
+<td style="text-align: left;">2024-07-24</td>
+<td style="text-align: left;">2024-07-24</td>
+<td style="text-align: left;">LOCAL</td>
+<td style="text-align: left;">842G</td>
+<td style="text-align: left;">TAMPINES STREET 82</td>
+<td style="text-align: left;">14</td>
+<td style="text-align: left;">86</td>
+<td style="text-align: left;">TAMPINES ARCADIA</td>
+<td style="text-align: left;">527842</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: right;">96012</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: right;">2024</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">Jul</td>
+<td style="text-align: left;">TAMPINES ARCADIA</td>
+<td style="text-align: left;">842G</td>
+<td style="text-align: left;">TAMPINES STREET 82</td>
+<td style="text-align: left;">TAMPINES ARCADIA</td>
+<td style="text-align: left;">842G TAMPINES STREET 82 TAMPINES ARCADIA SINGAPORE 527842</td>
+<td style="text-align: left;">1.35207674741611</td>
+<td style="text-align: left;">103.937111715862</td>
+<td style="text-align: left;">527842</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">POINT (39551.01 37131.54)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">53503312E</td>
+<td style="text-align: left;">ACRA</td>
+<td style="text-align: left;">A &amp; B LAUNDRY</td>
+<td style="text-align: left;">Sole Proprietorship/ Partnership</td>
+<td style="text-align: left;">Partnership</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">Live</td>
+<td style="text-align: left;">2025-04-30</td>
+<td style="text-align: left;">2025-04-30</td>
+<td style="text-align: left;">LOCAL</td>
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">KIM CHUAN TERRACE</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">537028</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: right;">96012</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: left;">na</td>
+<td style="text-align: right;">2025</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">Apr</td>
+<td style="text-align: left;">5 KIM CHUAN TERRACE SINGAPORE 537028</td>
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">KIM CHUAN TERRACE</td>
+<td style="text-align: left;">NIL</td>
+<td style="text-align: left;">5 KIM CHUAN TERRACE SINGAPORE 537028</td>
+<td style="text-align: left;">1.33932059888709</td>
+<td style="text-align: left;">103.890529559767</td>
+<td style="text-align: left;">537028</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">POINT (34366.97 35720.86)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="import-geospatial-data-into-r" class="level3">
+<h3 class="anchored" data-anchor-id="import-geospatial-data-into-r">2.6 Import geospatial data into R</h3>
+<p><em>The Master Plan 2019 Boundary (No Sea) (KML)</em> was downloaded from data.gov.sg that consists of the geographical boundary of Singapore at the planning subzone level. The data is based on URA Master Plan 2019. We will use this to plot the boundaries of the subzones.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true">Import data</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false">Tidy data</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-3" role="tab" aria-controls="tabset-5-3" aria-selected="false">Check data</a></li></ul>
+<div class="tab-content">
+<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>mpsz <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"data/geospatial/MasterPlan2019SubzoneBoundaryNoSeaKML.kml"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_zm</span>(<span class="at">drop =</span> <span class="cn">TRUE</span>, <span class="at">what =</span> <span class="st">"ZM"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="at">crs =</span> <span class="dv">3414</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>extract_kml_field <span class="ot">&lt;-</span> <span class="cf">function</span>(html_text, field_name) {</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.na</span>(html_text) <span class="sc">||</span> html_text <span class="sc">==</span> <span class="st">""</span>) <span class="fu">return</span>(<span class="cn">NA_character_</span>)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  page <span class="ot">&lt;-</span> <span class="fu">read_html</span>(html_text)</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  rows <span class="ot">&lt;-</span> page <span class="sc">%&gt;%</span> <span class="fu">html_elements</span>(<span class="st">"tr"</span>)</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  value <span class="ot">&lt;-</span> rows <span class="sc">%&gt;%</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">keep</span>(<span class="sc">~</span> <span class="fu">html_text2</span>(<span class="fu">html_element</span>(.x, <span class="st">"th"</span>)) <span class="sc">==</span> field_name) <span class="sc">%&gt;%</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_element</span>(<span class="st">"td"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_text2</span>()</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(value) <span class="sc">==</span> <span class="dv">0</span>) <span class="cn">NA_character_</span> <span class="cf">else</span> value</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>mpsz <span class="ot">&lt;-</span> mpsz <span class="sc">%&gt;%</span></span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">REGION_N =</span> <span class="fu">map_chr</span>(Description, extract_kml_field, <span class="st">"REGION_N"</span>),</span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">PLN_AREA_N =</span> <span class="fu">map_chr</span>(Description, extract_kml_field, <span class="st">"PLN_AREA_N"</span>),</span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">SUBZONE_N =</span> <span class="fu">map_chr</span>(Description, extract_kml_field, <span class="st">"SUBZONE_N"</span>),</span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">SUBZONE_C =</span> <span class="fu">map_chr</span>(Description, extract_kml_field, <span class="st">"SUBZONE_C"</span>)</span>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>Name, <span class="sc">-</span>Description) <span class="sc">%&gt;%</span></span>
+<span id="cb31-23"><a href="#cb31-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(geometry, <span class="at">.after =</span> <span class="fu">last_col</span>())</span>
+<span id="cb31-24"><a href="#cb31-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-25"><a href="#cb31-25" aria-hidden="true" tabindex="-1"></a>mpsz_cl <span class="ot">&lt;-</span> mpsz <span class="sc">%&gt;%</span></span>
+<span id="cb31-26"><a href="#cb31-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(SUBZONE_N <span class="sc">!=</span> <span class="st">"SOUTHERN GROUP"</span>,</span>
+<span id="cb31-27"><a href="#cb31-27" aria-hidden="true" tabindex="-1"></a>         PLN_AREA_N <span class="sc">!=</span> <span class="st">"WESTERN ISLANDS"</span>,</span>
+<span id="cb31-28"><a href="#cb31-28" aria-hidden="true" tabindex="-1"></a>         PLN_AREA_N <span class="sc">!=</span> <span class="st">"NORTH-EASTERN ISLANDS"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-5-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-3-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(mpsz_cl, <span class="st">"data/rds/mpsz_cl.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>mpsz_cl <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/mpsz_cl.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="prepare-population-data" class="level3">
+<h3 class="anchored" data-anchor-id="prepare-population-data">2.7 Prepare population data</h3>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true">Import data</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false">Data wrangling</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-3" role="tab" aria-controls="tabset-6-3" aria-selected="false">Join population and geospatial data</a></li></ul>
+<div class="tab-content">
+<div id="tabset-6-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-6-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>popdata <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/aspatial/respopagesextod2024.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-6-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>popdata2024 <span class="ot">&lt;-</span> popdata <span class="sc">%&gt;%</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(PA, SZ) <span class="sc">%&gt;%</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">TOTAL_POP =</span> <span class="fu">sum</span>(<span class="st">`</span><span class="at">Pop</span><span class="st">`</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(popdata2024, <span class="st">"data/rds/popdata2024.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>popdata2024 <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/popdata2024.rds"</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(popdata2024))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">PA</th>
+<th style="text-align: left;">SZ</th>
+<th style="text-align: right;">TOTAL_POP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Ang Mo Kio</td>
+<td style="text-align: left;">Ang Mo Kio Town Centre</td>
+<td style="text-align: right;">4910</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ang Mo Kio</td>
+<td style="text-align: left;">Cheng San</td>
+<td style="text-align: right;">27040</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ang Mo Kio</td>
+<td style="text-align: left;">Chong Boon</td>
+<td style="text-align: right;">25310</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ang Mo Kio</td>
+<td style="text-align: left;">Kebun Bahru</td>
+<td style="text-align: right;">22090</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ang Mo Kio</td>
+<td style="text-align: left;">Sembawang Hills</td>
+<td style="text-align: right;">6920</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ang Mo Kio</td>
+<td style="text-align: left;">Shangri-La</td>
+<td style="text-align: right;">17570</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="tabset-6-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-3-tab">
+<p>Use <code>left_join</code> to join the population data and geospatial data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>popdata2024 <span class="ot">&lt;-</span> popdata2024 <span class="sc">%&gt;%</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_at</span>(<span class="at">.vars =</span> <span class="fu">vars</span>(PA, SZ),</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">.funs =</span> <span class="fu">list</span>(toupper)) <span class="sc">%&gt;%</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="st">`</span><span class="at">TOTAL_POP</span><span class="st">`</span> <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>mpsz_pop2024 <span class="ot">&lt;-</span> <span class="fu">left_join</span>(mpsz_cl, popdata2024,</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"SUBZONE_N"</span> <span class="ot">=</span> <span class="st">"SZ"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Then write it into a rds file.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(mpsz_pop2024, <span class="st">"data/rds/mpsz_pop2024.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We will call it from rds file to save computation.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>mpsz_pop2024 <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/mpsz_pop2024.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
