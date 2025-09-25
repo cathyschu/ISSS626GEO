@@ -573,7 +573,7 @@ tm_layout(bg.color =  "#EEEEEE",
 
 ::::: notegoals
 ::: notegoals-header
-**Insight**
+**Analysis**
 :::
 
 ::: notegoals-container
@@ -625,7 +625,7 @@ tm_layout(bg.color =  "#EEEEEE",
 
 ::::: notegoals
 ::: notegoals-header
-**Insight**
+**Analysis**
 :::
 
 ::: notegoals-container
@@ -675,7 +675,7 @@ tm_layout(bg.color =  "#EEEEEE",
 
 ::::: notegoals
 ::: notegoals-header
-**Insight**
+**Analysis**
 :::
 
 ::: notegoals-container
@@ -707,9 +707,6 @@ In this section, we will convert the sf objects to spatstat ppp and owin object.
 biz_9601_ppp <- as.ppp(biz_9601_sf)
 ```
 
-```{r}
-summary(biz_9601_ppp)
-```
 
 **Create Owin object**
 
@@ -872,7 +869,7 @@ plot(kde_biz_9601_ab, main = "bw.ppl",
 
 ::::: notegoals
 ::: notegoals-header
-**Insight**
+**Analysis**
 :::
 
 ::: notegoals-container
@@ -902,7 +899,7 @@ plot(kde_biz_9602_ab, main = "bw.ppl",
 
 ::::: notegoals
 ::: notegoals-header
-**Insight**
+**Analysis**
 :::
 
 ::: notegoals-container
@@ -932,7 +929,7 @@ plot(kde_biz_86204_ab, main = "bw.ppl",
 
 ::::: notegoals
 ::: notegoals-header
-**Insight**
+**Analysis**
 :::
 
 ::: notegoals-container
@@ -981,7 +978,7 @@ tm_layout(
 
 ::::: notegoals
 ::: notegoals-header
-**Insight**
+**Analysis**
 :::
 
 ::: notegoals-container
@@ -1022,7 +1019,7 @@ tm_layout(
 
 ::::: notegoals
 ::: notegoals-header
-**Insight**
+**Analysis**
 :::
 
 ::: notegoals-container
@@ -1062,7 +1059,7 @@ tm_layout(
 
 ::::: notegoals
 ::: notegoals-header
-**Insight**
+**Analysis**
 :::
 
 ::: notegoals-container
@@ -1136,7 +1133,7 @@ for(i in tims){
 
 ::::: notegoals
 ::: notegoals-header
-**Insight**
+**Analysis**
 :::
 
 ::: notegoals-container
@@ -1207,7 +1204,7 @@ for(i in tims){
 
 ::::: notegoals
 ::: notegoals-header
-**Insight**
+**Analysis**
 :::
 
 ::: notegoals-container
@@ -1275,7 +1272,7 @@ for(i in tims){
 
 ::::: notegoals
 ::: notegoals-header
-**Insight**
+**Analysis**
 :::
 
 ::: notegoals-container
@@ -1336,7 +1333,7 @@ plot(F_9601.csr)
 
 ::::: notegoals
 ::: notegoals-header
-**Insight**
+**Analysis**
 :::
 
 ::: notegoals-container
@@ -1377,7 +1374,7 @@ plot(L_9602.csr, . - r ~ r, xlab = "d", ylab = "L(d)-r")
 
 ::::: notegoals
 ::: notegoals-header
-**Insight**
+**Analysis**
 :::
 
 ::: notegoals-container
@@ -1420,7 +1417,7 @@ plot(G_86204.csr)
 
 ::::: notegoals
 ::: notegoals-header
-**Insight**
+**Analysis**
 :::
 
 ::: notegoals-container
@@ -1428,4 +1425,242 @@ The observed line is completely above the envelope, and shows a very strong clus
 :::
 :::::
 ::::::::::::
+
+### 4.2 Spatio-Temporal analysis
+
+:::::::::::::::::: panel-tabset
+## Laundry Services
+
+### Perform F-function estimation
+
+```{r}
+#| fig-width: 12
+#| fig-height: 12
+biz_9601_quarter_split <- split(biz_9601_quarter_owin, f = as.factor(marks(biz_9601_quarter_owin)))
+
+F_9601_quarter <- lapply(biz_9601_quarter_split, Fest)
+
+par(mfrow = c(3,2), bg = "#EEEEEE")
+biz_9601_quarter_names <- c("2024-Q1", "2024-Q2", "2024-Q3", "2024-Q4", "2025-Q1", "2025-Q2")
+
+for (i in 1:6) {
+  plot(F_9601_quarter[[i]],
+       main = paste("Laundry Services F-function -", biz_9601_quarter_names[i]))
+}
+
+
+```
+
+::::: notegoals
+::: notegoals-header
+**Analysis**
+:::
+
+::: notegoals-container
+During the 6 quarters of observation, most of the time the F*km* line is consistenly below F*pois* line, except 2024-Q2 and 2024-Q4. This means new laundry services tend to cluster when they open.
+
+For 2024-Q2, F_km appears to cross above and below F_pois at different distances, rather than being consistently above. 2024-Q4 had new entrants that may have pursued different strategies, potentially targeting underserved areas, new development launch, etc.
+:::
+:::::
+
+### Perform spatial randomness test for each quarter
+
+Hypothesis test: H₀ = The distribution of laundry services is randomly distributed.
+
+H₁= The distribution of laundry services is not randomly distributed.
+
+Alpha value = 0.05.
+
+```{r}
+F_9601_quarter.csr <- lapply(biz_9601_quarter_split, function(x) envelope(x, Fest, nsim = 39))
+```
+
+### Plot result of test
+
+```{r}
+#| fig-width: 12
+#| fig-height: 12
+par(mfrow = c(3, 2), bg = "#EEEEEE")
+biz_9601_quarter_labels <- c(paste0("2024-Q", 1:4), paste0("2025-Q", 1:2))
+
+for (i in 1:6) {
+  plot(F_9601_quarter.csr[[i]], main = paste("Laundry F-function:", biz_9601_quarter_labels[i]))
+}
+```
+
+::::: notegoals
+::: notegoals-header
+**Analysis**
+:::
+
+::: notegoals-container
+-   Based on the test result, we found no statistically significant deviation from randomness in any quarter. Therefore, earlier on we observed that F_km below F_pois for 2024-Q4 is not strong enough to be statistically significant.
+-   This means weak clustering tendencies, meaning that new laundry services show mild clustering preferences but not strong ones. In addition, the spatial choices are more opportunistic than strategically clustered.
+-   For business, laundry services seem to have less rigid location strategies compared to other service types.
+:::
+:::::
+
+## Beauty Services
+
+### Perform L-function estimation by quarter
+
+```{r}
+#| fig-width: 12
+#| fig-height: 12
+biz_9602_quarter_split <- split(biz_9602_quarter_owin, f = as.factor(marks(biz_9602_quarter_owin)))
+
+L_9602_quarter <- lapply(biz_9602_quarter_split, Lest)
+
+par(mfcol = c(3,2), bg = "#EEEEEE")
+biz_9602_quarter_names <- c("2024-Q1", "2024-Q2", "2024-Q3", "2024-Q4","2025-Q1", "2025-Q2")
+
+for (i in 1:6) {
+  plot(L_9602_quarter[[i]],
+       main = paste("Beauty Services L-function -", biz_9602_quarter_names[i]))
+}
+
+
+```
+
+::::: notegoals
+::: notegoals-header
+**Analysis**
+:::
+
+::: notegoals-container
+-   In the visualisation for L-function estimation,
+:::
+:::::
+
+### Perform spatial randomness test for each quarter
+
+Hypothesis test:
+
+H₀ = The distribution of laundry services is randomly distributed.
+
+H₁= The distribution of laundry services is not randomly distributed.
+
+Alpha value = 0.05.
+
+```{r}
+L_9602_quarter.csr <- lapply(biz_9602_quarter_split, function(x) envelope(x, Lest, nsim = 39))
+```
+
+### Plot result of test
+
+```{r}
+#| fig-width: 12
+#| fig-height: 12
+
+par(mfrow = c(3, 2), bg = "#EEEEEE")
+biz_9602_quarter_labels <- c(paste0("2024-Q", 1:4), paste0("2025-Q", 1:2))
+
+for (i in 1:6) {
+  plot(L_9602_quarter.csr[[i]], main = paste("Beauty L-function:", biz_9602_quarter_labels[i]))
+}
+```
+
+::::: notegoals
+::: notegoals-header
+**Analysis**
+:::
+
+::: notegoals-container
+:::
+:::::
+
+## Dental Services
+
+### Perform G-function estimation by quarter
+
+```{r}
+#| fig-width: 12
+#| fig-height: 12
+biz_86204_quarter_split <- split(biz_86204_quarter_owin, f = as.factor(marks(biz_86204_quarter_owin)))
+
+G_86204_quarter <- lapply(biz_86204_quarter_split, Gest)
+
+par(mfrow = c(3,2), bg = "#EEEEEE")
+biz_86204_quarter_names <- c("2024-Q1", "2024-Q2", "2024-Q3", "2024-Q4", "2025-Q1", "2025-Q2", "2025-Q3", "2025-Q4")
+
+for (i in 1:6) {
+  plot(G_86204_quarter[[i]], xlim = c(0, 3000),
+       main = paste("Dental Services G-function -", biz_86204_quarter_names[i]))
+}
+
+
+```
+
+### Perform spatial randomness test for each quarter
+
+Hypothesis test: H₀ = The distribution of laundry services is randomly distributed. H₁= The distribution of laundry services is not randomly distributed.
+
+Alpha value = 0.05.
+
+```{r}
+G_86204_quarter.csr <- lapply(biz_86204_quarter_split, function(x) envelope(x, Gest, nsim = 39))
+```
+
+### Plot result of test
+
+```{r}
+#| fig-width: 12
+#| fig-height: 12
+par(mfrow = c(3, 2), bg = "#EEEEEE")
+biz_86204_quarter_labels <- c(paste0("2024-Q", 1:4), paste0("2025-Q", 1:2))
+
+for (i in 1:6) {
+  plot(G_86204_quarter.csr[[i]], xlim = c(0,3000), main = paste("Dental G-function:", biz_86204_quarter_labels[i]))
+}
+```
+
+::::: notegoals
+::: notegoals-header
+**Analysis**
+:::
+
+::: notegoals-container
+
+:::
+:::::
+::::::::::::::::::
+
+## 5 Conclusion
+
+Our study reveals each business type exhibits distinct clustering behaviors driven by different operational needs. The beauty services show multi-scale agglomeration - heavy concentration in central region and forming clusters in suburban residential areas. Dental services exhibit tight professional clustering in central region, and laundry services have accessibility-focused patterns.
+
+
+### 5.1 Key findings
+
+**Laundry service accessibility** - The F-function analysis revealed that despite clustering tendencies, laundry services maintain adequate accessibility across Singapore, suggesting successful market coverage that balances agglomeration benefits with customer convenience needs.The industry also grows consistently with clusters concentrated on mostly central region except 2024-Q1 when it also clusters in the north and the east region. 
+
+**Beauty service stable growth** - Beauty services grow very consistently throughout the 18 months since 2024 January. The highest density consistenly focuses on the central region while it also forms smaller clusters in suburban areas. The KDE output shows several very condensed cuslters in the central region. Along with its consistent growth in similar areas, we observed that the new beauty salons tend to open close to each other.
+
+**Dental service clustering variations** - Our analysis for dental services shows temporal variable clustering patterns (strong in 2024-Q1, 2024-Q3, 2025-Q2 but random in 2024-Q2, 2025-Q1), so clustering isn't constant but responds to market conditions or seasonal establishment patterns. This reveals that clustering behavior varies significantly over time, so suggests responsiveness to market conditions rather than static location patterns. Overall dental businesses also grow consistenly because new businesses emerge every quarter. However, regionally each quarter the growth is consistent only in central region. New dental businesses appear in different regions each quarter.
+
+Overall we see that the 3 business types all have much higher density in central region and have varying establishment densities across other regions. Laundry services and beauty services that residents need to patron periodically have higher density in more populated areas. Although dental services exhibit similar patterns, the new establishments in suburban areas are very few and only appear in areas with more condensed population. 
+
+**Support urban land use planning and management**
+-   Transit planning: Central region service concentration justifies continued public transit investment and transit-oriented development strategies.
+-   Western region gaps: Consistently lower establishment density in western Singapore indicates infrastructure or regulatory barriers requiring investigation.
+-   Professional districts: Dental services' tight clustering validates targeted development of medical/professional zones with shared facilities/buildings.
+
+### 5.2 Limitation
+-   The datasets used for this study are based on new business registration date, rather than their current practice status. Therefore, this study is not able to see a full picture of the current density and spatial spread to identify where are the real hot zones and observe their rise and fall. 
+
+-   We also observed that large dataset requires heavy computation capability, and often the simulation and rendering take much longer time than expected. Therefore, in this study, the numbre of simulation is kept minimum.
+
+### 5.3 Future works
+There are many business categories to study wider range of the businesses spatial growth. In addition, for each business, we can deep dive into their status and location to investigate these industries' growth and decline. 
+
+## 6 References
+Accounting and Corporate Regulatory Authority. (2025). ACRA information on corporate entities [Data set]. Data.gov.sg. https://data.gov.sg/datasets?query=ACRA+information&page=1&resultId=2
+
+Kam, T. S. (2022, December 8). R for geospatial data science and analytics. https://r4gdsa.netlify.app/
+
+Paez, A. (2021). Point pattern analysis IV. In An introduction to spatial data analysis and statistics: A course in R. https://paezha.github.io/spatial-analysis-r/point-pattern-analysis-iv.html#f-function
+
+Singapore Department of Statistics. (2020). Singapore standard industrial classification (SSIC) 2020. https://classification.codes/classifications/industry/ssic-singapore
+
+Urban Redevelopment Authority. (2024, June 6). Master Plan 2019 planning area boundary (no sea) [Data set]. Data.gov.sg. https://data.gov.sg/datasets?query=master+plan&page=1&resultId=d_4765db0e87b9c86336792efe8a1f7a66
 
