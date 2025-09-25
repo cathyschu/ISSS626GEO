@@ -528,3 +528,162 @@ We will call it from rds file to save computation.
 mpsz_pop2024 <- read_rds("data/rds/mpsz_pop2024.rds")
 ```
 :::
+
+
+## 3 First-order Analysis
+
+<summary for first-order analysis>
+
+:::::::::::: panel-tabset
+## Laundry Services
+
+### Mapping geospatial data sets
+
+```{r}
+#| fig-width: 12
+#| fig-height: 8
+#| fig-align: center
+par(bg = "#EEEEEE")
+plot(st_geometry(mpsz_cl), border = "grey70")
+plot(st_geometry(biz_9601_sf), add = TRUE, col = "#FF9800", pch = 16, cex = 0.8)
+```
+
+### Mapping with population
+
+```{r}
+#| fig-width: 12
+#| fig-height: 6
+#| fig-align: center
+
+par(bg = "#EEEEEE")
+tmap_mode("plot")
+
+tm_shape(mpsz_pop2024) +
+  tm_polygons(col = "TOTAL_POP", 
+          border.col = "#7077A1", lwd = 0.3) +
+tm_shape(biz_9601_sf) +
+  tm_dots(col = "orange", size = 0.3, alpha = 0.9) +
+tm_layout(bg.color =  "#EEEEEE",
+          outer.bg.color = NA,
+          frame = FALSE,
+          legend.bg.color = "transparent",      
+          legend.frame = FALSE)
+
+```
+
+::::: notegoals
+::: notegoals-header
+**Insight**
+:::
+
+::: notegoals-container
+New laundry businesses show a clear spatial pattern that aligns with both residential density and commercial activity. **Residential Area Patterns**: Laundry businesses concentrate in high-density residential areas. Areas with lower population density show correspondingly fewer or no new laundry establishments, which suggests a strong relationship between residential demand and business location decisions.
+
+**Commercial District Concentration**: The Central Business District (CBD) exhibits high concentrations of new laundry businesses. It likely serves the large working population who require convenient dry cleaning services near their workplaces.
+
+**Spatial Distribution**: This dual pattern - clustering in both high-density residential areas and the CBD, indicates that laundry services strategically locate to serve both residential neighborhoods and working professionals.
+:::
+:::::
+
+## Beauty Services
+
+### Mapping geospatial data sets
+
+```{r}
+#| fig-width: 12
+#| fig-height: 8
+#| fig-align: center
+par(bg = "#EEEEEE")
+plot(st_geometry(mpsz_cl), border = "grey70")
+plot(st_geometry(biz_9602_sf), add = TRUE, col = "#BA487F", pch = 16, cex = 0.5)
+```
+
+### Mapping with population
+
+```{r}
+#| fig-width: 12
+#| fig-height: 6
+#| fig-align: center
+
+par(bg = "#EEEEEE")
+tmap_mode("plot")
+
+tm_shape(mpsz_pop2024) +
+  tm_polygons(col = "TOTAL_POP", 
+          border.col = "#7077A1", lwd = 0.3) +
+tm_shape(biz_9602_sf) +
+  tm_dots(col = "deeppink3", size = 0.2, alpha = 0.9) +
+tm_layout(bg.color =  "#EEEEEE",
+          outer.bg.color = NA,
+          frame = FALSE,
+          legend.bg.color = "transparent",      
+          legend.frame = FALSE)
+
+```
+
+::::: notegoals
+::: notegoals-header
+**Insight**
+:::
+
+::: notegoals-container
+New beauty service establishments show a spatial pattern similar to laundry services, but with significantly higher overall density concentrations.
+
+**Residential Area Distribution**: In residential neighborhoods, beauty services show a more dispersed pattern compared to the central areas. While the density of new establishments correlates positively with residential population levels, areas with low population still have few business providers. Even for non-residential areas in the west, there are also new businesses there, likely to serve working professional or representing locations of chain store offices.
+
+**Commercial Center Concentration**: Beauty services demonstrate particularly strong density in central south areas, likely targeting areas with high concentrations of commercial buildings and shopping centers. This concentration is even more evident than that observed for laundry services.
+:::
+:::::
+
+## Dental Services
+
+### Mapping geospatial data sets
+
+```{r}
+#| fig-width: 12
+#| fig-height: 8
+#| fig-align: center
+par(bg = "#EEEEEE")
+plot(st_geometry(mpsz_cl), border = "grey70")
+plot(st_geometry(biz_86204_sf), add = TRUE, col = "#18978F", pch = 16, cex = 0.8)
+```
+
+### Mapping with population
+
+```{r}
+#| fig-width: 12
+#| fig-height: 6
+#| fig-align: center
+
+par(bg = "#EEEEEE")
+tmap_mode("plot")
+
+tm_shape(mpsz_pop2024) +
+  tm_polygons(col = "TOTAL_POP", 
+          border.col = "#7077A1", lwd = 0.3) +
+tm_shape(biz_86204_sf) +
+  tm_dots(col = "darkcyan", size = 0.3, alpha = 0.9) +
+tm_layout(bg.color =  "#EEEEEE",
+          outer.bg.color = NA,
+          frame = FALSE,
+          legend.bg.color = "transparent",      
+          legend.frame = FALSE)
+
+```
+
+::::: notegoals
+::: notegoals-header
+**Insight**
+:::
+
+::: notegoals-container
+Dental service establishments display a distinctly different spatial pattern compared to laundry and beauty services and show a more selective location strategy.
+
+**Selective Geographic Distribution**: Unlike the other 2 business types, dental services do not establish in every subzone. Instead, they cluster in specific subzones. They also have a clear preference for central locations over residential areas.
+
+**Central Location Dominance**: The majority of new dental services concentrate in central Singapore, significantly outnumbering those in residential areas. This pattern suggests that dental practices strategically locate in medical or commercial buildingswhere they can serve a broader catchment area.
+
+**Limited Residential Presence**: While some new dental services do establish in residential neighborhoods, these are relatively few and appear in select subzones only. This selective distribution indicates that residential areas are not the preferred location type for new dental businesses. This is likely due to different service requirements and patient accessibility needs compared to laundry and beauty services.
+:::
+:::::
+::::::::::::
