@@ -9,7 +9,7 @@
 <meta name="author" content="Cathy C.">
 <meta name="dcterms.date" content="2025-09-09">
 
-<title>Take-home Exercise: Spatial Analysis of Essential Services in Singapore - Laundry, Beauty &amp; Dental Business – GeoSpatial</title>
+<title>Take-home Exercise: Spatial Analysis on Emerging Business in Singapore - Laundry, Beauty &amp; Dental – GeoSpatial</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -220,7 +220,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#loading-the-r-packages" id="toc-loading-the-r-packages" class="nav-link" data-scroll-target="#loading-the-r-packages">1 Loading the R packages</a></li>
+  <li><a href="#loading-the-r-package" id="toc-loading-the-r-package" class="nav-link" data-scroll-target="#loading-the-r-package">1 Loading the R package</a></li>
   <li><a href="#the-data" id="toc-the-data" class="nav-link" data-scroll-target="#the-data">2 The Data</a>
   <ul class="collapse">
   <li><a href="#importing-acra-data" id="toc-importing-acra-data" class="nav-link" data-scroll-target="#importing-acra-data">2.1 Importing ACRA data</a></li>
@@ -236,6 +236,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#spatial-kde" id="toc-spatial-kde" class="nav-link" data-scroll-target="#spatial-kde">3.1 Spatial KDE</a></li>
   <li><a href="#spatio-temporal-kde" id="toc-spatio-temporal-kde" class="nav-link" data-scroll-target="#spatio-temporal-kde">3.2 Spatio-Temporal KDE</a></li>
   </ul></li>
+  <li><a href="#dental-services-4" id="toc-dental-services-4" class="nav-link" data-scroll-target="#dental-services-4">Dental Services</a></li>
   <li><a href="#second-order-analysis" id="toc-second-order-analysis" class="nav-link" data-scroll-target="#second-order-analysis">4 Second-order Analysis</a>
   <ul class="collapse">
   <li><a href="#spatial-analysis" id="toc-spatial-analysis" class="nav-link" data-scroll-target="#spatial-analysis">4.1 Spatial analysis</a></li>
@@ -256,7 +257,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Take-home Exercise: Spatial Analysis of Essential Services in Singapore - Laundry, Beauty &amp; Dental Business</h1>
+<h1 class="title">Take-home Exercise: Spatial Analysis on Emerging Business in Singapore - Laundry, Beauty &amp; Dental</h1>
 </div>
 
 
@@ -299,8 +300,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>We will start from processing the data, perform Kernel Density Estimation, Clarke-Evans test, and then conduct analysis with visualisation and test results. First-order and second-order spatial and spatio-temporal analyses are conducted to understand the overall new businesses and their temporal patterns during the period of time Jan 2024 to June 2025.</p>
 <p>Due to data set sizes, we will analyse spatial patterns by quarter for all 3 Services. Different spatial point pattern testing menthods are used to analyse the 3 business types: G-function for Dental Services, L-function for Beauty Services, and F-function for Laundry Services.</p>
 </section>
-<section id="loading-the-r-packages" class="level2">
-<h2 class="anchored" data-anchor-id="loading-the-r-packages">1 Loading the R packages</h2>
+<section id="loading-the-r-package" class="level2">
+<h2 class="anchored" data-anchor-id="loading-the-r-package">1 Loading the R package</h2>
 <p>We will use <strong>tidyverse, sf, tmap, tmap,</strong> and <strong>httr</strong> packages to process data sets, along with other packages for computing KDE and plotting visualisations.</p>
 <table class="caption-top table">
 <caption>R Packages</caption>
@@ -2556,7 +2557,7 @@ alternative hypothesis: clustered (R &lt; 1)</code></pre>
 <section id="visualise-business-entity-points-by-quarter" class="level4">
 <h4 class="anchored" data-anchor-id="visualise-business-entity-points-by-quarter">3.2.1 Visualise business entity points by quarter</h4>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-11-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-11-1" role="tab" aria-controls="tabset-11-1" aria-selected="true">Laundry Services</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-11-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-11-2" role="tab" aria-controls="tabset-11-2" aria-selected="false">Beauty Services</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-11-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-11-3" role="tab" aria-controls="tabset-11-3" aria-selected="false">Dental Services</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-11-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-11-1" role="tab" aria-controls="tabset-11-1" aria-selected="true">Laundry Services</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-11-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-11-2" role="tab" aria-controls="tabset-11-2" aria-selected="false">Beauty Services</a></li></ul>
 <div class="tab-content">
 <div id="tabset-11-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-11-1-tab">
 <div class="cell">
@@ -2594,10 +2595,9 @@ alternative hypothesis: clustered (R &lt; 1)</code></pre>
 <p><strong>Analysis</strong></p>
 </div>
 <div class="notegoals-container">
-<p>The visualisation above shows the new laundry businesses spatial patters by quarter from 2024-Q1 to 2025-Q2. Several dustubct temporal trends are evident.</p>
+<p>The visualisation above shows the new laundry businesses spatial patters by quarter from 2024-Q1 to 2025-Q2. Several dustubct temporal trends are evident. - <strong>Northern areas</strong>: After notable laundry service establishments in northern Singapore during the first half of 2024 (Q1-Q2), new business openings in this region significantly decreased, with zero to very few establishments in subsequent quarters.</p>
 <ul>
-<li><p><strong>Northern areas</strong>: After notable laundry service establishments in northern Singapore during the first half of 2024 (Q1-Q2), new business openings in this region significantly decreased, with zero to very few establishments in subsequent quarters.</p></li>
-<li><p><strong>Other areas</strong>: On the other hand, the central and eastern regions show sustained business growth throughout the study period and maintained consistent establishment patterns across all quarters.</p></li>
+<li><strong>Other areas</strong>: On the other hand, the central and eastern regions show sustained business growth throughout the study period and maintained consistent establishment patterns across all quarters.</li>
 </ul>
 </div>
 </div>
@@ -2638,11 +2638,18 @@ alternative hypothesis: clustered (R &lt; 1)</code></pre>
 <p><strong>Analysis</strong></p>
 </div>
 <div class="notegoals-container">
+
+</div>
 <p>The point patterns revealed in the 6 plots above explains <strong>consistent growth</strong> of the beauty services in both residential and commercial areas, with more density in the city center. Similar to other businesses, the beauty salons or shops may concentrate in commercial / shopping centers in the city center, hence the higher density. There are also beauty services catering to residential areas for easy access at customers’ convenience.</p>
 </div>
 </div>
 </div>
-<div id="tabset-11-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-11-3-tab">
+</div>
+</section>
+</section>
+</section>
+<section id="dental-services-4" class="level2">
+<h2 class="anchored" data-anchor-id="dental-services-4">Dental Services</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>biz_86204_quarter <span class="ot">&lt;-</span> biz_86204_sf <span class="sc">%&gt;%</span></span>
 <span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
@@ -2684,10 +2691,7 @@ alternative hypothesis: clustered (R &lt; 1)</code></pre>
 <p>This pattern also shows that <strong>dental healthcare accessibility gaps</strong> do exist in northern and outer western areas. Future urban planning should consider medical service corridors to improve healthcare distribution in underserved areas.</p>
 </div>
 </div>
-</div>
-</div>
-</div>
-</section>
+<p>::::::::::::</p>
 <section id="compute-spatio-temporal-stkde-by-quarter" class="level4">
 <h4 class="anchored">3.2.2 Compute Spatio-Temporal STKDE by quarter</h4>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
@@ -2980,7 +2984,6 @@ Evaluation
 </div>
 </section>
 </section>
-</section>
 <section id="second-order-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="second-order-analysis">4 Second-order Analysis</h2>
 <p>With the second-order analysis, we will examine the spatial relationships between points in a pattern.</p>
@@ -3077,72 +3080,72 @@ Done.</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>Generating 39 simulations of CSR  ...
 1, 2, 
-[1:20:36 remaining, estimate finish 2025-09-26 21:44:05]
+[1:21:31 remaining, estimate finish 2025-09-26 17:00:12]
 3, 
-[1:22:41 remaining, estimate finish 2025-09-26 21:48:35]
+[1:23:39 remaining, estimate finish 2025-09-26 17:04:48]
 4, 
-[1:20:59 remaining, estimate finish 2025-09-26 21:49:14]
+[1:21:46 remaining, estimate finish 2025-09-26 17:05:17]
 5, 
-[1:19:02 remaining, estimate finish 2025-09-26 21:49:38]
+[1:19:37 remaining, estimate finish 2025-09-26 17:05:29]
 6, 
-[1:16:11 remaining, estimate finish 2025-09-26 21:49:01]
+[1:16:40 remaining, estimate finish 2025-09-26 17:04:47]
 7, 
-[1:15:20 remaining, estimate finish 2025-09-26 21:50:46]
+[1:15:48 remaining, estimate finish 2025-09-26 17:06:31]
 8, 
-[1:12:10 remaining, estimate finish 2025-09-26 21:49:45]
+[1:12:35 remaining, estimate finish 2025-09-26 17:05:28]
 9, 
-[1:09:37 remaining, estimate finish 2025-09-26 21:49:29]
+[1:10:00 remaining, estimate finish 2025-09-26 17:05:10]
 10, 
-[1:07:17 remaining, estimate finish 2025-09-26 21:49:28]
+[1:07:39 remaining, estimate finish 2025-09-26 17:05:09]
 11, 
-[1:05:01 remaining, estimate finish 2025-09-26 21:49:32]
+[1:05:24 remaining, estimate finish 2025-09-26 17:05:15]
 12, 
-[1:02:13 remaining, estimate finish 2025-09-26 21:48:52]
+[1:02:35 remaining, estimate finish 2025-09-26 17:04:34]
 13, 
-[59:59 remaining, estimate finish 2025-09-26 21:48:58]
+[1:00:20 remaining, estimate finish 2025-09-26 17:04:41]
 14, 
-[57:53 remaining, estimate finish 2025-09-26 21:49:18]
+[58:13 remaining, estimate finish 2025-09-26 17:04:59]
 15, 
-[55:15 remaining, estimate finish 2025-09-26 21:48:47]
+[55:33 remaining, estimate finish 2025-09-26 17:04:27]
 16, 
-[52:46 remaining, estimate finish 2025-09-26 21:48:29]
+[53:03 remaining, estimate finish 2025-09-26 17:04:09]
 17, 
-[50:25 remaining, estimate finish 2025-09-26 21:48:23]
+[50:41 remaining, estimate finish 2025-09-26 17:04:02]
 18, 
-[48:01 remaining, estimate finish 2025-09-26 21:48:12]
+[48:15 remaining, estimate finish 2025-09-26 17:03:48]
 19, 
-[45:57 remaining, estimate finish 2025-09-26 21:48:36]
+[46:09 remaining, estimate finish 2025-09-26 17:04:11]
 20, 
-[43:51 remaining, estimate finish 2025-09-26 21:49:00]
+[44:02 remaining, estimate finish 2025-09-26 17:04:33]
 21, 
-[41:31 remaining, estimate finish 2025-09-26 21:48:56]
+[41:41 remaining, estimate finish 2025-09-26 17:04:30]
 22, 
-[39:13 remaining, estimate finish 2025-09-26 21:48:57]
+[39:22 remaining, estimate finish 2025-09-26 17:04:29]
 23, 
-[37:04 remaining, estimate finish 2025-09-26 21:49:21]
+[37:13 remaining, estimate finish 2025-09-26 17:04:53]
 24, 
-[34:39 remaining, estimate finish 2025-09-26 21:49:05]
+[34:47 remaining, estimate finish 2025-09-26 17:04:37]
 25, 
-[32:14 remaining, estimate finish 2025-09-26 21:48:48]
+[32:21 remaining, estimate finish 2025-09-26 17:04:19]
 26, 
-[29:55 remaining, estimate finish 2025-09-26 21:48:45]
+[30:01 remaining, estimate finish 2025-09-26 17:04:14]
 27, 
-[27:37 remaining, estimate finish 2025-09-26 21:48:44]
+[27:42 remaining, estimate finish 2025-09-26 17:04:12]
 28, 
-[25:20 remaining, estimate finish 2025-09-26 21:48:49]
+[25:25 remaining, estimate finish 2025-09-26 17:04:16]
 29, 
-[23:02 remaining, estimate finish 2025-09-26 21:48:48]
+[23:06 remaining, estimate finish 2025-09-26 17:04:15]
 30, 
-[20:43 remaining, estimate finish 2025-09-26 21:48:47]
+[20:47 remaining, estimate finish 2025-09-26 17:04:13]
 31, 
-[18:27 remaining, estimate finish 2025-09-26 21:48:56]
+[18:30 remaining, estimate finish 2025-09-26 17:04:23]
 32, 
-[16:09 remaining, estimate finish 2025-09-26 21:48:56]
+[16:11 remaining, estimate finish 2025-09-26 17:04:23]
 33, 
-[13:49 remaining, estimate finish 2025-09-26 21:48:46]
+[13:51 remaining, estimate finish 2025-09-26 17:04:14]
 34, 
-[11:30 remaining, estimate finish 2025-09-26 21:48:41]
-35,  [9:12 remaining] 36,  [6:54 remaining] 37,  [4:35 remaining] 38,  [2:18 remaining] 
+[11:32 remaining, estimate finish 2025-09-26 17:04:08]
+35,  [9:14 remaining] 36,  [6:55 remaining] 37,  [4:36 remaining] 38,  [2:18 remaining] 
 39.
 
 Done.</code></pre>
@@ -3419,35 +3422,35 @@ Generating 39 simulations of CSR  ...
 
 Done.
 Generating 39 simulations of CSR  ...
-1, 2,  [3:31 remaining] 3,
- [3:06 remaining] 4,  [3:01 remaining] 5,  [3:03 remaining] 6,
- [2:56 remaining] 7,  [2:50 remaining] 8,  [2:45 remaining] 9,
- [2:39 remaining] 10,  [2:32 remaining] 11,  [2:25 remaining] 12,
- [2:19 remaining] 13,  [2:14 remaining] 14,  [2:09 remaining] 15,
- [2:04 remaining] 16,  [1:59 remaining] 17,  [1:54 remaining] 18,
- [1:51 remaining] 19,  [1:46 remaining] 20,  [1:41 remaining] 21,
- [1:36 remaining] 22,  [1:31 remaining] 23,  [1:26 remaining] 24,
- [1:21 remaining] 25,  [1:15 remaining] 26,  [1:10 remaining] 27,
- [1:05 remaining] 28,  [1:00 remaining] 29,  [54 sec remaining] 30,
- [49 sec remaining] 31,  [43 sec remaining] 32,  [38 sec remaining] 33,
- [33 sec remaining] 34,  [27 sec remaining] 35,  [22 sec remaining] 36,
- [17 sec remaining] 37,  [11 sec remaining] 38,  [6 sec remaining] 
+1, 2,  [3:24 remaining] 3,
+ [3:03 remaining] 4,  [2:58 remaining] 5,  [3:01 remaining] 6,
+ [2:55 remaining] 7,  [2:49 remaining] 8,  [2:44 remaining] 9,
+ [2:37 remaining] 10,  [2:30 remaining] 11,  [2:23 remaining] 12,
+ [2:18 remaining] 13,  [2:13 remaining] 14,  [2:08 remaining] 15,
+ [2:02 remaining] 16,  [1:58 remaining] 17,  [1:53 remaining] 18,
+ [1:50 remaining] 19,  [1:45 remaining] 20,  [1:40 remaining] 21,
+ [1:35 remaining] 22,  [1:30 remaining] 23,  [1:25 remaining] 24,
+ [1:20 remaining] 25,  [1:14 remaining] 26,  [1:09 remaining] 27,
+ [1:04 remaining] 28,  [59 sec remaining] 29,  [53 sec remaining] 30,
+ [48 sec remaining] 31,  [43 sec remaining] 32,  [38 sec remaining] 33,
+ [32 sec remaining] 34,  [27 sec remaining] 35,  [22 sec remaining] 36,
+ [16 sec remaining] 37,  [11 sec remaining] 38,  [5 sec remaining] 
 39.
 
 Done.
 Generating 39 simulations of CSR  ...
-1, 2,  [3:13 remaining] 3,
- [3:13 remaining] 4,  [3:12 remaining] 5,  [3:01 remaining] 6,
- [3:01 remaining] 7,  [2:52 remaining] 8,  [2:46 remaining] 9,
- [2:38 remaining] 10,  [2:34 remaining] 11,  [2:28 remaining] 12,
- [2:23 remaining] 13,  [2:17 remaining] 14,  [2:13 remaining] 15,
- [2:07 remaining] 16,  [2:01 remaining] 17,  [1:57 remaining] 18,
- [1:51 remaining] 19,  [1:46 remaining] 20,  [1:41 remaining] 21,
- [1:36 remaining] 22,  [1:30 remaining] 23,  [1:24 remaining] 24,
- [1:19 remaining] 25,  [1:14 remaining] 26,  [1:09 remaining] 27,
- [1:04 remaining] 28,  [58 sec remaining] 29,  [53 sec remaining] 30,
- [48 sec remaining] 31,  [42 sec remaining] 32,  [37 sec remaining] 33,
- [32 sec remaining] 34,  [27 sec remaining] 35,  [21 sec remaining] 36,
+1, 2,  [3:11 remaining] 3,
+ [3:09 remaining] 4,  [3:09 remaining] 5,  [2:59 remaining] 6,
+ [2:59 remaining] 7,  [2:51 remaining] 8,  [2:44 remaining] 9,
+ [2:37 remaining] 10,  [2:32 remaining] 11,  [2:26 remaining] 12,
+ [2:22 remaining] 13,  [2:16 remaining] 14,  [2:12 remaining] 15,
+ [2:06 remaining] 16,  [2:00 remaining] 17,  [1:56 remaining] 18,
+ [1:50 remaining] 19,  [1:45 remaining] 20,  [1:40 remaining] 21,
+ [1:35 remaining] 22,  [1:30 remaining] 23,  [1:24 remaining] 24,
+ [1:19 remaining] 25,  [1:13 remaining] 26,  [1:08 remaining] 27,
+ [1:03 remaining] 28,  [58 sec remaining] 29,  [53 sec remaining] 30,
+ [47 sec remaining] 31,  [42 sec remaining] 32,  [37 sec remaining] 33,
+ [32 sec remaining] 34,  [26 sec remaining] 35,  [21 sec remaining] 36,
  [16 sec remaining] 37,  [11 sec remaining] 38,  [5 sec remaining] 
 39.
 
@@ -3477,10 +3480,10 @@ Done.</code></pre>
 <p><strong>Analysis</strong></p>
 </div>
 <div class="notegoals-container">
+<p>The observed L-function being well above the envelope across all six quarters indicates beauty services have very strong clustering that significantly exceeds random expectation. The combination of strong effect size, narrow confidence intervals, and temporal consistency makes this statistically robust clustering patterns and economically meaningful.</p>
+<p>The remarkable similarity across all quarters suggests beauty service clustering is a stable market characteristic rather than a temporary or seasonal phenomenon. This indicates that established location strategies that persist over time, mature market dynamics where clustering benefits are well-understood, and possibily consistent consumer preferences for beauty service districts.</p>
 <ul>
-<li><p>The observed L-function being well above the envelope across all six quarters indicates beauty services have very strong clustering that significantly exceeds random expectation. The combination of strong effect size, narrow confidence intervals, and temporal consistency makes this statistically robust clustering patterns and economically meaningful.</p></li>
-<li><p>The remarkable similarity across all 6 quarters suggests beauty service clustering is a stable market characteristic rather than a temporary or seasonal phenomenon. This indicates that established location strategies that persist over time, mature market dynamics where clustering benefits are well-understood, and possibily consistent consumer preferences for beauty service districts.</p></li>
-<li><p>Since the pattern holds across the entire distance range (0-6000r) in all 6 quarters, beauty services cluster at multiple spatial scales simultaneously, such as local clustering (shopping centers, beauty districts), regional clustering (concentration in central Singapore).</p></li>
+<li><p>Since the pattern holds across the entire distance range (0-6000r) in all quarters, beauty services cluster at multiple spatial scales simultaneously, such as local clustering (shopping centers, beauty districts), regional clustering (concentration in central Singapore).</p></li>
 <li><p>The consistency also suggests beauty services have developed optimal location strategies that create sustainable competitive advantages through agglomeration, consumer convenience through service concentration, as well as market patterns that new businesses can reliably follow.</p></li>
 </ul>
 </div>
@@ -3508,17 +3511,6 @@ Done.</code></pre>
 <p><img src="test_files/figure-html/unnamed-chunk-92-1.png" class="img-fluid figure-img" width="1152"></p>
 </figure>
 </div>
-</div>
-</div>
-<div class="notegoals">
-<div class="notegoals-header">
-<p><strong>Analysis</strong></p>
-</div>
-<div class="notegoals-container">
-<ul>
-<li><strong>Quarters with many steps include 2024-Q1, 2024-Q3, 2-24-Q4, and 2025-Q1</strong>: These quarters indicate that dental clinics established at multiple distance scales. Some are very close neighbors (medical complexes) and some medium-distance neighbors (same district).</li>
-<li><strong>Quarters with fewer steps like 2024-Q2 and 2025-Q2</strong>: The 2 quarters have more uniform spacing between establishments, showing simpler spatial arrangements. They are either very tight clustering or more dispersed patterns (see 3.2.1).</li>
-</ul>
 </div>
 </div>
 </section>
@@ -3591,7 +3583,11 @@ Done.</code></pre>
 </div>
 <div class="notegoals-container">
 <ul>
-<li><p><strong>Strong clustering quarters like 2024-Q1, 2024-Q3, 2024-Q4, 2025-Q2</strong>: have multiple distance ranges showing significant clustering and suggests these are periods of active medical district development.</p></li>
+<li><strong>Quarters with many steps include 2024-Q1, 2024-Q3, 2-24-Q4, and 2025-Q1</strong>: These quarters indicate that dental clinics established at multiple distance scales. Some are very close neighbors (medical complexes) and some medium-distance neighbors (same district).</li>
+<li><strong>Quarters with fewer steps like 2024-Q2 and 2025-Q2</strong>: The 2 quarters have more uniform spacing between establishments, showing simpler spatial arrangements. They are either very tight clustering or more dispersed patterns (see 3.2.1).</li>
+</ul>
+<p><strong>Randomness Test Result</strong> - <strong>Strong clustering quarters like 2024-Q1, 2024-Q3, 2024-Q4, 2025-Q2</strong>: have multiple distance ranges showing significant clustering and suggests these are periods of active medical district development.</p>
+<ul>
 <li><p><strong>Weak clustering quarters 2024-Q2 &amp; 2025-Q1</strong>: Their observed patterns are mostly within envelope, meaning it’s more random spatial distribution of new establishments. In these 2 quarters, the market conditions may have favored dispersed rather than clustered locations.</p></li>
 <li><p>Overall dental clustering patterns could be dynamic and context-dependent rather than consistently uniform. Some periods favor medical complex development with tight clustering and other periods see district expansion with medium-distance clustering. Market conditions can influence whether new practices cluster tightly or spread out.</p></li>
 </ul>
@@ -3635,13 +3631,11 @@ Done.</code></pre>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">6 References</h2>
-<ul>
-<li><p>Accounting and Corporate Regulatory Authority. (2025). ACRA information on corporate entities [Data set]. Data.gov.sg. https://data.gov.sg/datasets?query=ACRA+information&amp;page=1&amp;resultId=2</p></li>
-<li><p>Kam, T. S. (2022, December 8). R for geospatial data science and analytics. https://r4gdsa.netlify.app/</p></li>
-<li><p>Paez, A. (2021). Point pattern analysis IV. In An introduction to spatial data analysis and statistics: A course in R. https://paezha.github.io/spatial-analysis-r/point-pattern-analysis-iv.html#f-function</p></li>
-<li><p>Singapore Department of Statistics. (2020). Singapore standard industrial classification (SSIC) 2020. https://classification.codes/classifications/industry/ssic-singapore</p></li>
-<li><p>Urban Redevelopment Authority. (2024, June 6). Master Plan 2019 planning area boundary (no sea) [Data set]. Data.gov.sg. https://data.gov.sg/datasets?query=master+plan&amp;page=1&amp;resultId=d_4765db0e87b9c86336792efe8a1f7a66</p></li>
-</ul>
+<p>Accounting and Corporate Regulatory Authority. (2025). ACRA information on corporate entities [Data set]. Data.gov.sg. https://data.gov.sg/datasets?query=ACRA+information&amp;page=1&amp;resultId=2</p>
+<p>Kam, T. S. (2022, December 8). R for geospatial data science and analytics. https://r4gdsa.netlify.app/</p>
+<p>Paez, A. (2021). Point pattern analysis IV. In An introduction to spatial data analysis and statistics: A course in R. https://paezha.github.io/spatial-analysis-r/point-pattern-analysis-iv.html#f-function</p>
+<p>Singapore Department of Statistics. (2020). Singapore standard industrial classification (SSIC) 2020. https://classification.codes/classifications/industry/ssic-singapore</p>
+<p>Urban Redevelopment Authority. (2024, June 6). Master Plan 2019 planning area boundary (no sea) [Data set]. Data.gov.sg. https://data.gov.sg/datasets?query=master+plan&amp;page=1&amp;resultId=d_4765db0e87b9c86336792efe8a1f7a66</p>
 
 
 </section>
