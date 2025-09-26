@@ -1,5 +1,5 @@
 ---
-title: "03 - Spatio-Temporal Point Patterns Analysis"
+title: "Take-home Exercise: Spatial Analysis on Emerging Business in Singapore - Laundry, Beauty & Dental"
 author: "Cathy C."
 date: "Sep 9, 2025"
 date-modified: "last-modified" #auto render date
