@@ -18,7 +18,7 @@ The 3 chosen businesses are essential for working adults / professionals to take
 
 We will start from processing the data, perform Kernel Density Estimation, Clarke-Evans test, and then conduct analysis with visualisation and test results. First-order and second-order spatial and spatio-temporal analyses are conducted to understand the overall new businesses and their temporal patterns during the period of time Jan 2024 to June 2025.
 
-Due to data set sizes, we will analyse spatial patterns by quarter for Laundry Services and Dental Services, and by month for Beauty Services. Different spatial point pattern testing menthods are used to analyse the 3 business types: G-function for Dental Services, L-function for Beauty Services, and F-function for Laundry Services.
+Due to data set sizes, we will analyse spatial patterns by quarter for all 3 Services. Different spatial point pattern testing menthods are used to analyse the 3 business types: G-function for Dental Services, L-function for Beauty Services, and F-function for Laundry Services.
 
 ## 1 Loading the R package
 
@@ -96,7 +96,7 @@ The business types chosen are:
 
 : Business Code & Types
 
-We use below code to retrieve the data between Jan 1, 2024 to June 30, 2025 for the 3 different major business types.
+**We use below code to retrieve the data between Jan 1, 2024 to June 30, 2025 for the 3 different major business types.**
 
 ::: panel-tabset
 ## 9601
@@ -468,6 +468,12 @@ write_rds(mpsz_cl, "data/rds/mpsz_cl.rds")
 ```{r}
 mpsz_cl <- read_rds("data/rds/mpsz_cl.rds")
 ```
+
+```{r}
+kable(head(mpsz_cl))
+```
+
+
 :::
 
 ### 2.7 Prepare population data
@@ -982,7 +988,8 @@ tm_layout(
 :::
 
 ::: notegoals-container
-The visualisation above shows the new laundry businesses spatial patters by quarter from 2024-Q1 to 2025-Q2. Several dustubct temporal trends are evident. - **Northern areas**: After notable laundry service establishments in northern Singapore during the first half of 2024 (Q1-Q2), new business openings in this region significantly decreased, with zero to very few establishments in subsequent quarters.
+The visualisation above shows the new laundry businesses spatial patters by quarter from 2024-Q1 to 2025-Q2. Several dustubct temporal trends are evident. 
+-  **Northern areas**: After notable laundry service establishments in northern Singapore during the first half of 2024 (Q1-Q2), new business openings in this region significantly decreased, with zero to very few establishments in subsequent quarters.
 
 -   **Other areas**: On the other hand, the central and eastern regions show sustained business growth throughout the study period and maintained consistent establishment patterns across all quarters.
 :::
@@ -1026,6 +1033,7 @@ tm_layout(
 :::
 
 The point patterns revealed in the 6 plots above explains **consistent growth** of the beauty services in both residential and commercial areas, with more density in the city center. Similar to other businesses, the beauty salons or shops may concentrate in commercial / shopping centers in the city center, hence the higher density. There are also beauty services catering to residential areas for easy access at customers' convenience.
+:::
 :::::
 
 ## Dental Services
@@ -1212,7 +1220,7 @@ The KDE analysis reveals dynamic expansion patterns in beauty service establishm
 
 **Central Region Dominance**: Beauty services maintain consistently high density concentrations in the central region throughout all quarters. This persistent central clustering reflects the strategic importance of commercial districts and shopping areas for beauty businesses.
 
-**Temporal Growth Patterns**: 2024-Q1 shows strong initial central concentration. 2024-Q2&Q3 demonstrates market consolidation with maintained central focus. 2024-Q4 onwards exhibits notable expansion into residential areas, particularly in eastern and northeastern regions. The most significant development is the progressive density increase in eastern and northeastern residential areas from 2024-Q4 through 2025-Q2. This expansion suggests market maturation enabling viable residential location strategies, increased demand in these areas, and business model evolution toward neighborhood-based services.
+**Temporal Growth Patterns**: 2024-Q1 shows strong initial central concentration. 2024-Q2&Q3 demonstrates market consolidation with maintained central focus. The most significant development is the progressive density increase in eastern and northeastern residential areas from 2025-Q1 through 2025-Q2. This expansion suggests market maturation enabling viable residential location strategies, increased demand in these areas, and business model evolution toward neighborhood-based services.
 :::
 :::::
 
@@ -1278,7 +1286,7 @@ for(i in tims){
 ::: notegoals-container
 The dental services KDE reveals a highly concentrated spatial strategy that differs markedly from both laundry and beauty services in its focus and temporal stability.
 
-**Central Region Concentration**: New dental services demonstrate central clustering during 2024-Q1, 2024-Q3 and 2025-Q2. This concentration reflects the specialised nature of dental healthcare services and their dependence on medical districts, accessibility, and infrastructure. Western Region (Holland area) shows sporadic activity only in Q1, with no subsequent expansion, suggesting either market testing or unsuccessful location strategy.
+**Central Region Concentration**: New dental services demonstrate central clustering during 2024-Q1, 2024-Q3 though 2025-Q2. This concentration reflects the specialised nature of dental healthcare services and their dependence on medical districts, accessibility, and infrastructure. Western Region (Holland area) shows sporadic activity only in Q1, with limited subsequent expansion frp, 2024-Q4, suggesting either market testing or saturation.
 
 **Limited Spatial Distribution**: Unlike beauty services' multi-hub strategy, dental services show highly focused clustering patterns with minimal spatial expansion in peripheral areas. This concentration is influenced by 1/ lower establishment numbers compared to other service types and 2/ higher capital requirements for dental practice setup.
 
@@ -1387,6 +1395,7 @@ plot(L_9602.csr, . - r ~ r, xlab = "d", ylab = "L(d)-r")
 :::::
 
 ## Dental Services - G-function
+For dental services, we will use G-function to analyse the nearest neighbor distance distribution.
 
 ### G-function estimate
 
@@ -1421,7 +1430,7 @@ plot(G_86204.csr)
 :::
 
 ::: notegoals-container
-The observed line is completely above the envelope, and shows a very strong clustering pattern with highly statistically significant. With out obervation earlier on the density of dental businesses in the maps, the pattern suggests dental services form tight professional clusters rather than being distributed based on residential density alone.
+The observed line is completely above the envelope, and shows a very strong clustering pattern with highly statistically significant. With our obervation earlier on the density of dental businesses in the maps, the pattern suggests dental services form tight professional clusters rather than being distributed based on residential density alone. The results also suggests dental services cluster in professional districts where they benefit from shared facilities & infrastructure, referral network, patient convenience, and zones that concentrates medical services.
 :::
 :::::
 ::::::::::::
@@ -1457,9 +1466,9 @@ for (i in 1:6) {
 :::
 
 ::: notegoals-container
-During the 6 quarters of observation, most of the time the F*km* line is consistenly below F*pois* line, except 2024-Q2 and 2024-Q4. This means new laundry services tend to cluster when they open.
+During the 6 quarters of observation, most of the time the F_*km* line is consistenly below F_*pois* line, except 2024-Q2 and 2024-Q4. This means new laundry services tend to cluster when they open.
 
-For 2024-Q2, F_km appears to cross above and below F_pois at different distances, rather than being consistently above. 2024-Q4 had new entrants that may have pursued different strategies, potentially targeting underserved areas, new development launch, etc.
+For 2024-Q2, F_*km* appears to cross above and below F_*pois* at different distances, rather than being consistently above. 2024-Q4 had new entrants that may have pursued different strategies, potentially targeting underserved areas, new development launch, etc.
 :::
 :::::
 
@@ -1494,9 +1503,8 @@ for (i in 1:6) {
 :::
 
 ::: notegoals-container
--   Based on the test result, we found no statistically significant deviation from randomness in any quarter. Therefore, earlier on we observed that F_km below F_pois for 2024-Q4 is not strong enough to be statistically significant.
--   This means weak clustering tendencies, meaning that new laundry services show mild clustering preferences but not strong ones. In addition, the spatial choices are more opportunistic than strategically clustered.
--   For business, laundry services seem to have less rigid location strategies compared to other service types.
+-   Based on the test result, we found no statistically significant deviation from randomness in any quarter. Therefore, earlier on we observed that F_*km* below F_*pois* for 2024-Q4 is not strong enough to be statistically significant. This means weak clustering tendencies, meaning that new laundry services show mild clustering preferences but not strong ones. In addition, the spatial choices are more opportunistic than strategically clustered.
+-   For business, we observed that in the short term laundry services seem to have less rigid location strategies compared to other service types.
 :::
 :::::
 
@@ -1528,7 +1536,10 @@ for (i in 1:6) {
 :::
 
 ::: notegoals-container
--   In the visualisation for L-function estimation,
+-   In the visualisation for L-function estimation, the consistent gap between observed and expected values indicates beauty services exhibit robust spatial clustering that persists across all 6 quarters. This clustering is stronger than what would be expected from Singapore's underlying density patterns alone. 
+-   This temporal pattern suggests beauty services create commercial districts or beauty clusters that are economically beneficial for both businesses (shared customers, reduced marketing costs) and consumers (convenience, comparison shopping).
+-   It also indicates this clustering strategy is economically stable and likely to continue (6 plots appear to be quite similar), which makes it valuable information for urban planning and business location decisions.
+
 :::
 :::::
 
@@ -1566,6 +1577,14 @@ for (i in 1:6) {
 :::
 
 ::: notegoals-container
+The observed L-function being well above the envelope across all six quarters indicates beauty services have very strong clustering that significantly exceeds random expectation. The combination of strong effect size, narrow confidence intervals, and temporal consistency makes this statistically robust clustering patterns and economically meaningful.
+
+The remarkable similarity across all quarters suggests beauty service clustering is a stable market characteristic rather than a temporary or seasonal phenomenon. This indicates that established location strategies that persist over time, mature market dynamics where clustering benefits are well-understood, and possibily consistent consumer preferences for beauty service districts.
+
+-   Since the pattern holds across the entire distance range (0-6000r) in all quarters, beauty services cluster at multiple spatial scales simultaneously, such as local clustering (shopping centers, beauty districts), regional clustering (concentration in central Singapore). 
+
+-   The consistency also suggests beauty services have developed optimal location strategies that create sustainable competitive advantages through agglomeration, consumer convenience through service concentration, as well as market patterns that new businesses can reliably follow. 
+
 :::
 :::::
 
