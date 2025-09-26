@@ -998,14 +998,14 @@
     "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#getting-started",
     "title": "05 - Global Measures of Spatial Autocorrelation",
     "section": "2 Getting started",
-    "text": "2 Getting started\n\n2.1 The analytical question\nGenerally spatial policies would have development objectives from local government and planners to ensure equal distribution of development in the province, taking China for an example. Our task in this study, hence, is to apply appropriate spatial statistical methods to discover if development are evenly distributed geographically. If the answer is No. Then, our next question will be “]{style=”color: #B95E82;“}”. And, if the answer for this question is yes, then our next question will be “where are these clusters?”\n\n\n2.2"
+    "text": "2 Getting started\n\n2.1 The analytical question\nGenerally spatial policies would have development objectives from local government and planners to ensure equal distribution of development in the province, taking China for an example. Our task in this study, hence, is to apply appropriate spatial statistical methods to discover if development are evenly distributed geographically. If the answer is No. Then, our next question will be “is there sign of spatial clustering?”. And, if the answer for this question is yes, then our next question will be “where are these clusters?”\nIn this case study, we will use China’s data to examine the spatial pattern of a selected development indicator (i.e. GDP per capita) of Hunan Provice.\n\n\n2.2 Setting the Analytical Toolls\nWe will use the following packages: spdep, sf, tmap and tidyverse packages of R.\n\n\n\n\n\n\n\nPackage\nDescription\n\n\n\n\nsf\nimporting and handling geospatial data in R\n\n\ntidyverse\nwrangling attribute data in R\n\n\nspdep\ncomputing spatial weights, global and local spatial autocorrelation statistics\n\n\ntmap\npreparing cartographic quality chropleth map"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#the-data",
     "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#the-data",
     "title": "05 - Global Measures of Spatial Autocorrelation",
     "section": "3 The data",
-    "text": "3 The data"
+    "text": "3 The data\n\n3.1 The Study Area and Data\nTwo data sets will be used in this hands-on exercise, they are:\n\nHunan province administrative boundary layer at county level: This is a geospatial data set in ESRI shapefile format.\nHunan_2012.csv: This csv file contains selected Hunan’s local development indicators in 2012.\n\n\n\n3.2 Import shapefile into r environment\n\n\n3.3 Import csv file into r environment\n\n\n3.4 Performing relational join\n\n\n3.5 Visualising Regional Development Indicator"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#global-measures-of-spatial-autocorrelation",

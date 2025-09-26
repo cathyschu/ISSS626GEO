@@ -12,23 +12,44 @@ execute: #how YML page work
 ---
 
 ## 1 Overview
-We will learn to compute **Global Measures of Spatial Autocorrelation (GMSA)** by using **spdep** package. We will do the following in this hands-on exercise.
--   import geospatial data using appropriate function(s) of **sf** package
--   import csv file using appropriate function of readr package
--   perform relational join using appropriate join function of **dplyr** package
--   compute Global Spatial Autocorrelation (GSA) statistics using appropriate functions of **spdep** package,
-plot Moran scatterplot
--   compute and plot spatial correlogram using appropriate function of **spdep** package
--   provide statistically correct interpretation of GSA statistics.
+
+We will learn to compute **Global Measures of Spatial Autocorrelation (GMSA)** by using **spdep** package. We will do the following in this hands-on exercise. - import geospatial data using appropriate function(s) of **sf** package - import csv file using appropriate function of readr package - perform relational join using appropriate join function of **dplyr** package - compute Global Spatial Autocorrelation (GSA) statistics using appropriate functions of **spdep** package, plot Moran scatterplot - compute and plot spatial correlogram using appropriate function of **spdep** package - provide statistically correct interpretation of GSA statistics.
 
 ## 2 Getting started
 
 ### 2.1 The analytical question
-Generally spatial policies would have development objectives from local government and planners to ensure equal distribution of development in the province, taking China for an example. Our task in this study, hence, is to apply appropriate spatial statistical methods to discover if [*development are evenly distributed geographically*]{style="color: #B95E82;"}. If the answer is **No**. Then, our next question will be “]{style="color: #B95E82;"}”. And, if the answer for this question is **yes**, then our next question will be “[*where are these clusters?*]{style="color: #B95E82;"}”
 
-### 2.2 
+Generally spatial policies would have development objectives from local government and planners to ensure equal distribution of development in the province, taking China for an example. Our task in this study, hence, is to apply appropriate spatial statistical methods to discover if [*development are evenly distributed geographically*]{style="color: #B95E82;"}. If the answer is **No**. Then, our next question will be “[*is there sign of spatial clustering?*]{style="color: #B95E82;"}”. And, if the answer for this question is **yes**, then our next question will be “[*where are these clusters?*]{style="color: #B95E82;"}”
+
+In this case study, we will use China's data to examine the spatial pattern of a selected development indicator (i.e. GDP per capita) of Hunan Provice.
+
+### 2.2 Setting the Analytical Toolls
+
+We will use the following packages: **spdep, sf, tmap and tidyverse** packages of R.
+
+| Package | Description |
+|-----------------|-------------------------------------------------------|
+| **sf** | importing and handling geospatial data in R |
+| **tidyverse** | wrangling attribute data in R |
+| **spdep** | computing spatial weights, global and local spatial autocorrelation statistics |
+| **tmap** | preparing cartographic quality chropleth map |
 
 ## 3 The data
+
+### 3.1 The Study Area and Data
+
+Two data sets will be used in this hands-on exercise, they are:
+
+-   Hunan province administrative boundary layer at county level: This is a geospatial data set in ESRI shapefile format.
+-   Hunan_2012.csv: This csv file contains selected Hunan’s local development indicators in 2012.
+
+### 3.2 Import shapefile into r environment
+
+### 3.3 Import csv file into r environment
+
+### 3.4 Performing relational join
+
+### 3.5 Visualising Regional Development Indicator
 
 ## 4 Global Measures of Spatial Autocorrelation
 
@@ -37,4 +58,3 @@ Generally spatial policies would have development objectives from local governme
 ## 6 Global Measures of Spatial Autocorrelation: Geary’s C
 
 ## 7 Spatial Correlogram
-

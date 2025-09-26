@@ -189,9 +189,16 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started">2 Getting started</a>
   <ul class="collapse">
   <li><a href="#the-analytical-question" id="toc-the-analytical-question" class="nav-link" data-scroll-target="#the-analytical-question">2.1 The analytical question</a></li>
-  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section">2.2</a></li>
+  <li><a href="#setting-the-analytical-toolls" id="toc-setting-the-analytical-toolls" class="nav-link" data-scroll-target="#setting-the-analytical-toolls">2.2 Setting the Analytical Toolls</a></li>
   </ul></li>
-  <li><a href="#the-data" id="toc-the-data" class="nav-link" data-scroll-target="#the-data">3 The data</a></li>
+  <li><a href="#the-data" id="toc-the-data" class="nav-link" data-scroll-target="#the-data">3 The data</a>
+  <ul class="collapse">
+  <li><a href="#the-study-area-and-data" id="toc-the-study-area-and-data" class="nav-link" data-scroll-target="#the-study-area-and-data">3.1 The Study Area and Data</a></li>
+  <li><a href="#import-shapefile-into-r-environment" id="toc-import-shapefile-into-r-environment" class="nav-link" data-scroll-target="#import-shapefile-into-r-environment">3.2 Import shapefile into r environment</a></li>
+  <li><a href="#import-csv-file-into-r-environment" id="toc-import-csv-file-into-r-environment" class="nav-link" data-scroll-target="#import-csv-file-into-r-environment">3.3 Import csv file into r environment</a></li>
+  <li><a href="#performing-relational-join" id="toc-performing-relational-join" class="nav-link" data-scroll-target="#performing-relational-join">3.4 Performing relational join</a></li>
+  <li><a href="#visualising-regional-development-indicator" id="toc-visualising-regional-development-indicator" class="nav-link" data-scroll-target="#visualising-regional-development-indicator">3.5 Visualising Regional Development Indicator</a></li>
+  </ul></li>
   <li><a href="#global-measures-of-spatial-autocorrelation" id="toc-global-measures-of-spatial-autocorrelation" class="nav-link" data-scroll-target="#global-measures-of-spatial-autocorrelation">4 Global Measures of Spatial Autocorrelation</a></li>
   <li><a href="#global-measures-of-spatial-autocorrelation-morans-i" id="toc-global-measures-of-spatial-autocorrelation-morans-i" class="nav-link" data-scroll-target="#global-measures-of-spatial-autocorrelation-morans-i">5 Global Measures of Spatial Autocorrelation: Moran’s I</a></li>
   <li><a href="#global-measures-of-spatial-autocorrelation-gearys-c" id="toc-global-measures-of-spatial-autocorrelation-gearys-c" class="nav-link" data-scroll-target="#global-measures-of-spatial-autocorrelation-gearys-c">6 Global Measures of Spatial Autocorrelation: Geary’s C</a></li>
@@ -247,14 +254,66 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="getting-started">2 Getting started</h2>
 <section id="the-analytical-question" class="level3">
 <h3 class="anchored" data-anchor-id="the-analytical-question">2.1 The analytical question</h3>
-<p>Generally spatial policies would have development objectives from local government and planners to ensure equal distribution of development in the province, taking China for an example. Our task in this study, hence, is to apply appropriate spatial statistical methods to discover if <span style="color: #B95E82;"><em>development are evenly distributed geographically</em></span>. If the answer is <strong>No</strong>. Then, our next question will be “]{style=”color: #B95E82;“}”. And, if the answer for this question is <strong>yes</strong>, then our next question will be “<span style="color: #B95E82;"><em>where are these clusters?</em></span>”</p>
+<p>Generally spatial policies would have development objectives from local government and planners to ensure equal distribution of development in the province, taking China for an example. Our task in this study, hence, is to apply appropriate spatial statistical methods to discover if <span style="color: #B95E82;"><em>development are evenly distributed geographically</em></span>. If the answer is <strong>No</strong>. Then, our next question will be “<span style="color: #B95E82;"><em>is there sign of spatial clustering?</em></span>”. And, if the answer for this question is <strong>yes</strong>, then our next question will be “<span style="color: #B95E82;"><em>where are these clusters?</em></span>”</p>
+<p>In this case study, we will use China’s data to examine the spatial pattern of a selected development indicator (i.e.&nbsp;GDP per capita) of Hunan Provice.</p>
 </section>
-<section id="section" class="level3">
-<h3 class="anchored" data-anchor-id="section">2.2</h3>
+<section id="setting-the-analytical-toolls" class="level3">
+<h3 class="anchored" data-anchor-id="setting-the-analytical-toolls">2.2 Setting the Analytical Toolls</h3>
+<p>We will use the following packages: <strong>spdep, sf, tmap and tidyverse</strong> packages of R.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 76%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Package</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>sf</strong></td>
+<td>importing and handling geospatial data in R</td>
+</tr>
+<tr class="even">
+<td><strong>tidyverse</strong></td>
+<td>wrangling attribute data in R</td>
+</tr>
+<tr class="odd">
+<td><strong>spdep</strong></td>
+<td>computing spatial weights, global and local spatial autocorrelation statistics</td>
+</tr>
+<tr class="even">
+<td><strong>tmap</strong></td>
+<td>preparing cartographic quality chropleth map</td>
+</tr>
+</tbody>
+</table>
 </section>
 </section>
 <section id="the-data" class="level2">
 <h2 class="anchored" data-anchor-id="the-data">3 The data</h2>
+<section id="the-study-area-and-data" class="level3">
+<h3 class="anchored" data-anchor-id="the-study-area-and-data">3.1 The Study Area and Data</h3>
+<p>Two data sets will be used in this hands-on exercise, they are:</p>
+<ul>
+<li>Hunan province administrative boundary layer at county level: This is a geospatial data set in ESRI shapefile format.</li>
+<li>Hunan_2012.csv: This csv file contains selected Hunan’s local development indicators in 2012.</li>
+</ul>
+</section>
+<section id="import-shapefile-into-r-environment" class="level3">
+<h3 class="anchored" data-anchor-id="import-shapefile-into-r-environment">3.2 Import shapefile into r environment</h3>
+</section>
+<section id="import-csv-file-into-r-environment" class="level3">
+<h3 class="anchored" data-anchor-id="import-csv-file-into-r-environment">3.3 Import csv file into r environment</h3>
+</section>
+<section id="performing-relational-join" class="level3">
+<h3 class="anchored" data-anchor-id="performing-relational-join">3.4 Performing relational join</h3>
+</section>
+<section id="visualising-regional-development-indicator" class="level3">
+<h3 class="anchored" data-anchor-id="visualising-regional-development-indicator">3.5 Visualising Regional Development Indicator</h3>
+</section>
 </section>
 <section id="global-measures-of-spatial-autocorrelation" class="level2">
 <h2 class="anchored" data-anchor-id="global-measures-of-spatial-autocorrelation">4 Global Measures of Spatial Autocorrelation</h2>
