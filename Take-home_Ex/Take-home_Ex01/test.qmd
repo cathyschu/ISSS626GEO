@@ -532,7 +532,7 @@ mpsz_pop2024 <- read_rds("data/rds/mpsz_pop2024.rds")
 
 ## 3 First-order Analysis
 
-<summary for first-order analysis>
+In this section, we will work on first-order analysis to understand the point patterns for laundry, beauty, and dental services and to learn how event density varies across space.
 
 :::::::::::: panel-tabset
 ## Laundry Services

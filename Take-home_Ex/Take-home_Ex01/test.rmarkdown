@@ -12,6 +12,7 @@ execute: #how YML page work
 ---
 
 
+
 ## Introduction
 
 In this study, we are interested in understanding the spatial and spatio-temporal patterns of new businesses and firms established in Singapore. Based on the Singapore Standard Industrial Classification 2020, there are over 1,500 business types. Among these, we will focus on **Laundry services** (including Laundry and dry cleaning services and self-operated laundries), **Beauty services** (including Hairdressing salons/shops, beauty salons and spas, as well as manicure and pedicure services, and **Dental services**.
@@ -43,9 +44,11 @@ We will use **tidyverse, sf, tmap, tmap,** and **httr** packages to process data
 
 
 
+
 ```{r}
 pacman::p_load(tidyverse, sf, tmap, httr, knitr, rvest, spatstat, terra, raster, sparr)
 ```
+
 
 
 
@@ -63,6 +66,7 @@ We downloaded the ACRA (Accounting and Corporate Regulatory Authority) Informati
 
 
 
+
 ```{r}
 
 folder_path <- "data/aspatial/acra"
@@ -76,7 +80,9 @@ acra_data <- file_list %>%
 
 
 
+
 Then, we will write the data into .rds to store it in the data folder. This is so no need to process data every time.
+
 
 
 
@@ -88,6 +94,7 @@ write_rds(acra_data, "data/rds/acra_data.rds")
 ```{r}
 acra_data <- read_rds("data/rds/acra_data.rds")
 ```
+
 
 
 
@@ -119,6 +126,7 @@ We use below code to retrieve the data between Jan 1, 2024 to June 30, 2025 for 
 
 
 
+
 ```{r}
 #| eval: false
 biz_9601 <- acra_data %>%
@@ -147,11 +155,13 @@ glimpse(biz_9601)
 
 
 
+
 **There are 150 observations we have retrieved for this analysis.**
 
 ## 9602
 
 **Hairdressing, Beauty and Other Personal Care Services** Business Code 9602 includes hair dressing, beauty salons and manicure & pedicure services.
+
 
 
 
@@ -183,11 +193,13 @@ glimpse(biz_9602)
 
 
 
+
 **There are 1762 observations we have retrieved for this analysis.**
 
 ## 86204
 
 **Dental services**
+
 
 
 
@@ -219,6 +231,7 @@ glimpse(biz_86204)
 
 
 
+
 **There are 81 observations we have retrieved for this analysis.**
 :::
 
@@ -235,6 +248,7 @@ We will perform the following in this step: (Avoid doing so for \> 5K datasets)
 ## 9601
 
 Below is to perform geocoding for the Laundry Services type.
+
 
 
 
@@ -270,9 +284,11 @@ for (pc_9601 in postcodes_9601) {
 
 
 
+
 ## 9602
 
 Below is to perform geocoding for the Beauty Services type.
+
 
 
 
@@ -307,9 +323,11 @@ for (pc_9602 in postcodes_9602) {
 
 
 
+
 ## 86204
 
 Below is to perform geocoding for the Dental Services type.
+
 
 
 
@@ -344,6 +362,7 @@ for (pc_86204 in postcodes_86204) {
 ```
 
 
+
 :::
 
 ### 2.4 Appending the location information
@@ -357,6 +376,7 @@ Below is to perform location appendix for the Laundry Services type.
 
 
 
+
 ```{r}
 #| eval: false
 biz_9601 = biz_9601 %>%
@@ -366,9 +386,11 @@ biz_9601 = biz_9601 %>%
 
 
 
+
 ## 9602
 
 Below is to perform location appendix for the Beauty Services type.
+
 
 
 
@@ -381,9 +403,11 @@ biz_9602 = biz_9602 %>%
 
 
 
+
 ## 86204
 
 Below is to perform location appendix for the Dental Services type.
+
 
 
 
@@ -393,6 +417,7 @@ biz_86204 = biz_86204 %>%
   left_join(found_86204,
             by = c('postal_code' = 'POSTAL'))
 ```
+
 
 
 :::
@@ -406,6 +431,7 @@ Now we will convert the tibble data frame to a `sf` object.
 ## 9601
 
 Below is to convert data type for the Laundry Services type.
+
 
 
 
@@ -423,9 +449,11 @@ biz_9601_sf <- read_rds("data/rds/biz_9601_sf.rds")
 
 
 
+
 ## 9602
 
 Below is to convert data type for the Beauty Services type.
+
 
 
 
@@ -443,9 +471,11 @@ biz_9602_sf <- read_rds("data/rds/biz_9602_sf.rds")
 
 
 
+
 ## 86204
 
 Below is to convert data type for the Dental Services type.
+
 
 
 
@@ -463,9 +493,11 @@ biz_86204_sf <- read_rds("data/rds/biz_86204_sf.rds")
 
 
 
+
 ::: 
 
 **Take a look at the simple feature data (Laundry service).**
+
 
 
 
@@ -473,6 +505,7 @@ biz_86204_sf <- read_rds("data/rds/biz_86204_sf.rds")
 
 kable(head(biz_9601_sf))
 ```
+
 
 
 
@@ -485,6 +518,7 @@ kable(head(biz_9601_sf))
 
 
 
+
 ```{r}
 #| eval: false
 mpsz <- st_read("data/geospatial/MasterPlan2019SubzoneBoundaryNoSeaKML.kml") %>%
@@ -494,7 +528,9 @@ mpsz <- st_read("data/geospatial/MasterPlan2019SubzoneBoundaryNoSeaKML.kml") %>%
 
 
 
+
 ## Tidy data
+
 
 
 
@@ -532,7 +568,9 @@ mpsz_cl <- mpsz %>%
 
 
 
+
 ## Check data
+
 
 
 
@@ -546,12 +584,14 @@ mpsz_cl <- read_rds("data/rds/mpsz_cl.rds")
 ```
 
 
+
 :::
 
 ### 2.7 Prepare population data
 
 ::: panel-tabset
 ## Import data
+
 
 
 
@@ -562,7 +602,9 @@ popdata <- read_csv("data/aspatial/respopagesextod2024.csv")
 
 
 
+
 ## Data wrangling
+
 
 
 
@@ -587,9 +629,11 @@ kable(head(popdata2024))
 
 
 
+
 ## Join population and geospatial data
 
 Use `left_join` to join the population data and geospatial data.
+
 
 
 
@@ -605,7 +649,9 @@ mpsz_pop2024 <- left_join(mpsz_cl, popdata2024,
 
 
 
+
 Then write it into a rds file.
+
 
 
 
@@ -616,7 +662,9 @@ write_rds(mpsz_pop2024, "data/rds/mpsz_pop2024.rds")
 
 
 
+
 We will call it from rds file to save computation.
+
 
 
 
@@ -625,17 +673,19 @@ mpsz_pop2024 <- read_rds("data/rds/mpsz_pop2024.rds")
 ```
 
 
+
 :::
 
 
 ## 3 First-order Analysis
 
-<summary for first-order analysis>
+In this section, we will work on first-order analysis to understand the point patterns for laundry, beauty, and dental services and to learn how event density varies across space.
 
 :::::::::::: panel-tabset
 ## Laundry Services
 
 ### Mapping geospatial data sets
+
 
 
 
@@ -650,7 +700,9 @@ plot(st_geometry(biz_9601_sf), add = TRUE, col = "#FF9800", pch = 16, cex = 0.8)
 
 
 
+
 ### Mapping with population
+
 
 
 
@@ -677,6 +729,7 @@ tm_layout(bg.color =  "#EEEEEE",
 
 
 
+
 ::::: notegoals
 ::: notegoals-header
 **Analysis**
@@ -699,6 +752,7 @@ New laundry businesses show a clear spatial pattern that aligns with both reside
 
 
 
+
 ```{r}
 #| fig-width: 12
 #| fig-height: 8
@@ -710,7 +764,9 @@ plot(st_geometry(biz_9602_sf), add = TRUE, col = "#BA487F", pch = 16, cex = 0.5)
 
 
 
+
 ### Mapping with population
+
 
 
 
@@ -737,6 +793,7 @@ tm_layout(bg.color =  "#EEEEEE",
 
 
 
+
 ::::: notegoals
 ::: notegoals-header
 **Analysis**
@@ -757,6 +814,7 @@ New beauty service establishments show a spatial pattern similar to laundry serv
 
 
 
+
 ```{r}
 #| fig-width: 12
 #| fig-height: 8
@@ -768,7 +826,9 @@ plot(st_geometry(biz_86204_sf), add = TRUE, col = "#18978F", pch = 16, cex = 0.8
 
 
 
+
 ### Mapping with population
+
 
 
 
@@ -792,6 +852,7 @@ tm_layout(bg.color =  "#EEEEEE",
           legend.frame = FALSE)
 
 ```
+
 
 
 
@@ -827,6 +888,7 @@ In this section, we will convert the sf objects to spatstat ppp and owin object.
 
 
 
+
 ```{r}
 biz_9601_ppp <- as.ppp(biz_9601_sf)
 ```
@@ -834,7 +896,9 @@ biz_9601_ppp <- as.ppp(biz_9601_sf)
 
 
 
+
 **Create Owin object**
+
 
 
 
@@ -844,7 +908,9 @@ sg_owin <- as.owin(mpsz_cl)
 
 
 
+
 **Combine point events object and owin object**
+
 
 
 
@@ -855,9 +921,11 @@ biz_9601_ppp
 
 
 
+
 ## Beauty Services
 
 **Convert sf data frames to ppp class**
+
 
 
 
@@ -867,7 +935,9 @@ biz_9602_ppp <- as.ppp(biz_9602_sf)
 
 
 
+
 **Combine point events object and owin object**
+
 
 
 
@@ -878,9 +948,11 @@ biz_9602_ppp
 
 
 
+
 ## Dental Services
 
 **Convert sf data frames to ppp class**
+
 
 
 
@@ -890,7 +962,9 @@ biz_86204_ppp <- as.ppp(biz_86204_sf)
 
 
 
+
 **Combine point events object and owin object**
+
 
 
 
@@ -898,6 +972,7 @@ biz_86204_ppp <- as.ppp(biz_86204_sf)
 biz_86204_ppp = biz_86204_ppp[sg_owin]
 biz_86204_ppp
 ```
+
 
 
 :::
@@ -919,6 +994,7 @@ The 95% confident interval will be used.
 
 
 
+
 ```{r}
 clarkevans.test(biz_9601_ppp,
                 correction="none",
@@ -927,6 +1003,7 @@ clarkevans.test(biz_9601_ppp,
                 method="MonteCarlo",
                 nsim=99)
 ```
+
 
 
 
@@ -952,6 +1029,7 @@ The 95% confident interval will be used.
 
 
 
+
 ```{r}
 clarkevans.test(biz_9602_ppp,
                 correction="none",
@@ -960,6 +1038,7 @@ clarkevans.test(biz_9602_ppp,
                 method="MonteCarlo",
                 nsim=99)
 ```
+
 
 
 
@@ -985,6 +1064,7 @@ The 95% confident interval will be used.
 
 
 
+
 ```{r}
 clarkevans.test(biz_86204_ppp,
                 correction="none",
@@ -993,6 +1073,7 @@ clarkevans.test(biz_86204_ppp,
                 method="MonteCarlo",
                 nsim=99)
 ```
+
 
 
 
@@ -1016,6 +1097,7 @@ Now we will compute KDE to visualise and analyse first-order spatial point patte
 
 
 
+
 ```{r}
 biz_9601_ppp_km <- rescale.ppp(biz_9601_ppp, 1000, "km")
 bw.ppl(biz_9601_ppp_km)
@@ -1030,6 +1112,7 @@ kde_biz_9601_ab <- density(
 plot(kde_biz_9601_ab, main = "bw.ppl",
      col = terrain.colors(256))
 ```
+
 
 
 
@@ -1051,6 +1134,7 @@ Interestingly, these density areas show **connectivity patterns**, forming corri
 
 
 
+
 ```{r}
 biz_9602_ppp_km <- rescale.ppp(biz_9602_ppp, 1000, "km")
 bw.ppl(biz_9602_ppp_km)
@@ -1064,6 +1148,7 @@ kde_biz_9602_ab <- density(
 plot(kde_biz_9602_ab, main = "bw.ppl",
      col = terrain.colors(256))
 ```
+
 
 
 
@@ -1085,6 +1170,7 @@ The overall pattern suggests that beauty services are heavily concentrated in co
 
 
 
+
 ```{r}
 biz_86204_ppp_km <- rescale.ppp(biz_86204_ppp, 1000, "km")
 bw.ppl(biz_86204_ppp_km)
@@ -1098,6 +1184,7 @@ kde_biz_86204_ab <- density(
 plot(kde_biz_86204_ab, main = "bw.ppl",
      col = terrain.colors(256))
 ```
+
 
 
 
@@ -1122,6 +1209,7 @@ Jaundry, Beauty, and Dental business types have 150, 1762 and 81 points respecti
 
 :::::::::::: panel-tabset
 ## Laundry Services
+
 
 
 
@@ -1154,6 +1242,7 @@ tm_layout(
 
 
 
+
 ::::: notegoals
 ::: notegoals-header
 **Analysis**
@@ -1167,6 +1256,7 @@ The visualisation above shows the new laundry businesses spatial patters by quar
 :::::
 
 ## Beauty Services
+
 
 
 
@@ -1199,6 +1289,7 @@ tm_layout(
 
 
 
+
 ::::: notegoals
 ::: notegoals-header
 **Analysis**
@@ -1211,6 +1302,7 @@ The point patterns revealed in the 6 plots above explains **consistent growth** 
 :::::
 
 ## Dental Services
+
 
 
 
@@ -1243,6 +1335,7 @@ tm_layout(
 
 
 
+
 ::::: notegoals
 ::: notegoals-header
 **Analysis**
@@ -1267,6 +1360,7 @@ This pattern also shows that **dental healthcare accessibility gaps** do exist i
 
 
 
+
 ```{r}
 # extract laundry data by quarter
 kde_biz_9601_quarter <- biz_9601_quarter %>%
@@ -1288,7 +1382,9 @@ plot(biz_9601_quarter_owin)
 
 
 
+
 ### Compute STKDE
+
 
 
 
@@ -1309,7 +1405,9 @@ summary(st_kde_9601)
 
 
 
+
 ### Plot STKDE object
+
 
 
 
@@ -1326,6 +1424,7 @@ for(i in tims){
 }
 
 ```
+
 
 
 
@@ -1346,6 +1445,7 @@ for(i in tims){
 :::::
 
 ## Beauty Services
+
 
 
 
@@ -1370,7 +1470,9 @@ plot(biz_9602_quarter_owin)
 
 
 
+
 ### Compute STKDE
+
 
 
 
@@ -1392,7 +1494,9 @@ summary(st_kde_9602)
 
 
 
+
 ### Plot STKDE object
+
 
 
 
@@ -1412,6 +1516,7 @@ for(i in tims){
 
 
 
+
 ::::: notegoals
 ::: notegoals-header
 **Analysis**
@@ -1427,6 +1532,7 @@ The KDE analysis reveals dynamic expansion patterns in beauty service establishm
 :::::
 
 ## Dental Services
+
 
 
 
@@ -1451,7 +1557,9 @@ plot(biz_86204_quarter_owin)
 
 
 
+
 ### Compute STKDE
+
 
 
 
@@ -1472,7 +1580,9 @@ summary(st_kde_86204)
 
 
 
+
 ### Plot STKDE object
+
 
 
 
@@ -1489,6 +1599,7 @@ for(i in tims){
 }
 
 ```
+
 
 
 
@@ -1524,13 +1635,16 @@ For laundry services, we will use F-function to analyse spatial point process as
 
 
 
+
 ```{r}
 set.seed(1222)
 ```
 
 
 
+
 ### F-function estimation
+
 
 
 
@@ -1539,6 +1653,7 @@ par(bg = "#EEEEEE")
 F_9601 = Fest(biz_9601_ppp)
 plot(F_9601)
 ```
+
 
 
 
@@ -1552,9 +1667,11 @@ H₁ = The distribution of laundry services are not randomly distributed. The nu
 
 
 
+
 ```{r}
 F_9601.csr <- envelope(biz_9601_ppp, Fest, correction = "all", nsim = 39)
 ```
+
 
 
 
@@ -1562,10 +1679,12 @@ F_9601.csr <- envelope(biz_9601_ppp, Fest, correction = "all", nsim = 39)
 
 
 
+
 ```{r}
 par(bg = "#EEEEEE")
 plot(F_9601.csr)
 ```
+
 
 
 
@@ -1587,10 +1706,12 @@ For beauty services such as hair salons, manicure and pedicure, personal care se
 
 
 
+
 ```{r}
 L_9602 = Lest(biz_9602_ppp, correction = "Ripley")
 plot(L_9602, . -r ~ r, ylab = "L(d)-r", xlab = "d(m)")
 ```
+
 
 
 
@@ -1606,9 +1727,11 @@ The null hypothesis will be rejected if p-value is smaller than alpha value of 0
 
 
 
+
 ```{r}
 L_9602.csr <- envelope(biz_9602_ppp, Lest, nsim = 39, rank = 1)
 ```
+
 
 
 
@@ -1616,9 +1739,11 @@ L_9602.csr <- envelope(biz_9602_ppp, Lest, nsim = 39, rank = 1)
 
 
 
+
 ```{r}
 plot(L_9602.csr, . - r ~ r, xlab = "d", ylab = "L(d)-r")
 ```
+
 
 
 
@@ -1642,10 +1767,12 @@ plot(L_9602.csr, . - r ~ r, xlab = "d", ylab = "L(d)-r")
 
 
 
+
 ```{r}
 G_86204 = Lest(biz_86204_ppp, correction = "border")
 plot(G_86204, xlim = c(0, 500))
 ```
+
 
 
 
@@ -1661,9 +1788,11 @@ The null hypothesis will be rejected if p-value is smaller than alpha value of 0
 
 
 
+
 ```{r}
 G_86204.csr <- envelope(biz_86204_ppp, Gest, nsim = 39)
 ```
+
 
 
 
@@ -1671,9 +1800,11 @@ G_86204.csr <- envelope(biz_86204_ppp, Gest, nsim = 39)
 
 
 
+
 ```{r}
 plot(G_86204.csr)
 ```
+
 
 
 
@@ -1697,6 +1828,7 @@ The observed line is completely above the envelope, and shows a very strong clus
 
 
 
+
 ```{r}
 #| fig-width: 12
 #| fig-height: 12
@@ -1714,6 +1846,7 @@ for (i in 1:6) {
 
 
 ```
+
 
 
 
@@ -1739,13 +1872,16 @@ Alpha value = 0.05.
 
 
 
+
 ```{r}
 F_9601_quarter.csr <- lapply(biz_9601_quarter_split, function(x) envelope(x, Fest, nsim = 39))
 ```
 
 
 
+
 ### Plot result of test
+
 
 
 
@@ -1759,6 +1895,7 @@ for (i in 1:6) {
   plot(F_9601_quarter.csr[[i]], main = paste("Laundry F-function:", biz_9601_quarter_labels[i]))
 }
 ```
+
 
 
 
@@ -1780,6 +1917,7 @@ for (i in 1:6) {
 
 
 
+
 ```{r}
 #| fig-width: 12
 #| fig-height: 12
@@ -1797,6 +1935,7 @@ for (i in 1:6) {
 
 
 ```
+
 
 
 
@@ -1822,13 +1961,16 @@ Alpha value = 0.05.
 
 
 
+
 ```{r}
 L_9602_quarter.csr <- lapply(biz_9602_quarter_split, function(x) envelope(x, Lest, nsim = 39))
 ```
 
 
 
+
 ### Plot result of test
+
 
 
 
@@ -1846,6 +1988,7 @@ for (i in 1:6) {
 
 
 
+
 ::::: notegoals
 ::: notegoals-header
 **Analysis**
@@ -1858,6 +2001,7 @@ for (i in 1:6) {
 ## Dental Services
 
 ### Perform G-function estimation by quarter
+
 
 
 
@@ -1881,11 +2025,13 @@ for (i in 1:6) {
 
 
 
+
 ### Perform spatial randomness test for each quarter
 
 Hypothesis test: H₀ = The distribution of laundry services is randomly distributed. H₁= The distribution of laundry services is not randomly distributed.
 
 Alpha value = 0.05.
+
 
 
 
@@ -1895,7 +2041,9 @@ G_86204_quarter.csr <- lapply(biz_86204_quarter_split, function(x) envelope(x, G
 
 
 
+
 ### Plot result of test
+
 
 
 
@@ -1909,6 +2057,7 @@ for (i in 1:6) {
   plot(G_86204_quarter.csr[[i]], xlim = c(0,3000), main = paste("Dental G-function:", biz_86204_quarter_labels[i]))
 }
 ```
+
 
 
 
