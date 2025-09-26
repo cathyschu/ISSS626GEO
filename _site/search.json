@@ -779,9 +779,9 @@
   {
     "objectID": "Hands-on_Ex/template.html",
     "href": "Hands-on_Ex/template.html",
-    "title": "03 - Spatio-Temporal Point Patterns Analysis",
+    "title": "05 - Global Measures of Spatial Autocorrelation",
     "section": "",
-    "text": "Insight\n\n\nxyafdgfeg\n\n\n\n\nLearning\n\n\n12332524542"
+    "text": "We will learn to compute Global Measures of Spatial Autocorrelation (GMSA) by using spdep package. We will do the following in this hands-on exercise. - import geospatial data using appropriate function(s) of sf package - import csv file using appropriate function of readr package - perform relational join using appropriate join function of dplyr package - compute Global Spatial Autocorrelation (GSA) statistics using appropriate functions of spdep package, plot Moran scatterplot - compute and plot spatial correlogram using appropriate function of spdep package - provide statistically correct interpretation of GSA statistics."
   },
   {
     "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#the-data",
@@ -929,5 +929,110 @@
     "title": "Take-home Exercise: Spatial Analysis of Essential Services in Singapore - Laundry, Beauty & Dental Business",
     "section": "1 Loading the R packages",
     "text": "1 Loading the R packages\nWe will use tidyverse, sf, tmap, tmap, and httr packages to process data sets, along with other packages for computing KDE and plotting visualisations.\n\nR Packages\n\n\n\n\n\n\nR Package\nPurpose\n\n\n\n\ntidyverse\nthe tidyverse package is designed to make it easy to install and load core packages from the tidyverse in a single command. There are ggplot2, dplyr, tidyr, readr, purrr, and tibble, etc to manipulate, tidy, import, visualise data.\n\n\nsf\nprovides support for working with simple features, a standardized way to represent geographic vector data. It serves as a comprehensive tool for handling spatial data within the R environment.\n\n\ntmap\nserves the purpose of creating thematic maps, offering a flexible and intuitive way to visualize spatial data. It is designed to produce both static and interactive maps using a consistent, layer-based syntax similar to ggplot2.\n\n\nhttr\nserves as a tool for interacting with web APIs and performing HTTP requests within the R environment.\n\n\nknitr\nseamlessly integrate R code, its output (including text, tables, and graphics), and narrative text within a single document.\n\n\nrvest\nsimplify the process of scraping and manipulating web data. It allows for the extraction of information from websites and transforms it into a format suitable for analysis in R.\n\n\nspatstat\nprovides functions for spatial statistics with a strong focus on analysing spatial point patterns.\n\n\nterra\nprovides methods for manipulating geographic (spatial) data in both raster and vector formats.\n\n\nraster\nprovides functions which reads, writes, manipulates, analyses and model of gridded spatial data (i.e. raster). In this hands-on exercise, it will be used to convert image output generate by spatstat into raster format.\n\n\nsparr\nprovides a suite of functions for analyzing spatial and spatiotemporal point patterns, particularly focusing on the estimation and inference of relative risk surfaces.\n\n\n\n\npacman::p_load(tidyverse, sf, tmap, httr, knitr, rvest, spatstat, terra, raster, sparr)"
+  },
+  {
+    "objectID": "Hands-on_Ex/template.html#overview",
+    "href": "Hands-on_Ex/template.html#overview",
+    "title": "05 - Global Measures of Spatial Autocorrelation",
+    "section": "",
+    "text": "We will learn to compute Global Measures of Spatial Autocorrelation (GMSA) by using spdep package. We will do the following in this hands-on exercise. - import geospatial data using appropriate function(s) of sf package - import csv file using appropriate function of readr package - perform relational join using appropriate join function of dplyr package - compute Global Spatial Autocorrelation (GSA) statistics using appropriate functions of spdep package, plot Moran scatterplot - compute and plot spatial correlogram using appropriate function of spdep package - provide statistically correct interpretation of GSA statistics."
+  },
+  {
+    "objectID": "Hands-on_Ex/template.html#getting-started",
+    "href": "Hands-on_Ex/template.html#getting-started",
+    "title": "05 - Global Measures of Spatial Autocorrelation",
+    "section": "2 Getting started",
+    "text": "2 Getting started\n\n2.1 The analytical question\nGenerally spatial policies would have development objectives from local government and planners to ensure equal distribution of development in the province, taking China for an example. Our task in this study, hence, is to apply appropriate spatial statistical methods to discover if development are evenly distributed geographically. If the answer is No. Then, our next question will be “is there sign of spatial clustering?”. And, if the answer for this question is yes, then our next question will be “where are these clusters?”\n\n\n2.2"
+  },
+  {
+    "objectID": "Hands-on_Ex/template.html#the-data",
+    "href": "Hands-on_Ex/template.html#the-data",
+    "title": "05 - Global Measures of Spatial Autocorrelation",
+    "section": "3 The data",
+    "text": "3 The data"
+  },
+  {
+    "objectID": "Hands-on_Ex/template.html#global-measures-of-spatial-autocorrelation",
+    "href": "Hands-on_Ex/template.html#global-measures-of-spatial-autocorrelation",
+    "title": "05 - Global Measures of Spatial Autocorrelation",
+    "section": "4 Global Measures of Spatial Autocorrelation",
+    "text": "4 Global Measures of Spatial Autocorrelation"
+  },
+  {
+    "objectID": "Hands-on_Ex/template.html#global-measures-of-spatial-autocorrelation-morans-i",
+    "href": "Hands-on_Ex/template.html#global-measures-of-spatial-autocorrelation-morans-i",
+    "title": "05 - Global Measures of Spatial Autocorrelation",
+    "section": "5 Global Measures of Spatial Autocorrelation: Moran’s I",
+    "text": "5 Global Measures of Spatial Autocorrelation: Moran’s I"
+  },
+  {
+    "objectID": "Hands-on_Ex/template.html#global-measures-of-spatial-autocorrelation-gearys-c",
+    "href": "Hands-on_Ex/template.html#global-measures-of-spatial-autocorrelation-gearys-c",
+    "title": "05 - Global Measures of Spatial Autocorrelation",
+    "section": "6 Global Measures of Spatial Autocorrelation: Geary’s C",
+    "text": "6 Global Measures of Spatial Autocorrelation: Geary’s C"
+  },
+  {
+    "objectID": "Hands-on_Ex/template.html#spatial-correlogram",
+    "href": "Hands-on_Ex/template.html#spatial-correlogram",
+    "title": "05 - Global Measures of Spatial Autocorrelation",
+    "section": "7 Spatial Correlogram",
+    "text": "7 Spatial Correlogram"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html",
+    "title": "05 - Global Measures of Spatial Autocorrelation",
+    "section": "",
+    "text": "We will learn to compute Global Measures of Spatial Autocorrelation (GMSA) by using spdep package. We will do the following in this hands-on exercise. - import geospatial data using appropriate function(s) of sf package - import csv file using appropriate function of readr package - perform relational join using appropriate join function of dplyr package - compute Global Spatial Autocorrelation (GSA) statistics using appropriate functions of spdep package, plot Moran scatterplot - compute and plot spatial correlogram using appropriate function of spdep package - provide statistically correct interpretation of GSA statistics."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#overview",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#overview",
+    "title": "05 - Global Measures of Spatial Autocorrelation",
+    "section": "",
+    "text": "We will learn to compute Global Measures of Spatial Autocorrelation (GMSA) by using spdep package. We will do the following in this hands-on exercise. - import geospatial data using appropriate function(s) of sf package - import csv file using appropriate function of readr package - perform relational join using appropriate join function of dplyr package - compute Global Spatial Autocorrelation (GSA) statistics using appropriate functions of spdep package, plot Moran scatterplot - compute and plot spatial correlogram using appropriate function of spdep package - provide statistically correct interpretation of GSA statistics."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#getting-started",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#getting-started",
+    "title": "05 - Global Measures of Spatial Autocorrelation",
+    "section": "2 Getting started",
+    "text": "2 Getting started\n\n2.1 The analytical question\nGenerally spatial policies would have development objectives from local government and planners to ensure equal distribution of development in the province, taking China for an example. Our task in this study, hence, is to apply appropriate spatial statistical methods to discover if development are evenly distributed geographically. If the answer is No. Then, our next question will be “]{style=”color: #B95E82;“}”. And, if the answer for this question is yes, then our next question will be “where are these clusters?”\n\n\n2.2"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#the-data",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#the-data",
+    "title": "05 - Global Measures of Spatial Autocorrelation",
+    "section": "3 The data",
+    "text": "3 The data"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#global-measures-of-spatial-autocorrelation",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#global-measures-of-spatial-autocorrelation",
+    "title": "05 - Global Measures of Spatial Autocorrelation",
+    "section": "4 Global Measures of Spatial Autocorrelation",
+    "text": "4 Global Measures of Spatial Autocorrelation"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#global-measures-of-spatial-autocorrelation-morans-i",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#global-measures-of-spatial-autocorrelation-morans-i",
+    "title": "05 - Global Measures of Spatial Autocorrelation",
+    "section": "5 Global Measures of Spatial Autocorrelation: Moran’s I",
+    "text": "5 Global Measures of Spatial Autocorrelation: Moran’s I"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#global-measures-of-spatial-autocorrelation-gearys-c",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#global-measures-of-spatial-autocorrelation-gearys-c",
+    "title": "05 - Global Measures of Spatial Autocorrelation",
+    "section": "6 Global Measures of Spatial Autocorrelation: Geary’s C",
+    "text": "6 Global Measures of Spatial Autocorrelation: Geary’s C"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#spatial-correlogram",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#spatial-correlogram",
+    "title": "05 - Global Measures of Spatial Autocorrelation",
+    "section": "7 Spatial Correlogram",
+    "text": "7 Spatial Correlogram"
   }
 ]

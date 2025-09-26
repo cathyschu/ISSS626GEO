@@ -24,7 +24,7 @@ plot Moran scatterplot
 ## 2 Getting started
 
 ### 2.1 The analytical question
-Generally spatial policies would have development objectives from local government and planners to ensure equal distribution of development in the province, taking China for an example. Our task in this study, hence, is to apply appropriate spatial statistical methods to discover if [*development are evenly distributed geographically*]{style="color: #B95E82;"}. If the answer is **No**. Then, our next question will be “*is there sign of spatial clustering?*”. And, if the answer for this question is **yes**, then our next question will be “*where are these clusters?*”
+Generally spatial policies would have development objectives from local government and planners to ensure equal distribution of development in the province, taking China for an example. Our task in this study, hence, is to apply appropriate spatial statistical methods to discover if [*development are evenly distributed geographically*]{style="color: #B95E82;"}. If the answer is **No**. Then, our next question will be “]{style="color: #B95E82;"}”. And, if the answer for this question is **yes**, then our next question will be “[*where are these clusters?*]{style="color: #B95E82;"}”
 
 ### 2.2 
 
