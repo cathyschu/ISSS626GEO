@@ -248,9 +248,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#global-measures-of-spatial-autocorrelation-morans-i" id="toc-global-measures-of-spatial-autocorrelation-morans-i" class="nav-link" data-scroll-target="#global-measures-of-spatial-autocorrelation-morans-i">5 Global Measures of Spatial Autocorrelation: Moran’s I</a></li>
   <li><a href="#global-measures-of-spatial-autocorrelation-gearys-c" id="toc-global-measures-of-spatial-autocorrelation-gearys-c" class="nav-link" data-scroll-target="#global-measures-of-spatial-autocorrelation-gearys-c">6 Global Measures of Spatial Autocorrelation: Geary’s C</a></li>
-  <li><a href="#gearys-c-test" id="toc-gearys-c-test" class="nav-link" data-scroll-target="#gearys-c-test">6.1 Geary’s C test</a></li>
-  <li><a href="#computing-monte-carlo-gearys-c" id="toc-computing-monte-carlo-gearys-c" class="nav-link" data-scroll-target="#computing-monte-carlo-gearys-c">6.2 Computing Monte Carlo Geary’s C</a></li>
-  <li><a href="#visualise-monte-carlo-gearys-c" id="toc-visualise-monte-carlo-gearys-c" class="nav-link" data-scroll-target="#visualise-monte-carlo-gearys-c">6.3 Visualise Monte Carlo Geary’s C</a></li>
   <li><a href="#spatial-correlogram" id="toc-spatial-correlogram" class="nav-link" data-scroll-target="#spatial-correlogram">7 Spatial Correlogram</a></li>
   <li><a href="#computing-morans-i-correlogram" id="toc-computing-morans-i-correlogram" class="nav-link" data-scroll-target="#computing-morans-i-correlogram">7.2 Computing Moran’s I correlogram</a></li>
   <li><a href="#computing-gearys-c-correlogram-and-plot" id="toc-computing-gearys-c-correlogram-and-plot" class="nav-link" data-scroll-target="#computing-gearys-c-correlogram-and-plot">7.3 Computing Geary’s C correlogram and plot</a></li>
@@ -313,8 +310,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>We will use the following packages: <strong>spdep, sf, tmap and tidyverse</strong> packages of R.</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 31%">
-<col style="width: 68%">
+<col style="width: 32%">
+<col style="width: 67%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -647,9 +644,10 @@ alternative hypothesis: greater</code></pre>
 <section id="global-measures-of-spatial-autocorrelation-gearys-c" class="level2">
 <h2 class="anchored" data-anchor-id="global-measures-of-spatial-autocorrelation-gearys-c">6 Global Measures of Spatial Autocorrelation: Geary’s C</h2>
 <p>We will perform Geary’s C statistics testing by using appropriate functions of <strong>spdep</strong> package.</p>
-</section>
-<section id="gearys-c-test" class="level2 panel-tabeset">
-<h2 class="anchored" data-anchor-id="gearys-c-test">6.1 Geary’s C test</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">6.1 Geary’s C test</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">6.2 Computing Monte Carlo Geary’s C</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false">6.3 Visualise Monte Carlo Geary’s C</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
 <p>We will perform Geary’s C test for spatial autocorrelation by using <a href="https://r-spatial.github.io/spdep/reference/geary.test.html"><code>geary.test()</code></a> of <strong>spdep</strong>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">geary.test</span>(hunan<span class="sc">$</span>GDPPC, <span class="at">listw=</span>rswm_q)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -678,9 +676,8 @@ Geary C statistic       Expectation          Variance
 </ul>
 </div>
 </div>
-</section>
-<section id="computing-monte-carlo-gearys-c" class="level2">
-<h2 class="anchored" data-anchor-id="computing-monte-carlo-gearys-c">6.2 Computing Monte Carlo Geary’s C</h2>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
 <p>We will perform permutation test for Geary’s C statistic using <a href="https://r-spatial.github.io/spdep/reference/geary.mc.html"><code>geary.mc()</code></a> of spdep.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
@@ -708,10 +705,8 @@ alternative hypothesis: greater</code></pre>
 <p>The observed Geary C statistic = 0.69072 achieved an observed rank = 1 out of 1000, indicating it was the lowest value among all simulations. This extreme ranking confirms that none of the 999 random permutations produced a Geary’s C value as low as the observed data, so yields a p-value = 0.001 and provides very strong statistical evidence against the null hypothesis of spatial randomness.</p>
 </div>
 </div>
-<p>::::::</p>
-</section>
-<section id="visualise-monte-carlo-gearys-c" class="level2">
-<h2 class="anchored" data-anchor-id="visualise-monte-carlo-gearys-c">6.3 Visualise Monte Carlo Geary’s C</h2>
+</div>
+<div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
 <p>Finally we will plot the simulated values to show the distribution in a histogram.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(bperm<span class="sc">$</span>res[<span class="dv">1</span><span class="sc">:</span><span class="dv">999</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -742,17 +737,45 @@ alternative hypothesis: greater</code></pre>
 </div>
 </div>
 </div>
+<div class="markgoals">
+<div class="markgoals-header">
+<p><strong>Findings</strong></p>
+</div>
+<div class="markgoals-container">
 <ul>
 <li>The distribution appears approximately normal, which is expected for Geary’s C under the null hypothesis of spatial randomness. The distribution is centered around 1.0, which corresponds to the theoretical expectation of Geary’s C = 1.0 under spatial independence.</li>
 <li>The observed Geary C statistic = 0.69072 would fall far to the left of this entire distribution, well beyond the left tail. The histogram validates the p-value = 0.001 by demonstrating that values below 0.7 are virtually non-existent under spatial randomness.</li>
-<li>This visualisation confirms the exceptionally strong statistical significance of the spatial autocorrelation detected in Hunan’s GDPPC data, as the observed spatial clustering is far more extreme than what random spatial arrangements would produce. :::</li>
+<li>This visualisation confirms the exceptionally strong statistical significance of the spatial autocorrelation detected in Hunan’s GDPPC data, as the observed spatial clustering is far more extreme than what random spatial arrangements would produce.</li>
 </ul>
+</div>
+</div>
+</div>
+</div>
+</div>
 </section>
 <section id="spatial-correlogram" class="level2">
 <h2 class="anchored" data-anchor-id="spatial-correlogram">7 Spatial Correlogram</h2>
+<p>Spatial correlograms are great to examine patterns of spatial autocorrelation in your data or model residuals. They show <strong>how correlated are pairs of spatial observations when you increase the distance (lag) between them</strong> . They are plots of some index of autocorrelation (Moran’s I or Geary’s c) against distance. Although <strong>correlograms</strong> are not as fundamental as variograms (a keystone concept of geostatistics), they are very useful as an exploratory and descriptive tool. For this purpose they actually provide richer information than variograms.</p>
 </section>
 <section id="computing-morans-i-correlogram" class="level2">
 <h2 class="anchored" data-anchor-id="computing-morans-i-correlogram">7.2 Computing Moran’s I correlogram</h2>
+<p>Below <a href="https://r-spatial.github.io/spdep/reference/sp.correlogram.html"><code>sp.correlogram()</code></a> of <strong>spdep</strong> package is used to compute a 6-lag spatial correlogram of GDPPC. The global spatial autocorrelation used in Moran’s I. The <strong>plot()</strong> of base Graph is then used to plot the output.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#D0DDD0"</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>MI_corr <span class="ot">&lt;-</span> <span class="fu">sp.correlogram</span>(wm_q, </span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>                          hunan<span class="sc">$</span>GDPPC, </span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">order=</span><span class="dv">6</span>, <span class="at">method=</span><span class="st">"I"</span>, <span class="at">style=</span><span class="st">"W"</span>)</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(MI_corr,</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">col.main =</span> <span class="st">"#B95E82"</span>)</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex05a_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="computing-gearys-c-correlogram-and-plot" class="level2">
 <h2 class="anchored" data-anchor-id="computing-gearys-c-correlogram-and-plot">7.3 Computing Geary’s C correlogram and plot</h2>

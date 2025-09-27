@@ -28,7 +28,7 @@ In this case study, we will use China's data to examine the spatial pattern of a
 We will use the following packages: **spdep, sf, tmap and tidyverse** packages of R.
 
 | Package | Description |
-|-----------------------|-------------------------------------------------|
+|-----------------------|------------------------------------------------|
 | **sf** | importing and handling geospatial data in R |
 | **tidyverse** | wrangling attribute data in R |
 | **spdep** | computing spatial weights, global and local spatial autocorrelation statistics |
@@ -277,7 +277,7 @@ ggplot(data.frame(res = bperm$res), aes(x = res)) +
 
 We will perform Geary’s C statistics testing by using appropriate functions of **spdep** package.
 
-:::::: panel-tabeset
+:::::::::::: panel-tabset
 ## 6.1 Geary’s C test
 
 We will perform Geary’s C test for spatial autocorrelation by using [`geary.test()`](https://r-spatial.github.io/spdep/reference/geary.test.html) of **spdep**.
@@ -296,11 +296,11 @@ geary.test(hunan$GDPPC, listw=rswm_q)
 -   These results from both global spatial autocorrelation statistics provide robust evidence that GDPPC in Hunan province exhibits significant spatial clustering, and confirms the presence of regional economic spillover effects.
 :::
 :::::
-::::::
 
 ## 6.2 Computing Monte Carlo Geary’s C
 
 We will perform permutation test for Geary’s C statistic using [`geary.mc()`](https://r-spatial.github.io/spdep/reference/geary.mc.html) of spdep.
+
 ```{r}
 set.seed(1234)
 bperm=geary.mc(hunan$GDPPC, 
@@ -308,6 +308,7 @@ bperm=geary.mc(hunan$GDPPC,
                nsim=999)
 bperm
 ```
+
 ::::: markgoals
 ::: markgoals-header
 **Findings**
@@ -315,21 +316,19 @@ bperm
 
 ::: markgoals-container
 The observed Geary C statistic = 0.69072 achieved an observed rank = 1 out of 1000, indicating it was the lowest value among all simulations. This extreme ranking confirms that none of the 999 random permutations produced a Geary's C value as low as the observed data, so yields a p-value = 0.001 and provides very strong statistical evidence against the null hypothesis of spatial randomness.
-
 :::
 :::::
-::::::
 
 ## 6.3 Visualise Monte Carlo Geary’s C
 
 Finally we will plot the simulated values to show the distribution in a histogram.
+
 ```{r}
 mean(bperm$res[1:999])
 var(bperm$res[1:999])
 summary(bperm$res[1:999])
 
 ```
-
 
 ```{r}
 par(bg = "#D0DDD0")
@@ -339,13 +338,35 @@ hist(bperm$res, freq=TRUE,
 abline(v=1, col="red") 
 ```
 
+::::: markgoals
+::: markgoals-header
+**Findings**
+:::
+
+::: markgoals-container
 -   The distribution appears approximately normal, which is expected for Geary's C under the null hypothesis of spatial randomness. The distribution is centered around 1.0, which corresponds to the theoretical expectation of Geary's C = 1.0 under spatial independence.
--    The observed Geary C statistic = 0.69072 would fall far to the left of this entire distribution, well beyond the left tail. The histogram validates the p-value = 0.001 by demonstrating that values below 0.7 are virtually non-existent under spatial randomness. 
+-   The observed Geary C statistic = 0.69072 would fall far to the left of this entire distribution, well beyond the left tail. The histogram validates the p-value = 0.001 by demonstrating that values below 0.7 are virtually non-existent under spatial randomness.
 -   This visualisation confirms the exceptionally strong statistical significance of the spatial autocorrelation detected in Hunan's GDPPC data, as the observed spatial clustering is far more extreme than what random spatial arrangements would produce.
 :::
+:::::
+::::::::::::
 
 ## 7 Spatial Correlogram
 
+Spatial correlograms are great to examine patterns of spatial autocorrelation in your data or model residuals. They show **how correlated are pairs of spatial observations when you increase the distance (lag) between them** . They are plots of some index of autocorrelation (Moran’s I or Geary’s c) against distance. Although **correlograms** are not as fundamental as variograms (a keystone concept of geostatistics), they are very useful as an exploratory and descriptive tool. For this purpose they actually provide richer information than variograms.
+
 ## 7.2 Computing Moran’s I correlogram
+
+Below [`sp.correlogram()`](https://r-spatial.github.io/spdep/reference/sp.correlogram.html) of **spdep** package is used to compute a 6-lag spatial correlogram of GDPPC. The global spatial autocorrelation used in Moran’s I. The **plot()** of base Graph is then used to plot the output.
+
+```{r}
+par(bg = "#D0DDD0")
+MI_corr <- sp.correlogram(wm_q, 
+                          hunan$GDPPC, 
+                          order=6, method="I", style="W")
+plot(MI_corr,
+     col.main = "#B95E82")
+abline(h = 0, col = "red", lty = 2, lwd = 2)
+```
 
 ## 7.3 Computing Geary’s C correlogram and plot
