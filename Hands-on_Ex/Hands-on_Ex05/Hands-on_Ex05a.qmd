@@ -123,14 +123,14 @@ wm_q <- poly2nb(hunan, queen = TRUE)
 summary(wm_q)
 ```
 
-:::::::::::::::: markgoals
+::: markgoals
 :::: markgoals-header
 **Learning**
-
+::::
 ::: markgoals-container
 The summary report above shows that there are **88 area units** in Hunan. The most connected area unit has **11 neighbour**s. There are two area units with only one neighbours.
 :::
-::::
+:::
 
 ### 4.2 Row-standardised weights matrix
 
@@ -147,10 +147,10 @@ rswm_q <- nb2listw(wm_q, style = "W", zero.policy = TRUE)
 rswm_q
 ```
 
-::::::::::::: markgoals
-:::: markgoals-header
+:::: markgoals
+::: markgoals-header
 **Learning**
-
+:::
 ::: markgoals-container
 -   The input of [`nb2listw()`](https://r-spatial.github.io/spdep/reference/nb2listw.html) must be an object of class **nb**. The syntax of the function has two major arguments, namely style and zero.poly.
 
@@ -174,7 +174,7 @@ rswm_q
 
 We will perform Moran’s I statistics testing by using [`moran.test()`](https://r-spatial.github.io/spdep/reference/moran.test.html) of **spdep**.
 
-::::::::: panel-tabeset
+::: panel-tabset
 ## 5.1 Maron's I test
 
 Below we will performs Moran’s I statistical testing using [`moran.test()`](https://r-spatial.github.io/spdep/reference/moran.test.html) of **spdep**.
@@ -227,9 +227,8 @@ mean(bperm$res[1:999])
 var(bperm$res[1:999])
 summary(bperm$res[1:999])
 ```
-:::panel-tabset
 
-## Plot histogram
+**Plot histogram**
 ```{r}
 par(bg = "#D0DDD0")
 hist(bperm$res, freq=TRUE, 
@@ -238,7 +237,7 @@ hist(bperm$res, freq=TRUE,
 abline(v=0, col="red") 
 ```
 
-## ggplot2
+**ggplot2**
 
 ```{r}
 ggplot(data.frame(res = bperm$res), aes(x = res)) +
@@ -258,9 +257,6 @@ ggplot(data.frame(res = bperm$res), aes(x = res)) +
   )
 ```
 
-
-:::
-
 ::::: markgoals
 ::: markgoals-header
 **Findings**
@@ -272,9 +268,8 @@ ggplot(data.frame(res = bperm$res), aes(x = res)) +
 -   The evidence strongly rejects the null hypothesis of spatial independence, indicating that the observed spatial clustering of GDPPC substantially exceeds what would be expected under random spatial arrangements.
 :::
 :::::
+:::
 
-
-:::::::::
 
 ## 6 Global Measures of Spatial Autocorrelation: Geary’s C
 
