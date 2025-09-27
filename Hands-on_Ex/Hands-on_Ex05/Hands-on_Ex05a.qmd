@@ -34,6 +34,10 @@ We will use the following packages: **spdep, sf, tmap and tidyverse** packages o
 | **spdep** | computing spatial weights, global and local spatial autocorrelation statistics |
 | **tmap** | preparing cartographic quality chropleth map |
 
+```{r}
+pacman::p_load(sf, tidyverse, spdep, tmap)
+```
+
 ## 3 The data
 
 ### 3.1 The Study Area and Data
@@ -43,16 +47,117 @@ Two data sets will be used in this hands-on exercise, they are:
 -   Hunan province administrative boundary layer at county level: This is a geospatial data set in ESRI shapefile format.
 -   Hunan_2012.csv: This csv file contains selected Hunan’s local development indicators in 2012.
 
-### 3.2 Import shapefile into r environment
+We will bring a geospatial data and its associated attribute table into R environment. The geospatial data is in ESRI shapefile format and the attribute table is in csv fomat.
 
-### 3.3 Import csv file into r environment
+### 3.2 Import shapefile into R environment
+
+The code chunk below uses [`st_read()`](https://r-spatial.github.io/sf/reference/st_read.html) of **sf** package to import Hunan shapefile into R. The imported shapefile will be **simple features** Object of **sf**.
+
+```{r}
+hunan <- st_read(dsn = "data/geospatial", layer = "Hunan")
+```
+
+### 3.3 Import csv file into R environment
+
+Next, we will import *Hunan_2012.csv* into R by using [`read_csv()`](https://readr.tidyverse.org/reference/read_delim.html) of **readr** package. The output is R data frame class.
+
+```{r}
+hunan2012 <- read_csv("data/aspatial/Hunan_2012.csv")
+```
 
 ### 3.4 Performing relational join
 
+Below we will update the attribute table of *hunan*’s SpatialPolygonsDataFrame with the attribute fields of *hunan2012* dataframe. This is performed using [`left_join()`](https://dplyr.tidyverse.org/reference/mutate-joins.html) of **dplyr** package.
+
+```{r}
+hunan <- left_join(hunan, hunan2012) %>%
+  dplyr::select(1:4, 7, 15)
+```
+
 ### 3.5 Visualising Regional Development Indicator
+
+Now, we are going to prepare a basemap and a choropleth map showing the distribution of GDPPC 2012 using `qtm()` of **tmap** package.
+
+```{r}
+#| fig-width: 12
+
+equal <- tm_shape(hunan) +
+  tm_polygons(fill = "GDPPC",
+              fill.scale = tm_scale_intervals(
+                style = "equal",
+                n = 5,
+                values = "brewer.blues")) +
+  tm_borders(fiil_alpha = 0.5) + 
+  tm_layout(legend.position = c("left", "bottom"), 
+            main.title = "Equal interval classification")
+
+quantile <- tm_shape(hunan) +
+  tm_polygons(fill = "GDPPC",
+              fill.scale = tm_scale_intervals(
+                style = "quantile",
+                n = 5)) +
+  tm_borders(fiil_alpha = 0.5) + 
+  tm_layout(legend.position = c("left", "bottom"), 
+            main.title = "Quantile classification")
+
+tmap_arrange(equal, 
+             quantile, 
+             asp=1, 
+             ncol=2)
+```
 
 ## 4 Global Measures of Spatial Autocorrelation
 
+In this section, we will compute global spatial autocorrelation statistics and to perform spatial complete randomness test for global spatial autocorrelation.
+
+### 4.1 **Computing Contiguity Spatial Weights**
+
+Before we can compute the global spatial autocorrelation statistics, we need to construct a spatial weights of the study area. The spatial weights is used to define the neighbourhood relationships between the geographical units (i.e. county) in the study area.
+
+In the code chunk below, [`poly2nb()`](https://r-spatial.github.io/spdep/reference/poly2nb.html) of **spdep** package is used to compute contiguity weight matrices for the study area. This function builds a neighbours list based on regions with contiguous boundaries.
+
+More specifically, the code chunk below is used to compute Queen contiguity weight matrix.
+
+```{r}
+wm_q <- poly2nb(hunan, queen = TRUE)
+summary(wm_q)
+```
+
+::::: markgoals
+
+::: markgoals-header
+**Learning**
+
+::: markgoals-container 
+The summary report above shows that there are **88 area units** in Hunan. The most connected area unit has **11 neighbour**s. There are two area units with only one neighbours.
+:::
+:::::
+
+### 4.2 Row-standardised weights matrix
+This step is about creating a spatial lag, which is a value that summarises the variable (like income) across a central area's immediate neighbors. The method chosen is to assign an equal weight to every neighboring area, known as style="W" (Row-Standardized Weights).
+
+The weight for each neighbor is calculated simply as the fraction (/1number of neighbors). For example, if a county has four neighbors, each one is assigned a weight of 0.25. The final spatial lag is then computed by multiplying each neighbor's income value by this weight and summing the products. The primary appeal of this approach is that it is the most intuitive and easiest way to summarize the surrounding values.
+
+The significant limitation of using the equal-weight style="W" is the "edge effect." Areas located along the boundaries of the study region naturally have fewer neighbors than those in the center.
+
+When a polygon has fewer neighbors, those few neighbors receive a disproportionately large weight. This causes the calculated spatial lag for the boundary area to be heavily influenced by a limited sample of surrounding data, which may over or under-estimate the true underlying spatial pattern (spatial autocorrelation). Although this drawback exists, we use style="W" for its simplicity in this example. More robust alternative options—such as style="B" (Binary Weights) are available for more serious spatial analysis.
+
+```{r}
+rswm_p <- nb2listw(wm_q, style = "W", zero.policy = TRUE)
+rswm_p
+```
+
+::::: markgoals
+
+::: markgoals-header
+**Learning**
+
+::: markgoals-container 
+The input of nb2listw() must be an object of class nb. The syntax of the function has two major arguments, namely style and zero.poly.
+style can take values “W”, “B”, “C”, “U”, “minmax” and “S”. B is the basic binary coding, W is row standardised (sums over all links to n), C is globally standardised (sums over all links to n), U is equal to C divided by the number of neighbours (sums over all links to unity), while S is the variance-stabilizing coding scheme proposed by Tiefelsdorf et al. 1999, p. 167-168 (sums over all links to n).
+If zero policy is set to TRUE, weights vectors of zero length are inserted for regions without neighbour in the neighbours list. These will in turn generate lag values of zero, equivalent to the sum of products of the zero row t(rep(0, length=length(neighbours))) %*% x, for arbitrary numerical vector x of length length(neighbours). The spatially lagged value of x for the zero-neighbour region will then be zero, which may (or may not) be a sensible choice.
+:::
+:::::
 ## 5 Global Measures of Spatial Autocorrelation: Moran’s I
 
 ## 6 Global Measures of Spatial Autocorrelation: Geary’s C
