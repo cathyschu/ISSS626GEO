@@ -304,8 +304,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>We will use the following packages: <strong>spdep, sf, tmap and tidyverse</strong> packages of R.</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 25%">
-<col style="width: 75%">
+<col style="width: 29%">
+<col style="width: 70%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -458,8 +458,8 @@ Link number distribution:
 <p>The significant limitation of using the equal-weight style=“W” is the “edge effect.” Areas located along the boundaries of the study region naturally have fewer neighbors than those in the center.</p>
 <p>When a polygon has fewer neighbors, those few neighbors receive a disproportionately large weight. This causes the calculated spatial lag for the boundary area to be heavily influenced by a limited sample of surrounding data, which may over or under-estimate the true underlying spatial pattern (spatial autocorrelation). Although this drawback exists, we use style=“W” for its simplicity in this example. More robust alternative options—such as style=“B” (Binary Weights) are available for more serious spatial analysis.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>rswm_p <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(wm_q, <span class="at">style =</span> <span class="st">"W"</span>, <span class="at">zero.policy =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>rswm_p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>rswm_q <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(wm_q, <span class="at">style =</span> <span class="st">"W"</span>, <span class="at">zero.policy =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>rswm_q</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Characteristics of weights list object:
 Neighbour list object:
@@ -494,12 +494,97 @@ W 88 7744 88 37.86334 365.9147</code></pre>
 </div>
 <section id="global-measures-of-spatial-autocorrelation-morans-i" class="level2">
 <h2 class="anchored" data-anchor-id="global-measures-of-spatial-autocorrelation-morans-i">5 Global Measures of Spatial Autocorrelation: Moran’s I</h2>
+<p>We will perform Moran’s I statistics testing by using <a href="https://r-spatial.github.io/spdep/reference/moran.test.html"><code>moran.test()</code></a> of <strong>spdep</strong>.</p>
 </section>
+<div class="panel-tabeset">
+<section id="marons-i-test" class="level2">
+<h2 class="anchored" data-anchor-id="marons-i-test">5.1 Maron’s I test</h2>
+<p>Below we will performs Moran’s I statistical testing using <a href="https://r-spatial.github.io/spdep/reference/moran.test.html"><code>moran.test()</code></a> of <strong>spdep</strong>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">moran.test</span>(hunan<span class="sc">$</span>GDPPC, <span class="at">listw =</span> rswm_q,</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">zero.policy =</span> <span class="cn">TRUE</span>, <span class="at">na.action =</span> na.omit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Moran I test under randomisation
+
+data:  hunan$GDPPC  
+weights: rswm_q    
+
+Moran I statistic standard deviate = 4.7351, p-value = 1.095e-06
+alternative hypothesis: greater
+sample estimates:
+Moran I statistic       Expectation          Variance 
+      0.300749970      -0.011494253       0.004348351 </code></pre>
+</div>
+</div>
+<div class="markgoals">
+<div class="markgoals-header">
+<p><strong>Findings</strong></p>
+</div>
+<div class="markgoals-container">
+<p>There is statistically significant positive spatial autocorrelation in GDPPC across Hunan province. - p-value = 1.095e-06 is well below any conventional significance level (0.001, 0.01, 0.05) - Z-score = 4.74 indicates the observed Moran’s I is 4.74 standard deviations above what would be expected under spatial randomness. - This provides very strong evidence to <strong>reject the null hypothesis of spatial randomness</strong> - Moran’s I score 0.300749970 shows moderate positive spatial clustering. Areas with similar GDPPC tend to cluster together, but it’s not an extremely strong pattern.</p>
+</div>
+</div>
+</section>
+<section id="computing-monte-carlo-morans-i" class="level2">
+<h2 class="anchored" data-anchor-id="computing-monte-carlo-morans-i">5.2 Computing Monte Carlo Moran’s I</h2>
+<p>Let’s perform permutation test for Moran’s I statistic using <a href="https://r-spatial.github.io/spdep/reference/moran.mc.html"><code>moran.mc()</code></a> of <strong>spdep</strong>. A total of 1000 simulation will be performed.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>bperm<span class="ot">=</span> <span class="fu">moran.mc</span>(hunan<span class="sc">$</span>GDPPC, </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">listw=</span>rswm_q, </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">nsim=</span><span class="dv">999</span>, </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">zero.policy =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">na.action=</span>na.omit)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>bperm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Monte-Carlo simulation of Moran I
+
+data:  hunan$GDPPC 
+weights: rswm_q  
+number of simulations + 1: 1000 
+
+statistic = 0.30075, observed rank = 1000, p-value = 0.001
+alternative hypothesis: greater</code></pre>
+</div>
+</div>
+<div class="markgoals">
+<div class="markgoals-header">
+<p><strong>Findings</strong></p>
+</div>
+<div class="markgoals-container">
+<p>There is statistically significant positive spatial autocorrelation in GDP per capita across Hunan province. - p-value = 0.001 indicates strong statistical significance - Observed rank = 1000 means observed Moran’s I value was the highest among all 1000 values. This means none of the 999 random permutations produced a Moran’s I value as high as the observed value. - Moran’s I = 0.30075 confirms moderate positive spatial autocorrelation. Areas with similar GDP per capita are significantly clustered together geographically.</p>
+</div>
+</div>
+</section>
+<section id="visualise-monte-carlo-morans-i" class="level2">
+<h2 class="anchored" data-anchor-id="visualise-monte-carlo-morans-i">5.3 Visualise Monte Carlo Moran’s I</h2>
+</section>
+</div>
 <section id="global-measures-of-spatial-autocorrelation-gearys-c" class="level2">
 <h2 class="anchored" data-anchor-id="global-measures-of-spatial-autocorrelation-gearys-c">6 Global Measures of Spatial Autocorrelation: Geary’s C</h2>
+<p>We will perform Geary’s C statistics testing by using appropriate functions of <strong>spdep</strong> package.</p>
 </section>
+<div class="panel-tabeset">
+<section id="gearys-c-test" class="level2">
+<h2 class="anchored" data-anchor-id="gearys-c-test">6.1 Geary’s C test</h2>
+</section>
+<section id="computing-monte-carlo-gearys-c" class="level2">
+<h2 class="anchored" data-anchor-id="computing-monte-carlo-gearys-c">6.2 Computing Monte Carlo Geary’s C</h2>
+</section>
+<section id="visualise-monte-carlo-gearys-c" class="level2">
+<h2 class="anchored" data-anchor-id="visualise-monte-carlo-gearys-c">6.3 Visualise Monte Carlo Geary’s C</h2>
+</section>
+</div>
 <section id="spatial-correlogram" class="level2">
 <h2 class="anchored" data-anchor-id="spatial-correlogram">7 Spatial Correlogram</h2>
+</section>
+<section id="computing-morans-i-correlogram" class="level2">
+<h2 class="anchored" data-anchor-id="computing-morans-i-correlogram">7.2 Computing Moran’s I correlogram</h2>
+</section>
+<section id="computing-gearys-c-correlogram-and-plot" class="level2">
+<h2 class="anchored" data-anchor-id="computing-gearys-c-correlogram-and-plot">7.3 Computing Geary’s C correlogram and plot</h2>
 </section>
 </div>
 </section>

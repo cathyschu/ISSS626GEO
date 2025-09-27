@@ -28,7 +28,7 @@ In this case study, we will use China's data to examine the spatial pattern of a
 We will use the following packages: **spdep, sf, tmap and tidyverse** packages of R.
 
 | Package | Description |
-|------------------|------------------------------------------------------|
+|---------------------|---------------------------------------------------|
 | **sf** | importing and handling geospatial data in R |
 | **tidyverse** | wrangling attribute data in R |
 | **spdep** | computing spatial weights, global and local spatial autocorrelation statistics |
@@ -123,7 +123,7 @@ wm_q <- poly2nb(hunan, queen = TRUE)
 summary(wm_q)
 ```
 
-:::::::: markgoals
+::::::::::::: markgoals
 :::: markgoals-header
 **Learning**
 
@@ -143,11 +143,11 @@ The significant limitation of using the equal-weight style="W" is the "edge effe
 When a polygon has fewer neighbors, those few neighbors receive a disproportionately large weight. This causes the calculated spatial lag for the boundary area to be heavily influenced by a limited sample of surrounding data, which may over or under-estimate the true underlying spatial pattern (spatial autocorrelation). Although this drawback exists, we use style="W" for its simplicity in this example. More robust alternative options—such as style="B" (Binary Weights) are available for more serious spatial analysis.
 
 ```{r}
-rswm_p <- nb2listw(wm_q, style = "W", zero.policy = TRUE)
-rswm_p
+rswm_q <- nb2listw(wm_q, style = "W", zero.policy = TRUE)
+rswm_q
 ```
 
-::::: markgoals
+:::::::::: markgoals
 :::: markgoals-header
 **Learning**
 
@@ -172,8 +172,73 @@ rswm_p
 
 ## 5 Global Measures of Spatial Autocorrelation: Moran’s I
 
+We will perform Moran’s I statistics testing by using [`moran.test()`](https://r-spatial.github.io/spdep/reference/moran.test.html) of **spdep**.
+
+:::::: panel-tabeset
+## 5.1 Maron's I test
+
+Below we will performs Moran’s I statistical testing using [`moran.test()`](https://r-spatial.github.io/spdep/reference/moran.test.html) of **spdep**.
+
+```{r}
+moran.test(hunan$GDPPC, listw = rswm_q,
+           zero.policy = TRUE, na.action = na.omit)
+```
+
+::::: markgoals
+::: markgoals-header
+**Findings**
+:::
+
+::: markgoals-container
+There is statistically significant positive spatial autocorrelation in GDPPC across Hunan province. - p-value = 1.095e-06 is well below any conventional significance level (0.001, 0.01, 0.05) - Z-score = 4.74 indicates the observed Moran's I is 4.74 standard deviations above what would be expected under spatial randomness. - This provides very strong evidence to **reject the null hypothesis of spatial randomness** - Moran's I score 0.300749970 shows moderate positive spatial clustering. Areas with similar GDPPC tend to cluster together, but it's not an extremely strong pattern.
+:::
+:::::
+
+## 5.2 Computing Monte Carlo Moran's I
+
+Let's perform permutation test for Moran’s I statistic using [`moran.mc()`](https://r-spatial.github.io/spdep/reference/moran.mc.html) of **spdep**. A total of 1000 simulation will be performed.
+
+```{r}
+set.seed(1234)
+bperm= moran.mc(hunan$GDPPC, 
+                listw=rswm_q, 
+                nsim=999, 
+                zero.policy = TRUE, 
+                na.action=na.omit)
+bperm
+```
+::::: markgoals
+::: markgoals-header
+**Findings**
+:::
+
+::: markgoals-container
+There is statistically significant positive spatial autocorrelation in GDP per capita across Hunan province.
+-   p-value = 0.001 indicates strong statistical significance
+-   Observed rank = 1000 means observed Moran's I value was the highest among all 1000 values. This means none of the 999 random permutations produced a Moran's I value as high as the observed value.
+-   Moran's I = 0.30075 confirms moderate positive spatial autocorrelation. Areas with similar GDP per capita are significantly clustered together geographically.
+:::
+:::::
+
+## 5.3 Visualise Monte Carlo Moran's I
+::::::
+
 ## 6 Global Measures of Spatial Autocorrelation: Geary’s C
 
+We will perform Geary’s C statistics testing by using appropriate functions of **spdep** package.
+
+::: panel-tabeset
+## 6.1 Geary’s C test
+
+## 6.2 Computing Monte Carlo Geary’s C
+
+## 6.3 Visualise Monte Carlo Geary’s C
+:::
+
 ## 7 Spatial Correlogram
-:::::
-::::::::
+
+## 7.2 Computing Moran’s I correlogram
+
+## 7.3 Computing Geary’s C correlogram and plot
+::::::::::
+:::::::::::::
