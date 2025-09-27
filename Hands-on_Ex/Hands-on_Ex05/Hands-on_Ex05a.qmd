@@ -28,7 +28,7 @@ In this case study, we will use China's data to examine the spatial pattern of a
 We will use the following packages: **spdep, sf, tmap and tidyverse** packages of R.
 
 | Package | Description |
-|-----------------------|------------------------------------------------|
+|------------------------|------------------------------------------------|
 | **sf** | importing and handling geospatial data in R |
 | **tidyverse** | wrangling attribute data in R |
 | **spdep** | computing spatial weights, global and local spatial autocorrelation statistics |
@@ -125,7 +125,7 @@ summary(wm_q)
 
 ::::: markgoals
 ::: markgoals-header
-**Learning**
+**Note**
 :::
 
 ::: markgoals-container
@@ -188,7 +188,7 @@ moran.test(hunan$GDPPC, listw = rswm_q,
 
 ::::: markgoals
 ::: markgoals-header
-**Findings**
+**Analysis**
 :::
 
 ::: markgoals-container
@@ -212,7 +212,7 @@ bperm
 
 ::::: markgoals
 ::: markgoals-header
-**Findings**
+**Analysis**
 :::
 
 ::: markgoals-container
@@ -262,7 +262,7 @@ ggplot(data.frame(res = bperm$res), aes(x = res)) +
 
 ::::: markgoals
 ::: markgoals-header
-**Findings**
+**Analysis**
 :::
 
 ::: markgoals-container
@@ -288,7 +288,7 @@ geary.test(hunan$GDPPC, listw=rswm_q)
 
 ::::: markgoals
 ::: markgoals-header
-**Findings**
+**Analysis**
 :::
 
 ::: markgoals-container
@@ -311,7 +311,7 @@ bperm
 
 ::::: markgoals
 ::: markgoals-header
-**Findings**
+**Analysis**
 :::
 
 ::: markgoals-container
@@ -340,7 +340,7 @@ abline(v=1, col="red")
 
 ::::: markgoals
 ::: markgoals-header
-**Findings**
+**Analysis**
 :::
 
 ::: markgoals-container
@@ -355,7 +355,7 @@ abline(v=1, col="red")
 
 Spatial correlograms are great to examine patterns of spatial autocorrelation in your data or model residuals. They show **how correlated are pairs of spatial observations when you increase the distance (lag) between them** . They are plots of some index of autocorrelation (Moran’s I or Geary’s c) against distance. Although **correlograms** are not as fundamental as variograms (a keystone concept of geostatistics), they are very useful as an exploratory and descriptive tool. For this purpose they actually provide richer information than variograms.
 
-## 7.2 Computing Moran’s I correlogram
+## 7.1 Computing Moran’s I correlogram
 
 Below [`sp.correlogram()`](https://r-spatial.github.io/spdep/reference/sp.correlogram.html) of **spdep** package is used to compute a 6-lag spatial correlogram of GDPPC. The global spatial autocorrelation used in Moran’s I. The **plot()** of base Graph is then used to plot the output.
 
@@ -366,7 +366,56 @@ MI_corr <- sp.correlogram(wm_q,
                           order=6, method="I", style="W")
 plot(MI_corr,
      col.main = "#B95E82")
-abline(h = 0, col = "red", lty = 2, lwd = 2)
+
 ```
 
-## 7.3 Computing Geary’s C correlogram and plot
+**Not all autocorrelation values are statistically significant**, so the plot might not allow us to provide complete interpretation. It is important for us to examine the **full analysis report** by printing out the analysis results.
+
+```{r}
+print(MI_corr)
+```
+
+::::: markgoals
+::: markgoals-header
+**Analysis**
+:::
+
+::: markgoals-container
+-   Lag 1 (0.301, p \< 0.001) with very strong positive spatial autocorrelation indicates that neighboring areas have very similar GDPPC values; lag 2 (0.206, p \< 0.001) with moderately strong positive autocorrelation extends to second-order neighbors; lag 3 (0.067, p \< 0.05) with weak but significant positive autocorrelation at third-order neighbors.
+-   The significant positive autocorrelation at lags 1-3 confirms that areas with similar GDPPC are spatially clustered together.
+-   The pattern suggests high GDPPC areas are clustered together (positive autocorrelation at short distances). In addition, these prosperous clusters are surrounded by areas with lower GDPPC (negative autocorrelation at medium distances).
+-   With 5 out of 6 lags showing significant results, there is strong evidence of non-random spatial distribution of economic development in Hunan province.
+:::
+:::::
+
+## 7.2 Computing Geary’s C correlogram and plot
+
+In the code chunk below, `sp.correlogram()` of **spdep** package is used to compute a 6-lag spatial correlogram of GDPPC. The global spatial autocorrelation used in Geary’s C. The **plot()** of base Graph is then used to plot the output.
+
+```{r}
+par(bg = "#D0DDD0")
+GC_corr <- sp.correlogram(wm_q, 
+                          hunan$GDPPC, 
+                          order=6, 
+                          method="C", 
+                          style="W")
+plot(GC_corr)
+```
+
+Similar to the previous step, we will print out the analysis report by using the code chunk below.
+
+```{r}
+print(GC_corr)
+```
+::::: markgoals
+::: markgoals-header
+**Analysis**
+:::
+
+::: markgoals-container
+
+:::
+:::::
+
+**Class Note:** 
+Spatial autocorrelation is an extention of geographycal summary statistics. It looks at only 1 variable and its relations with the surrounding areas. 

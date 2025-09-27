@@ -249,8 +249,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#global-measures-of-spatial-autocorrelation-morans-i" id="toc-global-measures-of-spatial-autocorrelation-morans-i" class="nav-link" data-scroll-target="#global-measures-of-spatial-autocorrelation-morans-i">5 Global Measures of Spatial Autocorrelation: Moran’s I</a></li>
   <li><a href="#global-measures-of-spatial-autocorrelation-gearys-c" id="toc-global-measures-of-spatial-autocorrelation-gearys-c" class="nav-link" data-scroll-target="#global-measures-of-spatial-autocorrelation-gearys-c">6 Global Measures of Spatial Autocorrelation: Geary’s C</a></li>
   <li><a href="#spatial-correlogram" id="toc-spatial-correlogram" class="nav-link" data-scroll-target="#spatial-correlogram">7 Spatial Correlogram</a></li>
-  <li><a href="#computing-morans-i-correlogram" id="toc-computing-morans-i-correlogram" class="nav-link" data-scroll-target="#computing-morans-i-correlogram">7.2 Computing Moran’s I correlogram</a></li>
-  <li><a href="#computing-gearys-c-correlogram-and-plot" id="toc-computing-gearys-c-correlogram-and-plot" class="nav-link" data-scroll-target="#computing-gearys-c-correlogram-and-plot">7.3 Computing Geary’s C correlogram and plot</a></li>
+  <li><a href="#computing-morans-i-correlogram" id="toc-computing-morans-i-correlogram" class="nav-link" data-scroll-target="#computing-morans-i-correlogram">7.1 Computing Moran’s I correlogram</a></li>
+  <li><a href="#computing-gearys-c-correlogram-and-plot" id="toc-computing-gearys-c-correlogram-and-plot" class="nav-link" data-scroll-target="#computing-gearys-c-correlogram-and-plot">7.2 Computing Geary’s C correlogram and plot</a></li>
   </ul>
 </nav>
     </div>
@@ -310,8 +310,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>We will use the following packages: <strong>spdep, sf, tmap and tidyverse</strong> packages of R.</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 32%">
-<col style="width: 67%">
+<col style="width: 33%">
+<col style="width: 66%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -452,7 +452,7 @@ Link number distribution:
 </div>
 <div class="markgoals">
 <div class="markgoals-header">
-<p><strong>Learning</strong></p>
+<p><strong>Note</strong></p>
 </div>
 <div class="markgoals-container">
 <p>The summary report above shows that there are <strong>88 area units</strong> in Hunan. The most connected area unit has <strong>11 neighbour</strong>s. There are two area units with only one neighbours.</p>
@@ -530,7 +530,7 @@ Moran I statistic       Expectation          Variance
 </div>
 <div class="markgoals">
 <div class="markgoals-header">
-<p><strong>Findings</strong></p>
+<p><strong>Analysis</strong></p>
 </div>
 <div class="markgoals-container">
 <p>There is statistically significant positive spatial autocorrelation in GDPPC across Hunan province. - p-value = 1.095e-06 is well below any conventional significance level (0.001, 0.01, 0.05) - Z-score = 4.74 indicates the observed Moran’s I is 4.74 standard deviations above what would be expected under spatial randomness. - This provides very strong evidence to <strong>reject the null hypothesis of spatial randomness</strong> - Moran’s I score 0.300749970 shows moderate positive spatial clustering. Areas with similar GDPPC tend to cluster together, but it’s not an extremely strong pattern.</p>
@@ -561,7 +561,7 @@ alternative hypothesis: greater</code></pre>
 </div>
 <div class="markgoals">
 <div class="markgoals-header">
-<p><strong>Findings</strong></p>
+<p><strong>Analysis</strong></p>
 </div>
 <div class="markgoals-container">
 <p>There is statistically significant positive spatial autocorrelation in GDP per capita across Hunan province. - p-value = 0.001 indicates strong statistical significance - Observed rank = 1000 means observed Moran’s I value was the highest among all 1000 values. This means none of the 999 random permutations produced a Moran’s I value as high as the observed value. - Moran’s I = 0.30075 confirms moderate positive spatial autocorrelation. Areas with similar GDP per capita are significantly clustered together geographically.</p>
@@ -627,7 +627,7 @@ alternative hypothesis: greater</code></pre>
 </div>
 <div class="markgoals">
 <div class="markgoals-header">
-<p><strong>Findings</strong></p>
+<p><strong>Analysis</strong></p>
 </div>
 <div class="markgoals-container">
 <ul>
@@ -667,7 +667,7 @@ Geary C statistic       Expectation          Variance
 </div>
 <div class="markgoals">
 <div class="markgoals-header">
-<p><strong>Findings</strong></p>
+<p><strong>Analysis</strong></p>
 </div>
 <div class="markgoals-container">
 <ul>
@@ -699,7 +699,7 @@ alternative hypothesis: greater</code></pre>
 </div>
 <div class="markgoals">
 <div class="markgoals-header">
-<p><strong>Findings</strong></p>
+<p><strong>Analysis</strong></p>
 </div>
 <div class="markgoals-container">
 <p>The observed Geary C statistic = 0.69072 achieved an observed rank = 1 out of 1000, indicating it was the lowest value among all simulations. This extreme ranking confirms that none of the 999 random permutations produced a Geary’s C value as low as the observed data, so yields a p-value = 0.001 and provides very strong statistical evidence against the null hypothesis of spatial randomness.</p>
@@ -739,7 +739,7 @@ alternative hypothesis: greater</code></pre>
 </div>
 <div class="markgoals">
 <div class="markgoals-header">
-<p><strong>Findings</strong></p>
+<p><strong>Analysis</strong></p>
 </div>
 <div class="markgoals-container">
 <ul>
@@ -758,7 +758,7 @@ alternative hypothesis: greater</code></pre>
 <p>Spatial correlograms are great to examine patterns of spatial autocorrelation in your data or model residuals. They show <strong>how correlated are pairs of spatial observations when you increase the distance (lag) between them</strong> . They are plots of some index of autocorrelation (Moran’s I or Geary’s c) against distance. Although <strong>correlograms</strong> are not as fundamental as variograms (a keystone concept of geostatistics), they are very useful as an exploratory and descriptive tool. For this purpose they actually provide richer information than variograms.</p>
 </section>
 <section id="computing-morans-i-correlogram" class="level2">
-<h2 class="anchored" data-anchor-id="computing-morans-i-correlogram">7.2 Computing Moran’s I correlogram</h2>
+<h2 class="anchored" data-anchor-id="computing-morans-i-correlogram">7.1 Computing Moran’s I correlogram</h2>
 <p>Below <a href="https://r-spatial.github.io/spdep/reference/sp.correlogram.html"><code>sp.correlogram()</code></a> of <strong>spdep</strong> package is used to compute a 6-lag spatial correlogram of GDPPC. The global spatial autocorrelation used in Moran’s I. The <strong>plot()</strong> of base Graph is then used to plot the output.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#D0DDD0"</span>)</span>
@@ -766,8 +766,7 @@ alternative hypothesis: greater</code></pre>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>                          hunan<span class="sc">$</span>GDPPC, </span>
 <span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">order=</span><span class="dv">6</span>, <span class="at">method=</span><span class="st">"I"</span>, <span class="at">style=</span><span class="st">"W"</span>)</span>
 <span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(MI_corr,</span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">col.main =</span> <span class="st">"#B95E82"</span>)</span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">col.main =</span> <span class="st">"#B95E82"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -776,9 +775,82 @@ alternative hypothesis: greater</code></pre>
 </div>
 </div>
 </div>
+<p><strong>Not all autocorrelation values are statistically significant</strong>, so the plot might not allow us to provide complete interpretation. It is important for us to examine the <strong>full analysis report</strong> by printing out the analysis results.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(MI_corr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Spatial correlogram for hunan$GDPPC 
+method: Moran's I
+         estimate expectation   variance standard deviate Pr(I) two sided    
+1 (88)  0.3007500  -0.0114943  0.0043484           4.7351       2.189e-06 ***
+2 (88)  0.2060084  -0.0114943  0.0020962           4.7505       2.029e-06 ***
+3 (88)  0.0668273  -0.0114943  0.0014602           2.0496        0.040400 *  
+4 (88)  0.0299470  -0.0114943  0.0011717           1.2107        0.226015    
+5 (88) -0.1530471  -0.0114943  0.0012440          -4.0134       5.984e-05 ***
+6 (88) -0.1187070  -0.0114943  0.0016791          -2.6164        0.008886 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<div class="markgoals">
+<div class="markgoals-header">
+<p><strong>Analysis</strong></p>
+</div>
+<div class="markgoals-container">
+<ul>
+<li>Lag 1 (0.301, p &lt; 0.001) with very strong positive spatial autocorrelation indicates that neighboring areas have very similar GDPPC values; lag 2 (0.206, p &lt; 0.001) with moderately strong positive autocorrelation extends to second-order neighbors; lag 3 (0.067, p &lt; 0.05) with weak but significant positive autocorrelation at third-order neighbors.</li>
+<li>The significant positive autocorrelation at lags 1-3 confirms that areas with similar GDPPC are spatially clustered together.</li>
+<li>The pattern suggests high GDPPC areas are clustered together (positive autocorrelation at short distances). In addition, these prosperous clusters are surrounded by areas with lower GDPPC (negative autocorrelation at medium distances).</li>
+<li>With 5 out of 6 lags showing significant results, there is strong evidence of non-random spatial distribution of economic development in Hunan province.</li>
+</ul>
+</div>
+</div>
 </section>
 <section id="computing-gearys-c-correlogram-and-plot" class="level2">
-<h2 class="anchored" data-anchor-id="computing-gearys-c-correlogram-and-plot">7.3 Computing Geary’s C correlogram and plot</h2>
+<h2 class="anchored" data-anchor-id="computing-gearys-c-correlogram-and-plot">7.2 Computing Geary’s C correlogram and plot</h2>
+<p>In the code chunk below, <code>sp.correlogram()</code> of <strong>spdep</strong> package is used to compute a 6-lag spatial correlogram of GDPPC. The global spatial autocorrelation used in Geary’s C. The <strong>plot()</strong> of base Graph is then used to plot the output.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#D0DDD0"</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>GC_corr <span class="ot">&lt;-</span> <span class="fu">sp.correlogram</span>(wm_q, </span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>                          hunan<span class="sc">$</span>GDPPC, </span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">order=</span><span class="dv">6</span>, </span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">method=</span><span class="st">"C"</span>, </span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">style=</span><span class="st">"W"</span>)</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(GC_corr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex05a_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Similar to the previous step, we will print out the analysis report by using the code chunk below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(GC_corr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Spatial correlogram for hunan$GDPPC 
+method: Geary's C
+        estimate expectation  variance standard deviate Pr(I) two sided    
+1 (88) 0.6907223   1.0000000 0.0073364          -3.6108       0.0003052 ***
+2 (88) 0.7630197   1.0000000 0.0049126          -3.3811       0.0007220 ***
+3 (88) 0.9397299   1.0000000 0.0049005          -0.8610       0.3892612    
+4 (88) 1.0098462   1.0000000 0.0039631           0.1564       0.8757128    
+5 (88) 1.2008204   1.0000000 0.0035568           3.3673       0.0007592 ***
+6 (88) 1.0773386   1.0000000 0.0058042           1.0151       0.3100407    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<div class="markgoals">
+<div class="markgoals-header">
+<p><strong>Analysis</strong></p>
+</div>
+<div class="markgoals-container">
+
+</div>
+</div>
+<p><strong>Class Note:</strong> Spatial autocorrelation is an extention of geographycal summary statistics. It looks at only 1 variable and its relations with the surrounding areas.</p>
 
 
 </section>
