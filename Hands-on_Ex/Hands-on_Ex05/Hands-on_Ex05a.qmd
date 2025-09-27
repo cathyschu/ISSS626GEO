@@ -28,7 +28,7 @@ In this case study, we will use China's data to examine the spatial pattern of a
 We will use the following packages: **spdep, sf, tmap and tidyverse** packages of R.
 
 | Package | Description |
-|---------------------|---------------------------------------------------|
+|----------------------|--------------------------------------------------|
 | **sf** | importing and handling geospatial data in R |
 | **tidyverse** | wrangling attribute data in R |
 | **spdep** | computing spatial weights, global and local spatial autocorrelation statistics |
@@ -123,7 +123,7 @@ wm_q <- poly2nb(hunan, queen = TRUE)
 summary(wm_q)
 ```
 
-::::::::::::: markgoals
+:::::::::::::::: markgoals
 :::: markgoals-header
 **Learning**
 
@@ -147,7 +147,7 @@ rswm_q <- nb2listw(wm_q, style = "W", zero.policy = TRUE)
 rswm_q
 ```
 
-:::::::::: markgoals
+::::::::::::: markgoals
 :::: markgoals-header
 **Learning**
 
@@ -174,7 +174,7 @@ rswm_q
 
 We will perform Moran’s I statistics testing by using [`moran.test()`](https://r-spatial.github.io/spdep/reference/moran.test.html) of **spdep**.
 
-:::::: panel-tabeset
+::::::::: panel-tabeset
 ## 5.1 Maron's I test
 
 Below we will performs Moran’s I statistical testing using [`moran.test()`](https://r-spatial.github.io/spdep/reference/moran.test.html) of **spdep**.
@@ -207,21 +207,74 @@ bperm= moran.mc(hunan$GDPPC,
                 na.action=na.omit)
 bperm
 ```
+
 ::::: markgoals
 ::: markgoals-header
 **Findings**
 :::
 
 ::: markgoals-container
-There is statistically significant positive spatial autocorrelation in GDP per capita across Hunan province.
--   p-value = 0.001 indicates strong statistical significance
--   Observed rank = 1000 means observed Moran's I value was the highest among all 1000 values. This means none of the 999 random permutations produced a Moran's I value as high as the observed value.
--   Moran's I = 0.30075 confirms moderate positive spatial autocorrelation. Areas with similar GDP per capita are significantly clustered together geographically.
+There is statistically significant positive spatial autocorrelation in GDP per capita across Hunan province. - p-value = 0.001 indicates strong statistical significance - Observed rank = 1000 means observed Moran's I value was the highest among all 1000 values. This means none of the 999 random permutations produced a Moran's I value as high as the observed value. - Moran's I = 0.30075 confirms moderate positive spatial autocorrelation. Areas with similar GDP per capita are significantly clustered together geographically.
 :::
 :::::
 
 ## 5.3 Visualise Monte Carlo Moran's I
-::::::
+
+To examine the simulated Moran's test statistics in greater detail, we can plot the distribution of the statistical values as a histogram. Below we will use [`hist()`](https://www.rdocumentation.org/packages/graphics/versions/3.6.2/topics/hist) and [`abline()`](https://www.rdocumentation.org/packages/graphics/versions/3.6.2/topics/abline) of R Graphics.
+
+```{r}
+mean(bperm$res[1:999])
+var(bperm$res[1:999])
+summary(bperm$res[1:999])
+```
+:::panel-tabset
+
+## Plot histogram
+```{r}
+par(bg = "#D0DDD0")
+hist(bperm$res, freq=TRUE, 
+     breaks=20, xlab="Simulated Moran's I",
+     col="#FFECC0")
+abline(v=0, col="red") 
+```
+
+## ggplot2
+
+```{r}
+ggplot(data.frame(res = bperm$res), aes(x = res)) +
+  geom_histogram(bins = 20, 
+                 fill = "#FFECC0", 
+                 color = "grey",
+                 boundary = 0) +
+  geom_vline(xintercept = 0, color = "red", size = 1) +
+  labs(x = "Simulated Moran's I",
+       y = "Frequency",
+       title = "Histogram of bperm$res") +
+  theme_minimal() +
+  theme(
+    plot.background = element_rect(fill = "#D0DDD0", color = NA),
+    panel.background = element_rect(fill = "#D0DDD0", color = NA),
+    panel.grid = element_blank()
+  )
+```
+
+
+:::
+
+::::: markgoals
+::: markgoals-header
+**Findings**
+:::
+
+::: markgoals-container
+-   This histogram displays exhibits an approximately normal distribution with slight positive skewness centered near -0.05. The distribution demonstrates the expected range of Moran's I values under the null hypothesis of spatial randomness, with the majority of simulated statistics falling within the interval [-0.15, +0.05].
+-   The observed test statistic of 0.301 represents an extreme outlier, positioned far beyond the upper tail of this reference distribution. **This extreme positioning validates the Monte Carlo p-value of 0.001 and confirms statistically significant positive spatial autocorrelation at α = 0.001.** 
+-   The evidence strongly rejects the null hypothesis of spatial independence, indicating that the observed spatial clustering of GDPPC substantially exceeds what would be expected under random spatial arrangements.
+:::
+:::::
+
+
+:::::::::
 
 ## 6 Global Measures of Spatial Autocorrelation: Geary’s C
 
@@ -240,5 +293,5 @@ We will perform Geary’s C statistics testing by using appropriate functions of
 ## 7.2 Computing Moran’s I correlogram
 
 ## 7.3 Computing Geary’s C correlogram and plot
-::::::::::
 :::::::::::::
+::::::::::::::::
