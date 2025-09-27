@@ -28,7 +28,7 @@ In this case study, we will use China's data to examine the spatial pattern of a
 We will use the following packages: **spdep, sf, tmap and tidyverse** packages of R.
 
 | Package | Description |
-|----------------------|--------------------------------------------------|
+|-----------------------|-------------------------------------------------|
 | **sf** | importing and handling geospatial data in R |
 | **tidyverse** | wrangling attribute data in R |
 | **spdep** | computing spatial weights, global and local spatial autocorrelation statistics |
@@ -123,14 +123,15 @@ wm_q <- poly2nb(hunan, queen = TRUE)
 summary(wm_q)
 ```
 
-::: markgoals
-:::: markgoals-header
+::::: markgoals
+::: markgoals-header
 **Learning**
-::::
+:::
+
 ::: markgoals-container
 The summary report above shows that there are **88 area units** in Hunan. The most connected area unit has **11 neighbour**s. There are two area units with only one neighbours.
 :::
-:::
+:::::
 
 ### 4.2 Row-standardised weights matrix
 
@@ -147,10 +148,11 @@ rswm_q <- nb2listw(wm_q, style = "W", zero.policy = TRUE)
 rswm_q
 ```
 
-:::: markgoals
+::::: markgoals
 ::: markgoals-header
 **Learning**
 :::
+
 ::: markgoals-container
 -   The input of [`nb2listw()`](https://r-spatial.github.io/spdep/reference/nb2listw.html) must be an object of class **nb**. The syntax of the function has two major arguments, namely style and zero.poly.
 
@@ -168,13 +170,13 @@ rswm_q
 
 -   If *zero policy* is set to TRUE, weights vectors of zero length are inserted for regions without neighbour in the neighbours list. These will in turn generate lag values of zero, equivalent to the sum of products of the zero row t(rep(0, length=length(neighbours))) %\*% x, for arbitrary numerical vector x of length length(neighbours). The spatially lagged value of x for the zero-neighbour region will then be zero, which may (or may not) be a sensible choice.
 :::
-::::
+:::::
 
 ## 5 Global Measures of Spatial Autocorrelation: Moran’s I
 
 We will perform Moran’s I statistics testing by using [`moran.test()`](https://r-spatial.github.io/spdep/reference/moran.test.html) of **spdep**.
 
-::: panel-tabset
+:::::::::::: panel-tabset
 ## 5.1 Maron's I test
 
 Below we will performs Moran’s I statistical testing using [`moran.test()`](https://r-spatial.github.io/spdep/reference/moran.test.html) of **spdep**.
@@ -229,6 +231,7 @@ summary(bperm$res[1:999])
 ```
 
 **Plot histogram**
+
 ```{r}
 par(bg = "#D0DDD0")
 hist(bperm$res, freq=TRUE, 
@@ -263,24 +266,82 @@ ggplot(data.frame(res = bperm$res), aes(x = res)) +
 :::
 
 ::: markgoals-container
--   This histogram displays exhibits an approximately normal distribution with slight positive skewness centered near -0.05. The distribution demonstrates the expected range of Moran's I values under the null hypothesis of spatial randomness, with the majority of simulated statistics falling within the interval [-0.15, +0.05].
--   The observed test statistic of 0.301 represents an extreme outlier, positioned far beyond the upper tail of this reference distribution. **This extreme positioning validates the Monte Carlo p-value of 0.001 and confirms statistically significant positive spatial autocorrelation at α = 0.001.** 
+-   This histogram displays exhibits an approximately normal distribution with slight positive skewness centered near -0.05. The distribution demonstrates the expected range of Moran's I values under the null hypothesis of spatial randomness, with the majority of simulated statistics falling within the interval \[-0.15, +0.05\].
+-   The observed test statistic of 0.301 represents an extreme outlier, positioned far beyond the upper tail of this reference distribution. **This extreme positioning validates the Monte Carlo p-value of 0.001 and confirms statistically significant positive spatial autocorrelation at α = 0.001.**
 -   The evidence strongly rejects the null hypothesis of spatial independence, indicating that the observed spatial clustering of GDPPC substantially exceeds what would be expected under random spatial arrangements.
 :::
 :::::
-:::
-
+::::::::::::
 
 ## 6 Global Measures of Spatial Autocorrelation: Geary’s C
 
 We will perform Geary’s C statistics testing by using appropriate functions of **spdep** package.
 
-::: panel-tabeset
+:::::: panel-tabeset
 ## 6.1 Geary’s C test
+
+We will perform Geary’s C test for spatial autocorrelation by using [`geary.test()`](https://r-spatial.github.io/spdep/reference/geary.test.html) of **spdep**.
+
+```{r}
+geary.test(hunan$GDPPC, listw=rswm_q)
+```
+
+::::: markgoals
+::: markgoals-header
+**Findings**
+:::
+
+::: markgoals-container
+-   The Geary C statistic = 0.691 is substantially below the expected value of 1.000 under spatial randomness, with a highly significant p-value = 0.0001526 (α \< 0.001). The standardized test statistic = 3.61 indicates the observed value is 3.61 standard deviations below the null expectation, providing strong statistical evidence to reject the null hypothesis of spatial independence.
+-   These results from both global spatial autocorrelation statistics provide robust evidence that GDPPC in Hunan province exhibits significant spatial clustering, and confirms the presence of regional economic spillover effects.
+:::
+:::::
+::::::
 
 ## 6.2 Computing Monte Carlo Geary’s C
 
+We will perform permutation test for Geary’s C statistic using [`geary.mc()`](https://r-spatial.github.io/spdep/reference/geary.mc.html) of spdep.
+```{r}
+set.seed(1234)
+bperm=geary.mc(hunan$GDPPC, 
+               listw=rswm_q, 
+               nsim=999)
+bperm
+```
+::::: markgoals
+::: markgoals-header
+**Findings**
+:::
+
+::: markgoals-container
+The observed Geary C statistic = 0.69072 achieved an observed rank = 1 out of 1000, indicating it was the lowest value among all simulations. This extreme ranking confirms that none of the 999 random permutations produced a Geary's C value as low as the observed data, so yields a p-value = 0.001 and provides very strong statistical evidence against the null hypothesis of spatial randomness.
+
+:::
+:::::
+::::::
+
 ## 6.3 Visualise Monte Carlo Geary’s C
+
+Finally we will plot the simulated values to show the distribution in a histogram.
+```{r}
+mean(bperm$res[1:999])
+var(bperm$res[1:999])
+summary(bperm$res[1:999])
+
+```
+
+
+```{r}
+par(bg = "#D0DDD0")
+hist(bperm$res, freq=TRUE, 
+     breaks=20, xlab="Simulated Geary c",
+     col="#FFF1F1")
+abline(v=1, col="red") 
+```
+
+-   The distribution appears approximately normal, which is expected for Geary's C under the null hypothesis of spatial randomness. The distribution is centered around 1.0, which corresponds to the theoretical expectation of Geary's C = 1.0 under spatial independence.
+-    The observed Geary C statistic = 0.69072 would fall far to the left of this entire distribution, well beyond the left tail. The histogram validates the p-value = 0.001 by demonstrating that values below 0.7 are virtually non-existent under spatial randomness. 
+-   This visualisation confirms the exceptionally strong statistical significance of the spatial autocorrelation detected in Hunan's GDPPC data, as the observed spatial clustering is far more extreme than what random spatial arrangements would produce.
 :::
 
 ## 7 Spatial Correlogram
@@ -288,5 +349,3 @@ We will perform Geary’s C statistics testing by using appropriate functions of
 ## 7.2 Computing Moran’s I correlogram
 
 ## 7.3 Computing Geary’s C correlogram and plot
-:::::::::::::
-::::::::::::::::

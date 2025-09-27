@@ -248,6 +248,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#global-measures-of-spatial-autocorrelation-morans-i" id="toc-global-measures-of-spatial-autocorrelation-morans-i" class="nav-link" data-scroll-target="#global-measures-of-spatial-autocorrelation-morans-i">5 Global Measures of Spatial Autocorrelation: Moran’s I</a></li>
   <li><a href="#global-measures-of-spatial-autocorrelation-gearys-c" id="toc-global-measures-of-spatial-autocorrelation-gearys-c" class="nav-link" data-scroll-target="#global-measures-of-spatial-autocorrelation-gearys-c">6 Global Measures of Spatial Autocorrelation: Geary’s C</a></li>
+  <li><a href="#gearys-c-test" id="toc-gearys-c-test" class="nav-link" data-scroll-target="#gearys-c-test">6.1 Geary’s C test</a></li>
+  <li><a href="#computing-monte-carlo-gearys-c" id="toc-computing-monte-carlo-gearys-c" class="nav-link" data-scroll-target="#computing-monte-carlo-gearys-c">6.2 Computing Monte Carlo Geary’s C</a></li>
+  <li><a href="#visualise-monte-carlo-gearys-c" id="toc-visualise-monte-carlo-gearys-c" class="nav-link" data-scroll-target="#visualise-monte-carlo-gearys-c">6.3 Visualise Monte Carlo Geary’s C</a></li>
   <li><a href="#spatial-correlogram" id="toc-spatial-correlogram" class="nav-link" data-scroll-target="#spatial-correlogram">7 Spatial Correlogram</a></li>
   <li><a href="#computing-morans-i-correlogram" id="toc-computing-morans-i-correlogram" class="nav-link" data-scroll-target="#computing-morans-i-correlogram">7.2 Computing Moran’s I correlogram</a></li>
   <li><a href="#computing-gearys-c-correlogram-and-plot" id="toc-computing-gearys-c-correlogram-and-plot" class="nav-link" data-scroll-target="#computing-gearys-c-correlogram-and-plot">7.3 Computing Geary’s C correlogram and plot</a></li>
@@ -310,8 +313,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>We will use the following packages: <strong>spdep, sf, tmap and tidyverse</strong> packages of R.</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 30%">
-<col style="width: 69%">
+<col style="width: 31%">
+<col style="width: 68%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -645,17 +648,106 @@ alternative hypothesis: greater</code></pre>
 <h2 class="anchored" data-anchor-id="global-measures-of-spatial-autocorrelation-gearys-c">6 Global Measures of Spatial Autocorrelation: Geary’s C</h2>
 <p>We will perform Geary’s C statistics testing by using appropriate functions of <strong>spdep</strong> package.</p>
 </section>
-<div class="panel-tabeset">
-<section id="gearys-c-test" class="level2">
+<section id="gearys-c-test" class="level2 panel-tabeset">
 <h2 class="anchored" data-anchor-id="gearys-c-test">6.1 Geary’s C test</h2>
+<p>We will perform Geary’s C test for spatial autocorrelation by using <a href="https://r-spatial.github.io/spdep/reference/geary.test.html"><code>geary.test()</code></a> of <strong>spdep</strong>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">geary.test</span>(hunan<span class="sc">$</span>GDPPC, <span class="at">listw=</span>rswm_q)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Geary C test under randomisation
+
+data:  hunan$GDPPC 
+weights: rswm_q   
+
+Geary C statistic standard deviate = 3.6108, p-value = 0.0001526
+alternative hypothesis: Expectation greater than statistic
+sample estimates:
+Geary C statistic       Expectation          Variance 
+        0.6907223         1.0000000         0.0073364 </code></pre>
+</div>
+</div>
+<div class="markgoals">
+<div class="markgoals-header">
+<p><strong>Findings</strong></p>
+</div>
+<div class="markgoals-container">
+<ul>
+<li>The Geary C statistic = 0.691 is substantially below the expected value of 1.000 under spatial randomness, with a highly significant p-value = 0.0001526 (α &lt; 0.001). The standardized test statistic = 3.61 indicates the observed value is 3.61 standard deviations below the null expectation, providing strong statistical evidence to reject the null hypothesis of spatial independence.</li>
+<li>These results from both global spatial autocorrelation statistics provide robust evidence that GDPPC in Hunan province exhibits significant spatial clustering, and confirms the presence of regional economic spillover effects.</li>
+</ul>
+</div>
+</div>
 </section>
 <section id="computing-monte-carlo-gearys-c" class="level2">
 <h2 class="anchored" data-anchor-id="computing-monte-carlo-gearys-c">6.2 Computing Monte Carlo Geary’s C</h2>
+<p>We will perform permutation test for Geary’s C statistic using <a href="https://r-spatial.github.io/spdep/reference/geary.mc.html"><code>geary.mc()</code></a> of spdep.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>bperm<span class="ot">=</span><span class="fu">geary.mc</span>(hunan<span class="sc">$</span>GDPPC, </span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">listw=</span>rswm_q, </span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">nsim=</span><span class="dv">999</span>)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>bperm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Monte-Carlo simulation of Geary C
+
+data:  hunan$GDPPC 
+weights: rswm_q  
+number of simulations + 1: 1000 
+
+statistic = 0.69072, observed rank = 1, p-value = 0.001
+alternative hypothesis: greater</code></pre>
+</div>
+</div>
+<div class="markgoals">
+<div class="markgoals-header">
+<p><strong>Findings</strong></p>
+</div>
+<div class="markgoals-container">
+<p>The observed Geary C statistic = 0.69072 achieved an observed rank = 1 out of 1000, indicating it was the lowest value among all simulations. This extreme ranking confirms that none of the 999 random permutations produced a Geary’s C value as low as the observed data, so yields a p-value = 0.001 and provides very strong statistical evidence against the null hypothesis of spatial randomness.</p>
+</div>
+</div>
+<p>::::::</p>
 </section>
 <section id="visualise-monte-carlo-gearys-c" class="level2">
 <h2 class="anchored" data-anchor-id="visualise-monte-carlo-gearys-c">6.3 Visualise Monte Carlo Geary’s C</h2>
-</section>
+<p>Finally we will plot the simulated values to show the distribution in a histogram.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(bperm<span class="sc">$</span>res[<span class="dv">1</span><span class="sc">:</span><span class="dv">999</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.004402</code></pre>
 </div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">var</span>(bperm<span class="sc">$</span>res[<span class="dv">1</span><span class="sc">:</span><span class="dv">999</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.007436493</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(bperm<span class="sc">$</span>res[<span class="dv">1</span><span class="sc">:</span><span class="dv">999</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.7142  0.9502  1.0052  1.0044  1.0595  1.2722 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#D0DDD0"</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(bperm<span class="sc">$</span>res, <span class="at">freq=</span><span class="cn">TRUE</span>, </span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks=</span><span class="dv">20</span>, <span class="at">xlab=</span><span class="st">"Simulated Geary c"</span>,</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">col=</span><span class="st">"#FFF1F1"</span>)</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v=</span><span class="dv">1</span>, <span class="at">col=</span><span class="st">"red"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex05a_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>The distribution appears approximately normal, which is expected for Geary’s C under the null hypothesis of spatial randomness. The distribution is centered around 1.0, which corresponds to the theoretical expectation of Geary’s C = 1.0 under spatial independence.</li>
+<li>The observed Geary C statistic = 0.69072 would fall far to the left of this entire distribution, well beyond the left tail. The histogram validates the p-value = 0.001 by demonstrating that values below 0.7 are virtually non-existent under spatial randomness.</li>
+<li>This visualisation confirms the exceptionally strong statistical significance of the spatial autocorrelation detected in Hunan’s GDPPC data, as the observed spatial clustering is far more extreme than what random spatial arrangements would produce. :::</li>
+</ul>
+</section>
 <section id="spatial-correlogram" class="level2">
 <h2 class="anchored" data-anchor-id="spatial-correlogram">7 Spatial Correlogram</h2>
 </section>
@@ -664,7 +756,6 @@ alternative hypothesis: greater</code></pre>
 </section>
 <section id="computing-gearys-c-correlogram-and-plot" class="level2">
 <h2 class="anchored" data-anchor-id="computing-gearys-c-correlogram-and-plot">7.3 Computing Geary’s C correlogram and plot</h2>
-<p>::::::::::::: ::::::::::::::::</p>
 
 
 </section>
