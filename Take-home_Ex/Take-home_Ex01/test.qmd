@@ -28,7 +28,7 @@ Due to data set sizes, we will analyse spatial patterns by quarter for all 3 Ser
 We will use **tidyverse, sf, tmap, tmap,** and **httr** packages to process data sets, along with other packages for computing KDE and plotting visualisations.
 
 | R Package | Purpose |
-|----------------------|--------------------------------------------------|
+|----------------------|-------------------------------------------------|
 | **tidyverse** | the **tidyverse** package is designed to make it easy to install and load core packages from the tidyverse in a single command. There are ggplot2, dplyr, tidyr, readr, purrr, and tibble, etc to manipulate, tidy, import, visualise data. |
 | **sf** | provides support for working with simple features, a standardized way to represent geographic vector data. It serves as a comprehensive tool for handling spatial data within the R environment. |
 | **tmap** | serves the purpose of creating thematic maps, offering a flexible and intuitive way to visualize spatial data. It is designed to produce both static and interactive maps using a consistent, layer-based syntax similar to `ggplot2`. |
@@ -59,7 +59,7 @@ There are mainly two raw public datasets used in this study.
 We downloaded the ACRA (Accounting and Corporate Regulatory Authority) Information on Corporate Entities datasets from data.gov.sg, and will import the ACRA data and transform them as tibble frame.
 
 ```{r}
-
+#| echo: false
 folder_path <- "data/aspatial/acra"
 file_list <- list.files(path = folder_path,
                         pattern = "^ACRA*.*\\.csv$",
@@ -87,7 +87,7 @@ With this step, we will extract the business codes 9601, 9602, and 86204, then r
 The business types chosen are:
 
 | Business Code | Types / subtypes |
-|------------------------|------------------------------------------------|
+|------------------------|-----------------------------------------------|
 | **9601** | **Washing and (Dry-) Cleaning of Textile and Fur Products** |
 | 96011 | Laundry and dry cleaning services except self-operated laundries |
 | 96012 | Self-operated laundries |
@@ -707,7 +707,13 @@ In this section, we will convert the sf objects to spatstat ppp and owin object.
 **Convert sf data frames to ppp class**
 
 ```{r}
+#| eval: false
 biz_9601_ppp <- as.ppp(biz_9601_sf)
+write_rds(biz_9601_ppp, "data/rds/biz_9601_ppp.rds")
+```
+
+```{r}
+biz_9601_ppp <- read_rds("data/rds/biz_9601_ppp.rds")
 ```
 
 **Create Owin object**
@@ -728,7 +734,13 @@ biz_9601_ppp
 **Convert sf data frames to ppp class**
 
 ```{r}
+#| eval: false
 biz_9602_ppp <- as.ppp(biz_9602_sf)
+write_rds(biz_9602_ppp, "data/rds/biz_9602_ppp.rds")
+```
+
+```{r}
+biz_9602_ppp <- read_rds("data/rds/biz_9602_ppp.rds")
 ```
 
 **Combine point events object and owin object**
@@ -743,7 +755,13 @@ biz_9602_ppp
 **Convert sf data frames to ppp class**
 
 ```{r}
+#| eval: false
 biz_86204_ppp <- as.ppp(biz_86204_sf)
+write_rds(biz_86204_ppp, "data/rds/biz_86204_ppp.rds")
+```
+
+```{r}
+biz_86204_ppp <- read_rds("data/rds/biz_86204_ppp.rds")
 ```
 
 **Combine point events object and owin object**
@@ -770,12 +788,21 @@ H₁ = The distribution of laundry services are not randomly distributed.
 The 95% confident interval will be used.
 
 ```{r}
-clarkevans.test(biz_9601_ppp,
+#| eval: false
+set.seed(1234)
+clarkevans_9601 <- clarkevans.test(biz_9601_ppp,
                 correction="none",
                 clipregion="sg_owin",
                 alternative=c("clustered"),
                 method="MonteCarlo",
                 nsim=99)
+
+write_rds(clarkevans_9601, "data/rds/clarkevans_9601.rds")
+```
+
+```{r}
+clarkevans_9601 <- read_rds("data/rds/clarkevans_9601.rds")
+clarkevans_9601
 ```
 
 ::::: notegoals
@@ -784,7 +811,7 @@ clarkevans.test(biz_9601_ppp,
 :::
 
 ::: notegoals-container
-Laundry service R = 0.59189 & p-value = 0.01 shows **the distribution is not random**. As R value is between 0.5-1.0, there are some clustering in residential areas. It is more dispersed to serve neighbourhood needs, but it is not random.
+Laundry service R = 0.59183 & p-value = 0.05 shows **the distribution is not random**. As R value is between 0.5-1.0, there are some clustering in residential areas. It is more dispersed to serve neighbourhood needs, but it is not random.
 :::
 :::::
 
@@ -799,12 +826,19 @@ H₁ = The distribution of beauty services are not randomly distributed. '
 The 95% confident interval will be used.
 
 ```{r}
-clarkevans.test(biz_9602_ppp,
+set.seed(1234)
+clarkevans_9602 <- clarkevans.test(biz_9602_ppp,
                 correction="none",
                 clipregion="sg_owin",
                 alternative=c("clustered"),
                 method="MonteCarlo",
                 nsim=99)
+write_rds(clarkevans_9602, "data/rds/clarkevans_9602.rds")
+```
+
+```{r}
+clarkevans_9602 <- read_rds("data/rds/clarkevans_9602.rds")
+clarkevans_9602
 ```
 
 ::::: notegoals
@@ -813,7 +847,7 @@ clarkevans.test(biz_9602_ppp,
 :::
 
 ::: notegoals-container
-Beauty services R = 0.36 & p-value = 0.01 indicates that they are not random. The R value is 0.0-0.5, showing **strong clustering**, meaning that the points are very close together.
+Beauty services R = 0.35901 & p-value = 0.05 indicates that they are not random. The R value is 0.0-0.5, showing **strong clustering**, meaning that the points are very close together.
 :::
 :::::
 
@@ -828,12 +862,19 @@ H₁ = The distribution of dental services are not randomly distributed.
 The 95% confident interval will be used.
 
 ```{r}
-clarkevans.test(biz_86204_ppp,
+set.seed(1234)
+clarkevans_86204 <- clarkevans.test(biz_86204_ppp,
                 correction="none",
                 clipregion="sg_owin",
                 alternative=c("clustered"),
                 method="MonteCarlo",
                 nsim=99)
+write_rds(clarkevans_86204, "data/rds/clarkevans_86204.rds")
+```
+
+```{r}
+clarkevans_86204 <- read_rds("data/rds/clarkevans_86204.rds")
+clarkevans_86204
 ```
 
 ::::: notegoals
@@ -842,7 +883,7 @@ clarkevans.test(biz_86204_ppp,
 :::
 
 ::: notegoals-container
-Dental service R = 0.49043 & p-value = 0.01, so the distribution of dental businesses are not random. As R value is around 0.5, it shows moderate to strong clustering. This is possibly due to medical professional buildings or proximity to hospitals.
+Dental service R = 0.49038 & p-value = 0.05, so the distribution of dental businesses are not random. As R value is around 0.5, it shows moderate to strong clustering. This is possibly due to medical professional buildings or proximity to hospitals.
 :::
 :::::
 ::::::::::::
@@ -948,7 +989,7 @@ Jaundry, Beauty, and Dental business types have 150, 1762 and 81 points respecti
 
 #### 3.2.1 Visualise business entity points by quarter
 
-::::::::: panel-tabset
+:::::::::::: panel-tabset
 ## Laundry Services
 
 ```{r}
@@ -1075,7 +1116,6 @@ Dental service establishments demonstrate a distinctly concentrated spatial stra
 This pattern also shows that **dental healthcare accessibility gaps** do exist in northern and outer western areas. Future urban planning should consider medical service corridors to improve healthcare distribution in underserved areas.
 :::
 :::::
-
 ::::::::::::
 
 #### 3.2.2 Compute Spatio-Temporal STKDE by quarter
@@ -1313,6 +1353,13 @@ set.seed(1222)
 ```{r}
 par(bg = "#EEEEEE")
 F_9601 = Fest(biz_9601_ppp)
+write_rds(F_9601, "data/rds/F_9601.rds")
+
+```
+
+```{r}
+par(bg = "#EEEEEE")
+F_9601 <- read_rds("data/rds/F_9601.rds")
 plot(F_9601)
 ```
 
@@ -1325,15 +1372,19 @@ H₀ = The distribution of laundry services are randomly distributed.
 H₁ = The distribution of laundry services are not randomly distributed. The null hypothesis will be rejected is p-value is smaller than alpha value of 0.05.
 
 ```{r}
-F_9601.csr <- envelope(biz_9601_ppp, Fest, correction = "all", nsim = 39)
+F_9601.csr <- envelope(biz_9601_ppp, Fest, correction = "all", nsim = 99)
+write_rds(F_9601.csr, "data/rds/F_9601.csr")
 ```
+
 
 ### Plot simulation
 
 ```{r}
 par(bg = "#EEEEEE")
+F_9601.csr <- read_rds("data/rds/F_9601.csr")
 plot(F_9601.csr)
 ```
+
 
 ::::: notegoals
 ::: notegoals-header
@@ -1353,6 +1404,15 @@ For beauty services such as hair salons, manicure and pedicure, personal care se
 
 ```{r}
 L_9602 = Lest(biz_9602_ppp, correction = "Ripley")
+```
+
+```{r}
+L_9602 <- write_rds(L_9602, "data/rds/L_9602.rds")
+```
+
+```{r}
+par(bg = "#EEEEEE")
+L_9602 <- read_rds("data/rds/L_9602.rds")
 plot(L_9602, . -r ~ r, ylab = "L(d)-r", xlab = "d(m)")
 ```
 
@@ -1367,12 +1427,16 @@ H₁ = The distribution of Beauty services are not randomly distributed.
 The null hypothesis will be rejected if p-value is smaller than alpha value of 0.05.
 
 ```{r}
-L_9602.csr <- envelope(biz_9602_ppp, Lest, nsim = 39, rank = 1)
+#| eval: false
+L_9602.csr <- envelope(biz_9602_ppp, Lest, nsim = 99, rank = 1)
+write_rds(L_9602.csr, "data/rds/L_9602.csr")
 ```
 
 ### Plot L-function test
 
 ```{r}
+par(bg = "#EEEEEE")
+L_9602.csr <- read_rds("data/rds/L_9602.csr")
 plot(L_9602.csr, . - r ~ r, xlab = "d", ylab = "L(d)-r")
 ```
 
@@ -1397,6 +1461,7 @@ For dental services, we will use G-function to analyse the nearest neighbor dist
 ### G-function estimate
 
 ```{r}
+par(bg = "#EEEEEE")
 G_86204 = Lest(biz_86204_ppp, correction = "border")
 plot(G_86204, xlim = c(0, 500))
 ```
@@ -1412,12 +1477,15 @@ H₁ = The distribution of Beauty services are not randomly distributed.
 The null hypothesis will be rejected if p-value is smaller than alpha value of 0.05.
 
 ```{r}
-G_86204.csr <- envelope(biz_86204_ppp, Gest, nsim = 39)
+G_86204.csr <- envelope(biz_86204_ppp, Gest, nsim = 99)
+write_rds(G_86204.csr, "data/rds/G_86204.csr")
 ```
 
 ### Plot G-function test
 
 ```{r}
+par(bg = "#EEEEEE")
+G_86204.csr <- read_rds("data/rds/G_86204.csr")
 plot(G_86204.csr)
 ```
 
@@ -1434,7 +1502,7 @@ The observed line is completely above the envelope, and shows a very strong clus
 
 ### 4.2 Spatio-Temporal analysis
 
-:::::::::::::::::: panel-tabset
+::::::::::::::::::::: panel-tabset
 ## Laundry Services
 
 ### Perform F-function estimation
@@ -1478,7 +1546,9 @@ H₁= The distribution of laundry services is not randomly distributed.
 Alpha value = 0.05.
 
 ```{r}
-F_9601_quarter.csr <- lapply(biz_9601_quarter_split, function(x) envelope(x, Fest, nsim = 39))
+#| eval: false
+F_9601_quarter.csr <- lapply(biz_9601_quarter_split, function(x) envelope(x, Fest, nsim = 99))
+write_rds(F_9601_quarter.csr, "data/rds/F_9601_quarter.csr")
 ```
 
 ### Plot result of test
@@ -1487,6 +1557,7 @@ F_9601_quarter.csr <- lapply(biz_9601_quarter_split, function(x) envelope(x, Fes
 #| fig-width: 12
 #| fig-height: 12
 par(mfrow = c(3, 2), bg = "#EEEEEE")
+F_9601_quarter.csr <- read_rds("data/rds/F_9601_quarter.csr")
 biz_9601_quarter_labels <- c(paste0("2024-Q", 1:4), paste0("2025-Q", 1:2))
 
 for (i in 1:6) {
@@ -1550,7 +1621,9 @@ H₁= The distribution of laundry services is not randomly distributed.
 Alpha value = 0.05.
 
 ```{r}
-L_9602_quarter.csr <- lapply(biz_9602_quarter_split, function(x) envelope(x, Lest, nsim = 39))
+#| eval: false
+L_9602_quarter.csr <- lapply(biz_9602_quarter_split, function(x) envelope(x, Lest, nsim = 99))
+write_rds(L_9602_quarter.csr, "data/rds/L_9602_quarter.csr")
 ```
 
 ### Plot result of test
@@ -1560,6 +1633,7 @@ L_9602_quarter.csr <- lapply(biz_9602_quarter_split, function(x) envelope(x, Les
 #| fig-height: 12
 
 par(mfrow = c(3, 2), bg = "#EEEEEE")
+L_9602_quarter.csr <- read_rds("data/rds/L_9602_quarter.csr")
 biz_9602_quarter_labels <- c(paste0("2024-Q", 1:4), paste0("2025-Q", 1:2))
 
 for (i in 1:6) {
@@ -1623,7 +1697,9 @@ Hypothesis test: H₀ = The distribution of laundry services is randomly distrib
 Alpha value = 0.05.
 
 ```{r}
+#| eval: false
 G_86204_quarter.csr <- lapply(biz_86204_quarter_split, function(x) envelope(x, Gest, nsim = 39))
+write_rds(G_86204_quarter.csr, "data/rds/G_86204_quarter.csr")
 ```
 
 ### Plot result of test
@@ -1632,6 +1708,7 @@ G_86204_quarter.csr <- lapply(biz_86204_quarter_split, function(x) envelope(x, G
 #| fig-width: 12
 #| fig-height: 12
 par(mfrow = c(3, 2), bg = "#EEEEEE")
+G_86204_quarter.csr <- read_rds("data/rds/G_86204_quarter.csr")
 biz_86204_quarter_labels <- c(paste0("2024-Q", 1:4), paste0("2025-Q", 1:2))
 
 for (i in 1:6) {
@@ -1645,14 +1722,14 @@ for (i in 1:6) {
 :::
 
 ::: notegoals-container
--  **Strong clustering quarters like 2024-Q1, 2024-Q3, 2024-Q4, 2025-Q2**: have multiple distance ranges showing significant clustering and suggests these are periods of active medical district development.
+-   **Strong clustering quarters like 2024-Q1, 2024-Q3, 2024-Q4, 2025-Q2**: have multiple distance ranges showing significant clustering and suggests these are periods of active medical district development.
 
 -   **Weak clustering quarters 2024-Q2 & 2025-Q1**: Their observed patterns are mostly within envelope, meaning it's more random spatial distribution of new establishments. In these 2 quarters, the market conditions may have favored dispersed rather than clustered locations.
 
 -   Overall dental clustering patterns could be dynamic and context-dependent rather than consistently uniform. Some periods favor medical complex development with tight clustering and other periods see district expansion with medium-distance clustering. Market conditions can influence whether new practices cluster tightly or spread out.
 :::
 :::::
-::::::::::::::::::
+:::::::::::::::::::::
 
 ## 5 Conclusion
 
