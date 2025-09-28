@@ -3181,27 +3181,16 @@ Done.</code></pre>
 <p>H₁ = The distribution of Beauty services are not randomly distributed.</p>
 <p>The null hypothesis will be rejected if p-value is smaller than alpha value of 0.05.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a>G_86204.csr <span class="ot">&lt;-</span> <span class="fu">envelope</span>(biz_86204_ppp, Gest, <span class="at">nsim =</span> <span class="dv">99</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Generating 99 simulations of CSR  ...
-1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
-41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60,
-61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80,
-81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 
-99.
-
-Done.</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(G_86204.csr, <span class="st">"data/rds/G_86204.csr"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a>G_86204.csr <span class="ot">&lt;-</span> <span class="fu">envelope</span>(biz_86204_ppp, Gest, <span class="at">nsim =</span> <span class="dv">99</span>)</span>
+<span id="cb109-2"><a href="#cb109-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(G_86204.csr, <span class="st">"data/rds/G_86204.csr"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="plot-g-function-test" class="level3">
 <h3 class="anchored" data-anchor-id="plot-g-function-test">Plot G-function test</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb112"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
-<span id="cb112-2"><a href="#cb112-2" aria-hidden="true" tabindex="-1"></a>G_86204.csr <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/G_86204.csr"</span>)</span>
-<span id="cb112-3"><a href="#cb112-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(G_86204.csr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
+<span id="cb110-2"><a href="#cb110-2" aria-hidden="true" tabindex="-1"></a>G_86204.csr <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/G_86204.csr"</span>)</span>
+<span id="cb110-3"><a href="#cb110-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(G_86204.csr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -3232,17 +3221,17 @@ Done.</code></pre>
 <section id="perform-f-function-estimation" class="level3">
 <h3 class="anchored" data-anchor-id="perform-f-function-estimation">Perform F-function estimation</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb113"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a>biz_9601_quarter_split <span class="ot">&lt;-</span> <span class="fu">split</span>(biz_9601_quarter_owin, <span class="at">f =</span> <span class="fu">as.factor</span>(<span class="fu">marks</span>(biz_9601_quarter_owin)))</span>
-<span id="cb113-2"><a href="#cb113-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb113-3"><a href="#cb113-3" aria-hidden="true" tabindex="-1"></a>F_9601_quarter <span class="ot">&lt;-</span> <span class="fu">lapply</span>(biz_9601_quarter_split, Fest)</span>
-<span id="cb113-4"><a href="#cb113-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb113-5"><a href="#cb113-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">2</span>), <span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
-<span id="cb113-6"><a href="#cb113-6" aria-hidden="true" tabindex="-1"></a>biz_9601_quarter_names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"2024-Q1"</span>, <span class="st">"2024-Q2"</span>, <span class="st">"2024-Q3"</span>, <span class="st">"2024-Q4"</span>, <span class="st">"2025-Q1"</span>, <span class="st">"2025-Q2"</span>)</span>
-<span id="cb113-7"><a href="#cb113-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb113-8"><a href="#cb113-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>) {</span>
-<span id="cb113-9"><a href="#cb113-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(F_9601_quarter[[i]],</span>
-<span id="cb113-10"><a href="#cb113-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Laundry Services F-function -"</span>, biz_9601_quarter_names[i]))</span>
-<span id="cb113-11"><a href="#cb113-11" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a>biz_9601_quarter_split <span class="ot">&lt;-</span> <span class="fu">split</span>(biz_9601_quarter_owin, <span class="at">f =</span> <span class="fu">as.factor</span>(<span class="fu">marks</span>(biz_9601_quarter_owin)))</span>
+<span id="cb111-2"><a href="#cb111-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb111-3"><a href="#cb111-3" aria-hidden="true" tabindex="-1"></a>F_9601_quarter <span class="ot">&lt;-</span> <span class="fu">lapply</span>(biz_9601_quarter_split, Fest)</span>
+<span id="cb111-4"><a href="#cb111-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb111-5"><a href="#cb111-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">2</span>), <span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
+<span id="cb111-6"><a href="#cb111-6" aria-hidden="true" tabindex="-1"></a>biz_9601_quarter_names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"2024-Q1"</span>, <span class="st">"2024-Q2"</span>, <span class="st">"2024-Q3"</span>, <span class="st">"2024-Q4"</span>, <span class="st">"2025-Q1"</span>, <span class="st">"2025-Q2"</span>)</span>
+<span id="cb111-7"><a href="#cb111-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb111-8"><a href="#cb111-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>) {</span>
+<span id="cb111-9"><a href="#cb111-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(F_9601_quarter[[i]],</span>
+<span id="cb111-10"><a href="#cb111-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Laundry Services F-function -"</span>, biz_9601_quarter_names[i]))</span>
+<span id="cb111-11"><a href="#cb111-11" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -3267,20 +3256,20 @@ Done.</code></pre>
 <p>H₁= The distribution of laundry services is not randomly distributed.</p>
 <p>Alpha value = 0.05.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb114"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a>F_9601_quarter.csr <span class="ot">&lt;-</span> <span class="fu">lapply</span>(biz_9601_quarter_split, <span class="cf">function</span>(x) <span class="fu">envelope</span>(x, Fest, <span class="at">nsim =</span> <span class="dv">99</span>))</span>
-<span id="cb114-2"><a href="#cb114-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(F_9601_quarter.csr, <span class="st">"data/rds/F_9601_quarter.csr"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb112"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a>F_9601_quarter.csr <span class="ot">&lt;-</span> <span class="fu">lapply</span>(biz_9601_quarter_split, <span class="cf">function</span>(x) <span class="fu">envelope</span>(x, Fest, <span class="at">nsim =</span> <span class="dv">99</span>))</span>
+<span id="cb112-2"><a href="#cb112-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(F_9601_quarter.csr, <span class="st">"data/rds/F_9601_quarter.csr"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="plot-result-of-test" class="level3">
 <h3 class="anchored" data-anchor-id="plot-result-of-test">Plot result of test</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb115"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">2</span>), <span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
-<span id="cb115-2"><a href="#cb115-2" aria-hidden="true" tabindex="-1"></a>F_9601_quarter.csr <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/F_9601_quarter.csr"</span>)</span>
-<span id="cb115-3"><a href="#cb115-3" aria-hidden="true" tabindex="-1"></a>biz_9601_quarter_labels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">paste0</span>(<span class="st">"2024-Q"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>), <span class="fu">paste0</span>(<span class="st">"2025-Q"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>))</span>
-<span id="cb115-4"><a href="#cb115-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb115-5"><a href="#cb115-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>) {</span>
-<span id="cb115-6"><a href="#cb115-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(F_9601_quarter.csr[[i]], <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Laundry F-function:"</span>, biz_9601_quarter_labels[i]))</span>
-<span id="cb115-7"><a href="#cb115-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb113"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">2</span>), <span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
+<span id="cb113-2"><a href="#cb113-2" aria-hidden="true" tabindex="-1"></a>F_9601_quarter.csr <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/F_9601_quarter.csr"</span>)</span>
+<span id="cb113-3"><a href="#cb113-3" aria-hidden="true" tabindex="-1"></a>biz_9601_quarter_labels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">paste0</span>(<span class="st">"2024-Q"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>), <span class="fu">paste0</span>(<span class="st">"2025-Q"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>))</span>
+<span id="cb113-4"><a href="#cb113-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb113-5"><a href="#cb113-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>) {</span>
+<span id="cb113-6"><a href="#cb113-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(F_9601_quarter.csr[[i]], <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Laundry F-function:"</span>, biz_9601_quarter_labels[i]))</span>
+<span id="cb113-7"><a href="#cb113-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -3306,17 +3295,17 @@ Done.</code></pre>
 <section id="perform-l-function-estimation-by-quarter" class="level3">
 <h3 class="anchored" data-anchor-id="perform-l-function-estimation-by-quarter">Perform L-function estimation by quarter</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a>biz_9602_quarter_split <span class="ot">&lt;-</span> <span class="fu">split</span>(biz_9602_quarter_owin, <span class="at">f =</span> <span class="fu">as.factor</span>(<span class="fu">marks</span>(biz_9602_quarter_owin)))</span>
-<span id="cb116-2"><a href="#cb116-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb116-3"><a href="#cb116-3" aria-hidden="true" tabindex="-1"></a>L_9602_quarter <span class="ot">&lt;-</span> <span class="fu">lapply</span>(biz_9602_quarter_split, Lest)</span>
-<span id="cb116-4"><a href="#cb116-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb116-5"><a href="#cb116-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfcol =</span> <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">2</span>), <span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
-<span id="cb116-6"><a href="#cb116-6" aria-hidden="true" tabindex="-1"></a>biz_9602_quarter_names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"2024-Q1"</span>, <span class="st">"2024-Q2"</span>, <span class="st">"2024-Q3"</span>, <span class="st">"2024-Q4"</span>,<span class="st">"2025-Q1"</span>, <span class="st">"2025-Q2"</span>)</span>
-<span id="cb116-7"><a href="#cb116-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb116-8"><a href="#cb116-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>) {</span>
-<span id="cb116-9"><a href="#cb116-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(L_9602_quarter[[i]],</span>
-<span id="cb116-10"><a href="#cb116-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Beauty Services L-function -"</span>, biz_9602_quarter_names[i]))</span>
-<span id="cb116-11"><a href="#cb116-11" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb114"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a>biz_9602_quarter_split <span class="ot">&lt;-</span> <span class="fu">split</span>(biz_9602_quarter_owin, <span class="at">f =</span> <span class="fu">as.factor</span>(<span class="fu">marks</span>(biz_9602_quarter_owin)))</span>
+<span id="cb114-2"><a href="#cb114-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb114-3"><a href="#cb114-3" aria-hidden="true" tabindex="-1"></a>L_9602_quarter <span class="ot">&lt;-</span> <span class="fu">lapply</span>(biz_9602_quarter_split, Lest)</span>
+<span id="cb114-4"><a href="#cb114-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb114-5"><a href="#cb114-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfcol =</span> <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">2</span>), <span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
+<span id="cb114-6"><a href="#cb114-6" aria-hidden="true" tabindex="-1"></a>biz_9602_quarter_names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"2024-Q1"</span>, <span class="st">"2024-Q2"</span>, <span class="st">"2024-Q3"</span>, <span class="st">"2024-Q4"</span>,<span class="st">"2025-Q1"</span>, <span class="st">"2025-Q2"</span>)</span>
+<span id="cb114-7"><a href="#cb114-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb114-8"><a href="#cb114-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>) {</span>
+<span id="cb114-9"><a href="#cb114-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(L_9602_quarter[[i]],</span>
+<span id="cb114-10"><a href="#cb114-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Beauty Services L-function -"</span>, biz_9602_quarter_names[i]))</span>
+<span id="cb114-11"><a href="#cb114-11" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -3345,20 +3334,20 @@ Done.</code></pre>
 <p>H₁= The distribution of laundry services is not randomly distributed.</p>
 <p>Alpha value = 0.05.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb117"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a>L_9602_quarter.csr <span class="ot">&lt;-</span> <span class="fu">lapply</span>(biz_9602_quarter_split, <span class="cf">function</span>(x) <span class="fu">envelope</span>(x, Lest, <span class="at">nsim =</span> <span class="dv">99</span>))</span>
-<span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(L_9602_quarter.csr, <span class="st">"data/rds/L_9602_quarter.csr"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb115"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" aria-hidden="true" tabindex="-1"></a>L_9602_quarter.csr <span class="ot">&lt;-</span> <span class="fu">lapply</span>(biz_9602_quarter_split, <span class="cf">function</span>(x) <span class="fu">envelope</span>(x, Lest, <span class="at">nsim =</span> <span class="dv">99</span>))</span>
+<span id="cb115-2"><a href="#cb115-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(L_9602_quarter.csr, <span class="st">"data/rds/L_9602_quarter.csr"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="plot-result-of-test-1" class="level3">
 <h3 class="anchored" data-anchor-id="plot-result-of-test-1">Plot result of test</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb118"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">2</span>), <span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
-<span id="cb118-2"><a href="#cb118-2" aria-hidden="true" tabindex="-1"></a>L_9602_quarter.csr <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/L_9602_quarter.csr"</span>)</span>
-<span id="cb118-3"><a href="#cb118-3" aria-hidden="true" tabindex="-1"></a>biz_9602_quarter_labels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">paste0</span>(<span class="st">"2024-Q"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>), <span class="fu">paste0</span>(<span class="st">"2025-Q"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>))</span>
-<span id="cb118-4"><a href="#cb118-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb118-5"><a href="#cb118-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>) {</span>
-<span id="cb118-6"><a href="#cb118-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(L_9602_quarter.csr[[i]], <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Beauty L-function:"</span>, biz_9602_quarter_labels[i]))</span>
-<span id="cb118-7"><a href="#cb118-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">2</span>), <span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
+<span id="cb116-2"><a href="#cb116-2" aria-hidden="true" tabindex="-1"></a>L_9602_quarter.csr <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/L_9602_quarter.csr"</span>)</span>
+<span id="cb116-3"><a href="#cb116-3" aria-hidden="true" tabindex="-1"></a>biz_9602_quarter_labels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">paste0</span>(<span class="st">"2024-Q"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>), <span class="fu">paste0</span>(<span class="st">"2025-Q"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>))</span>
+<span id="cb116-4"><a href="#cb116-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-5"><a href="#cb116-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>) {</span>
+<span id="cb116-6"><a href="#cb116-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(L_9602_quarter.csr[[i]], <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Beauty L-function:"</span>, biz_9602_quarter_labels[i]))</span>
+<span id="cb116-7"><a href="#cb116-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -3386,17 +3375,17 @@ Done.</code></pre>
 <section id="perform-g-function-estimation-by-quarter" class="level3">
 <h3 class="anchored" data-anchor-id="perform-g-function-estimation-by-quarter">Perform G-function estimation by quarter</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb119"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a>biz_86204_quarter_split <span class="ot">&lt;-</span> <span class="fu">split</span>(biz_86204_quarter_owin, <span class="at">f =</span> <span class="fu">as.factor</span>(<span class="fu">marks</span>(biz_86204_quarter_owin)))</span>
-<span id="cb119-2"><a href="#cb119-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb119-3"><a href="#cb119-3" aria-hidden="true" tabindex="-1"></a>G_86204_quarter <span class="ot">&lt;-</span> <span class="fu">lapply</span>(biz_86204_quarter_split, Gest)</span>
-<span id="cb119-4"><a href="#cb119-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb119-5"><a href="#cb119-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">2</span>), <span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
-<span id="cb119-6"><a href="#cb119-6" aria-hidden="true" tabindex="-1"></a>biz_86204_quarter_names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"2024-Q1"</span>, <span class="st">"2024-Q2"</span>, <span class="st">"2024-Q3"</span>, <span class="st">"2024-Q4"</span>, <span class="st">"2025-Q1"</span>, <span class="st">"2025-Q2"</span>, <span class="st">"2025-Q3"</span>, <span class="st">"2025-Q4"</span>)</span>
-<span id="cb119-7"><a href="#cb119-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb119-8"><a href="#cb119-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>) {</span>
-<span id="cb119-9"><a href="#cb119-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(G_86204_quarter[[i]], <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">3000</span>),</span>
-<span id="cb119-10"><a href="#cb119-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Dental Services G-function -"</span>, biz_86204_quarter_names[i]))</span>
-<span id="cb119-11"><a href="#cb119-11" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb117"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a>biz_86204_quarter_split <span class="ot">&lt;-</span> <span class="fu">split</span>(biz_86204_quarter_owin, <span class="at">f =</span> <span class="fu">as.factor</span>(<span class="fu">marks</span>(biz_86204_quarter_owin)))</span>
+<span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb117-3"><a href="#cb117-3" aria-hidden="true" tabindex="-1"></a>G_86204_quarter <span class="ot">&lt;-</span> <span class="fu">lapply</span>(biz_86204_quarter_split, Gest)</span>
+<span id="cb117-4"><a href="#cb117-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb117-5"><a href="#cb117-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">2</span>), <span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
+<span id="cb117-6"><a href="#cb117-6" aria-hidden="true" tabindex="-1"></a>biz_86204_quarter_names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"2024-Q1"</span>, <span class="st">"2024-Q2"</span>, <span class="st">"2024-Q3"</span>, <span class="st">"2024-Q4"</span>, <span class="st">"2025-Q1"</span>, <span class="st">"2025-Q2"</span>, <span class="st">"2025-Q3"</span>, <span class="st">"2025-Q4"</span>)</span>
+<span id="cb117-7"><a href="#cb117-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb117-8"><a href="#cb117-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>) {</span>
+<span id="cb117-9"><a href="#cb117-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(G_86204_quarter[[i]], <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">3000</span>),</span>
+<span id="cb117-10"><a href="#cb117-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Dental Services G-function -"</span>, biz_86204_quarter_names[i]))</span>
+<span id="cb117-11"><a href="#cb117-11" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -3422,20 +3411,20 @@ Done.</code></pre>
 <p>Hypothesis test: H₀ = The distribution of laundry services is randomly distributed. H₁= The distribution of laundry services is not randomly distributed.</p>
 <p>Alpha value = 0.05.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb120"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a>G_86204_quarter.csr <span class="ot">&lt;-</span> <span class="fu">lapply</span>(biz_86204_quarter_split, <span class="cf">function</span>(x) <span class="fu">envelope</span>(x, Gest, <span class="at">nsim =</span> <span class="dv">39</span>))</span>
-<span id="cb120-2"><a href="#cb120-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(G_86204_quarter.csr, <span class="st">"data/rds/G_86204_quarter.csr"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb118"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a>G_86204_quarter.csr <span class="ot">&lt;-</span> <span class="fu">lapply</span>(biz_86204_quarter_split, <span class="cf">function</span>(x) <span class="fu">envelope</span>(x, Gest, <span class="at">nsim =</span> <span class="dv">99</span>))</span>
+<span id="cb118-2"><a href="#cb118-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(G_86204_quarter.csr, <span class="st">"data/rds/G_86204_quarter.csr"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="plot-result-of-test-2" class="level3">
 <h3 class="anchored" data-anchor-id="plot-result-of-test-2">Plot result of test</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb121"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">2</span>), <span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
-<span id="cb121-2"><a href="#cb121-2" aria-hidden="true" tabindex="-1"></a>G_86204_quarter.csr <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/G_86204_quarter.csr"</span>)</span>
-<span id="cb121-3"><a href="#cb121-3" aria-hidden="true" tabindex="-1"></a>biz_86204_quarter_labels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">paste0</span>(<span class="st">"2024-Q"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>), <span class="fu">paste0</span>(<span class="st">"2025-Q"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>))</span>
-<span id="cb121-4"><a href="#cb121-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb121-5"><a href="#cb121-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>) {</span>
-<span id="cb121-6"><a href="#cb121-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(G_86204_quarter.csr[[i]], <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">3000</span>), <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Dental G-function:"</span>, biz_86204_quarter_labels[i]))</span>
-<span id="cb121-7"><a href="#cb121-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb119"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">2</span>), <span class="at">bg =</span> <span class="st">"#EEEEEE"</span>)</span>
+<span id="cb119-2"><a href="#cb119-2" aria-hidden="true" tabindex="-1"></a>G_86204_quarter.csr <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/G_86204_quarter.csr"</span>)</span>
+<span id="cb119-3"><a href="#cb119-3" aria-hidden="true" tabindex="-1"></a>biz_86204_quarter_labels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">paste0</span>(<span class="st">"2024-Q"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>), <span class="fu">paste0</span>(<span class="st">"2025-Q"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>))</span>
+<span id="cb119-4"><a href="#cb119-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb119-5"><a href="#cb119-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>) {</span>
+<span id="cb119-6"><a href="#cb119-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(G_86204_quarter.csr[[i]], <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">3000</span>), <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Dental G-function:"</span>, biz_86204_quarter_labels[i]))</span>
+<span id="cb119-7"><a href="#cb119-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">

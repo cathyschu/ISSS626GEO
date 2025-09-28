@@ -1477,6 +1477,7 @@ H₁ = The distribution of Beauty services are not randomly distributed.
 The null hypothesis will be rejected if p-value is smaller than alpha value of 0.05.
 
 ```{r}
+#| eval: false
 G_86204.csr <- envelope(biz_86204_ppp, Gest, nsim = 99)
 write_rds(G_86204.csr, "data/rds/G_86204.csr")
 ```
@@ -1698,7 +1699,7 @@ Alpha value = 0.05.
 
 ```{r}
 #| eval: false
-G_86204_quarter.csr <- lapply(biz_86204_quarter_split, function(x) envelope(x, Gest, nsim = 39))
+G_86204_quarter.csr <- lapply(biz_86204_quarter_split, function(x) envelope(x, Gest, nsim = 99))
 write_rds(G_86204_quarter.csr, "data/rds/G_86204_quarter.csr")
 ```
 
