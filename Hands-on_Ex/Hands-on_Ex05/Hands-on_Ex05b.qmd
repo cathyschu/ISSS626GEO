@@ -13,20 +13,58 @@ execute: #how YML page work
 
 ## 1 Overview
 
+Local Measures of Spatial Autocorrelation (LMSA) focus on the **relationships between each observation and its surroundings**, rather than providing a single summary of these relationships across the map. In this sense, they are not summary statistics but scores that allow us to learn more about the spatial structure in our data.
+
+The general intuition behind the metrics however is similar to that of global ones. Some of them are even mathematically connected, where the global version can be decomposed into a collection of local ones. One such example are **Local Indicators of Spatial Association (LISA)**. Beside LISA, **Getis-Ord’s Gi-statistics** will be introduce as an alternative LMSA statistics that present complementary information or allow us to obtain similar insights for geographically referenced data.
+
+### Objectives
+
+In this hands-on exercise, we will compute Local Measures of Spatial Autocorrelation (LMSA) by using [**sfdep**](https://sfdep.josiahparry.com/) package. We wil do the following:
+
+-   import geospatial data using appropriate function(s) of **sf** package,
+-   import csv file using appropriate function of **readr** package,
+-   perform relational join using appropriate join function of **dplyr** package,
+-   compute Local Indicator of Spatial Association (LISA) statistics for detecting clusters and outliers by using appropriate functions **sfdep** package;
+-   compute Getis-Ord’s Gi-statistics for detecting hot spot or/and cold spot area by using appropriate functions of **sfdep** package; and to visualise the analysis output by using **tmap** package.
 
 ## 2 Getting started
 
 ### 2.1 The analytical question
 
-### 2.2 Setting the Analytical Toolls
+In spatial policy, one of the main development objective of the local govenment and planners is to ensure equal distribution of development in the province. Our task in this study, hence, is to apply appropriate spatial statistical methods to **discover if development are evenly distributed geographically**. If the answer is **No**. Then, our next question will be [“is there sign of spatial clustering?”]{style="color: #B95E82;"}. And, if the answer for this question is **yes**, then our next question will be [“where are these clusters?”]{style="color: #B95E82;"}
+
+In this case study, we are interested to examine the spatial pattern of a selected development indicator (i.e. GDP per capita) of Hunan Provice, People Republic of China.(https://en.wikipedia.org/wiki/Hunan)
+
+### 2.2 Setting the Analytical Tools
+
+We will use **sf**, **sfdep**, **tmap** and **tidyverse** packages of R.
+
+| R package | Description |
+|--------------|----------------------------------------------------------|
+| sf | importing and handling geospatial data in R |
+| tidyverse | wrangling attribute data in R |
+| sfdep | compute spatial weights, global and local spatial autocorrelation statistics |
+| tmap | prepare cartographic quality choropleth map |
+
+The code chunk below is used to perform the following tasks:
+
+-   creating a package list containing the necessary R packages,
+-   checking if the R packages in the package list have been installed in R, if they have yet to be installed, RStudio will installed the missing packages,
+-   launching the packages into R environment.
 
 ```{r}
-pacman::p_load(sf, tidyverse, spdep, tmap)
+pacman::p_load(sf, tidyverse, sfdep, tmap)
 ```
 
 ## 3 The data
 
 ### 3.1 The Study Area and Data
+
+Two data sets will be used in this hands-on exercise, they are:
+
+-   Hunan province administrative boundary layer at county level. This is a geospatial data set in ESRI shapefile format.
+
+-   Hunan_2012.csv: This csv file contains selected Hunan’s local development indicators in 2012.
 
 ### 3.2 Import shapefile into R environment
 
@@ -46,13 +84,11 @@ pacman::p_load(sf, tidyverse, spdep, tmap)
 
 ### 4.4 Preparing and Visualising LISA Map
 
-
 ## 5 Hot Spots and Cold Spots Analysis (HCSA)
-
 
 ## 5.1 Deriving distance weight matrix
 
-## 5.2 Computing local Gi*
+## 5.2 Computing local Gi\*
 
 ### 5.3 Preparing and Visualising HCSA Map
 

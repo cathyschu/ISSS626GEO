@@ -231,11 +231,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">1 Overview</a></li>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">1 Overview</a>
+  <ul class="collapse">
+  <li><a href="#objectives" id="toc-objectives" class="nav-link" data-scroll-target="#objectives">Objectives</a></li>
+  </ul></li>
   <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started">2 Getting started</a>
   <ul class="collapse">
   <li><a href="#the-analytical-question" id="toc-the-analytical-question" class="nav-link" data-scroll-target="#the-analytical-question">2.1 The analytical question</a></li>
-  <li><a href="#setting-the-analytical-toolls" id="toc-setting-the-analytical-toolls" class="nav-link" data-scroll-target="#setting-the-analytical-toolls">2.2 Setting the Analytical Toolls</a></li>
+  <li><a href="#setting-the-analytical-tools" id="toc-setting-the-analytical-tools" class="nav-link" data-scroll-target="#setting-the-analytical-tools">2.2 Setting the Analytical Tools</a></li>
   </ul></li>
   <li><a href="#the-data" id="toc-the-data" class="nav-link" data-scroll-target="#the-data">3 The data</a>
   <ul class="collapse">
@@ -304,16 +307,68 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="overview" class="level2">
 <h2 class="anchored" data-anchor-id="overview">1 Overview</h2>
+<p>Local Measures of Spatial Autocorrelation (LMSA) focus on the <strong>relationships between each observation and its surroundings</strong>, rather than providing a single summary of these relationships across the map. In this sense, they are not summary statistics but scores that allow us to learn more about the spatial structure in our data.</p>
+<p>The general intuition behind the metrics however is similar to that of global ones. Some of them are even mathematically connected, where the global version can be decomposed into a collection of local ones. One such example are <strong>Local Indicators of Spatial Association (LISA)</strong>. Beside LISA, <strong>Getis-Ord’s Gi-statistics</strong> will be introduce as an alternative LMSA statistics that present complementary information or allow us to obtain similar insights for geographically referenced data.</p>
+<section id="objectives" class="level3">
+<h3 class="anchored" data-anchor-id="objectives">Objectives</h3>
+<p>In this hands-on exercise, we will compute Local Measures of Spatial Autocorrelation (LMSA) by using <a href="https://sfdep.josiahparry.com/"><strong>sfdep</strong></a> package. We wil do the following:</p>
+<ul>
+<li>import geospatial data using appropriate function(s) of <strong>sf</strong> package,</li>
+<li>import csv file using appropriate function of <strong>readr</strong> package,</li>
+<li>perform relational join using appropriate join function of <strong>dplyr</strong> package,</li>
+<li>compute Local Indicator of Spatial Association (LISA) statistics for detecting clusters and outliers by using appropriate functions <strong>sfdep</strong> package;</li>
+<li>compute Getis-Ord’s Gi-statistics for detecting hot spot or/and cold spot area by using appropriate functions of <strong>sfdep</strong> package; and to visualise the analysis output by using <strong>tmap</strong> package.</li>
+</ul>
+</section>
 </section>
 <section id="getting-started" class="level2">
 <h2 class="anchored" data-anchor-id="getting-started">2 Getting started</h2>
 <section id="the-analytical-question" class="level3">
 <h3 class="anchored" data-anchor-id="the-analytical-question">2.1 The analytical question</h3>
+<p>In spatial policy, one of the main development objective of the local govenment and planners is to ensure equal distribution of development in the province. Our task in this study, hence, is to apply appropriate spatial statistical methods to <strong>discover if development are evenly distributed geographically</strong>. If the answer is <strong>No</strong>. Then, our next question will be <span style="color: #B95E82;">“is there sign of spatial clustering?”</span>. And, if the answer for this question is <strong>yes</strong>, then our next question will be <span style="color: #B95E82;">“where are these clusters?”</span></p>
+<p>In this case study, we are interested to examine the spatial pattern of a selected development indicator (i.e.&nbsp;GDP per capita) of Hunan Provice, People Republic of China.(https://en.wikipedia.org/wiki/Hunan)</p>
 </section>
-<section id="setting-the-analytical-toolls" class="level3">
-<h3 class="anchored" data-anchor-id="setting-the-analytical-toolls">2.2 Setting the Analytical Toolls</h3>
+<section id="setting-the-analytical-tools" class="level3">
+<h3 class="anchored" data-anchor-id="setting-the-analytical-tools">2.2 Setting the Analytical Tools</h3>
+<p>We will use <strong>sf</strong>, <strong>sfdep</strong>, <strong>tmap</strong> and <strong>tidyverse</strong> packages of R.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 19%">
+<col style="width: 80%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>R package</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>sf</td>
+<td>importing and handling geospatial data in R</td>
+</tr>
+<tr class="even">
+<td>tidyverse</td>
+<td>wrangling attribute data in R</td>
+</tr>
+<tr class="odd">
+<td>sfdep</td>
+<td>compute spatial weights, global and local spatial autocorrelation statistics</td>
+</tr>
+<tr class="even">
+<td>tmap</td>
+<td>prepare cartographic quality choropleth map</td>
+</tr>
+</tbody>
+</table>
+<p>The code chunk below is used to perform the following tasks:</p>
+<ul>
+<li>creating a package list containing the necessary R packages,</li>
+<li>checking if the R packages in the package list have been installed in R, if they have yet to be installed, RStudio will installed the missing packages,</li>
+<li>launching the packages into R environment.</li>
+</ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(sf, tidyverse, spdep, tmap)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(sf, tidyverse, sfdep, tmap)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -321,6 +376,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="the-data">3 The data</h2>
 <section id="the-study-area-and-data" class="level3">
 <h3 class="anchored" data-anchor-id="the-study-area-and-data">3.1 The Study Area and Data</h3>
+<p>Two data sets will be used in this hands-on exercise, they are:</p>
+<ul>
+<li><p>Hunan province administrative boundary layer at county level. This is a geospatial data set in ESRI shapefile format.</p></li>
+<li><p>Hunan_2012.csv: This csv file contains selected Hunan’s local development indicators in 2012.</p></li>
+</ul>
 </section>
 <section id="import-shapefile-into-r-environment" class="level3">
 <h3 class="anchored" data-anchor-id="import-shapefile-into-r-environment">3.2 Import shapefile into R environment</h3>
