@@ -1,0 +1,15 @@
+{
+  "hash": "ddd7333f1d315ad6aeab90c23d93432d",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"05b - Local Measures of Spatial Autocorrelation\"\nauthor: \"Cathy C.\"\ndate: \"Sep 29, 2025\"\ndate-modified: \"last-modified\" #auto render date\nformat: html\nexecute: #how YML page work\n  echo: true #will show code\n  eval: true #will run code every time and show output\n  warning: false #dont show warning msg\n  freeze: true #controls rendering - no render if no changes\n---\n\n\n\n\n## 1 Overview\n\n\n## 2 Getting started\n\n### 2.1 The analytical question\n\n### 2.2 Setting the Analytical Toolls\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\npacman::p_load(sf, tidyverse, spdep, tmap)\n```\n:::\n\n\n\n\n## 3 The data\n\n### 3.1 The Study Area and Data\n\n### 3.2 Import shapefile into R environment\n\n### 3.3 Import csv file into R environment\n\n### 3.4 Performing relational join\n\n### 3.5 Visualising Regional Development Indicator\n\n## 4 Local Indicators of Spatial Association(LISA)\n\n### 4.1 Computing Contiguity Spatial Weights\n\n### 4.2 Row-standardised weights matrix\n\n### 4.3 Computing local Moran’s I\n\n### 4.4 Preparing and Visualising LISA Map\n\n\n## 5 Hot Spots and Cold Spots Analysis (HCSA)\n\n\n## 5.1 Deriving distance weight matrix\n\n## 5.2 Computing local Gi*\n\n### 5.3 Preparing and Visualising HCSA Map\n\n## 6 References\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

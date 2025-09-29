@@ -1461,8 +1461,14 @@ For dental services, we will use G-function to analyse the nearest neighbor dist
 ### G-function estimate
 
 ```{r}
-par(bg = "#EEEEEE")
+#| eval: false
 G_86204 = Lest(biz_86204_ppp, correction = "border")
+write_rds(G_86204, "data/rds/G_86204.rds")
+```
+
+```{r}
+par(bg = "#EEEEEE")
+G_86204 <- read_rds("data/rds/G_86204.rds")
 plot(G_86204, xlim = c(0, 500))
 ```
 

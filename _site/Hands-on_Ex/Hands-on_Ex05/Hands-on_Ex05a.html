@@ -188,6 +188,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="dropdown-item" href="../../In-class_Ex/In-class_Ex04.html">
  <span class="dropdown-text">Exercise 04</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../../In-class_Ex/In-class_Ex05.html">
+ <span class="dropdown-text">Exercise 05</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
@@ -283,7 +287,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">September 27, 2025</p>
+      <p class="date-modified">September 29, 2025</p>
     </div>
   </div>
     
@@ -847,7 +851,13 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <p><strong>Analysis</strong></p>
 </div>
 <div class="markgoals-container">
-
+<ul>
+<li>The result shows strong postive spatial autocorrelation at short distances - Lag 1: C = 0.691, p &lt; 0.001; Lag 2: C = 0.763, p &lt; 0.001</li>
+<li>Between lag 3-4 there is no significant spatial autocorrelatio - C ≈ 1, <strong>p &gt; 0.05</strong></li>
+<li>For long distance, it shows significant negative spatial autocorrelation - Lag 5: C = 1.201, p &lt; 0.001</li>
+<li>The Geary’s C results strongly corroborate the Moran’s I findings, providing robust evidence for the spatial autocorrelation pattern.</li>
+<li>The significant positive autocorrelation at short distances confirms that <strong>areas with similar GDPPC values are geographically clustered together.</strong> The transition from positive to negative autocorrelation suggests a core-periphery economic geography where the economic centers (high GDPPC) cluster together, and these centers are spatially separated from lower GDPPC areas.</li>
+</ul>
 </div>
 </div>
 <p><strong>Class Note:</strong> Spatial autocorrelation is an extention of geographycal summary statistics. It looks at only 1 variable and its relations with the surrounding areas.</p>

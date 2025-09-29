@@ -1,0 +1,59 @@
+---
+title: "05b - Local Measures of Spatial Autocorrelation"
+author: "Cathy C."
+date: "Sep 29, 2025"
+date-modified: "last-modified" #auto render date
+format: html
+execute: #how YML page work
+  echo: true #will show code
+  eval: true #will run code every time and show output
+  warning: false #dont show warning msg
+  freeze: true #controls rendering - no render if no changes
+---
+
+## 1 Overview
+
+
+## 2 Getting started
+
+### 2.1 The analytical question
+
+### 2.2 Setting the Analytical Toolls
+
+```{r}
+pacman::p_load(sf, tidyverse, spdep, tmap)
+```
+
+## 3 The data
+
+### 3.1 The Study Area and Data
+
+### 3.2 Import shapefile into R environment
+
+### 3.3 Import csv file into R environment
+
+### 3.4 Performing relational join
+
+### 3.5 Visualising Regional Development Indicator
+
+## 4 Local Indicators of Spatial Association(LISA)
+
+### 4.1 Computing Contiguity Spatial Weights
+
+### 4.2 Row-standardised weights matrix
+
+### 4.3 Computing local Moran’s I
+
+### 4.4 Preparing and Visualising LISA Map
+
+
+## 5 Hot Spots and Cold Spots Analysis (HCSA)
+
+
+## 5.1 Deriving distance weight matrix
+
+## 5.2 Computing local Gi*
+
+### 5.3 Preparing and Visualising HCSA Map
+
+## 6 References
