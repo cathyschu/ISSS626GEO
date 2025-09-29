@@ -40,7 +40,7 @@ In this case study, we are interested to examine the spatial pattern of a select
 We will use **sf**, **sfdep**, **tmap** and **tidyverse** packages of R.
 
 | R package | Description |
-|------------------------|-----------------------------------------------|
+|-------------------------|-----------------------------------------------|
 | sf | importing and handling geospatial data in R |
 | tidyverse | wrangling attribute data in R |
 | sfdep | compute spatial weights, global and local spatial autocorrelation statistics |
@@ -638,7 +638,6 @@ HCSA_fdw <- hunan_fdw %>%
 ## 5.3 Preparing and Visualising HCSA Map
 
 ::: panel-tabset
-
 ## Gi\* with fix distance weights
 
 Thematic mapping functions of tmaps are used to prepare a choropleth map showing the distribution of Gi\* values.
@@ -666,18 +665,7 @@ The choropleth shows there is evidence for both positive and negative Ii values.
 
 The code chunk below plots a choropleth map of p-values of Gi\* by using functions of **tmap** package.
 
-```{#| fig-width: 12}
-tm_shape(HCSA_fdw) +
-  tm_polygons(fill = "p_sim", 
-              fill.scale = tm_scale_intervals(
-                breaks = c(-Inf, 0.001, 0.01, 0.05, 0.1, Inf),
-                values = "-brewer.Reds"),
-              fill.legend = tm_legend(
-                title = "simulated p-value",
-      position = tm_pos_out())) + 
-  tm_borders(fill_alpha = 0.5) +
-  tm_title("p-values of local Gi* of GDPPC (Fixed distance)")
-```
+`{#| fig-width: 12} tm_shape(HCSA_fdw) +   tm_polygons(fill = "p_sim",                fill.scale = tm_scale_intervals(                 breaks = c(-Inf, 0.001, 0.01, 0.05, 0.1, Inf),                 values = "-brewer.Reds"),               fill.legend = tm_legend(                 title = "simulated p-value",       position = tm_pos_out())) +    tm_borders(fill_alpha = 0.5) +   tm_title("p-values of local Gi* of GDPPC (Fixed distance)")`
 
 ## Gi\* values + p-values
 
@@ -714,8 +702,8 @@ p_values_map <- tm_shape(HCSA_fdw) +
 
 tmap_arrange(Gi_star_map, p_values_map, asp=1, ncol=2)
 ```
-
 :::
+
 ## 5.4 Plotting and visualising HCSA Map
 
 By default, the HCSA classes are stored in *cluster* field of *HCSA_fdw* sf data frame. To prepare the HSCA map, we will derive a new field called *HCSA_cluster* from *cluster* field using the code chunk below.
@@ -761,12 +749,13 @@ HCSA_map <- tm_shape(HCSA_fdw) +
   tm_title("HCSA Clusters (p < 0.05)")
 HCSA_map
 ```
-Next we will plot the local Gi* values map and its corresponding HCSA map next to each other for effective interpretation.
+
+Next we will plot the local Gi\* values map and its corresponding HCSA map next to each other for effective interpretation.
+
 ```{r}
 #| fig-width: 12
 tmap_arrange(Gi_star_map, HCSA_map, asp=1, ncol=2)
 ```
-
 
 ::::: markgoals
 ::: markgoals-header
@@ -775,12 +764,17 @@ tmap_arrange(Gi_star_map, HCSA_map, asp=1, ncol=2)
 
 ::: markgoals-container
 We can observe from the LISA maps that:
+
 -   There is stong spatial autocorrelation in eastern Hunan.
--   The hot spot cluster in the east shows that High GDPPC values surrounded by high GDPPC neighbors (High-High cluster) with statistically significance at p < 0.05. 
--   The code spot clusters appear in the northeastern area and central-south area with statistical significance. This shows persisten regional economic disadvantage. 
--   The grey areas show "insignificance", meaning that majority of the areas do not show statistically significant spatial clustering. 
+
+-   The hot spot cluster in the east shows that High GDPPC values surrounded by high GDPPC neighbors (High-High cluster) with statistically significance at p \< 0.05.
+
+-   The code spot clusters appear in the northeastern area and central-south area with statistical significance. This shows persisten regional economic disadvantage.
+
+-    The grey areas show "insignificance", meaning that majority of the areas do not show statistically significant spatial clustering.
 :::
 :::::
 
 ## 6 References
+
 -   Kam, T. S. (2022, December 8). R for geospatial data science and analytics. https://r4gdsa.netlify.app/chap10#overview
