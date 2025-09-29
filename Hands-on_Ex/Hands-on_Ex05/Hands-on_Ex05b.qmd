@@ -40,7 +40,7 @@ In this case study, we are interested to examine the spatial pattern of a select
 We will use **sf**, **sfdep**, **tmap** and **tidyverse** packages of R.
 
 | R package | Description |
-|--------------|----------------------------------------------------------|
+|------------------|------------------------------------------------------|
 | sf | importing and handling geospatial data in R |
 | tidyverse | wrangling attribute data in R |
 | sfdep | compute spatial weights, global and local spatial autocorrelation statistics |
@@ -68,11 +68,94 @@ Two data sets will be used in this hands-on exercise, they are:
 
 ### 3.2 Import shapefile into R environment
 
+The code chunk below uses [`st_read()`](https://r-spatial.github.io/sf/reference/st_read.html) of **sf** package to import Hunan shapefile into R. The imported shapefile will be **simple features** Object of **sf**.
+
+```{r}
+hunan <- st_read(dsn = "data/geospatial", layer = "Hunan") %>%
+  st_transform(crs = 32650)
+```
+
+::::: markgoals
+::: markgoals-header
+**Tips**
+:::
+
+::: markgoals-container
+The raw data is in WGS 84 geographic coordinates system. For geospatial analysis, it is appropriate to use projected coordinates system. In the code chunk above, `st_transform()` is used to transform Hunan geospatial data from WGS 84 to UTM zone 50N (i.e. EPSG: 32650).
+:::
+:::::
+
 ### 3.3 Import csv file into R environment
+
+Next, we will import *Hunan_2012.csv* into R by using [`read_csv()`](https://readr.tidyverse.org/reference/read_delim.html) of **readr** package. The output is R data frame class.
+
+```{r}
+hunan2012 <- read_csv("data/aspatial/Hunan_2012.csv")
+```
 
 ### 3.4 Performing relational join
 
+Below we will update the attribute table of *hunan*’s SpatialPolygonsDataFrame with the attribute fields of *hunan2012* dataframe. This is performed using [`left_join()`](https://dplyr.tidyverse.org/reference/mutate-joins.html) of **dplyr** package.
+
+```{r}
+hunan <- left_join(hunan, hunan2012) %>%
+  dplyr::select(1:4, 7, 15)
+```
+
 ### 3.5 Visualising Regional Development Indicator
+
+Now, we are going to prepare a basemap and a choropleth map showing the distribution of GDPPC 2012 using `qtm()` of **tmap** package.
+
+```{r}
+#| fig-width: 12
+#| fig-height: 8
+
+equal <- tm_shape(hunan) +
+  tm_polygons(fill = "GDPPC",
+              fill.scale = tm_scale_intervals(
+                style = "equal",
+                n = 5,
+                values = "brewer.blues")) +
+  tm_text("NAME_3", size = 0.5) +
+  tm_borders(fiil_alpha = 0.5) + 
+  tm_layout(legend.position = c("left", "bottom"), 
+            main.title = "Equal interval classification")
+
+quantile <- tm_shape(hunan) +
+  tm_polygons(fill = "GDPPC",
+              fill.scale = tm_scale_intervals(
+                style = "quantile",
+                n = 5)) +
+  tm_text("NAME_3", size = 0.5) +
+  tm_borders(fiil_alpha = 0.5) + 
+  tm_layout(legend.position = c("left", "bottom"), 
+            main.title = "Quantile classification")
+
+tmap_arrange(equal, 
+             quantile, 
+             asp=1, 
+             ncol=2)
+```
+
+::::: markgoals
+::: markgoals-header
+**Insights**
+:::
+
+::: markgoals-container
+-   **Does the plot above reveal any outliers or clusters?**
+
+    -   **outliers** - from both maps, we can see that county **Lengshuijiang** appears to be dark blue and is surrounded by lighter colors counties. **Zixing**, could also be considered as an outlier as most of the surrounding counties are lighter colors. Another outlier is **Anren** that appears to be the bottom of GDPPC but surrounded by higher GDPPC counties.
+
+    -   **clusters** - We see clusters appearing in the Hunan province. In the northeast and southeast there is a high GDPPC cluster each. In central south from Xinhua to Tongdao counties, these form a low GDPPC cluster.
+
+-   **Does the plot above indicate the presence of hot spots or cold spots?**
+Based on our observation for clusters: 
+
+    -   Hot spots include the clusters surrounding **Changsha** and **Guiyang**.
+    -   Cold spot is the cluster from **Xinhua** to **Tongdao** that we identified for low GDPPC cluster.
+:::
+:::::
 
 ## 4 Local Indicators of Spatial Association(LISA)
 
