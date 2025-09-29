@@ -287,6 +287,7 @@ tmap_arrange(ii.map, p_ii.map, asp=1, ncol=2)
 Using choropleth mapping functions of **tmap** package, we can plot the local Moran’s I values using the code chinks below.
 
 ```{r}
+#| fig-width: 12
 #| fig-align: center
 tm_shape(lisa) +
   tm_polygons(fill = "p_ii_sim",
@@ -309,6 +310,7 @@ The choropleth shows there is evidence for both positive and negative Ii values.
 The code chunks below produce a choropleth map of Moran’s I p-values by using functions of **tmap** package.
 
 ```{r}
+#| fig-width: 12
 #| fig-align: center
 tm_shape(lisa) +
   tm_polygons(fill = "p_ii_sim", 
@@ -644,6 +646,7 @@ Thematic mapping functions of tmaps are used to prepare a choropleth map showing
 
 ```{r}
 #| fig-widht: 12
+#| fig-height: 8
 #| fig-align: center
 tm_shape(HCSA_fdw) +
   tm_polygons(fill = "gi_star",
@@ -654,7 +657,7 @@ tm_shape(HCSA_fdw) +
               fill.legend = tm_legend(
                 title = "Gi*",
                 position = tm_pos_out())) + 
-    tm_text("NAME_3", size = 0.4) +
+    tm_text("NAME_3", size = 0.5) +
   tm_borders(fill_alpha = 0.5) +
   tm_title("Gi* of GDPPC (Fixed Bandwidth d = 60799.91m)")
 ```
@@ -665,7 +668,22 @@ The choropleth shows there is evidence for both positive and negative Ii values.
 
 The code chunk below plots a choropleth map of p-values of Gi\* by using functions of **tmap** package.
 
-`{#| fig-width: 12} tm_shape(HCSA_fdw) +   tm_polygons(fill = "p_sim",                fill.scale = tm_scale_intervals(                 breaks = c(-Inf, 0.001, 0.01, 0.05, 0.1, Inf),                 values = "-brewer.Reds"),               fill.legend = tm_legend(                 title = "simulated p-value",       position = tm_pos_out())) +    tm_borders(fill_alpha = 0.5) +   tm_title("p-values of local Gi* of GDPPC (Fixed distance)")`
+```{r}
+#| fig-width: 12
+#| fig-height: 8
+  tm_shape(HCSA_fdw) +   
+  tm_polygons(fill = "p_sim",                
+              fill.scale = tm_scale_intervals(                 
+                breaks = c(-Inf, 0.001, 0.01, 0.05, 0.1, Inf),                 
+                values = "-brewer.Reds"),               
+              fill.legend = tm_legend(                 
+                title = "simulated p-value",       
+                position = tm_pos_out())) +    
+    tm_text("NAME_3", size = 0.5) +
+  tm_borders(fill_alpha = 0.5) +   
+  tm_title("p-values of local Gi* of GDPPC (Fixed distance)")
+
+```
 
 ## Gi\* values + p-values
 
@@ -673,6 +691,7 @@ Plot both the Gi\* values map and its corresponding p-values map next to each ot
 
 ```{r}
 #| fig-width: 12
+#| fig-height: 8
 Gi_star_map <- tm_shape(HCSA_fdw) +
   tm_polygons(fill = "gi_star",
               fill.scale = tm_scale_intervals(
@@ -683,7 +702,7 @@ Gi_star_map <- tm_shape(HCSA_fdw) +
                 title = "local Gi*",
                 position = tm_pos_in(
                   "left", "bottom"))) + 
-    tm_text("NAME_3", size = 0.4) +
+    tm_text("NAME_3", size = 0.5) +
   tm_borders(fill_alpha = 0.5) +
   tm_title("Local Gi* of GDPPC")
 
@@ -696,7 +715,7 @@ p_values_map <- tm_shape(HCSA_fdw) +
                 title = "p-value",
       position = tm_pos_in("left", "bottom")
     )) + 
-    tm_text("NAME_3", size = 0.4) +
+    tm_text("NAME_3", size = 0.5) +
   tm_borders(fill_alpha = 0.5) +
   tm_title("p-values of local Gi* of GDPPC (fixed distance)")
 
@@ -729,6 +748,7 @@ a new class called *Insignificant* has been added for records whereby p_sim \> 0
 
 ```{r}
 #| fig-width: 12
+#| fig-height: 8
 #| fig-align: center
 HCSA_map <- tm_shape(HCSA_fdw) + 
   tm_polygons(
@@ -744,7 +764,7 @@ HCSA_map <- tm_shape(HCSA_fdw) +
       title = "HSCA Cluster",
       position = tm_pos_in("left", "bottom"))
   ) +
-    tm_text("NAME_3", size = 0.4) +
+    tm_text("NAME_3", size = 0.5) +
   tm_borders() +
   tm_title("HCSA Clusters (p < 0.05)")
 HCSA_map
@@ -754,6 +774,7 @@ Next we will plot the local Gi\* values map and its corresponding HCSA map next 
 
 ```{r}
 #| fig-width: 12
+#| fig-height: 8
 tmap_arrange(Gi_star_map, HCSA_map, asp=1, ncol=2)
 ```
 
