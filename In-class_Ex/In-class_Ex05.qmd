@@ -10,7 +10,6 @@ execute: #how YML page work
   warning: false #dont show warning msg
   freeze: true #controls rendering - no render if no changes
 ---
-
 ## 1 Getting started
 
 We will install and load the R packages **sf, tmap, sfdep** and **tidyverse** packages in R environment.
@@ -89,4 +88,45 @@ global_moran_perm(wm_q$GDPPC,
 :::
 :::::
 
+# Emerging Hot Spot Analysis (EHSA)
 
+Describe the pattern change over time. It is a spatial-temporal analyssi method for revealing and describing 
+
+## Getting started
+
+```{r}
+pacman::p_load(sf, sfdep, tmap, plotly, tidyverse, kendall)
+```
+
+## Import data
+
+```{r}
+hunan <- st_read(dsn = "data/geospatial", 
+                 layer = "Hunan") %>% 
+  st_transform(crs = 32650)
+```
+
+## Create a time series Cube
+```{r}
+GDPPC_st <- spacetime(GDPPC, hunan,
+                      .loc_col = "County",
+                      .time_col = "Year")
+```
+
+## Computing GI*
+Derive spatial weights
+```{r}
+GDPPC_nb <- GDPPC_st %>%
+  activate("geometry") %>%
+```
+
+## Mann-Kendall test
+A monotonic series is one that only increase (or decrease) and never changes direction. SO long as the function either stays flat or continues to inceease, it is monotonic - flat line.
+H0: No monotonic trend
+H1: Monotonic trend is present
+Interpretation
+-   Reject the null-hypothesis null if the p-value is smaller than alpha. 
+
+
+
+https://sfdep.josiahparry.com/articles/understanding-emerging-hotspots

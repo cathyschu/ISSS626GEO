@@ -28,7 +28,7 @@ In this case study, we will use China's data to examine the spatial pattern of a
 We will use the following packages: **spdep, sf, tmap and tidyverse** packages of R.
 
 | Package | Description |
-|------------------------|-----------------------------------------------|
+|-------------------------|-----------------------------------------------|
 | **sf** | importing and handling geospatial data in R |
 | **tidyverse** | wrangling attribute data in R |
 | **spdep** | computing spatial weights, global and local spatial autocorrelation statistics |
@@ -414,13 +414,15 @@ print(GC_corr)
 :::
 
 ::: markgoals-container
--   The result shows strong postive spatial autocorrelation at short distances - Lag 1: C = 0.691, p < 0.001; Lag 2: C = 0.763, p < 0.001
--   Between lag 3-4 there is no significant spatial autocorrelatio - C ≈ 1, **p > 0.05** 
--   For long distance, it shows significant negative spatial autocorrelation - Lag 5: C = 1.201, p < 0.001
+-   The result shows strong postive spatial autocorrelation at short distances - Lag 1: C = 0.691, p \< 0.001; Lag 2: C = 0.763, p \< 0.001
+-   Between lag 3-4 there is no significant spatial autocorrelatio - C ≈ 1, **p \> 0.05**
+-   For long distance, it shows significant negative spatial autocorrelation - Lag 5: C = 1.201, p \< 0.001
 -   The Geary's C results strongly corroborate the Moran's I findings, providing robust evidence for the spatial autocorrelation pattern.
 -   The significant positive autocorrelation at short distances confirms that **areas with similar GDPPC values are geographically clustered together.** The transition from positive to negative autocorrelation suggests a core-periphery economic geography where the economic centers (high GDPPC) cluster together, and these centers are spatially separated from lower GDPPC areas.
-
 :::
 :::::
 
 **Class Note:** Spatial autocorrelation is an extention of geographycal summary statistics. It looks at only 1 variable and its relations with the surrounding areas.
+
+## 8 Reference
+-   Kam, T. S. (2022, December 8). R for geospatial data science and analytics. https://r4gdsa.netlify.app/
