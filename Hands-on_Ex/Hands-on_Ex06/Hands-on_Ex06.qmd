@@ -1,0 +1,56 @@
+---
+title: "06 - Global Measures of Spatial Autocorrelation"
+author: "Cathy C."
+date: "Oct 1, 2025"
+date-modified: "last-modified" #auto render date
+format: html
+execute: #how YML page work
+  echo: true #will show code
+  eval: true #will run code every time and show output
+  warning: false #dont show warning msg
+  freeze: true #controls rendering - no render if no changes
+---
+
+## 1 Overview
+
+We will learn how to delineate homogeneous region by using geographically referenced multivariate data. There are two major analysis, namely:
+
+-   hierarchical cluster analysis
+-   spatially constrained cluster analysis
+
+By the end of this hands-on exercise, we will be able to do the following:
+
+-   convert GIS polygon data into R’s simple feature data.frame by using appropriate functions of **sf** package of R;
+-   convert simple feature data.frame into R’s SpatialPolygonDataFrame object by using appropriate **sf** of package of R;
+-   perform custer analysis by using *hclust()* of Base R;
+-   perform spatially constrained cluster analysis using *skater()* of Base R; and
+-   visualise the analysis output by using **ggplot2** and **tmap** package.
+
+## 2 Getting started
+
+In geobusiness and spatial policy, it is a common practice to delineate the market or planning area into homogeneous regions by using multivariate data. In this hands-on exercise, we are interested to delineate [Shan State](https://en.wikipedia.org/wiki/Shan_State), [Myanmar](https://en.wikipedia.org/wiki/Myanmar) into homogeneous regions by using multiple Information and Communication technology (ICT) measures, namely: Radio, Television, Land line phone, Mobile phone, Computer, and Internet at home.
+
+## 3 The data
+
+Two data sets will be used in this study. They are:
+
+-   Myanmar Township Boundary Data (i.e. *myanmar_township_boundaries*) : This is a GIS data in ESRI shapefile format. It consists of township boundary information of Myanmar. The spatial data are captured in polygon features.
+-   *Shan-ICT.csv*: This is an extract of [**The 2014 Myanmar Population and Housing Census Myanmar**](https://myanmar.unfpa.org/en/publications/2014-population-and-housing-census-myanmar-data-sheet) at the township level.
+
+Both data sets are download from [Myanmar Information Management Unit (MIMU)](http://themimu.info/)
+
+## 4 Data import and preparation
+
+## 5 Exploratory data analysis (EDA)
+
+## 6 Correlation analysis
+
+## 7 Hierarchy cluster analysis
+
+## 8 Spatially constrained clustering: SKATER approach
+
+## 9 Spatially constrained clustering: ClustGeo method
+
+## 10 Visual interpretation of clusters
+
+## 11 Reference

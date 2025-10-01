@@ -950,5 +950,89 @@
     "title": "In-class exerricse 04",
     "section": "7 Visualise geographically weighted statistics",
     "text": "7 Visualise geographically weighted statistics\n\nLM &lt;- tm_shape(hunan_gstat) +\n  tm_polygons(\"GDPPC_LM\") +\n  tm_layout(legend.outside = TRUE) +\n  tm_title(\"GDPPC Local Moran\")\n\nLSD &lt;- tm_shape(hunan_gstat) + \n  tm_polygons(\"GDPPC_LSD\") +\n  tm_layout(legend.outside = TRUE) +\n  tm_title(\"Local Standard Deviation\")\n\nLSKe &lt;- tm_shape(hunan_gstat) +\n  tm_polygons(\"GDPPC_LSKe\") +\n  tm_layout(legend.outside = TRUE) +\n  tm_title(\"GDPPC Local Skewness\")\n\nLVar &lt;- tm_shape(hunan_gstat) + \n  tm_polygons(\"GDPPC_LVar\") +\n  tm_layout(legend.outside = TRUE) +\n  tm_title(\"Local Variance\")\n\nLCV &lt;- tm_shape(hunan_gstat) + \n  tm_polygons(\"GDPPC_LCV\") +\n  tm_layout(legend.outside = TRUE) +\n  tm_title(\"Local Coefficient of Variation\")\n\ntmap_arrange(LM, LSD, LSKe, LVar, LCV, asp = 1, ncol = 1)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html#getting-started",
+    "href": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html#getting-started",
+    "title": "06 - Global Measures of Spatial Autocorrelation",
+    "section": "2 Getting started",
+    "text": "2 Getting started\nIn geobusiness and spatial policy, it is a common practice to delineate the market or planning area into homogeneous regions by using multivariate data. In this hands-on exercise, we are interested to delineate Shan State, Myanmar into homogeneous regions by using multiple Information and Communication technology (ICT) measures, namely: Radio, Television, Land line phone, Mobile phone, Computer, and Internet at home."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html#the-data",
+    "href": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html#the-data",
+    "title": "06 - Global Measures of Spatial Autocorrelation",
+    "section": "3 The data",
+    "text": "3 The data\nTwo data sets will be used in this study. They are:\n\nMyanmar Township Boundary Data (i.e. myanmar_township_boundaries) : This is a GIS data in ESRI shapefile format. It consists of township boundary information of Myanmar. The spatial data are captured in polygon features.\nShan-ICT.csv: This is an extract of The 2014 Myanmar Population and Housing Census Myanmar at the township level.\n\nBoth data sets are download from Myanmar Information Management Unit (MIMU)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html#data-import-and-preparation",
+    "href": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html#data-import-and-preparation",
+    "title": "06 - Global Measures of Spatial Autocorrelation",
+    "section": "4 Data import and preparation",
+    "text": "4 Data import and preparation"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html#exploratory-data-analysis-eda",
+    "href": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html#exploratory-data-analysis-eda",
+    "title": "06 - Global Measures of Spatial Autocorrelation",
+    "section": "5 Exploratory data analysis (EDA)",
+    "text": "5 Exploratory data analysis (EDA)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html#correlation-analysis",
+    "href": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html#correlation-analysis",
+    "title": "06 - Global Measures of Spatial Autocorrelation",
+    "section": "6 Correlation analysis",
+    "text": "6 Correlation analysis"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html#hierarchy-cluster-analysis",
+    "href": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html#hierarchy-cluster-analysis",
+    "title": "06 - Global Measures of Spatial Autocorrelation",
+    "section": "7 Hierarchy cluster analysis",
+    "text": "7 Hierarchy cluster analysis"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html#spatially-constrained-clustering-skater-approach",
+    "href": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html#spatially-constrained-clustering-skater-approach",
+    "title": "06 - Global Measures of Spatial Autocorrelation",
+    "section": "8 Spatially constrained clustering: SKATER approach",
+    "text": "8 Spatially constrained clustering: SKATER approach"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html#spatially-constrained-clustering-clustgeo-method",
+    "href": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html#spatially-constrained-clustering-clustgeo-method",
+    "title": "06 - Global Measures of Spatial Autocorrelation",
+    "section": "9 Spatially constrained clustering: ClustGeo method",
+    "text": "9 Spatially constrained clustering: ClustGeo method"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html#visual-interpretation-of-clusters",
+    "href": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html#visual-interpretation-of-clusters",
+    "title": "06 - Global Measures of Spatial Autocorrelation",
+    "section": "10 Visual interpretation of clusters",
+    "text": "10 Visual interpretation of clusters"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html#reference",
+    "href": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html#reference",
+    "title": "06 - Global Measures of Spatial Autocorrelation",
+    "section": "11 Reference",
+    "text": "11 Reference"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html",
+    "href": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html",
+    "title": "06 - Global Measures of Spatial Autocorrelation",
+    "section": "",
+    "text": "We will learn how to delineate homogeneous region by using geographically referenced multivariate data. There are two major analysis, namely:\n\nhierarchical cluster analysis\nspatially constrained cluster analysis\n\nBy the end of this hands-on exercise, we will be able to do the following:\n\nconvert GIS polygon data into R’s simple feature data.frame by using appropriate functions of sf package of R;\nconvert simple feature data.frame into R’s SpatialPolygonDataFrame object by using appropriate sf of package of R;\nperform custer analysis by using hclust() of Base R;\nperform spatially constrained cluster analysis using skater() of Base R; and\nvisualise the analysis output by using ggplot2 and tmap package."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html#overview",
+    "href": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html#overview",
+    "title": "06 - Global Measures of Spatial Autocorrelation",
+    "section": "",
+    "text": "We will learn how to delineate homogeneous region by using geographically referenced multivariate data. There are two major analysis, namely:\n\nhierarchical cluster analysis\nspatially constrained cluster analysis\n\nBy the end of this hands-on exercise, we will be able to do the following:\n\nconvert GIS polygon data into R’s simple feature data.frame by using appropriate functions of sf package of R;\nconvert simple feature data.frame into R’s SpatialPolygonDataFrame object by using appropriate sf of package of R;\nperform custer analysis by using hclust() of Base R;\nperform spatially constrained cluster analysis using skater() of Base R; and\nvisualise the analysis output by using ggplot2 and tmap package."
   }
 ]
