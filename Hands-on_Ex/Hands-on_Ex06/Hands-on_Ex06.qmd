@@ -148,6 +148,32 @@ ggplot(data = ict_derived,
   
 ```
 
+Boxplot is useful to detect outliers.
+
+```{r}
+#| fig-width: 12
+ggplot(data = ict_derived,
+       aes(x = `RADIO`)) +
+  geom_boxplot(color = "black", fill = "#5D866C") +
+  theme(panel.background = element_rect(fill = "#D0DDD0"))
+```
+
+Next we will plot the distribution of the newly derived variables (ie. Radio penetration rate) with the code below.
+
+```{r}
+#| fig-width: 12
+ggplot(data = ict_derived,
+       aes(x = `RADIO_PR`)) +
+  geom_histogram(bins = 20, color = "grey", fill = "#5D866C")
+```
+
+```{r}
+#| fig-width: 12
+ggplot(data = ict_derived,
+       aes(x = `RADIO_PR`)) +
+  geom_boxplot(color = "black", fill = "#5D866C")
+```
+
 ## 6 Correlation analysis
 
 ## 7 Hierarchy cluster analysis
