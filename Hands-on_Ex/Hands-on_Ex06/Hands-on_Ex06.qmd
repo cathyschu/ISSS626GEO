@@ -44,7 +44,7 @@ Both data sets are download from [Myanmar Information Management Unit (MIMU)](ht
 ### 3.2 Installing and loading R packages
 
 | R package | Purpose |
-|------------------------------------|------------------------------------|
+|----|----|
 | **sf, rgdal, spdep** | Spatial data handling |
 | **tidyverse - readr, ggplot2 and dplyr** | Attribute data handling |
 | **tmap** | Choropleth mapping |
@@ -173,6 +173,105 @@ ggplot(data = ict_derived,
        aes(x = `RADIO_PR`)) +
   geom_boxplot(color = "black", fill = "#5D866C")
 ```
+
+In the figure below, multiple histograms are plotted to reveal the distribution of the selected variables in the ict_derived data.frame.
+
+::: panel-tabset
+## Multiplot
+
+```{r}
+#| echo: false
+#| fig-width: 12
+#| fig-height: 6
+radio <- ggplot(data=ict_derived, 
+             aes(x= `RADIO_PR`)) +
+  geom_histogram(bins=20, 
+                 color="grey60", 
+                 fill="#B8C4A9")
+
+tv <- ggplot(data=ict_derived, 
+             aes(x= `TV_PR`)) +
+  geom_histogram(bins=20, 
+                 color="grey60", 
+                 fill="#B8C4A9")
+
+llphone <- ggplot(data=ict_derived, 
+             aes(x= `LLPHONE_PR`)) +
+  geom_histogram(bins=20, 
+                 color="grey60", 
+                 fill="#B8C4A9")
+
+mphone <- ggplot(data=ict_derived, 
+             aes(x= `MPHONE_PR`)) +
+  geom_histogram(bins=20, 
+                 color="grey60", 
+                 fill="#B8C4A9")
+
+computer <- ggplot(data=ict_derived, 
+             aes(x= `COMPUTER_PR`)) +
+  geom_histogram(bins=20, 
+                 color="grey60", 
+                 fill="#B8C4A9")
+
+internet <- ggplot(data=ict_derived, 
+             aes(x= `INTERNET_PR`)) +
+  geom_histogram(bins=20, 
+                 color="grey60", 
+                 fill="#B8C4A9")
+
+# Use ggarrange() of ggpubr package to group these histograms.
+
+ggarrange(radio, tv, llphone, mphone, computer, internet,
+          ncol = 3, nrow = 2)
+```
+
+## Code
+
+``` r
+#| fig-width: 12
+#| fig-height: 6
+radio <- ggplot(data=ict_derived, 
+             aes(x= `RADIO_PR`)) +
+  geom_histogram(bins=20, 
+                 color="grey60", 
+                 fill="#B8C4A9")
+
+tv <- ggplot(data=ict_derived, 
+             aes(x= `TV_PR`)) +
+  geom_histogram(bins=20, 
+                 color="grey60", 
+                 fill="#B8C4A9")
+
+llphone <- ggplot(data=ict_derived, 
+             aes(x= `LLPHONE_PR`)) +
+  geom_histogram(bins=20, 
+                 color="grey60", 
+                 fill="#B8C4A9")
+
+mphone <- ggplot(data=ict_derived, 
+             aes(x= `MPHONE_PR`)) +
+  geom_histogram(bins=20, 
+                 color="grey60", 
+                 fill="#B8C4A9")
+
+computer <- ggplot(data=ict_derived, 
+             aes(x= `COMPUTER_PR`)) +
+  geom_histogram(bins=20, 
+                 color="grey60", 
+                 fill="#B8C4A9")
+
+internet <- ggplot(data=ict_derived, 
+             aes(x= `INTERNET_PR`)) +
+  geom_histogram(bins=20, 
+                 color="grey60", 
+                 fill="#B8C4A9")
+
+# Use ggarrange() of ggpubr package to group these histograms.
+
+ggarrange(radio, tv, llphone, mphone, computer, internet,
+          ncol = 3, nrow = 2)
+```
+:::
 
 ## 6 Correlation analysis
 
