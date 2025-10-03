@@ -53,7 +53,7 @@ Both data sets are download from [Myanmar Information Management Unit (MIMU)](ht
 
 ```{r}
 pacman::p_load(sf, rgdal, spdep, tidyverse, tmap, corrplot, ggpubr, heatmaply, cluster, ClustGeo,
-               factoextra, NbClust, psych, GGally)
+               factoextra, NbClust, psych, GGally, knitr)
 ```
 
 ## 4 Data import and preparation
@@ -140,38 +140,52 @@ Now six fields have been added to the data.frame. They are RADIO_PR, TV_PR, LLPH
 We can plot the distributiob of the variables (ie. number of households with radio) by using appropriate EDA. Below histogram is useful to identify the overall distrbution of the data values (ie. left skew, right skew or normal distribution)
 
 ```{r}
-#| fig-width: 12
+#| fig-width: 6
+#| fig-height: 4
+#| fig-align: center
 ggplot(data = ict_derived,
        aes(x = `RADIO`)) +
   geom_histogram(bins = 20, color = "grey", fill = "#5D866C") +
-  theme(panel.background = element_rect(fill = "#D0DDD0"))
+  theme(panel.background = element_rect(fill = "#D0DDD0"),
+        plot.background = element_rect(fill = "#D0DDD0"))
   
 ```
 
 Boxplot is useful to detect outliers.
 
 ```{r}
-#| fig-width: 12
+#| fig-width: 6
+#| fig-height: 4
+#| fig-align: center
 ggplot(data = ict_derived,
        aes(x = `RADIO`)) +
   geom_boxplot(color = "black", fill = "#5D866C") +
-  theme(panel.background = element_rect(fill = "#D0DDD0"))
+  theme(panel.background = element_rect(fill = "#D0DDD0"),
+        plot.background = element_rect(fill = "#D0DDD0")) 
 ```
 
 Next we will plot the distribution of the newly derived variables (ie. Radio penetration rate) with the code below.
 
 ```{r}
-#| fig-width: 12
+#| fig-width: 6
+#| fig-height: 4
+#| fig-align: center
 ggplot(data = ict_derived,
        aes(x = `RADIO_PR`)) +
-  geom_histogram(bins = 20, color = "grey", fill = "#5D866C")
+  geom_histogram(bins = 20, color = "grey", fill = "#5D866C") +
+    theme(plot.background = element_rect(fill = "#D0DDD0"),
+        panel.background = element_rect(fill = "#D0DDD0")) 
 ```
 
 ```{r}
-#| fig-width: 12
+#| fig-width: 6
+#| fig-height: 4
+#| fig-align: center
 ggplot(data = ict_derived,
        aes(x = `RADIO_PR`)) +
-  geom_boxplot(color = "black", fill = "#5D866C")
+  geom_boxplot(color = "black", fill = "#5D866C") +
+  theme(plot.background = element_rect(fill = "#D0DDD0"),
+        panel.background = element_rect(fill = "#D0DDD0")) 
 ```
 
 In the figure below, multiple histograms are plotted to reveal the distribution of the selected variables in the ict_derived data.frame.
@@ -593,7 +607,7 @@ Next we plot the tree using plot() of R graphics.
 
 ```{r}
 #| fig-width: 12
-#| fig-height: 8
+#| fig-height: 6
 par(bg = "#F7F4EA")
 plot(hclust_ward, cex = 0.6)
 ```
@@ -659,8 +673,9 @@ print(gap_stat, method = "firstmax")
 Next, we can visualise the plot by using [*fviz_gap_stat()*](https://rpkgs.datanovia.com/factoextra/reference/fviz_nbclust.html) of [**factoextra**](https://rpkgs.datanovia.com/factoextra/index.html) package.
 
 ```{r}
-#| fig-width: 12
-#| fig-height: 6
+#| fig-width: 10
+#| fig-height: 5
+#| fig-algin: center
 fviz_gap_stat(gap_stat) +
   theme(plot.background = element_rect(fill = "#F7F4EA"),
         panel.background = element_rect(fill = "#F7F4EA"))
@@ -679,8 +694,9 @@ The height of the fusion, provided on the vertical axis, indicates the (dis)simi
 It’s also possible to draw the dendrogram with a border around the selected clusters by using [*rect.hclust()*](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/rect.hclust.html) of R stats. The argument *border* is used to specify the border colors for the rectangles.
 
 ```{r}
-#| fig-width: 12
-#| fig-height: 8
+#| fig-width: 10
+#| fig-height: 5
+#| fig-algin: center
 par(bg = "#F7F4EA")
 
 plot(hclust_ward, cex = 0.6)
@@ -708,8 +724,9 @@ shan_ict_mat <- data.matrix(shan_ict)
 [*heatmaply()*](https://talgalili.github.io/heatmaply/reference/heatmaply.html) of [heatmaply](https://talgalili.github.io/heatmaply/index.html) package is used to build an interactive cluster heatmap.
 
 ```{r}
-#| fig-width: 12
-#| fig-height: 10
+#| fig-width: 10
+#| fig-height: 8
+#| fig-algin: center
 p <- heatmaply(normalize(shan_ict_mat),
           Colv=NA,
           dist_method = "euclidean",
@@ -758,7 +775,7 @@ Next, *qtm()* of **tmap** package is used to plot the choropleth map showing the
 
 ```{r}
 #| fig-width: 12
-#| fig-height: 8
+#| fig-height: 6
 par(bg = "#D0DDD0")
 qtm(shan_sf_cluster, "CLUSTER") +
     tm_layout(bg.color = "#D0DDD0",
@@ -961,7 +978,7 @@ Below we plot the newly derived clusters by using **SKATER** method.
 
 ```{r}
 #| fig-width: 12
-#| fig-height: 8
+#| fig-height: 6
 par(bg = "#D0DDD0")
 groups_mat <- as.matrix(clust6$groups)
 shan_sf_spatialcluster <- cbind(shan_sf_cluster, as.factor(groups_mat)) %>%
@@ -1019,7 +1036,7 @@ To perform non-spatially constrained hierarchical clustering, we only need to pr
 
 ```{r}
 #| fig-width: 12
-#| fig-heught: 8
+#| fig-heught: 6
 par(bg = "#F7F4EA")
 nongeo_cluster <- hclustgeo(proxmat)
 plot(nongeo_cluster, cex = 0.5)
@@ -1190,8 +1207,8 @@ shan_sf_ngeo_cluster %>%
             mean_MPHONE_PR = mean(MPHONE_PR.y),
             mean_COMPUTER_PR = mean(COMPUTER_PR.y))
 
-kable(shan_sf_ngeo_cluster)
 ```
 
 
 ## 11 Reference
+-   Kam, T. S. (2022, December 8). R for geospatial data science and analytics. https://r4gdsa.netlify.app/chap12#overview
