@@ -44,15 +44,15 @@ Both data sets are download from [Myanmar Information Management Unit (MIMU)](ht
 ### 3.2 Installing and loading R packages
 
 | R package | Purpose |
-|----|----|
+|------------------------------------|------------------------------------|
 | **sf, rgdal, spdep** | Spatial data handling |
 | **tidyverse - readr, ggplot2 and dplyr** | Attribute data handling |
 | **tmap** | Choropleth mapping |
-| **coorplot, ggpubr, heatmaply** | Multivariate data visualisation and analysis |
+| **corrplot, ggpubr, heatmaply** | Multivariate data visualisation and analysis |
 | **cluster, ClustGeo** | Cluster analysis |
 
 ```{r}
-pacman::p_load(sf, rgdal, spdep, tidyverse, tmap, coorplot, ggpubr, heatmaply, cluster, ClustGeo,
+pacman::p_load(sf, rgdal, spdep, tidyverse, tmap, corrplot, ggpubr, heatmaply, cluster, ClustGeo,
                factoextra, NbClust, psych, GGally)
 ```
 
@@ -273,9 +273,499 @@ ggarrange(radio, tv, llphone, mphone, computer, internet,
 ```
 :::
 
+### 5.2 **EDA using choropleth map**
+
+#### 5.2.1 Joining geospatial data with aspatial data
+
+Before we can prepare the choropleth map, we need to combine both the geospatial data object (i.e. *shan_sf*) and aspatial data.frame object (i.e. *ict_derived*) into one. This will be performed by using the [*left_join*](https://dplyr.tidyverse.org/reference/join.tbl_df.html) function of **dplyr** package. The *shan_sf* simple feature data.frame will be used as the base data object and the *ict_derived* data.frame will be used as the join table.
+
+Below is to perform the task. The unique identifier used to join both data objects is *TS_PCODE*.
+
+```{r}
+#| eval: false
+shan_sf <- left_join(shan_sf, 
+                     ict_derived, by=c("TS_PCODE"="TS_PCODE"))
+  
+write_rds(shan_sf, "data/rds/shan_sf.rds")
+```
+
+```{r}
+shan_sf <- read_rds("data/rds/shan_sf.rds")
+```
+
+```{r}
+summary(shan_sf)
+```
+
+#### 5.2.2 Preparing a choropleth map
+
+To have a quick look at the distribution of Radio penetration rate of Shan State at township level, a choropleth map will be prepared.
+
+The code chunks below are used to prepare the choroplethby using the *qtm()* function of **tmap** package.
+
+```{r}
+qtm(shan_sf, "RADIO_PR.y")
+```
+
+In order to reveal the distribution shown in the choropleth map above are bias to the underlying total number of households at the townships, we will create two choropleth maps.
+
+One is for the **total number of households** (i.e. TT_HOUSEHOLDS.map) and the other is for the **total number of household with Radio (RADIO.map)** by using the code chunk below.
+
+```{r}
+#| fig-width: 12
+#| fig-height: 8
+TT_HOUSEHOLDS.map <- tm_shape(shan_sf) + 
+  tm_fill(col = "TT_HOUSEHOLDS.y",
+          n = 5,
+          style = "jenks", 
+          title = "Total households",
+          palette = "Greens") + 
+  tm_borders(alpha = 0.5) +
+  tm_text("TS.y", size = 0.5) +
+  tm_layout(legend.position = c("right", "top"))
+
+RADIO.map <- tm_shape(shan_sf) + 
+  tm_fill(col = "RADIO.y",
+          n = 5,
+          style = "jenks",
+          title = "Number Radio ",
+          palette = "Greens") + 
+  tm_borders(alpha = 0.5) +
+  tm_text("TS.y", size = 0.5) +
+  tm_layout(legend.position = c("right", "top"))
+
+tmap_arrange(TT_HOUSEHOLDS.map, RADIO.map,
+             asp=NA, ncol=2)
+```
+
+::::: markgoals
+::: markgoals-header
+**Learning**
+:::
+
+::: markgoals-container
+The choropleth maps above clearly show that townships with relatively larger number of households are also showing relatively higher number of radio ownership.
+:::
+:::::
+
+Now let us plot the choropleth maps showing the dsitribution of total number of households and Radio penetration rate.
+
+```{r}
+#| fig-width: 12
+#| fig-height: 8
+tm_shape(shan_sf) +
+    tm_polygons(c("TT_HOUSEHOLDS.y", "RADIO_PR.y"),
+                style="jenks") +
+    tm_text("TS.y", size = 0.5) +
+    tm_facets(sync = TRUE, ncol = 2) +
+#  tm_legend(legend.position = c("right", "bottom"))+
+  tm_layout(legend.position = c("right", "bottom"), outer.margins=0.01, asp=0)
+```
+
+::::: markgoals
+::: markgoals-header
+**Analysis**
+:::
+
+::: markgoals-container
+-   In the previous visualisation, we noticed that the Radio ownership is positively correlated, meaning that the more households in the township, the more radios there are in this area.
+-   Now we compare the total household against the Radio penetration, we see the some township has apparently higher penetration rate while their population isn's as dense. These townships include Mabein in the northwest, Ywangan in the west, and Monghpyak in the southeast.
+-   The higher Radio penetration areas concentrate on the townships next to Laos and other domestic states in the west. Townships on the east side next to China have the lowest Radio penetration rate. These townships next to China might be less developed as compared to others.
+:::
+:::::
+
 ## 6 Correlation analysis
 
+Before we perform cluster analysis, it is important for us to ensure that the cluster variables are not highly correlated.
+
+In this section, we will use [*corrplot.mixed()*](https://cran.r-project.org/web/packages/corrplot/corrplot.pdf) function of [**corrplot**](https://cran.r-project.org/web/packages/corrplot/vignettes/corrplot-intro.html) package to visualise and analyse the correlation of the input variables.
+
+```{r}
+#| fig-width: 12
+#| fig-height: 8
+par(bg = "#A7C1A8")
+cluster_vars.cor = cor(ict_derived[,12:17])
+corrplot.mixed(cluster_vars.cor,
+         lower = "ellipse", 
+         upper = "number",
+         bg = "#DCDCDC",
+         tl.pos = "lt",
+         tl.srt = 45,
+         diag = "l",
+         tl.col = "black")
+```
+
+::::: markgoals
+::: markgoals-header
+**Analysis**
+:::
+
+::: markgoals-container
+The correlation plot above shows that COMPUTER_PR and INTERNET_PR are highly correlated. This suggest that only one of them should be used in the cluster analysis instead of both.
+:::
+:::::
+
 ## 7 Hierarchy cluster analysis
+
+In this section, we will perform hierarchical cluster analysis. The analysis consists of four major steps:
+
+### 7.1 Extracting clustering variables
+
+Below we will extract the clustering variables from the shan_sf simple feature object into data.frame. COMPUTER_PR is included, but not INTERNET_PR, because they are highly correlated.
+
+```{r}
+
+cluster_vars <- shan_sf %>%
+  st_set_geometry(NULL) %>%
+  select("TS.x", "RADIO_PR.x", "TV_PR.x", "LLPHONE_PR.x", "MPHONE_PR.x", "COMPUTER_PR.x")
+head(cluster_vars,10)
+```
+
+Next we will change the rows by township name instead of row number:
+
+```{r}
+
+row.names(cluster_vars) <- cluster_vars$"TS.x"
+head(cluster_vars,10)
+```
+
+We see that the numbers have been replaced with township names. Next we will delete TS.x field:
+
+```{r}
+shan_ict <- select(cluster_vars, c(2:6))
+head(shan_ict, 10)
+```
+
+It's clearly TS.x is removed, and we will save this to a rds file.
+
+```{r}
+shan_ict <- write_rds(shan_ict, "data/rds/shan_ict.rds")
+```
+
+```{r}
+shan_ict <- read_rds("data/rds/shan_ict.rds")
+```
+
+### 7.2 Data Standardisation
+
+In general, multiple variables will be used in cluster analysis. It is not unusual their values range are different. In order to avoid the cluster analysis result being biased to clustering variables with large values, it is useful to standardise the input variables before performing cluster analysis.
+
+### 7.3 Min-Max standardisation
+
+*`normalize()`* of [*heatmaply*](https://cran.r-project.org/web/packages/heatmaply/index.html) package is used to stadardisation the clustering variables by using Min-Max method. The *summary()* is then used to display the summary statistics of the standardised clustering variables.
+
+```{r}
+shan_ict.std <- normalize(shan_ict)
+summary(shan_ict.std)
+```
+
+Note that the values range of the Min-max standardised clustering variables are 0-1 now.
+
+### 7.4 Z-score standardisation
+
+Z-score standardisation can be performed easily by using [*scale()*](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/scale) of Base R. The code chunk below will be used to stadardisation the clustering variables by using Z-score method.
+
+```{r}
+shan_ict.z <- scale(shan_ict)
+describe(shan_ict.z)
+```
+
+::::: markgoals
+::: markgoals-header
+**Note**
+:::
+
+::: markgoals-container
+-   Note that the mean and standard deviation of the Z-score standardised clustering variables are 0 and 1 respectively.
+-   [*describe()*](https://www.rdocumentation.org/packages/Hmisc/versions/4.4-0/topics/describe) of [**psych**](https://cran.r-project.org/web/packages/psych/index.html) package is used here instead of *summary()* of Base R because the earlier provides standard deviation.
+-   [**Z-score standardisation method should only be used if we would assume all variables come from some normal distribution.**]{style="color: #B95E82;"}
+:::
+:::::
+
+### 7.5 Visualising the standardised clustering variables
+
+Beside reviewing the summary statistics of the standardised clustering variables, it is also a good practice to visualise their distribution graphical.
+
+The code chunk below plot the scaled *Radio_PR* field with histogram and density plots.
+
+::: panel-tabset
+## Histogram
+
+```{r}
+#| fig-width: 12
+#| fig-height: 4
+r <- ggplot(data=ict_derived, 
+             aes(x= `RADIO_PR`)) +
+  geom_histogram(bins=20, 
+                 color="grey70", 
+                 fill="#B8C4A9") +
+  ggtitle("Raw values without standardisation")
+
+shan_ict_s_df <- as.data.frame(shan_ict.std)
+s <- ggplot(data=shan_ict_s_df, 
+       aes(x=`RADIO_PR.x`)) +
+  geom_histogram(bins=20, 
+                 color="grey70", 
+                 fill="#B8C4A9") +
+  ggtitle("Min-Max Standardisation")
+
+shan_ict_z_df <- as.data.frame(shan_ict.z)
+z <- ggplot(data=shan_ict_z_df, 
+       aes(x=`RADIO_PR.x`)) +
+  geom_histogram(bins=20, 
+                 color="grey70", 
+                 fill="#B8C4A9") +
+  ggtitle("Z-score Standardisation")
+
+ggarrange(r, s, z,
+          ncol = 3,
+          nrow = 1)
+```
+
+## DensityPlot
+
+```{r}
+#| fig-width: 12
+#| fig-height: 4
+r <- ggplot(data=ict_derived, 
+             aes(x= `RADIO_PR`)) +
+  geom_density(color="black",
+               fill="light blue") +
+  ggtitle("Raw values without standardisation")
+
+shan_ict_s_df <- as.data.frame(shan_ict.std)
+s <- ggplot(data=shan_ict_s_df, 
+       aes(x=`RADIO_PR.x`)) +
+  geom_density(color="black",
+               fill="light blue") +
+  ggtitle("Min-Max Standardisation")
+
+shan_ict_z_df <- as.data.frame(shan_ict.z)
+z <- ggplot(data=shan_ict_z_df, 
+       aes(x=`RADIO_PR.x`)) +
+  geom_density(color="black",
+               fill="light blue") +
+  ggtitle("Z-score Standardisation")
+
+ggarrange(r, s, z,
+          ncol = 3,
+          nrow = 1)
+```
+:::
+
+### 7.6 Computing proximity matrix
+
+In R, many packages provide functions to calculate distance matrix. We will compute the proximity matrix by using [*dist()*](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/dist.html) of R.
+
+*dist()* supports six distance proximity calculations, they are: **euclidean, maximum, manhattan, canberra, binary and minkowski**. The default is *euclidean* proximity matrix.
+
+Below is to compute the proximity matrix using *euclidean* and *manhattan* method.
+
+::: panel-tabset
+## euclidean
+
+```{r}
+proxmat <- dist(shan_ict, method = 'euclidean')
+proxmat
+```
+
+## manhattan
+
+```{r}
+proxmat <- dist(shan_ict, method = 'manhattan')
+proxmat
+```
+:::
+
+### 7.7 Computing hierarchical clustering
+
+In R, several packages provide hierarchical clustering function. In this hands-on exercise, [*hclust()*](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/hclust.html) of R stats will be used.
+
+*hclust()* employed agglomeration method to compute the cluster. Eight clustering algorithms are supported, they are: ward.D, ward.D2, single, complete, average(UPGMA), mcquitty(WPGMA), median(WPGMC) and centroid(UPGMC).
+
+Below performs hierarchical cluster analysis using **ward.D method**. The hierarchical clustering output is stored in an object of class **hclust** which describes the tree produced by the clustering process.
+
+```{r}
+hclust_ward <- hclust(proxmat, method = 'ward.D')
+```
+
+Next we plot the tree using plot() of R graphics.
+
+```{r}
+#| fig-width: 12
+#| fig-height: 8
+par(bg = "#F7F4EA")
+plot(hclust_ward, cex = 0.6)
+```
+
+### 7.8 Selecting the optimal clustering algorithm
+
+One of the challenge in performing hierarchical clustering is to identify stronger clustering structures. The issue can be solved by using use [*agnes()*](https://www.rdocumentation.org/packages/cluster/versions/2.1.0/topics/agnes) function of [**cluster**](https://cran.r-project.org/web/packages/cluster/) package. It functions like *hclus()*, however, with the *agnes()* function you can also get the agglomerative coefficient, which measures the amount of clustering structure found (values closer to 1 suggest strong clustering structure).
+
+Below computes the agglomerative coefficients of all hierarchical clustering algorithms.
+
+```{r}
+m <- c( "average", "single", "complete", "ward")
+names(m) <- c( "average", "single", "complete", "ward")
+
+ac <- function(x) {
+  agnes(shan_ict, method = x)$ac
+}
+
+map_dbl(m, ac)
+```
+
+With reference to the output above, we can see that Ward’s method provides the strongest clustering structure among the four methods assessed. Hence, in the subsequent analysis, only Ward’s method will be used.
+
+### 7.9 Determining Optimal Clusters
+
+Another technical challenge face by data analyst in performing clustering analysis is to determine the optimal clusters to retain.
+
+There are [three](https://statweb.stanford.edu/~gwalther/gap) commonly used methods to determine the optimal clusters, they are:
+
+-   [Elbow Method](https://en.wikipedia.org/wiki/Elbow_method_(clustering))
+
+-   [Average Silhouette Method](https://www.sciencedirect.com/science/article/pii/0377042787901257?via%3Dihub)
+
+-   [Gap Statistic Method](http://www.web.stanford.edu/~hastie/Papers/gap.pdf)
+
+::: panel-tabset
+## Gap Statistic Method
+
+The [**gap statistic**](http://www.web.stanford.edu/~hastie/Papers/gap.pdf) compares the total within intra-cluster variation for different values of k with their expected values under null reference distribution of the data. The estimate of the optimal clusters will be value that maximize the gap statistic (i.e., that yields the largest gap statistic). This means that the clustering structure is far away from the random uniform distribution of points.
+
+To compute the gap statistic, [*clusGap()*](https://www.rdocumentation.org/packages/cluster/versions/2.1.0/topics/clusGap) of [**cluster**](https://cran.r-project.org/web/packages/cluster/index.html) package will be used. The [*hcut*](https://rpkgs.datanovia.com/factoextra/reference/hcut.html) function used is from [**factoextra**](https://rpkgs.datanovia.com/factoextra/index.html) package.
+
+```{r}
+set.seed(12345)
+gap_stat <- clusGap(shan_ict, 
+                    FUN = hcut, 
+                    nstart = 25, 
+                    K.max = 10, 
+                    B = 50)
+# Print the result
+print(gap_stat, method = "firstmax")
+```
+
+## Elbow Method
+
+```{r}
+
+```
+
+## Average Silhouette Method
+:::
+
+Next, we can visualise the plot by using [*fviz_gap_stat()*](https://rpkgs.datanovia.com/factoextra/reference/fviz_nbclust.html) of [**factoextra**](https://rpkgs.datanovia.com/factoextra/index.html) package.
+
+```{r}
+#| fig-width: 12
+#| fig-height: 6
+fviz_gap_stat(gap_stat) +
+  theme(plot.background = element_rect(fill = "#F7F4EA"),
+        panel.background = element_rect(fill = "#F7F4EA"))
+```
+
+With reference to the gap statistic graph above, the recommended number of cluster to retain is 1. However, it is not logical to retain only one cluster. By examine the gap statistic graph, [the 6-cluster gives the largest gap statistic and should be the next best cluster to pick]{style="color: #B95E82;"}.
+
+**Note:** In addition to these commonly used approaches, the [NbClust](https://cran.r-project.org/web/packages/NbClust/) package, published by Charrad et al., 2014, provides 30 indices for determining the relevant number of clusters and proposes to users the best clustering scheme from the different results obtained by varying all combinations of number of clusters, distance measures, and clustering methods.
+
+### 7.10 Interpreting the dendrograms
+
+In the dendrogram displayed above, each leaf corresponds to one observation. As we move up the tree, observations that are similar to each other are combined into branches, which are themselves fused at a higher height.
+
+The height of the fusion, provided on the vertical axis, indicates the (dis)similarity between two observations. The higher the height of the fusion, the less similar the observations are. Note that, conclusions about the proximity of two observations can be drawn only based on the height where branches containing those two observations first are fused. We cannot use the proximity of two observations along the horizontal axis as a criteria of their similarity.
+
+It’s also possible to draw the dendrogram with a border around the selected clusters by using [*rect.hclust()*](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/rect.hclust.html) of R stats. The argument *border* is used to specify the border colors for the rectangles.
+
+```{r}
+#| fig-width: 12
+#| fig-height: 8
+par(bg = "#F7F4EA")
+
+plot(hclust_ward, cex = 0.6)
+rect.hclust(hclust_ward, 
+            k = 6, 
+            border = 2:5)
+```
+
+### 7.11 Visually-driven hierarchical clustering analysis
+
+In this section, we will perform visually-driven hiearchical clustering analysis by using [*heatmaply*](https://cran.r-project.org/web/packages/heatmaply/index.html) package.
+
+With **heatmaply**, we are able to build both highly interactive cluster heatmap or static cluster heatmap.
+
+### 7.11.1 Transforming the data frame into a matrix
+
+The data was loaded into a data frame, but **it has to be a data matrix** to make a heatmap. Below will transform *shan_ict* data frame into a data matrix.
+
+```{r}
+shan_ict_mat <- data.matrix(shan_ict)
+```
+
+### 7.11.2 Plotting interactive cluster heatmap using *heatmaply()*
+
+[*heatmaply()*](https://talgalili.github.io/heatmaply/reference/heatmaply.html) of [heatmaply](https://talgalili.github.io/heatmaply/index.html) package is used to build an interactive cluster heatmap.
+
+```{r}
+#| fig-width: 12
+#| fig-height: 10
+p <- heatmaply(normalize(shan_ict_mat),
+          Colv=NA,
+          dist_method = "euclidean",
+          hclust_method = "ward.D",
+          seriate = "OLO",
+          colors = Blues,
+          k_row = 6,
+          margins = c(NA,200,60,NA),
+          fontsize_row = 4,
+          fontsize_col = 5,
+          main="Geographic Segmentation of Shan State by ICT indicators",
+          xlab = "ICT Indicators",
+          ylab = "Townships of Shan State"
+          ) %>%
+  layout(plot_bgcolor = "#D0DDD0",
+         paper_bgcolor = "#D0DDD0")
+p
+```
+
+### 7.12 Mapping the clusters formed
+
+With closed examination of the dendragram above, we have decided to retain six clusters.
+
+[*cutree()*](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/cutree.html) of R Base will be used in the code chunk below to derive a 6-cluster model.
+
+```{r}
+groups <- as.factor(cutree(hclust_ward, k=6))
+```
+
+The output is called *groups*. It is a *list* object.
+
+In order to visualise the clusters, the *groups* object need to be appended onto *shan_sf* simple feature object.
+
+The code chunk below form the join in three steps:
+
+-   the *groups* list object will be converted into a matrix;
+-   *cbind()* is used to append *groups* matrix onto shan_sf to produce an output simple feature object called `shan_sf_cluster`; and
+-   *rename* of **dplyr** package is used to rename *as.matrix.groups* field as *CLUSTER*.
+
+```{r}
+shan_sf_cluster <- cbind(shan_sf, as.matrix(groups)) %>%
+  rename(`CLUSTER`=`as.matrix.groups.`)
+```
+
+Next, *qtm()* of **tmap** package is used to plot the choropleth map showing the cluster formed.
+
+```{r}
+#| fig-width: 12
+#| fig-height: 8
+par(bg = "#D0DDD0")
+qtm(shan_sf_cluster, "CLUSTER") +
+    tm_layout(bg.color = "#D0DDD0",
+              outer.margins = c(0.02, 0.02, 0.02, 0.02),
+              legend.position = c("right", "top"),
+              frame = FALSE)
+```
 
 ## 8 Spatially constrained clustering: SKATER approach
 
