@@ -1,5 +1,6 @@
 ---
-title: "06 - Geographical Segmentation with Spatially Constrained Clustering Techniques"
+title: "06 - Geographical Segmentation with Spatially Constrained Clustering Techniques
+"
 author: "Cathy C."
 date: "Oct 1, 2025"
 date-modified: "last-modified" #auto render date
