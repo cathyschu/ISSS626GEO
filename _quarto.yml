@@ -29,7 +29,7 @@ website:
         - text: "Exercise 5b"
           href: Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05b.qmd  
         - text: "Exercise 6"
-          href: Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex06.qmd   
+          href: Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.qmd   
       - text: "In-class Exercise"
         menu:
         - text: "Exercise 1"
