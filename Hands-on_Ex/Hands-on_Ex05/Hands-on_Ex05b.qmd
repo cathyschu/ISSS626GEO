@@ -253,7 +253,7 @@ lisa <- read_rds("data/rds/lisa.rds")
 head(lisa)
 ```
 
-#### 4.3 Mapping the local Moran's I
+#### 4.3.1 Mapping the local Moran's I
 
 ::: panel-tabset
 ## Local Moran’s I values + p-values
@@ -315,12 +315,16 @@ tm_shape(lisa) +
   tm_borders(fill_alpha = 0.5) +
   tm_title("Loal Morans'I of GDPPC (Queen's method)")
 ```
+**Positive ii means:** Location has similar values to its neighbors (clustering)
+**Negative ii means:** Location has different values from neighbors (spatial outlier)
 
 ## Local Moran’s I p-values
 
 The choropleth shows there is evidence for both positive and negative Ii values. However, it is useful to consider the p-values for each of these values, as consider above.
 
 The code chunks below produce a choropleth map of Moran’s I p-values by using functions of **tmap** package.
+
+This is to show statistical significance based on Monte Carlo simulation. It is more accurate, especially for small sample sizes or skewed data.
 
 ```{r}
 #| fig-width: 12
@@ -336,7 +340,7 @@ tm_shape(lisa) +
       position = tm_pos_out())) + 
   tm_text("NAME_3", size = 0.5) +
   tm_borders(fill_alpha = 0.5) +
-  tm_title("p-values of Loal Moran's I of GDPPC (Queen's method)")
+  tm_title("p-values of Local Moran's I of GDPPC (Queen's method)")
 ```
 :::
 
@@ -492,7 +496,7 @@ lisa <- lisa %>%
 :::
 
 ::: markgoals-container
-A new class called Insignificant has been added for records whereby p_ii \> 0.05.
+A new class called Insignificant has been added for records whereby p_ii_sim \> 0.05.
 :::
 :::::
 
@@ -529,7 +533,7 @@ Below we will plot both the local Moran’s I values map and its corresponding p
 #| fig-height: 8
 #| fig-align: center
 ii.map <- tm_shape(lisa) +
-  tm_polygons(fill = "p_ii_sim",
+  tm_polygons(fill = "ii",
               fill.scale = tm_scale_intervals(
                 style = "pretty",
                 n = 5,
