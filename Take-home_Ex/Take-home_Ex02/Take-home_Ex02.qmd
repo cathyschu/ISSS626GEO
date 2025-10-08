@@ -1,0 +1,219 @@
+---
+title: "02 - Singapore Bus Passenger Travel Patterns"
+author: "Cathy C."
+date: "Oct 7, 2025"
+date-modified: "last-modified" #auto render date
+format: html
+execute: #how YML page work
+  echo: true #will show code
+  eval: true #will run code every time and show output
+  warning: false #dont show warning msg
+  freeze: true #controls rendering - no render if no changes
+---
+
+## 1 Overview
+
+## 2 Load packages
+
+Let's install and load the following packages: **tidyverse, sf, sfdep, tmap, knitr** in R environment.
+
+```{r}
+pacman::p_load(tidyverse, sf, sfdep, tmap, knitr)
+```
+
+## 3 The data
+
+### 3.1 Import data
+
+Will import 3 datasets:
+
+-   Import *Bus Stop Location* shapfile from LTA DataMall into R environment
+-   Import *Master Plan 2019 Subzone Boundary (No Sea)* from <https://data.gov.sg/>
+-   Import *Passenger Volume by Origin Destination Bus Stops* from LTA DataMall
+
+When importing data, need to check first. Make sure busstop code is in character form rather than numeric. If it's latter, need to insert 0 because the stop code can start with zero.
+
+Open Bustop.prj and check if the data has the information we need, or need to transform.
+
+Below we will start importing the data.
+
+#### 3.1.2 Import *Master Plan 2019 Subzone Boundary data*
+
+```{r}
+mpsz <- st_read("data/MasterPlan2019SubzoneBoundaryNoSeaKML.kml")
+```
+
+```{r}
+mpsz <- read_rds("data/rds/mpsz.rds")
+st_crs(mpsz)
+```
+
+#### 3.1.3 Import B*us Stop Location* shapfile
+
+```{r}
+BusStop = st_read(dsn = "data/LTADataMall",
+                  layer = "BusStop")
+```
+
+Check the data type:
+
+```{r}
+st_crs(BusStop)
+```
+
+Based on the above, we identify that the the EPSG is not aligned with mpsz, so we need to transform the data for EPSG:3414 Projected coordinate system for Singapore.
+
+```{r}
+BusStop <- BusStop %>%
+  st_transform(crs = 3414)
+```
+
+Check again on BusStop:
+
+```{r}
+st_crs(BusStop)
+```
+
+Now, we see BusStop is aligned with mpsz.
+
+#### 3.1.4 Import *Passenger Volume by Origin Destination Bus Stops*
+
+```{r}
+odbus <- read_csv("data/origin_destination_bus_202508.csv")
+```
+
+```{r}
+st_crs(odbus)
+```
+
+describe the coordinate system EPSG, SF
+
+### 3.2 Prepare hexagon data
+
+#### 3.2.1 Extracting bus stops in Singapore
+
+First we plot the bus stops in Singapore below:
+
+```{r}
+tm_shape(mpsz) +
+  tm_polygons() +
+  tm_shape(BusStop) +
+  tm_dots() +
+  tm_layout(bg.color = "#D0DDD0")
+```
+
+We see that the dots (bus stops) outside the boundaries are buses for JB, Malaysia. Therefore, these have to be excluded. One way to exclude them is to plot the mpsz layer on top of the BusStop layer.
+
+If we have mpsz in front of the layer, it will capture all bus stops. When we plot first layer using Busstop before mpsz, these spots for JB will be covered.
+
+```{r}
+BusStop_in_SG <- st_join(
+  BusStop, mpsz, #BusStop first
+  join = st_within,
+  left = FALSE
+)
+```
+
+The, we plot again:
+
+```{r}
+tm_shape(mpsz) +
+  tm_polygons() +
+  tm_shape(BusStop_in_SG) +
+  tm_dots() +
+  tm_layout(bg.color = "#D0DDD0")
+```
+
+#### 3.2.2 Deriving Analytical Hexagon
+
+We want to create regular shapes layers with hexagon grid (square and hexagon are 2 most used).
+
+We want to exclude those without bus stops. Create the hexagon layer cover the entire Singapore.
+
+We will need to derive the hexzgon data of 375m (this distance is the perpendicular distance between the centre of the hexagon and its edges) to represent the [traffic analysis zone (TAZ)](https://tmg.utoronto.ca/files/Reports/Traffic-Zone-Guidance_March-2021_Final.pdf).
+
+```{r}
+hexagon <- st_make_grid(mpsz, cellsize = 700,
+                        what = "polygon",
+                        square = FALSE) %>% 
+# not a tibbler data frame
+  st_sf() # so need to convert to sf
+```
+
+The output does not have a unique ID.
+
+#### 3.2.3 Filtering hexagons with bus stops
+
+We only want to retain hexagons with bus stops. Use `st_intersects()` to return 2 values: True, False (0 or 1). The hexagon with a bus stop would be 1, and without a bus stop would return 0.
+
+```{r}
+hexagon$n_collisions = 
+  lengths(st_intersects(
+    hexagon, BusStop_in_SG
+  )) #n_collisions show the number of bus stops.
+
+hexagon <- filter(hexagon, n_collisions >0) #retain all that have bus stops.
+```
+
+#### 3.2.4 Visualise the output
+
+```{r}
+tm_shape(mpsz) +
+  tm_polygons() +
+  tm_shape(hexagon) +
+  tm_fill(col = "black", fill = "green")
+```
+
+We want to know the trips occurred in each hexagon in certain time periods.
+
+The hexagons do not have an ID, so we will give each an ID.
+
+#### 3.2.5 Assign IDs to each hexagon
+
+```{r}
+hexagon <- hexagon %>%
+  select(, -n_collisions)
+
+hexagon$HEX_ID <- sprintf(
+  "H%04d", seq_len(nrow(hexagon))
+) %>%
+  as.factor() #they will in ordinal scale
+
+kable(head(hexagon))
+```
+
+### 3.3 Prepare trip generation data
+
+#### 3.3.1 Clearing the data
+
+We dont need the destination code. Below we will select the columns we need, including `ORIGIN_PT_CODE`, `DAY_TYPE`, `TIME_PER_HOUR`, and `TOTAL_TRIPS`. We also simply the code to join the datasets together later.
+
+```{r}
+trips <- odbus %>%
+  select(c(ORIGIN_PT_CODE, DAY_TYPE, TIME_PER_HOUR, TOTAL_TRIPS)) %>%
+  rename(BUS_STOP_N = ORIGIN_PT_CODE) %>% #simply the code for joining.
+  rename(HOUR_OF_DAY = TIME_PER_HOUR) %>%
+  rename(TRIPS = TOTAL_TRIPS)
+trips$BUS_STOP_N <- as.factor(trips$BUS_STOP_N) #convert to factor so it's not numerical.
+kable(head(trips))
+```
+
+**Combine bus stop with Hex ID into hexagon layer.**
+
+```{r}
+bs_hex <- st_intersection(
+  BusStop, hexagon
+) %>%
+  st_drop_geometry() %>%
+  select(c(BUS_STOP_N, HEX_ID)) #drop away the rest
+kable(head(bs_hex))
+```
+
+#### 3.3.2 Add HEX_ID into bus trips data
+
+**Use inner_join() to join trips and bus_hex.**
+
+```{r}
+trips <- inner_join(trips, bs_hex)
+kable(head(trips))
+```

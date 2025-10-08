@@ -207,6 +207,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="dropdown-item" href="../../Take-home_Ex/Take-home_Ex01/test.html">
  <span class="dropdown-text">Exercise 1</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../../Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html">
+ <span class="dropdown-text">Exercise 2</span></a>
+  </li>  
     </ul>
   </li>
 </ul>
@@ -304,7 +308,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">September 30, 2025</p>
+      <p class="date-modified">October 8, 2025</p>
     </div>
   </div>
     
@@ -343,8 +347,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>We will use <strong>sf</strong>, <strong>sfdep</strong>, <strong>tmap</strong> and <strong>tidyverse</strong> packages of R.</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 34%">
-<col style="width: 65%">
+<col style="width: 35%">
+<col style="width: 64%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -562,12 +566,16 @@ Link number distribution:
 </div>
 <p><code>local_moran()</code> function returns a matrix of values whose columns are:</p>
 <ul>
-<li>Ii: the local Moran’s I statistics</li>
-<li>E.Ii: the expectation of local moran statistic under the randomisation hypothesis</li>
-<li>Var.Ii: the variance of local moran statistic under the randomisation hypothesis</li>
-<li>Z.Ii:the standard deviate of local moran statistic</li>
-<li>Pr(): the p-value of local moran statistic</li>
+<li><p>ii: the local Moran’s I statistics</p></li>
+<li><p>eii: the expectation of local moran statistic under the randomisation hypothesis</p></li>
+<li><p>var_ii: the variance of local moran statistic under the randomisation hypothesis</p></li>
+<li><p>p_ii: p-value (<strong>p &lt; 0.05</strong>: Statistically significant clustering/outlier)</p></li>
+<li><p>p_ii_sim: P-value (Simulated/Monte Carlo)</p></li>
+<li><p>z_ii:the standard deviate of local moran statistic</p></li>
+<li><p>Pr(): the p-value of local moran statistic</p></li>
 </ul>
+<p><strong>Look at <code>ii</code></strong> to see if there’s clustering (positive) or outliers (negative)</p>
+<p><strong>Check <code>p_ii_sim</code></strong> to see if it’s statistically significant (&lt; 0.05)</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>lisa <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/lisa.rds"</span>)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(lisa)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -600,7 +608,7 @@ Projected CRS: WGS 84 / UTM zone 50N
 <p>Plotting the local Moran’s I values and its correspnding p-values offers effective interpretation. <strong>Individual plot is on the next tabs.</strong></p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>ii.map <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(lisa) <span class="sc">+</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="at">fill =</span> <span class="st">"p_ii_sim"</span>,</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="at">fill =</span> <span class="st">"ii"</span>,</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">fill.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">style =</span> <span class="st">"pretty"</span>,</span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">n =</span> <span class="dv">5</span>,</span>
@@ -640,7 +648,7 @@ Projected CRS: WGS 84 / UTM zone 50N
 <p>Using choropleth mapping functions of <strong>tmap</strong> package, we can plot the local Moran’s I values using the code chinks below.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(lisa) <span class="sc">+</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="at">fill =</span> <span class="st">"p_ii_sim"</span>,</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="at">fill =</span> <span class="st">"ii"</span>,</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">fill.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">style =</span> <span class="st">"pretty"</span>,</span>
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">n =</span> <span class="dv">5</span>,</span>
