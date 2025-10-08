@@ -300,6 +300,7 @@ Using choropleth mapping functions of **tmap** package, we can plot the local Mo
 
 ```{r}
 #| fig-width: 12
+#| fig-height: 8
 #| fig-align: center
 tm_shape(lisa) +
   tm_polygons(fill = "ii",
@@ -323,6 +324,7 @@ The code chunks below produce a choropleth map of Moran’s I p-values by using 
 
 ```{r}
 #| fig-width: 12
+#| fig-height: 8
 #| fig-align: center
 tm_shape(lisa) +
   tm_polygons(fill = "p_ii_sim", 
