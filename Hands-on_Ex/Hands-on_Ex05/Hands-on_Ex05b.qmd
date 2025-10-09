@@ -627,7 +627,7 @@ One of the characteristics of fixed distance weight matrix is that more densely 
 
 It is possible to control the numbers of neighbours directly using k-nearest neighbours, either accepting asymmetric neighbours or imposing symmetry as shown in the code chunk below.
 
-In this section, you will learn how to compute fixed distance weight matrix by using `st_dist_band()` and `st_weights()` of **sfdep** package.
+In this section, we will compute adaptive distance weight matrix by using `st_knn()` and `st_weights()` of **sfdep** package.
 
 ```{r}
 hunan_adw <- hunan %>%
@@ -644,7 +644,7 @@ hunan_adw <- hunan %>%
 
 Local Gi\* (pronounced “G-i-star”) is a Getis-Ord statistic used in spatial analysis to identify statistically significant hot spots and cold spots of high or low attribute values within a dataset. It measures the spatial clustering of values by comparing the total value within a specified neighborhood to the global total, producing a Z-score and p-value for each location to determine the likelihood that the observed pattern is not due to random chance.
 
-In this sub-section, you will gain hands-on experience on performing Gi\* analysis by using `local_gstar_perm()` of **sfdep** package.
+In this sub-section, we will gain hands-on experience on performing Gi\* analysis by using `local_gstar_perm()` of **sfdep** package.
 
 ```{r}
 HCSA_fdw <- hunan_fdw %>%
@@ -680,9 +680,9 @@ tm_shape(HCSA_fdw) +
   tm_title("Gi* of GDPPC (Fixed Bandwidth d = 60799.91m)")
 ```
 
-## Gi\* with fix distance weights
+## Gi\* with fix distance weights p-value
 
-The choropleth shows there is evidence for both positive and negative Ii values. However, it is useful to consider the p-values for each of these values, as consider above.
+The choropleth shows there is evidence for both positive and negative Gi* values. However, it is useful to consider the p-values for each of these values, as consider above.
 
 The code chunk below plots a choropleth map of p-values of Gi\* by using functions of **tmap** package.
 

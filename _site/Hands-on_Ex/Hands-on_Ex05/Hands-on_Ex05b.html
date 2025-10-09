@@ -308,7 +308,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">October 8, 2025</p>
+      <p class="date-modified">October 9, 2025</p>
     </div>
   </div>
     
@@ -976,7 +976,7 @@ Projected CRS: WGS 84 / UTM zone 50N
 <h3 class="anchored" data-anchor-id="computing-adaptive-distance-weights">5.1.2 Computing adaptive distance weights</h3>
 <p>One of the characteristics of fixed distance weight matrix is that more densely settled areas (usually the urban areas) tend to have more neighbours and the less densely settled areas (usually the rural counties) tend to have lesser neighbours. Having many neighbours smooth the neighbour relationship across more neighbours.</p>
 <p>It is possible to control the numbers of neighbours directly using k-nearest neighbours, either accepting asymmetric neighbours or imposing symmetry as shown in the code chunk below.</p>
-<p>In this section, you will learn how to compute fixed distance weight matrix by using <code>st_dist_band()</code> and <code>st_weights()</code> of <strong>sfdep</strong> package.</p>
+<p>In this section, we will compute adaptive distance weight matrix by using <code>st_knn()</code> and <code>st_weights()</code> of <strong>sfdep</strong> package.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>hunan_adw <span class="ot">&lt;-</span> hunan <span class="sc">%&gt;%</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nb =</span> <span class="fu">include_self</span>(</span>
@@ -992,7 +992,7 @@ Projected CRS: WGS 84 / UTM zone 50N
 <section id="computing-local-gi" class="level2">
 <h2 class="anchored" data-anchor-id="computing-local-gi">5.2 Computing local Gi*</h2>
 <p>Local Gi* (pronounced “G-i-star”) is a Getis-Ord statistic used in spatial analysis to identify statistically significant hot spots and cold spots of high or low attribute values within a dataset. It measures the spatial clustering of values by comparing the total value within a specified neighborhood to the global total, producing a Z-score and p-value for each location to determine the likelihood that the observed pattern is not due to random chance.</p>
-<p>In this sub-section, you will gain hands-on experience on performing Gi* analysis by using <code>local_gstar_perm()</code> of <strong>sfdep</strong> package.</p>
+<p>In this sub-section, we will gain hands-on experience on performing Gi* analysis by using <code>local_gstar_perm()</code> of <strong>sfdep</strong> package.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>HCSA_fdw <span class="ot">&lt;-</span> hunan_fdw <span class="sc">%&gt;%</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
@@ -1005,7 +1005,7 @@ Projected CRS: WGS 84 / UTM zone 50N
 <section id="preparing-and-visualising-hcsa-map" class="level2">
 <h2 class="anchored" data-anchor-id="preparing-and-visualising-hcsa-map">5.3 Preparing and Visualising HCSA Map</h2>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Gi* with fix distance weights</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Gi* with fix distance weights</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false">Gi* values + p-values</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Gi* with fix distance weights</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Gi* with fix distance weights p-value</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false">Gi* values + p-values</a></li></ul>
 <div class="tab-content">
 <div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
 <p>Thematic mapping functions of tmaps are used to prepare a choropleth map showing the distribution of Gi* values.</p>
@@ -1032,7 +1032,7 @@ Projected CRS: WGS 84 / UTM zone 50N
 </div>
 </div>
 <div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
-<p>The choropleth shows there is evidence for both positive and negative Ii values. However, it is useful to consider the p-values for each of these values, as consider above.</p>
+<p>The choropleth shows there is evidence for both positive and negative Gi* values. However, it is useful to consider the p-values for each of these values, as consider above.</p>
 <p>The code chunk below plots a choropleth map of p-values of Gi* by using functions of <strong>tmap</strong> package.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(HCSA_fdw) <span class="sc">+</span>   </span>
