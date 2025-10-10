@@ -647,6 +647,7 @@ Local Gi\* (pronounced “G-i-star”) is a Getis-Ord statistic used in spatial 
 In this sub-section, we will gain hands-on experience on performing Gi\* analysis by using `local_gstar_perm()` of **sfdep** package.
 
 ```{r}
+set.seed(1234)
 HCSA_fdw <- hunan_fdw %>%
   mutate(
     gistar = local_gstar_perm(
