@@ -675,7 +675,7 @@ tm_shape(HCSA_fdw) +
                 values = "brewer.rd_bu"),
               fill.legend = tm_legend(
                 title = "Gi*",
-                position = tm_pos_out())) + 
+                position = tm_pos_in())) + 
     tm_text("NAME_3", size = 0.5) +
   tm_borders(fill_alpha = 0.5) +
   tm_title("Gi* of GDPPC (Fixed Bandwidth d = 60799.91m)")
@@ -690,6 +690,7 @@ The code chunk below plots a choropleth map of p-values of Gi\* by using functio
 ```{r}
 #| fig-width: 12
 #| fig-height: 8
+#| fig-align: center
   tm_shape(HCSA_fdw) +   
   tm_polygons(fill = "p_sim",                
               fill.scale = tm_scale_intervals(                 
@@ -697,7 +698,7 @@ The code chunk below plots a choropleth map of p-values of Gi\* by using functio
                 values = "-brewer.Reds"),               
               fill.legend = tm_legend(                 
                 title = "simulated p-value",       
-                position = tm_pos_out())) +    
+                position = tm_pos_in())) +    
     tm_text("NAME_3", size = 0.5) +
   tm_borders(fill_alpha = 0.5) +   
   tm_title("p-values of local Gi* of GDPPC (Fixed distance)")
