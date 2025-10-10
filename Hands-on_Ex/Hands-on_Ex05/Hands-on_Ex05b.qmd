@@ -689,7 +689,7 @@ The code chunk below plots a choropleth map of p-values of Gi\* by using functio
 
 ```{r}
 #| fig-width: 12
-#| fig-height: 8
+#| fig-height: 10
 #| fig-align: center
   tm_shape(HCSA_fdw) +   
   tm_polygons(fill = "p_sim",                
