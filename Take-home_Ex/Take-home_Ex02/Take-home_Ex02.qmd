@@ -126,14 +126,12 @@ tm_shape(mpsz) +
 
 #### 3.2.2 Deriving Analytical Hexagon
 
-We want to create regular shapes layers with hexagon grid (square and hexagon are 2 most used).
+We want to create regular shapes layers with hexagon grid (square and hexagon are 2 most used), and exclude those without bus stops. Create the hexagon layer covering the entire Singapore.
 
-We want to exclude those without bus stops. Create the hexagon layer cover the entire Singapore.
-
-We will need to derive the hexzgon data of 375m (this distance is the perpendicular distance between the centre of the hexagon and its edges) to represent the [traffic analysis zone (TAZ)](https://tmg.utoronto.ca/files/Reports/Traffic-Zone-Guidance_March-2021_Final.pdf).
+We will need to derive the hexagon data of 375m (this distance is the perpendicular distance between the centre of the hexagon and its edges) to represent the [traffic analysis zone (TAZ)](https://tmg.utoronto.ca/files/Reports/Traffic-Zone-Guidance_March-2021_Final.pdf).
 
 ```{r}
-hexagon <- st_make_grid(mpsz, cellsize = 700,
+hexagon <- st_make_grid(mpsz, cellsize = 750,
                         what = "polygon",
                         square = FALSE) %>% 
 # not a tibbler data frame
@@ -217,3 +215,15 @@ kable(head(bs_hex))
 trips <- inner_join(trips, bs_hex)
 kable(head(trips))
 ```
+
+## 4 Bus geographical distribution of passenger trips
+
+## 5 **Local Measures of Spatial Association (LMSA) Analysis**
+
+## 6 **Emerging Hot Spot Analysis(EHSA)**
+
+## 7 Space-time analysis 
+
+animated time-series maps
+
+## Reference
