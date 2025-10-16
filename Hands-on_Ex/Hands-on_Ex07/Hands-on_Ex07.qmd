@@ -1,0 +1,51 @@
+---
+title: "07 - Calibrating Hedonic Pricing Model for Private Highrise Property with GWR Method"
+author: "Cathy C."
+date: "Oct 17, 2025"
+date-modified: "last-modified" #auto render date
+format: html
+execute: #how YML page work
+  echo: true #will show code
+  eval: true #will run code every time and show output
+  warning: false #dont show warning msg
+  freeze: true #controls rendering - no render if no changes
+---
+
+## 1 Overview
+
+**Geographically weighted regression (GWR)** is a spatial statistical technique that takes non-stationary variables into consideration (e.g., climate; demographic factors; physical environment characteristics) and models the local relationships between these independent variables and an outcome of interest (also known as dependent variable). In this hands-on exercise, we will build [hedonic pricing](https://www.investopedia.com/terms/h/hedonicpricing.asp) models by using GWR methods. The dependent variable is the resale prices of condominium in 2015. The independent variables are divided into either structural and locational.
+
+::::: markgoals
+::: markgoals-header
+**Note**
+:::
+
+::: markgoals-container
+**Non-stationary variables** = Things that change depending on where you are.
+
+The two types of factors:
+
+-   **Structural factors** - Physical features of the condo itself (size, number of rooms, age of building, facilities)
+-   **Locational factors** - Where the condo is located (distance to MRT station, nearby schools, shopping centers)
+
+**Hedonic pricing** = identifies price factors based on the idea that a good's price is influenced by both its internal characteristics and external factors. Hedonic pricing is often used to estimate the [value](https://www.investopedia.com/articles/trading/09/quant-strategies.asp) of environmental or ecosystem services that influence home prices. This valuation method often requires statistical expertise and model specification after collecting data.
+:::
+:::::
+
+## 2 Getting started
+
+### 2.1 The analytical question
+
+Generally spatial policies would have development objectives from local government and planners to ensure equal distribution of development in the province, taking China for an example. Our task in this study, hence, is to apply appropriate spatial statistical methods to discover if [*development are evenly distributed geographically*]{style="color: #B95E82;"}. If the answer is **No**. Then, our next question will be “*is there sign of spatial clustering?*”. And, if the answer for this question is **yes**, then our next question will be “*where are these clusters?*”
+
+### 2.2
+
+## 3 The data
+
+## 4 Global Measures of Spatial Autocorrelation
+
+## 5 Global Measures of Spatial Autocorrelation: Moran’s I
+
+## 6 Global Measures of Spatial Autocorrelation: Geary’s C
+
+## 7 Spatial Correlogram
