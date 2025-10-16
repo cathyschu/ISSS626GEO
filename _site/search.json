@@ -1173,14 +1173,14 @@
     "href": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07.html#getting-started",
     "title": "07 - Calibrating Hedonic Pricing Model for Private Highrise Property with GWR Method",
     "section": "2 Getting started",
-    "text": "2 Getting started\n\n2.1 The analytical question\nGenerally spatial policies would have development objectives from local government and planners to ensure equal distribution of development in the province, taking China for an example. Our task in this study, hence, is to apply appropriate spatial statistical methods to discover if development are evenly distributed geographically. If the answer is No. Then, our next question will be “is there sign of spatial clustering?”. And, if the answer for this question is yes, then our next question will be “where are these clusters?”\n\n\n2.2"
+    "text": "2 Getting started"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07.html#the-data",
     "href": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07.html#the-data",
     "title": "07 - Calibrating Hedonic Pricing Model for Private Highrise Property with GWR Method",
-    "section": "3 The data",
-    "text": "3 The data"
+    "section": "4 The data",
+    "text": "4 The data\n\n4.1 Data set\n\n\n4.2 Geospatial data wrangling\n\n4.2.1 Import geospatial data\n\n\n4.2.2 Update CRS information\n\n\n\n4.3 Aspatial data wrangling\n\n4.3.1 Import aspatial data\n\n\n4.3.2 Convert aspatial data frame into a sf object"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07.html#global-measures-of-spatial-autocorrelation",
@@ -1209,5 +1209,40 @@
     "title": "07 - Calibrating Hedonic Pricing Model for Private Highrise Property with GWR Method",
     "section": "7 Spatial Correlogram",
     "text": "7 Spatial Correlogram"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07.html#about-gwmodel",
+    "href": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07.html#about-gwmodel",
+    "title": "07 - Calibrating Hedonic Pricing Model for Private Highrise Property with GWR Method",
+    "section": "3 About GWmodel",
+    "text": "3 About GWmodel"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07.html#exploratory-data-analysis-eda",
+    "href": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07.html#exploratory-data-analysis-eda",
+    "title": "07 - Calibrating Hedonic Pricing Model for Private Highrise Property with GWR Method",
+    "section": "5 Exploratory data analysis (EDA)",
+    "text": "5 Exploratory data analysis (EDA)\n\n5.1 EDA using statistical graphics\n\n\n5.2 Multiple histogram plots distributions of variables\n\n\n5.3 Draw statistical point map"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07.html#hedonic-pricing-modelling-in-r",
+    "href": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07.html#hedonic-pricing-modelling-in-r",
+    "title": "07 - Calibrating Hedonic Pricing Model for Private Highrise Property with GWR Method",
+    "section": "6 Hedonic pricing modelling in R",
+    "text": "6 Hedonic pricing modelling in R\n\n6.1 Simple linear regression method\n\n\n6.2 Multiple linear regression method\n\n\n6.3 Building a hedonic pricing model using multiple linear regression method\n\n\n6.4 Revising the model\n\n\n6.5 Preparing Publication Quality Table: gtsummary method\n\n\n6.6 Regression Diagnostics\n\n6.6.1 Multicollinearity test\n\n\n6.6.2 Test for Non-Linearity\n\n\n6.6.3 Test for Normality Assumption\n\n\n6.6.4 Test for Spatial Autocorrelation"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07.html#building-hedonic-pricing-models-using-gwmodel",
+    "href": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07.html#building-hedonic-pricing-models-using-gwmodel",
+    "title": "07 - Calibrating Hedonic Pricing Model for Private Highrise Property with GWR Method",
+    "section": "7 Building Hedonic Pricing Models using GWmodel",
+    "text": "7 Building Hedonic Pricing Models using GWmodel\n\n7.1 Building Fixed Bandwidth GWR Model\n\n7.1.1 Computing fixed bandwidth\n\n\n7.1.2 GWModel method - fixed bandwidth\n\n\n\n7.2 Building Adaptive Bandwidth GWR Model\n\n7.2.1 Computing the adaptive bandwidth\n\n\n7.2.2 Constructing the adaptive bandwidth gwr model\n\n\n\n7.3 Visualising GWR Output\n\n\n7.4 Converting SDF into sf data.frame\n\n\n7.5 Visualising local R2\n\n\n7.6 Visualising coefficient estimates"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07.html#references",
+    "href": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07.html#references",
+    "title": "07 - Calibrating Hedonic Pricing Model for Private Highrise Property with GWR Method",
+    "section": "References",
+    "text": "References"
   }
 ]

@@ -34,18 +34,74 @@ The two types of factors:
 
 ## 2 Getting started
 
-### 2.1 The analytical question
+## 3 About GWmodel
 
-Generally spatial policies would have development objectives from local government and planners to ensure equal distribution of development in the province, taking China for an example. Our task in this study, hence, is to apply appropriate spatial statistical methods to discover if [*development are evenly distributed geographically*]{style="color: #B95E82;"}. If the answer is **No**. Then, our next question will be “*is there sign of spatial clustering?*”. And, if the answer for this question is **yes**, then our next question will be “*where are these clusters?*”
+## 4 The data 
 
-### 2.2
+### 4.1 Data set
 
-## 3 The data
+### 4.2 Geospatial data wrangling
 
-## 4 Global Measures of Spatial Autocorrelation
+#### 4.2.1 Import geospatial data
 
-## 5 Global Measures of Spatial Autocorrelation: Moran’s I
+#### 4.2.2 Update CRS information
 
-## 6 Global Measures of Spatial Autocorrelation: Geary’s C
+### 4.3 Aspatial data wrangling
 
-## 7 Spatial Correlogram
+#### 4.3.1 Import aspatial data
+
+#### 4.3.2 Convert aspatial data frame into a sf object
+
+## 5 Exploratory data analysis (EDA)
+
+### 5.1 EDA using statistical graphics
+
+### 5.2 Multiple histogram plots distributions of variables
+
+### 5.3 Draw statistical point map
+
+## 6 Hedonic pricing modelling in R
+
+### 6.1 Simple linear regression method
+
+### 6.2 Multiple linear regression method
+
+### 6.3 **Building a hedonic pricing model using multiple linear regression method**
+
+### 6.4 **Revising the model**
+
+### 6.5 **Preparing Publication Quality Table: gtsummary method**
+
+### 6.6 **Regression Diagnostics**
+
+#### 6.6.1 Multicollinearity test
+
+#### 6.6.2 Test for Non-Linearity
+
+#### 6.6.3 Test for Normality Assumption
+
+#### 6.6.4 Test for Spatial Autocorrelation
+
+## **7 Building Hedonic Pricing Models using GWmodel**
+
+### 7.1 **Building Fixed Bandwidth GWR Model** 
+
+#### 7.1.1 Computing fixed bandwidth
+
+#### 7.1.2 GWModel method - fixed bandwidth
+
+### 7.2 **Building Adaptive Bandwidth GWR Model**
+
+#### 7.2.1 Computing the adaptive bandwidth
+
+#### 7.2.2 Constructing the adaptive bandwidth gwr model
+
+### 7.3 **Visualising GWR Output**
+
+### 7.4 **Converting SDF into *sf* data.frame**
+
+### 7.5 **Visualising local R2**
+
+### 7.6 **Visualising coefficient estimates**
+
+## References
