@@ -13,31 +13,45 @@ execute: #how YML page work
 
 ## 1 Overview
 
-## 2 Load packages
+## 2 Data sources & preparation
+
+### 2.1 Load packages
+
+The packages that we will use for this study are outlined below:
+
+| R Package | Description |
+|------------------|------------------------------------------------------|
+| **sf** | A package that provides [**simple features access**](https://en.wikipedia.org/wiki/Simple_Features) for R. |
+| **spdep** | Creates spatial weights matrices and to test for and model spatial autocorrelation in geographical data,  like Moran's I and Geary's C and Local Moran's I and Getis-Ord G. |
+| **tidyverse** | Includes the core packages like ggplot2, dplyr, readr, purrr, tibble, lubridate, etc. |
+| **sfdep** | Builds on the great shoulders of **spdep** package for spatial dependence. sfdep creates an sf and tidyverse friendly interface to the package as well as introduces new functionality that is not present in spdep. |
+| **h3** | H3 is a geospatial indexing system using a hexagonal grid that can be (approximately) subdivided into finer and finer hexagonal grids, combining the benefits of a hexagonal grid with [S2](https://code.google.com/archive/p/s2-geometry-library/)'s hierarchical subdivisions. |
+| **knitr** | Color maps designed to improve graph readability for readers with common forms of color blindness and/or color vision deficiency. |
+| **tmap** | geographical maps in which spatial data distributions are visualized. This package offers a flexible, layer-based, and easy to use approach to create thematic maps, such as choropleths and bubble maps. |
 
 Let's install and load the following packages: **tidyverse, sf, sfdep, tmap, knitr** in R environment.
 
 ```{r}
-pacman::p_load(tidyverse, sf, sfdep, tmap, knitr)
+pacman::p_load(tidyverse, sf, sfdep, tmap, knitr, h3)
 ```
 
-## 3 The data
+### 2.2 Import data
 
-### 3.1 Import data
+We will import 3 data sets for this study:
 
-Will import 3 datasets:
-
--   Import *Bus Stop Location* shapfile from LTA DataMall into R environment
--   Import *Master Plan 2019 Subzone Boundary (No Sea)* from <https://data.gov.sg/>
--   Import *Passenger Volume by Origin Destination Bus Stops* from LTA DataMall
+1.  Import *Bus Stop Location* shapfile from LTA DataMall into R environment
+2.  Import *Master Plan 2019 Subzone Boundary (No Sea)* from <https://data.gov.sg/>
+3.  Import *Passenger Volume by Origin Destination Bus Stops* from LTA DataMall
 
 When importing data, need to check first. Make sure busstop code is in character form rather than numeric. If it's latter, need to insert 0 because the stop code can start with zero.
 
-Open Bustop.prj and check if the data has the information we need, or need to transform.
+Open Bustop.prj and check if the data has the information we need, or need to transform. Below we will start importing the data.
 
-Below we will start importing the data.
+::: panel-tabset
 
-#### 3.1.2 Import *Master Plan 2019 Subzone Boundary data*
+## **Master Plan Subzone Boundary**
+
+Below we will import *Master Plan 2019 Subzone Boundary (No Sea).*
 
 ```{r}
 mpsz <- st_read("data/MasterPlan2019SubzoneBoundaryNoSeaKML.kml")
@@ -48,7 +62,9 @@ mpsz <- read_rds("data/rds/mpsz.rds")
 st_crs(mpsz)
 ```
 
-#### 3.1.3 Import B*us Stop Location* shapfile
+## **Bus Stop Location**
+
+Below we will import *Bus Stop Location* shapfile from LTA DataMall.
 
 ```{r}
 BusStop = st_read(dsn = "data/LTADataMall",
@@ -76,7 +92,9 @@ st_crs(BusStop)
 
 Now, we see BusStop is aligned with mpsz.
 
-#### 3.1.4 Import *Passenger Volume by Origin Destination Bus Stops*
+## **Passenger Volume**
+
+Below code is used to import *Passenger Volume by Origin Destination Bus Stops* from LTA DataMall.
 
 ```{r}
 odbus <- read_csv("data/origin_destination_bus_202508.csv")
@@ -88,21 +106,27 @@ st_crs(odbus)
 
 describe the coordinate system EPSG, SF
 
-### 3.2 Prepare hexagon data
+:::
 
-#### 3.2.1 Extracting bus stops in Singapore
+### 2.3 Data wrangling: Prepare hexagon data
+
+#### 2.3.1 Extracting bus stops in Singapore
 
 First we plot the bus stops in Singapore below:
 
 ```{r}
+#| fig-width: 12
+#| fig-height: 8
+
 tm_shape(mpsz) +
   tm_polygons() +
   tm_shape(BusStop) +
-  tm_dots() +
-  tm_layout(bg.color = "#D0DDD0")
+  tm_dots(size = 0.3, fill = "#344F1F") +
+  tm_layout(bg.color = "#D0DDD0",
+            outer.margins = c(0.01, 0.01, 0.01, 0.01))
 ```
 
-We see that the dots (bus stops) outside the boundaries are buses for JB, Malaysia. Therefore, these have to be excluded. One way to exclude them is to plot the mpsz layer on top of the BusStop layer.
+We see that the dots (bus stops) outside the boundaries are buses for JB, Malaysia. Therefore, **these have to be excluded.** One way to exclude them is to plot the mpsz layer on top of the BusStop layer.
 
 If we have mpsz in front of the layer, it will capture all bus stops. When we plot first layer using Busstop before mpsz, these spots for JB will be covered.
 
@@ -117,18 +141,22 @@ BusStop_in_SG <- st_join(
 The, we plot again:
 
 ```{r}
+#| fig-width: 12
+#| fig-height: 8
+
 tm_shape(mpsz) +
   tm_polygons() +
   tm_shape(BusStop_in_SG) +
-  tm_dots() +
-  tm_layout(bg.color = "#D0DDD0")
+  tm_dots(size = 0.3, fill = "#E45A92") +
+  tm_layout(bg.color = "#D0DDD0",
+            outer.margins = c(0.01, 0.01, 0.01, 0.01))
 ```
 
-#### 3.2.2 Deriving Analytical Hexagon
+#### 2.3.2 Deriving Analytical Hexagon
 
 We want to create regular shapes layers with hexagon grid (square and hexagon are 2 most used), and exclude those without bus stops. Create the hexagon layer covering the entire Singapore.
 
-We will need to derive the hexagon data of 375m (this distance is the perpendicular distance between the centre of the hexagon and its edges) to represent the [traffic analysis zone (TAZ)](https://tmg.utoronto.ca/files/Reports/Traffic-Zone-Guidance_March-2021_Final.pdf).
+We will need to derive the hexagon data of **375m** (this distance is the perpendicular distance between the centre of the hexagon and its edges) to represent the [traffic analysis zone (TAZ)](https://tmg.utoronto.ca/files/Reports/Traffic-Zone-Guidance_March-2021_Final.pdf). `cellsize` is the distance between opposite edges of the hexagon. This distance is twice the perpendicular distance from the center to any edge.
 
 ```{r}
 hexagon <- st_make_grid(mpsz, cellsize = 750,
@@ -140,7 +168,7 @@ hexagon <- st_make_grid(mpsz, cellsize = 750,
 
 The output does not have a unique ID.
 
-#### 3.2.3 Filtering hexagons with bus stops
+#### 2.3.3 Filtering hexagons with bus stops
 
 We only want to retain hexagons with bus stops. Use `st_intersects()` to return 2 values: True, False (0 or 1). The hexagon with a bus stop would be 1, and without a bus stop would return 0.
 
@@ -153,20 +181,24 @@ hexagon$n_collisions =
 hexagon <- filter(hexagon, n_collisions >0) #retain all that have bus stops.
 ```
 
-#### 3.2.4 Visualise the output
+#### 2.3.4 Visualise the output
 
 ```{r}
+#| fig-width: 12
+#| fig-height: 8
 tm_shape(mpsz) +
   tm_polygons() +
   tm_shape(hexagon) +
-  tm_fill(col = "black", fill = "green")
+  tm_fill(col = "black", fill = "#FFD5D5") +
+  tm_layout(bg.color = "#D0DDD0",
+            outer.margins = c(0.01, 0.01, 0.01, 0.01))
 ```
 
 We want to know the trips occurred in each hexagon in certain time periods.
 
 The hexagons do not have an ID, so we will give each an ID.
 
-#### 3.2.5 Assign IDs to each hexagon
+#### 2.3.5 Assign IDs to each hexagon
 
 ```{r}
 hexagon <- hexagon %>%
@@ -180,9 +212,9 @@ hexagon$HEX_ID <- sprintf(
 kable(head(hexagon))
 ```
 
-### 3.3 Prepare trip generation data
+### 2.4 Prepare trip generation data
 
-#### 3.3.1 Clearing the data
+#### 2.4.1 Clearing the data
 
 We dont need the destination code. Below we will select the columns we need, including `ORIGIN_PT_CODE`, `DAY_TYPE`, `TIME_PER_HOUR`, and `TOTAL_TRIPS`. We also simply the code to join the datasets together later.
 
@@ -207,7 +239,7 @@ bs_hex <- st_intersection(
 kable(head(bs_hex))
 ```
 
-#### 3.3.2 Add HEX_ID into bus trips data
+#### 2.4.2 Add HEX_ID into bus trips data
 
 **Use inner_join() to join trips and bus_hex.**
 
@@ -216,14 +248,36 @@ trips <- inner_join(trips, bs_hex)
 kable(head(trips))
 ```
 
-## 4 Bus geographical distribution of passenger trips
+\*\* count trips per hexagon?
 
-## 5 **Local Measures of Spatial Association (LMSA) Analysis**
+### 2.5 Time preiod filtering
 
-## 6 **Emerging Hot Spot Analysis(EHSA)**
+Create separate datasets for each time period
 
-## 7 Space-time analysis
+## 3 Exploratory spatial analysis
+
+Bus geographical distribution of passenger trips
+
+## 4 Local Measures of Spatial Autocorrelation (LMSA) Analysis
+
+1.  Calculate Local Moran's I first
+2.  Build complexity: Add Local Geary's C and Getis-Ord Gi\*
+3.  Focus on interpretation: What do the patterns mean for urban planning?
+
+## 5 Emerging Hot Spot Analysis(EHSA)
+
+1.  Create space-time cube: Stack the three time periods
+2.  Apply Mann-Kendall test to detect trends
+3.  Categorize patterns: New, intensifying, diminishing, sporadic
+
+## 6 Space-time analysis
 
 animated time-series maps
+
+## 7 Key findings & Conclusions
+
+**Visualisation** Create comparison layouts (e.g., side-by-side time periods) Highlight only significant results (p \< 0.05) Write concise, insightful captions focusing on: What the pattern shows, Why it matters for transportation planning, Potential causes or implications
+
+**Extra data - MRT data**
 
 ## Reference
