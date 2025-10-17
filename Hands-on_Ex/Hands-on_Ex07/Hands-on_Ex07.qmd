@@ -34,31 +34,290 @@ The two types of factors:
 
 ## 2 Getting started
 
+We will be using the following R packages:
+
+| R Package | Description |
+|---------------------|---------------------------------------------------|
+| [**olsrr**](https://olsrr.rsquaredacademy.com/) | R package for building OLS and performing diagnostics tests |
+| [**GWmodel**](https://cran.r-project.org/web/packages/GWmodel/index.html) | R package for calibrating geographical weighted family of models |
+| [**corrplot**](https://cran.r-project.org/web/packages/corrplot/vignettes/corrplot-intro.html) | R package for multivariate data visualisation and analysis |
+| **sf** | Spatial data handling |
+| **tidyverse** | Attribute data handling with **readr**, **ggplot2** and **dplyr** |
+| **tmap** | Do Choropleth mapping |
+
+```{r}
+pacman::p_load(olsrr, corrplot, ggpubr, sf, sfdep, GWmodel, tmap, tidyverse, gtsummary,
+               performance, RColorBrewer)
+```
+
 ## 3 About GWmodel
 
-## 4 The data 
+[**GWmodel**](https://www.jstatsoft.org/article/view/v063i17) package provides a collection of localised spatial statistical methods, namely: GW summary statistics, GW principal components analysis, GW discriminant analysis and various forms of GW regression; some of which are provided in basic and robust (outlier resistant) forms. Commonly, outputs or parameters of the GWmodel are mapped to provide a useful exploratory tool, which can often precede (and direct) a more traditional or sophisticated statistical analysis.
+
+## 4 The data
 
 ### 4.1 Data set
+
+Two data sets will be used in this model building exercise, they are:
+
+-   URA Master Plan subzone boundary in shapefile format (i.e. *MP14_SUBZONE_WEB_PL*)
+-   condo_resale_2015 in csv format (i.e. *condo_resale_2015.csv*)
 
 ### 4.2 Geospatial data wrangling
 
 #### 4.2.1 Import geospatial data
 
+The geospatial data used in this hands-on exercise is called MP14_SUBZONE_WEB_PL. It is in ESRI shapefile format. The shapefile consists of URA Master Plan 2014’s planning subzone boundaries. Polygon features are used to represent these geographic boundaries. The GIS data is in svy21 projected coordinates systems.
+
+The code chunk below is used to import *MP_SUBZONE_WEB_PL* shapefile by using `st_read()` of **sf** packages.
+
+```{r}
+mpsz = st_read(dsn = "data/geospatial", layer = "MP14_SUBZONE_WEB_PL")
+```
+
 #### 4.2.2 Update CRS information
+
+The code chunk below updates the newly imported *mpsz* with the **correct ESPG code (i.e. 3414)**
+
+```{r}
+mpsz_svy21 <- st_transform(mpsz, 3414)
+```
+
+Let's verify the newly transformed *mpsz_svy21*.
+
+```{r}
+st_crs(mpsz_svy21)
+```
+
+Notice that the EPSG: **is indicated as *3414* now.**
+
+Next, we will reveal the extent of *mpsz_svy21* by using `st_bbox()` of sf package. The print below reports the extent of mpsz_svy21 layer by its l**ower and upper limits**.
+
+```{r}
+st_bbox(mpsz_svy21)
+```
 
 ### 4.3 Aspatial data wrangling
 
-#### 4.3.1 Import aspatial data
+#### 4.3.1 Import Aspatial data
+
+The *condo_resale_2015* is in csv file format. The codes chunk below uses `read_csv()` function of **readr** package to import *condo_resale_2015* into R as a tibble data frame called *condo_resale*.
+
+```{r}
+condo_resale = read_csv("data/aspatial/Condo_resale_2015.csv")
+```
+
+```{r}
+glimpse(condo_resale)
+```
+
+**Look at the data set's longitude and latitude.**
+
+```{r}
+head(condo_resale$LONGITUDE)
+head(condo_resale$LATITUDE)
+```
+
+The print above reveals that the values of *LONGITITUDE* and *LATITUDE* fields are in decimal degree. Most probably wgs84 geographic coordinate system is used.
+
+Next, `summary()` of base R is used to display the summary statistics of *cond_resale* tibble data frame.
+
+```{r}
+summary(condo_resale)
+```
 
 #### 4.3.2 Convert aspatial data frame into a sf object
 
+Currently, the *condo_resale* tibble data frame is aspatial. We will convert it to a **sf** object. The code chunk below converts condo_resale data frame into a simple feature data frame by using `st_as_sf()` of **sf** packages.
+
+```{r}
+condo_resale.sf <- st_as_sf(condo_resale,
+                            coords = c("LONGITUDE", "LATITUDE"),
+                            crs=4326) %>%
+  st_transform(crs=3414)
+```
+
+::::: markgoals
+::: markgoals-header
+**Note**
+:::
+
+::: markgoals-container
+Notice that `st_transform()` of **sf** package is used to convert the coordinates from wgs84 (i.e. crs:4326) to svy21 (i.e. crs=3414).
+:::
+:::::
+
+Let's list the content of *condo_resale.sf* object. Notice that the output is in point feature data frame.
+
+```{r}
+head(condo_resale.sf)
+```
+
 ## 5 Exploratory data analysis (EDA)
+
+In the section, we will use statistical graphics functions of **ggplot2** package to perform EDA.
 
 ### 5.1 EDA using statistical graphics
 
+We can plot the distribution of *SELLING_PRICE* by using appropriate Exploratory Data Analysis (EDA) as shown in the code chunk below.
+
+```{r}
+ggplot(data=condo_resale.sf, 
+       aes(x=`SELLING_PRICE`)) +
+  geom_histogram(bins=20, 
+                 color="#CBCBCB", 
+                 fill="#B7B89F")
+```
+
+The histogram shows a right skewed distribution. This means that more condominium units were transacted at relatively lower prices.
+
+Statistically, the skewed dsitribution can be normalised by using log transformation. The code chunk below is used to derive a new variable called *LOG_SELLING_PRICE* by using a log transformation on the variable *SELLING_PRICE*. It is performed using `mutate()` of **dplyr** package.
+
+**Below histogram using logarithmic graph looks less skewed after the transformation.**
+
+```{r}
+condo_resale.sf <- condo_resale.sf %>%
+  mutate(`LOG_SELLING_PRICE` = log(SELLING_PRICE))
+
+ggplot(data=condo_resale.sf, 
+       aes(x=`LOG_SELLING_PRICE`)) +
+  geom_histogram(bins=20, 
+                 color="#CBCBCB", 
+                 fill="#B7B89F")
+```
+
 ### 5.2 Multiple histogram plots distributions of variables
 
+In this section, we will draw a small multiple histograms (also known as trellis plot) by using `ggarrange()` of [**ggpubr**](https://cran.r-project.org/web/packages/ggpubr/index.html) package.
+
+Below we create 12 histograms. Then, `ggarrange()` is used to organised these histogram into a 3 columns by 4 rows small multiple plot.
+
+```{r}
+#| fig-width: 12
+#| fig-height: 10
+#| code-fold: true
+
+custom_theme <- theme(
+  axis.text.x = element_text(size = 7),
+  axis.title.x = element_text(size = 9),
+  plot.background = element_rect(fill = "grey")
+)
+
+AREA_SQM <- ggplot(data=condo_resale.sf, 
+                   aes(x= `AREA_SQM`)) +
+  geom_histogram(bins=20, 
+                 color="#777C6D", fill="#B7B89F") +
+  custom_theme
+
+AGE <- ggplot(data=condo_resale.sf, 
+              aes(x= `AGE`)) +
+  geom_histogram(bins=20, 
+                 color="#777C6D", fill="#B7B89F") +
+  custom_theme
+
+PROX_CBD <- ggplot(data=condo_resale.sf, 
+                   aes(x= `PROX_CBD`)) +
+  geom_histogram(bins=20, 
+                 color="#777C6D", fill="#B7B89F") +
+  custom_theme
+
+PROX_CHILDCARE <- ggplot(data=condo_resale.sf, 
+                         aes(x= `PROX_CHILDCARE`)) + 
+  geom_histogram(bins=20, 
+                 color="#777C6D", fill="#B7B89F") +
+  custom_theme
+
+PROX_ELDERLYCARE <- ggplot(data=condo_resale.sf, 
+                           aes(x= `PROX_ELDERLYCARE`)) +
+  geom_histogram(bins=20, 
+                 color="#777C6D", fill="#B7B89F") +
+  custom_theme
+
+PROX_URA_GROWTH_AREA <- ggplot(data=condo_resale.sf, 
+                               aes(x= `PROX_URA_GROWTH_AREA`)) +
+  geom_histogram(bins=20, 
+                 color="#777C6D", fill="#B7B89F") +
+  custom_theme
+
+PROX_HAWKER_MARKET <- ggplot(data=condo_resale.sf, 
+                             aes(x= `PROX_HAWKER_MARKET`)) +
+  geom_histogram(bins=20, 
+                 color="#777C6D", fill="#B7B89F") +
+  custom_theme
+
+PROX_KINDERGARTEN <- ggplot(data=condo_resale.sf, 
+                            aes(x= `PROX_KINDERGARTEN`)) +
+  geom_histogram(bins=20, 
+                 color="#777C6D", fill="#B7B89F") +
+  custom_theme
+
+PROX_MRT <- ggplot(data=condo_resale.sf, 
+                   aes(x= `PROX_MRT`)) +
+  geom_histogram(bins=20, 
+                 color="#777C6D", fill="#B7B89F") +
+  custom_theme
+
+PROX_PARK <- ggplot(data=condo_resale.sf, 
+                    aes(x= `PROX_PARK`)) +
+  geom_histogram(bins=20, 
+                 color="#777C6D", fill="#B7B89F") +
+  custom_theme
+
+PROX_PRIMARY_SCH <- ggplot(data=condo_resale.sf, 
+                           aes(x= `PROX_PRIMARY_SCH`)) +
+  geom_histogram(bins=20, 
+                 color="#777C6D", fill="#B7B89F") +
+  custom_theme
+
+PROX_TOP_PRIMARY_SCH <- ggplot(data=condo_resale.sf, 
+                               aes(x= `PROX_TOP_PRIMARY_SCH`)) +
+  geom_histogram(bins=20, 
+                 color="#777C6D", fill="#B7B89F") +
+  custom_theme
+
+ggarrange(AREA_SQM, AGE, PROX_CBD, PROX_CHILDCARE, 
+          PROX_ELDERLYCARE, PROX_URA_GROWTH_AREA,
+          PROX_HAWKER_MARKET, PROX_KINDERGARTEN, PROX_MRT,
+          PROX_PARK, PROX_PRIMARY_SCH, PROX_TOP_PRIMARY_SCH,  
+          ncol = 3, nrow = 4) 
+```
+
 ### 5.3 Draw statistical point map
+
+Finally, we want to reveal the geospatial distribution condominium resale prices in Singapore. The map will be prepared by using **tmap** package.
+
+First, we will turn on the interactive mode of tmap.
+
+```{r}
+tmap_mode("view")
+```
+
+Then, we will create a interactive point symbol map.
+
+```{r}
+tm_shape(mpsz_svy21)+
+  tm_polygons() +
+  tm_text("PLN_AREA_N", size = 0.5) +
+tm_shape(condo_resale.sf) +  
+  tm_dots(fill = "SELLING_PRICE",
+          fill_alpha = 0.6,
+          size = 0.5,
+          fill.scale = tm_scale_intervals(
+            style="quantile")) +
+  tm_view(set_zoom_limits = c(11,14))
+```
+
+::::: markgoals
+::: markgoals-header
+**Note**
+:::
+
+::: markgoals-container
+-   [`tm_dots()`](https://www.rdocumentation.org/packages/tmap/versions/2.2/topics/tm_symbols) is used instead of `tm_bubbles(), so it's not oversized.`
+
+-   `set_zoom_limits` argument of `tm_view()` sets the minimum and maximum zoom level to 11 and 14 respectively.
+:::
+:::::
 
 ## 6 Hedonic pricing modelling in R
 
@@ -84,7 +343,7 @@ The two types of factors:
 
 ## **7 Building Hedonic Pricing Models using GWmodel**
 
-### 7.1 **Building Fixed Bandwidth GWR Model** 
+### 7.1 **Building Fixed Bandwidth GWR Model**
 
 #### 7.1.1 Computing fixed bandwidth
 
