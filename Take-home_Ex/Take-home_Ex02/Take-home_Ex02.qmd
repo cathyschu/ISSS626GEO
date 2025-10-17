@@ -222,7 +222,7 @@ kable(head(trips))
 
 ## 6 **Emerging Hot Spot Analysis(EHSA)**
 
-## 7 Space-time analysis 
+## 7 Space-time analysis
 
 animated time-series maps
 
