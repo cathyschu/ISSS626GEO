@@ -37,7 +37,7 @@ The two types of factors:
 We will be using the following R packages:
 
 | R Package | Description |
-|---------------------|---------------------------------------------------|
+|-------------------------|----------------------------------------------|
 | [**olsrr**](https://olsrr.rsquaredacademy.com/) | R package for building OLS and performing diagnostics tests |
 | [**GWmodel**](https://cran.r-project.org/web/packages/GWmodel/index.html) | R package for calibrating geographical weighted family of models |
 | [**corrplot**](https://cran.r-project.org/web/packages/corrplot/vignettes/corrplot-intro.html) | R package for multivariate data visualisation and analysis |
@@ -166,7 +166,8 @@ ggplot(data=condo_resale.sf,
        aes(x=`SELLING_PRICE`)) +
   geom_histogram(bins=20, 
                  color="#CBCBCB", 
-                 fill="#B7B89F")
+                 fill="#B7B89F") +
+  theme(plot.background = element_rect(fill = "grey"))
 ```
 
 The histogram shows a right skewed distribution. This means that more condominium units were transacted at relatively lower prices.
@@ -183,7 +184,8 @@ ggplot(data=condo_resale.sf,
        aes(x=`LOG_SELLING_PRICE`)) +
   geom_histogram(bins=20, 
                  color="#CBCBCB", 
-                 fill="#B7B89F")
+                 fill="#B7B89F") +
+  theme(plot.background = element_rect(fill = "grey"))
 ```
 
 ### 5.2 Multiple histogram plots distributions of variables
@@ -297,14 +299,14 @@ Then, we will create a interactive point symbol map.
 ```{r}
 tm_shape(mpsz_svy21)+
   tm_polygons() +
-  tm_text("PLN_AREA_N", size = 0.5) +
+  tm_text("SUBZONE_N", size = 0.5) +
 tm_shape(condo_resale.sf) +  
   tm_dots(fill = "SELLING_PRICE",
           fill_alpha = 0.6,
           size = 0.5,
           fill.scale = tm_scale_intervals(
             style="quantile")) +
-  tm_view(set_zoom_limits = c(11,14))
+  tm_view(set_zoom_limits = c(11,16))
 ```
 
 ::::: markgoals
@@ -319,19 +321,171 @@ tm_shape(condo_resale.sf) +
 :::
 :::::
 
+**Don't forget to return to the *"plot"* mode.**
+
+```{r}
+tmap_mode("plot")
+```
+
 ## 6 Hedonic pricing modelling in R
+
+In this section, we will build hedonic pricing models for condominium resale units using [`lm()`](https://www.rdocumentation.org/packages/stats/versions/3.5.2/topics/lm) of R base.
 
 ### 6.1 Simple linear regression method
 
+First, we will build a simple linear regression model by using *SELLING_PRICE* as the dependent variable and *AREA_SQM* as the independent variable. **\[*AREA_SQM*➡️ *SELLING_PRICE* \]**
+
+`lm()` returns an object of class “lm” or for multiple responses of class c(“mlm”, “lm”).
+
+```{r}
+condo.slr <- lm(formula=SELLING_PRICE ~ AREA_SQM, 
+                data = condo_resale.sf)
+```
+
+The functions `summary()` and `anova()` can be used to obtain and print a summary and analysis of variance table of the results. The generic accessor functions coefficients, effects, fitted.values and residuals extract various useful features of the value returned by `lm`.
+
+```{r}
+summary(condo.slr)
+```
+
+::::: markgoals
+::: markgoals-header
+\*\*Learning\*
+:::
+
+::: markgoals-container
+The output report reveals that the SELLING_PRICE can be explained by using the formula:
+
+```         
+      *y = -258121.1 + 14719x1*
+```
+
+-   The R-squared of 0.4518 reveals that the simple regression model built is able to explain about 45% of the resale prices.
+
+-   Since p-value is much smaller than 0.0001, we will **reject the null hypothesis** that mean is a good estimator of *SELLING_PRICE*. This will allow us to infer that **simple linear regression model above is a good estimator of *SELLING_PRICE*.**
+
+-   The **Coefficients:** section of the report reveals that the p-values of both the estimates of the Intercept and ARA_SQM are smaller than 0.001. In view of this, the null hypothesis of the B0 and B1 are equal to 0 will be rejected. As a results, we will be able to infer that the B0 and B1 are good parameter estimates.
+:::
+:::::
+
+To visualise the best fit curve on a scatterplot, we can incorporate `lm()` as a method function in ggplot’s geometry as shown in the code chunk below.
+
+```{r}
+#| fig-width: 12
+#| fig-height: 8
+ggplot(data=condo_resale.sf,  
+       aes(x=`AREA_SQM`, y=`SELLING_PRICE`)) +
+  geom_point(size = 0.3, color = "#777C6D") +
+  geom_smooth(method = lm) +
+  theme(plot.background = element_rect(fill = "grey"))
+```
+
+::::: markgoals
+::: markgoals-header
+**Insight**
+:::
+
+::: markgoals-container
+Figure above reveals that there are a few statistical outliers with relatively high selling prices.
+:::
+:::::
+
 ### 6.2 Multiple linear regression method
 
-### 6.3 **Building a hedonic pricing model using multiple linear regression method**
+#### 6.2.1 Visualising the relationships of the independent variables
 
-### 6.4 **Revising the model**
+Before building a multiple regression model, it is important to ensure that the indepdent variables used are not highly correlated to each other. If these highly correlated independent variables are used in building a regression model by mistake, the quality of the model will be compromised. This phenomenon is known as **multicollinearity** in statistics.
 
-### 6.5 **Preparing Publication Quality Table: gtsummary method**
+Correlation matrix is commonly used to visualise the relationships between the independent variables. Beside the `pairs()` of R, there are many packages support the display of a correlation matrix. In this section, the [**corrplot**](https://cran.r-project.org/web/packages/corrplot/vignettes/corrplot-intro.html) package will be used.
 
-### 6.6 **Regression Diagnostics**
+Below we will plot a scatterplot matrix of the relationship between the independent variables in *condo_resale* data.frame.
+
+```{r}
+#| fig-width: 12
+#| fig-height: 8
+par(bg = "grey") 
+corrplot(cor(condo_resale[, 5:23]), 
+         bg = "#E7F0DC",
+         diag = FALSE, 
+         order = "AOE",
+         tl.pos = "td", 
+         tl.cex = 0.7, 
+         tl.col = "black",
+         tl.srt = 45,
+         method = "number", 
+         number.cex = 0.9,
+         type = "upper")
+```
+
+::::: markgoals
+::: markgoals-header
+**Learning**
+:::
+
+::: markgoals-container
+-   Matrix reorder is very important for mining the hiden structure and patter in the matrix. There are four methods in corrplot (parameter order), named “AOE”, “FPC”, “hclust”, “alphabet”. In the code chunk above, **AOE order** is used. It orders the variables by using the *angular order of the eigenvectors* method suggested by [Michael Friendly](https://www.datavis.ca/papers/corrgram.pdf).
+
+-   From the scatterplot matrix, it is clear that ***Freehold*** is highly correlated to ***LEASE_99YEAR***. In view of this, it is wiser to only include either one of them in the subsequent model building. As a result, ***LEASE_99YEAR*** is excluded in the subsequent model building.
+:::
+:::::
+
+### 6.3 Building a hedonic pricing model using multiple linear regression method
+
+The code chunk below using `lm()` to calibrate the **multiple linear regression** model.
+
+`lm()` of Base R is used to calibrate a multiple linear regression model. The model output is stored in an lm object called *condo.mlr*. - `summary()` is used to print the model output.
+
+```{r}
+condo.mlr <- lm(
+  formula = SELLING_PRICE ~ AREA_SQM + AGE  + 
+    PROX_CBD + PROX_CHILDCARE + PROX_ELDERLYCARE +
+    PROX_URA_GROWTH_AREA + PROX_HAWKER_MARKET   +
+    PROX_KINDERGARTEN   + PROX_MRT  + PROX_PARK +
+    PROX_PRIMARY_SCH + PROX_TOP_PRIMARY_SCH +
+    PROX_SHOPPING_MALL  + PROX_SUPERMARKET + 
+    PROX_BUS_STOP   + NO_Of_UNITS + 
+    FAMILY_FRIENDLY + FREEHOLD, 
+  data=condo_resale.sf)
+summary(condo.mlr)
+```
+
+### 6.4 Revising the model
+
+With reference to the report above, it is clear that not all the independent variables are statistically significant. We will revised the model by **removing those variables which are not statistically significant, including *PROX_HAWKER_MARKET*, *PROX_KINDERGARTEN*, *PROX_TOP_PRIMARY_SCH*, and *PROX_SUPERMARKET*.**
+
+Now, we are ready to calibrate the revised model.
+
+```{r}
+condo.mlr1 <- lm(
+  formula = SELLING_PRICE ~ AREA_SQM + AGE + 
+    PROX_CBD + PROX_CHILDCARE + PROX_MRT +
+    PROX_ELDERLYCARE  + PROX_URA_GROWTH_AREA +
+    PROX_PARK + PROX_PRIMARY_SCH + 
+    PROX_SHOPPING_MALL+ PROX_BUS_STOP + 
+    NO_Of_UNITS + FAMILY_FRIENDLY + FREEHOLD,
+  data=condo_resale.sf)
+summary(condo.mlr1)
+```
+
+::::: markgoals
+::: markgoals-header
+**Insight**
+:::
+
+::: markgoals-container
+The output above shows that all explanatory variables are now statistically significant at 95% confident level.
+:::
+:::::
+
+### 6.5 Preparing Publication Quality Table: gtsummary method
+
+The [**gtsummary**](https://www.danieldsjoberg.com/gtsummary/index.html) package provides an elegant and flexible way to create publication-ready summary tables in R. In the code chunk below, [`tbl_regression()`](https://www.danieldsjoberg.com/gtsummary/reference/tbl_regression.html) is used to create a well formatted regression report.
+
+```{r}
+tbl_regression(condo.mlr1, intercept = TRUE)
+```
+
+### 6.6 Regression Diagnostics
 
 #### 6.6.1 Multicollinearity test
 
@@ -341,9 +495,9 @@ tm_shape(condo_resale.sf) +
 
 #### 6.6.4 Test for Spatial Autocorrelation
 
-## **7 Building Hedonic Pricing Models using GWmodel**
+## 7 Building Hedonic Pricing Models using GWmodel
 
-### 7.1 **Building Fixed Bandwidth GWR Model**
+### 7.1 Building Fixed Bandwidth GWR Model
 
 #### 7.1.1 Computing fixed bandwidth
 
