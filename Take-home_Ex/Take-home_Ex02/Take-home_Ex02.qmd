@@ -20,9 +20,9 @@ execute: #how YML page work
 The packages that we will use for this study are outlined below:
 
 | R Package | Description |
-|------------------|------------------------------------------------------|
+|--------------------|----------------------------------------------------|
 | **sf** | A package that provides [**simple features access**](https://en.wikipedia.org/wiki/Simple_Features) for R. |
-| **spdep** | Creates spatial weights matrices and to test for and model spatial autocorrelation in geographical data,  like Moran's I and Geary's C and Local Moran's I and Getis-Ord G. |
+| **spdep** | Creates spatial weights matrices and to test for and model spatial autocorrelation in geographical data, like Moran's I and Geary's C and Local Moran's I and Getis-Ord G. |
 | **tidyverse** | Includes the core packages like ggplot2, dplyr, readr, purrr, tibble, lubridate, etc. |
 | **sfdep** | Builds on the great shoulders of **spdep** package for spatial dependence. sfdep creates an sf and tidyverse friendly interface to the package as well as introduces new functionality that is not present in spdep. |
 | **h3** | H3 is a geospatial indexing system using a hexagonal grid that can be (approximately) subdivided into finer and finer hexagonal grids, combining the benefits of a hexagonal grid with [S2](https://code.google.com/archive/p/s2-geometry-library/)'s hierarchical subdivisions. |
@@ -48,7 +48,6 @@ When importing data, need to check first. Make sure busstop code is in character
 Open Bustop.prj and check if the data has the information we need, or need to transform. Below we will start importing the data.
 
 ::: panel-tabset
-
 ## **Master Plan Subzone Boundary**
 
 Below we will import *Master Plan 2019 Subzone Boundary (No Sea).*
@@ -105,7 +104,6 @@ st_crs(odbus)
 ```
 
 describe the coordinate system EPSG, SF
-
 :::
 
 ### 2.3 Data wrangling: Prepare hexagon data
@@ -189,12 +187,12 @@ hexagon <- filter(hexagon, n_collisions >0) #retain all that have bus stops.
 tm_shape(mpsz) +
   tm_polygons() +
   tm_shape(hexagon) +
-  tm_fill(col = "black", fill = "#FFD5D5") +
+  tm_fill(col = "black", fill = "#F39F9F") +
   tm_layout(bg.color = "#D0DDD0",
             outer.margins = c(0.01, 0.01, 0.01, 0.01))
 ```
 
-We want to know the trips occurred in each hexagon in certain time periods.
+%%We want to know the trips occurred in each hexagon in certain time periods.%%
 
 The hexagons do not have an ID, so we will give each an ID.
 
@@ -216,7 +214,7 @@ kable(head(hexagon))
 
 #### 2.4.1 Clearing the data
 
-We dont need the destination code. Below we will select the columns we need, including `ORIGIN_PT_CODE`, `DAY_TYPE`, `TIME_PER_HOUR`, and `TOTAL_TRIPS`. We also simply the code to join the datasets together later.
+We don't need the destination code. Below we will select the columns we need, including `ORIGIN_PT_CODE`, `DAY_TYPE`, `TIME_PER_HOUR`, and `TOTAL_TRIPS`. We also simplify the code to join the datasets together later.
 
 ```{r}
 trips <- odbus %>%
@@ -241,16 +239,25 @@ kable(head(bs_hex))
 
 #### 2.4.2 Add HEX_ID into bus trips data
 
-**Use inner_join() to join trips and bus_hex.**
+**Use inner_join() to join trips and bus_hex. - Count trips per hexagon.**
 
 ```{r}
 trips <- inner_join(trips, bs_hex)
 kable(head(trips))
 ```
 
-\*\* count trips per hexagon?
+Let's plot the trips in a bar plot:
 
-### 2.5 Time preiod filtering
+```{r}
+ggplot(data = trips,
+       aes(x = HEX_ID, y = TRIPS)) +
+  geom_col(fill = "blue") +
+  labs(title = "Total Trips by HexID",
+       x = "Hex ID", y = "Number of Trips") + 
+  theme_minimal()
+```
+
+### 2.5 Time preriod filtering
 
 Create separate datasets for each time period
 
