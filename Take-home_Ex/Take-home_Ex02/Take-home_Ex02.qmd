@@ -20,7 +20,7 @@ execute: #how YML page work
 The packages that we will use for this study are outlined below:
 
 | R Package | Description |
-|--------------------|----------------------------------------------------|
+|---------------------|---------------------------------------------------|
 | **sf** | A package that provides [**simple features access**](https://en.wikipedia.org/wiki/Simple_Features) for R. |
 | **spdep** | Creates spatial weights matrices and to test for and model spatial autocorrelation in geographical data, like Moran's I and Geary's C and Local Moran's I and Getis-Ord G. |
 | **tidyverse** | Includes the core packages like ggplot2, dplyr, readr, purrr, tibble, lubridate, etc. |
@@ -28,11 +28,12 @@ The packages that we will use for this study are outlined below:
 | **h3** | H3 is a geospatial indexing system using a hexagonal grid that can be (approximately) subdivided into finer and finer hexagonal grids, combining the benefits of a hexagonal grid with [S2](https://code.google.com/archive/p/s2-geometry-library/)'s hierarchical subdivisions. |
 | **knitr** | Color maps designed to improve graph readability for readers with common forms of color blindness and/or color vision deficiency. |
 | **tmap** | geographical maps in which spatial data distributions are visualized. This package offers a flexible, layer-based, and easy to use approach to create thematic maps, such as choropleths and bubble maps. |
+| **patchwork** |  |
 
 Let's install and load the following packages: **tidyverse, sf, sfdep, tmap, knitr** in R environment.
 
 ```{r}
-pacman::p_load(tidyverse, sf, sfdep, tmap, knitr, h3)
+pacman::p_load(tidyverse, sf, sfdep, tmap, knitr, h3, patchwork)
 ```
 
 ### 2.2 Import data
@@ -96,8 +97,18 @@ Now, we see BusStop is aligned with mpsz.
 Below code is used to import *Passenger Volume by Origin Destination Bus Stops* from LTA DataMall.
 
 ```{r}
-odbus <- read_csv("data/origin_destination_bus_202508.csv")
+#| eval: false
+odbus_08 <- read_csv("data/origin_destination_bus_202508.csv")
+odbus_09 <- read_csv("data/origin_destination_bus_202509.csv")
+odbus_07 <- read_csv("data/origin_destination_bus_202507.csv")
+odbus <- rbind(odbus_08, odbus_09, odbus_07)
+write_csv(odbus, "data/odbus.csv")
 ```
+
+```{r}
+odbus <- read_csv("data/odbus.csv")
+```
+
 
 ```{r}
 st_crs(odbus)
@@ -187,10 +198,12 @@ hexagon <- filter(hexagon, n_collisions >0) #retain all that have bus stops.
 tm_shape(mpsz) +
   tm_polygons() +
   tm_shape(hexagon) +
-  tm_fill(col = "black", fill = "#F39F9F") +
+  tm_fill(col = "grey20", fill = "#F39F9F", fill_alpha = 0.7) +
   tm_layout(bg.color = "#D0DDD0",
             outer.margins = c(0.01, 0.01, 0.01, 0.01))
 ```
+
+
 
 %%We want to know the trips occurred in each hexagon in certain time periods.%%
 
@@ -218,7 +231,7 @@ We don't need the destination code. Below we will select the columns we need, in
 
 ```{r}
 trips <- odbus %>%
-  select(c(ORIGIN_PT_CODE, DAY_TYPE, TIME_PER_HOUR, TOTAL_TRIPS)) %>%
+  select(c(YEAR_MONTH, ORIGIN_PT_CODE, DAY_TYPE, TIME_PER_HOUR, TOTAL_TRIPS)) %>%
   rename(BUS_STOP_N = ORIGIN_PT_CODE) %>% #simply the code for joining.
   rename(HOUR_OF_DAY = TIME_PER_HOUR) %>%
   rename(TRIPS = TOTAL_TRIPS)
@@ -249,17 +262,277 @@ kable(head(trips))
 Let's plot the trips in a bar plot:
 
 ```{r}
-ggplot(data = trips,
-       aes(x = HEX_ID, y = TRIPS)) +
+trips_sort <- trips %>%
+  arrange(desc(TRIPS)) %>%
+  mutate(HEX_ID = factor(HEX_ID, levels = unique(HEX_ID)))
+```
+
+```{r}  
+ggplot(trips_sort,
+  aes(x = HEX_ID, y = TRIPS, fill = HEX_ID)) +
   geom_col(fill = "blue") +
   labs(title = "Total Trips by HexID",
        x = "Hex ID", y = "Number of Trips") + 
   theme_minimal()
 ```
 
+***
+When we sort the number of trips by Hex ID, we see 
+***
+
 ### 2.5 Time preriod filtering
 
-Create separate datasets for each time period
+```{r}
+glimpse(trips_sort)
+
+```
+:::panel-tabset
+## Weekday AM
+In this section, we want to filter the Bus tap on the time between 6am to 9am as morning peak hours during weekdays.
+
+```{r}
+AM_weekday_sort <- trips_sort %>%
+  filter(HOUR_OF_DAY %in% c(6, 7, 8, 9),
+         DAY_TYPE == "WEEKDAY") %>%
+  group_by(HEX_ID) %>%
+  summarise(AM_TRIPS = sum(TRIPS)) %>%
+  arrange(desc(AM_TRIPS))
+```
+
+Next let's plot it out.
+```{r}
+ggplot(AM_weekday_sort, 
+       aes(x = reorder(HEX_ID, -AM_TRIPS), y = AM_TRIPS)) +
+  geom_col(fill = "#B8C4A9") +
+  labs(title = "Weekday Morning Peak Hour Trips (6-9 AM) by HexID",
+       x = "Hex ID", y = "Number of Trips") + 
+  theme(panel.background = element_rect(fill = "#D0DDD0"))
+```
+
+
+## Weekday PM
+In this section, we want to filter the Bus tap on the time between 5pm to 8pm as afternoon peak hours during weekdays.
+```{r}
+PM_weekday_sort <- trips_sort %>%
+  filter(HOUR_OF_DAY %in% c(17, 18, 19, 20),
+         DAY_TYPE == "WEEKDAY") %>%
+  group_by(HEX_ID) %>%
+  summarise(PM_TRIPS = sum(TRIPS)) %>%
+  arrange(desc(PM_TRIPS))
+```
+
+
+```{r}
+ggplot(PM_weekday_sort, 
+       aes(x = reorder(HEX_ID, -PM_TRIPS), y = PM_TRIPS)) +
+  geom_col(fill = "#F2AEBB") +
+  labs(title = "Weekday Afternoon Peak Hour Trips (5-8 PM) by HexID",
+       x = "Hex ID", y = "Number of Trips") + 
+  theme(panel.background = element_rect(fill = "#D0DDD0"))
+
+```
+
+## Weekend/PH
+In this section, we want to filter the Bus tap on the time between 11am to 8pm as morning peak hours during weekend or holidays.
+```{r}
+weekend_sort <- trips_sort %>%
+  filter(HOUR_OF_DAY %in% c(11:20),
+         DAY_TYPE == "WEEKENDS/HOLIDAY") %>%
+  group_by(HEX_ID) %>%
+  summarise(WKD_TRIPS = sum(TRIPS)) %>%
+  arrange(desc(WKD_TRIPS))
+```
+
+```{r}
+ggplot(weekend_sort, 
+       aes(x = reorder(HEX_ID, -WKD_TRIPS), y = WKD_TRIPS)) +
+  geom_col(fill = "#A376A2") +
+  labs(title = "Weekend/Holiday Trips (5-8 PM) by HexID",
+       x = "Hex ID", y = "Number of Trips") + 
+  theme(panel.background = element_rect(fill = "#D0DDD0"))
+
+```
+
+:::
+Below data are sorted using Hex ID (instead of sorted number of trips) to plot different peak periods.
+We will use this data to join back to hexagon, so we can plot the passenger volumne in the thematic maps with hexagons.
+
+```{r}
+#| code-fold: true
+# AM weekdays sorted by Hex ID
+AM_weekday <- trips %>%
+  filter(HOUR_OF_DAY %in% c(6, 7, 8, 9),
+         DAY_TYPE == "WEEKDAY") %>%
+  group_by(HEX_ID) %>%
+  summarise(AM_TRIPS = sum(TRIPS)) %>%
+  arrange(as.character(HEX_ID))
+
+# PM weekdays sorted by Hex ID
+PM_weekday <- trips %>%
+  filter(HOUR_OF_DAY %in% c(17, 18, 19, 20),
+         DAY_TYPE == "WEEKDAY") %>%
+  group_by(HEX_ID) %>%
+  summarise(PM_TRIPS = sum(TRIPS)) %>%
+  arrange(as.character(HEX_ID))
+
+# Weekend sorted by Hex ID
+weekend <- trips %>%
+  filter(HOUR_OF_DAY %in% c(11:20),
+         DAY_TYPE == "WEEKENDS/HOLIDAY") %>%
+  group_by(HEX_ID) %>%
+  summarise(WKD_TRIPS = sum(TRIPS)) %>%
+  arrange(as.character(HEX_ID))
+
+```
+
+
+Below we plot out all peak hours trips per their Hex ID to have a full picture of the volumne of the passengers. 
+```{r}
+#| fig-width: 12
+#| fig-height: 40
+#| code-fold: true
+
+max_trips <- max(c(max(weekend$WKD_TRIPS), 
+                   max(AM_weekday$AM_TRIPS), 
+                   max(PM_weekday$PM_TRIPS)))
+#weekend plot - adjust scale
+wknd_bar <- ggplot(weekend, 
+       aes(x = HEX_ID, y = WKD_TRIPS)) +
+  geom_col(fill = "#A376A2") +
+  labs(title = "Weekend/Holiday Trips",
+       x = "Hex ID", y = "Number of Trips") + 
+  theme(panel.background = element_rect(fill = "#D0DDD0")) +
+  scale_y_continuous(limits = c(0, max_trips)) +
+  coord_flip()
+
+#AM plot - adjust scale
+am_bar <- ggplot(AM_weekday, 
+       aes(x = HEX_ID, y = AM_TRIPS)) +
+  geom_col(fill = "#B8C4A9") +
+  labs(title = "AM Trips",
+       x = "Hex ID", y = "Number of Trips") + 
+  theme(panel.background = element_rect(fill = "#D0DDD0")) +
+  scale_y_continuous(limits = c(0, max_trips)) +  
+  coord_flip()
+
+#PM plot - adjust scale
+pm_bar <- ggplot(PM_weekday, 
+       aes(x = HEX_ID, y = PM_TRIPS)) +
+  geom_col(fill = "#F2AEBB") +
+  labs(title = "PM Trips",
+       x = "Hex ID", y = "Number of Trips") + 
+  theme(panel.background = element_rect(fill = "#D0DDD0")) +
+  scale_y_continuous(limits = c(0, max_trips)) +
+  coord_flip()
+
+
+
+combined_plot <- am_bar + pm_bar + wknd_bar
+combined_plot
+```
+
+First we join the data grouped by HEX_ID with `hexagon`. 
+```{r}
+# Join PM_weekday to your hexagon spatial object
+hexagon_pm <- hexagon %>%
+  left_join(PM_weekday, by = "HEX_ID")
+
+# Check if join worked
+names(hexagon_pm)  
+head(hexagon_pm$PM_TRIPS)  
+
+# Handle any NA values - we fill in zero for hexagons with no trips
+hexagon_pm <- hexagon_pm %>%
+  mutate(PM_TRIPS = replace_na(PM_TRIPS, 0))
+```
+
+
+```{r}
+#| fig-width: 12
+#| fig-height: 7
+#| align: center
+
+tmap_mode("view")
+pm_tm <- tm_shape(mpsz) +
+  tm_polygons(fill = "#A1C2BD", alpha = 0.3) +
+  tm_text("SUBZONE_N", size = 0.5) +
+tm_shape(hexagon_pm) +
+  tm_fill("PM_TRIPS", palette = "Purples", fill_alpha = 1) +
+  tm_borders(col = "grey20", lwd = 0.5) +
+  tm_layout(bg.color = "#D0DDD0",
+            outer.margins = c(0.01, 0.01, 0.01, 0.01),
+            main.title = "PM Peak Hour Trips by Hexagon",
+            legend.position = c("right", "bottom"),
+            frame = FALSE)
+
+# Add log-transformed column
+hexagon_pm <- hexagon_pm %>%
+  mutate(PM_TRIPS_SQRT = sqrt(PM_TRIPS))
+
+pm_tm_sq <- pm_tm_qt <- tm_shape(mpsz) +
+  tm_polygons(fill = "#A1C2BD", alpha = 0.3) +
+  tm_shape(hexagon_pm) +
+  tm_fill("PM_TRIPS_SQRT", 
+          palette = "Purples",
+          style = "pretty") +
+  tm_borders(col = "grey20", lwd = 0.5) +
+  tm_layout(bg.color = "#D0DDD0",
+            outer.margins = c(0.01, 0.01, 0.01, 0.01),
+            main.title = "PM Peak Hour Trips (Scale)",
+            legend.position = c("right", "bottom"),
+            frame = FALSE)
+
+pm_tm_qt <- tm_shape(mpsz) +
+  tm_polygons(fill = "#A1C2BD", alpha = 0.3) +
+tm_shape(hexagon_pm) +
+  tm_fill("PM_TRIPS", palette = "Purples", fill_alpha = 1,
+         style = "quantile",  # Equal number of hexagons in each color group
+          n = 6) +
+  tm_borders(col = "grey20", lwd = 0.5) +
+  tm_layout(bg.color = "#D0DDD0",
+            outer.margins = c(0.01, 0.01, 0.01, 0.01),
+            main.title = "PM Peak Hour Trips per Quantile",
+            legend.position = c("right", "bottom"),
+            frame = FALSE)
+
+tmap_arrange(pm_tm, pm_tm_sq, 
+             asp=1, ncol=1,
+             sync = TRUE)
+tmap_mode("plot")
+```
+
+```{r}
+# Join all three datasets
+hexagon_all <- hexagon %>%
+  left_join(AM_weekday, by = "HEX_ID") %>%
+  left_join(PM_weekday, by = "HEX_ID") %>%
+  left_join(weekend, by = "HEX_ID") %>%
+  mutate(across(c(AM_TRIPS, PM_TRIPS, WKD_TRIPS), 
+                ~replace_na(., 0)))
+
+# Create three maps
+am_map <- tm_shape(mpsz) +
+  tm_borders(col = "grey70", lwd = 0.3) +
+  tm_shape(hexagon_all) +
+  tm_fill("AM_TRIPS", palette = "Oranges", title = "AM Trips") +
+  tm_borders(col = "white", lwd = 0.1)
+
+pm_map <- tm_shape(mpsz) +
+  tm_borders(col = "grey70", lwd = 0.3) +
+  tm_shape(hexagon_all) +
+  tm_fill("PM_TRIPS", palette = "Blues", title = "PM Trips") +
+  tm_borders(col = "white", lwd = 0.1)
+
+wkd_map <- tm_shape(mpsz) +
+  tm_borders(col = "grey70", lwd = 0.3) +
+  tm_shape(hexagon_all) +
+  tm_fill("WKD_TRIPS", palette = "Purples", title = "Weekend Trips") +
+  tm_borders(col = "white", lwd = 0.1)
+
+# Display together
+tmap_arrange(am_map, pm_map, wkd_map, ncol = 3)
+```
+
 
 ## 3 Exploratory spatial analysis
 
