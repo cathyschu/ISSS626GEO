@@ -433,20 +433,66 @@ combined_plot
 
 First we join the data grouped by HEX_ID with `hexagon`. 
 ```{r}
-# Join PM_weekday to your hexagon spatial object
-hexagon_pm <- hexagon %>%
-  left_join(PM_weekday, by = "HEX_ID")
+# Join all three datasets
+hexagon_all <- hexagon %>%
+  left_join(AM_weekday, by = "HEX_ID") %>%
+  left_join(PM_weekday, by = "HEX_ID") %>%
+  left_join(weekend, by = "HEX_ID") %>%
+  mutate(across(c(AM_TRIPS, PM_TRIPS, WKD_TRIPS), 
+                ~replace_na(., 0))) # Handle any NA values - we fill in zero for hexagons with no trips
 
 # Check if join worked
-names(hexagon_pm)  
-head(hexagon_pm$PM_TRIPS)  
+names(hexagon_all)  
+head(hexagon_all$PM_TRIPS)  
+head(hexagon_all$AM_TRIPS)  
+head(hexagon_all$WKD_TRIPS)  
 
-# Handle any NA values - we fill in zero for hexagons with no trips
-hexagon_pm <- hexagon_pm %>%
-  mutate(PM_TRIPS = replace_na(PM_TRIPS, 0))
+```
+:::panel-tabset
+
+## AM weekdays
+```{r}
+#| fig-width: 12
+#| fig-height: 7
+#| align: center
+
+tmap_mode("view")
+am_tm <- tm_shape(mpsz) +
+  tm_polygons(fill = "#A1C2BD", alpha = 0.3) +
+  tm_text("SUBZONE_N", size = 0.5) +
+tm_shape(hexagon_all) +
+  tm_fill("AM_TRIPS", palette = "Purples", fill_alpha = 0.6) +
+  tm_borders(col = "grey20", lwd = 0.5) +
+  tm_layout(bg.color = "#D0DDD0",
+            outer.margins = c(0.01, 0.01, 0.01, 0.01),
+            main.title = "AM Peak Hour Trips by Hexagon",
+            legend.position = c("right", "bottom"),
+            frame = FALSE) +
+    tm_view(set_zoom_limits = c(11,18))
+
+# Add sqr-transformed column
+hexagon_all <- hexagon_all %>%
+  mutate(AM_TRIPS_SQRT = sqrt(AM_TRIPS))
+
+am_tm_sq <- tm_shape(mpsz) +
+  tm_polygons(fill = "#A1C2BD", alpha = 0.3) +
+  tm_shape(hexagon_all) +
+  tm_fill("AM_TRIPS_SQRT", palette = "Purples", fill_alpha = 0.6) +
+  tm_borders(col = "grey20", lwd = 0.5) +
+  tm_layout(bg.color = "#D0DDD0",
+            outer.margins = c(0.01, 0.01, 0.01, 0.01),
+            main.title = "AM Peak Hour Trips (Scale)",
+            legend.position = c("right", "bottom"),
+            frame = FALSE) +
+    tm_view(set_zoom_limits = c(11,18))
+
+tmap_arrange(am_tm, am_tm_sq, 
+             asp=1, ncol=1,
+             sync = TRUE)
+tmap_mode("plot")
 ```
 
-
+## PM weekdays
 ```{r}
 #| fig-width: 12
 #| fig-height: 7
@@ -456,50 +502,81 @@ tmap_mode("view")
 pm_tm <- tm_shape(mpsz) +
   tm_polygons(fill = "#A1C2BD", alpha = 0.3) +
   tm_text("SUBZONE_N", size = 0.5) +
-tm_shape(hexagon_pm) +
-  tm_fill("PM_TRIPS", palette = "Purples", fill_alpha = 1) +
+tm_shape(hexagon_all) +
+  tm_fill("PM_TRIPS", palette = "Blues", fill_alpha = 0.6) +
   tm_borders(col = "grey20", lwd = 0.5) +
   tm_layout(bg.color = "#D0DDD0",
             outer.margins = c(0.01, 0.01, 0.01, 0.01),
             main.title = "PM Peak Hour Trips by Hexagon",
             legend.position = c("right", "bottom"),
-            frame = FALSE)
+            frame = FALSE) +
+    tm_view(set_zoom_limits = c(11,18))
 
-# Add log-transformed column
-hexagon_pm <- hexagon_pm %>%
+# Add sqr-transformed column
+hexagon_all <- hexagon_all %>%
   mutate(PM_TRIPS_SQRT = sqrt(PM_TRIPS))
 
-pm_tm_sq <- pm_tm_qt <- tm_shape(mpsz) +
+pm_tm_sq <- tm_shape(mpsz) +
   tm_polygons(fill = "#A1C2BD", alpha = 0.3) +
-  tm_shape(hexagon_pm) +
-  tm_fill("PM_TRIPS_SQRT", 
-          palette = "Purples",
-          style = "pretty") +
+  tm_shape(hexagon_all) +
+  tm_fill("PM_TRIPS_SQRT", palette = "Blues", fill_alpha = 0.6) +
   tm_borders(col = "grey20", lwd = 0.5) +
   tm_layout(bg.color = "#D0DDD0",
             outer.margins = c(0.01, 0.01, 0.01, 0.01),
             main.title = "PM Peak Hour Trips (Scale)",
             legend.position = c("right", "bottom"),
-            frame = FALSE)
-
-pm_tm_qt <- tm_shape(mpsz) +
-  tm_polygons(fill = "#A1C2BD", alpha = 0.3) +
-tm_shape(hexagon_pm) +
-  tm_fill("PM_TRIPS", palette = "Purples", fill_alpha = 1,
-         style = "quantile",  # Equal number of hexagons in each color group
-          n = 6) +
-  tm_borders(col = "grey20", lwd = 0.5) +
-  tm_layout(bg.color = "#D0DDD0",
-            outer.margins = c(0.01, 0.01, 0.01, 0.01),
-            main.title = "PM Peak Hour Trips per Quantile",
-            legend.position = c("right", "bottom"),
-            frame = FALSE)
+            frame = FALSE) +
+    tm_view(set_zoom_limits = c(11,18))
 
 tmap_arrange(pm_tm, pm_tm_sq, 
              asp=1, ncol=1,
              sync = TRUE)
 tmap_mode("plot")
 ```
+
+## Weekends
+```{r}
+#| fig-width: 12
+#| fig-height: 7
+#| align: center
+
+tmap_mode("view")
+wkd_tm <- tm_shape(mpsz) +
+  tm_polygons(fill = "#A1C2BD", alpha = 0.3) +
+  tm_text("SUBZONE_N", size = 0.5) +
+tm_shape(hexagon_all) +
+  tm_fill("WKD_TRIPS", palette = "Greens", fill_alpha = 0.6) +
+  tm_borders(col = "grey20", lwd = 0.5) +
+  tm_layout(bg.color = "#D0DDD0",
+            outer.margins = c(0.01, 0.01, 0.01, 0.01),
+            main.title = "Weekend Peak Hour Trips by Hexagon",
+            legend.position = c("right", "bottom"),
+            frame = FALSE) +
+    tm_view(set_zoom_limits = c(11,18))
+
+# Add sqr-transformed column
+hexagon_all <- hexagon_all %>%
+  mutate(WKD_TRIPS_SQRT = sqrt(WKD_TRIPS))
+
+wkd_tm_sq <- tm_shape(mpsz) +
+  tm_polygons(fill = "#A1C2BD", alpha = 0.3) +
+  tm_shape(hexagon_all) +
+  tm_fill("WKD_TRIPS_SQRT", palette = "Greens", fill_alpha = 0.6) +
+  tm_borders(col = "grey20", lwd = 0.5) +
+  tm_layout(bg.color = "#D0DDD0",
+            outer.margins = c(0.01, 0.01, 0.01, 0.01),
+            main.title = "Weekend Peak Hour Trips (Scale)",
+            legend.position = c("right", "bottom"),
+            frame = FALSE) +
+    tm_view(set_zoom_limits = c(11,18))
+
+tmap_arrange(wkd_tm, wkd_tm_sq, 
+             asp=1, ncol=1,
+             sync = TRUE)
+tmap_mode("plot")
+```
+
+:::
 
 ```{r}
 # Join all three datasets
@@ -531,8 +608,9 @@ wkd_map <- tm_shape(mpsz) +
 
 # Display together
 tmap_arrange(am_map, pm_map, wkd_map, ncol = 3)
-```
 
+
+```
 
 ## 3 Exploratory spatial analysis
 
