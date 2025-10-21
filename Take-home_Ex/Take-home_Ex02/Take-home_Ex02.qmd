@@ -20,7 +20,7 @@ execute: #how YML page work
 The packages that we will use for this study are outlined below:
 
 | R Package | Description |
-|---------------------|---------------------------------------------------|
+|----------------------|--------------------------------------------------|
 | **sf** | A package that provides [**simple features access**](https://en.wikipedia.org/wiki/Simple_Features) for R. |
 | **spdep** | Creates spatial weights matrices and to test for and model spatial autocorrelation in geographical data, like Moran's I and Geary's C and Local Moran's I and Getis-Ord G. |
 | **tidyverse** | Includes the core packages like ggplot2, dplyr, readr, purrr, tibble, lubridate, etc. |
@@ -29,11 +29,13 @@ The packages that we will use for this study are outlined below:
 | **knitr** | Color maps designed to improve graph readability for readers with common forms of color blindness and/or color vision deficiency. |
 | **tmap** | geographical maps in which spatial data distributions are visualized. This package offers a flexible, layer-based, and easy to use approach to create thematic maps, such as choropleths and bubble maps. |
 | **patchwork** |  |
+| **rvest**| Provides the HTML parsing and extraction functions |
+| **rsvg** | |
 
 Let's install and load the following packages: **tidyverse, sf, sfdep, tmap, knitr** in R environment.
 
 ```{r}
-pacman::p_load(tidyverse, sf, sfdep, tmap, knitr, h3, patchwork)
+pacman::p_load(tidyverse, sf, sfdep, tmap, knitr, h3, patchwork, rvest, RColorBrewer)
 ```
 
 ### 2.2 Import data
@@ -43,6 +45,7 @@ We will import 3 data sets for this study:
 1.  Import *Bus Stop Location* shapfile from LTA DataMall into R environment
 2.  Import *Master Plan 2019 Subzone Boundary (No Sea)* from <https://data.gov.sg/>
 3.  Import *Passenger Volume by Origin Destination Bus Stops* from LTA DataMall
+4.  Import *LTA MRT Station Exit (KML)* from <https://data.gov.sg/>
 
 When importing data, need to check first. Make sure busstop code is in character form rather than numeric. If it's latter, need to insert 0 because the stop code can start with zero.
 
@@ -54,6 +57,7 @@ Open Bustop.prj and check if the data has the information we need, or need to tr
 Below we will import *Master Plan 2019 Subzone Boundary (No Sea).*
 
 ```{r}
+#| eval: false
 mpsz <- st_read("data/MasterPlan2019SubzoneBoundaryNoSeaKML.kml")
 ```
 
@@ -109,12 +113,79 @@ write_csv(odbus, "data/odbus.csv")
 odbus <- read_csv("data/odbus.csv")
 ```
 
-
 ```{r}
 st_crs(odbus)
 ```
 
 describe the coordinate system EPSG, SF
+
+## **MRT Station**
+Below we will import **Master Plan 2019 Subzone Boundary (No Sea).**
+```{r}
+mrt <- st_read("data/LTAMRTStationExitKML.kml") %>%
+  st_zm(drop = TRUE, what = "ZM") %>%
+  st_transform(crs = 3414)
+```
+Below code is to write MRT station data into a rsd file, so we can directly call it without processing the data set again.
+```{r}
+#| eval: false
+extract_kml_field <- function(html_text, field_name) {
+  if (is.na(html_text) || html_text == "") return(NA_character_)
+  
+  page <- read_html(html_text)
+  rows <- page %>% html_elements("tr")
+  
+  value <- rows %>%
+    keep(~ html_text2(html_element(.x, "th")) == field_name) %>%
+    html_element("td") %>%
+    html_text2()
+  
+  if (length(value) == 0) NA_character_ else value
+}
+
+mrt_sf <- mrt %>%
+  mutate(
+    STATION = map_chr(Description, extract_kml_field, "STATION_NA"),
+    EXIT_CODE = map_chr(Description, extract_kml_field, "EXIT_CODE"),
+    INC_CRC = map_chr(Description, extract_kml_field, "INC_CRC"),
+    FMEL_UPD_D = map_chr(Description, extract_kml_field, "FMEL_UPD_D")
+  ) %>%
+  
+  # Just one exit for each station to avoid multiple points.
+  filter(EXIT_CODE == "Exit A") %>%
+  
+  select(-Name, -Description) %>%
+  relocate(geometry, .after = last_col())
+
+
+write_rds(mrt_sf, "data/mrt_sf.rds")
+```
+
+
+```{r}
+mrt_sf <- read_rds("data/mrt_sf.rds")
+```
+
+
+Plot the MRT station exits in a tmap. 
+```{r}
+tmap_mode("view")
+tm_shape(mpsz) +
+  tm_polygons(fill = "#A1C2BD", filll_alpha = 0.3) +
+  tm_text("SUBZONE_N", size = 0.4) +
+tm_shape(mrt_sf) +
+  tm_symbols(
+   fill = "#EDA35A", size = 0.4,
+   col = "#D9E9CF",
+#   popup = "STATION"
+  ) +
+  tm_layout(
+    main.title = "MRT Station Exits",
+    legend.show = FALSE    # Hide the legend since there are many unique stations
+  )
+
+```
+
 :::
 
 ### 2.3 Data wrangling: Prepare hexagon data
@@ -130,7 +201,7 @@ First we plot the bus stops in Singapore below:
 tm_shape(mpsz) +
   tm_polygons() +
   tm_shape(BusStop) +
-  tm_dots(size = 0.3, fill = "#344F1F") +
+  tm_dots(size = 0.3, fill = "#DA6C6C", col = "#F49BAB") +
   tm_layout(bg.color = "#D0DDD0",
             outer.margins = c(0.01, 0.01, 0.01, 0.01))
 ```
@@ -156,7 +227,7 @@ The, we plot again:
 tm_shape(mpsz) +
   tm_polygons() +
   tm_shape(BusStop_in_SG) +
-  tm_dots(size = 0.3, fill = "#E45A92") +
+  tm_dots(size = 0.3, fill = "#DA6C6C", col = "#F49BAB") +
   tm_layout(bg.color = "#D0DDD0",
             outer.margins = c(0.01, 0.01, 0.01, 0.01))
 ```
@@ -198,12 +269,10 @@ hexagon <- filter(hexagon, n_collisions >0) #retain all that have bus stops.
 tm_shape(mpsz) +
   tm_polygons() +
   tm_shape(hexagon) +
-  tm_fill(col = "grey20", fill = "#F39F9F", fill_alpha = 0.7) +
+  tm_fill(col = "grey20", fill = "#FFE8CD", fill_alpha = 0.7) +
   tm_layout(bg.color = "#D0DDD0",
             outer.margins = c(0.01, 0.01, 0.01, 0.01))
 ```
-
-
 
 %%We want to know the trips occurred in each hexagon in certain time periods.%%
 
@@ -267,7 +336,7 @@ trips_sort <- trips %>%
   mutate(HEX_ID = factor(HEX_ID, levels = unique(HEX_ID)))
 ```
 
-```{r}  
+```{r}
 ggplot(trips_sort,
   aes(x = HEX_ID, y = TRIPS, fill = HEX_ID)) +
   geom_col(fill = "blue") +
@@ -276,9 +345,9 @@ ggplot(trips_sort,
   theme_minimal()
 ```
 
-***
-When we sort the number of trips by Hex ID, we see 
-***
+------------------------------------------------------------------------
+
+When we sort the number of trips by Hex ID, we see \*\*\*
 
 ### 2.5 Time preriod filtering
 
@@ -286,8 +355,25 @@ When we sort the number of trips by Hex ID, we see
 glimpse(trips_sort)
 
 ```
-:::panel-tabset
+
+
+## 3 Exploratory spatial analysis
+
+In section 2.3, we derived an analytical hexagon data of 375m to represent the traffic analysis zone (TAZ). We also processed time period filtering for 3 time intervals to compute passenger trips generated by origin at hexagon level. Below are the 3 time intervals.
+
+| Peak hour period       | Bus tap on time |
+|------------------------|-----------------|
+| Weekday morning peak   | 6am - 9am       |
+| Weekday afternoon peak | 5pm - 8pm       |
+| Weekend/holiday        | 11am - 8pm      |
+
+### 3.1 Peak Hour Trips by HexID
+Below charts are plotted to have a full picture of the volumn of each Hex ID in a descending manner. 
+
+::: panel-tabset
+
 ## Weekday AM
+
 In this section, we want to filter the Bus tap on the time between 6am to 9am as morning peak hours during weekdays.
 
 ```{r}
@@ -300,6 +386,7 @@ AM_weekday_sort <- trips_sort %>%
 ```
 
 Next let's plot it out.
+
 ```{r}
 ggplot(AM_weekday_sort, 
        aes(x = reorder(HEX_ID, -AM_TRIPS), y = AM_TRIPS)) +
@@ -309,9 +396,10 @@ ggplot(AM_weekday_sort,
   theme(panel.background = element_rect(fill = "#D0DDD0"))
 ```
 
-
 ## Weekday PM
+
 In this section, we want to filter the Bus tap on the time between 5pm to 8pm as afternoon peak hours during weekdays.
+
 ```{r}
 PM_weekday_sort <- trips_sort %>%
   filter(HOUR_OF_DAY %in% c(17, 18, 19, 20),
@@ -321,7 +409,7 @@ PM_weekday_sort <- trips_sort %>%
   arrange(desc(PM_TRIPS))
 ```
 
-
+Next let's plot it out.
 ```{r}
 ggplot(PM_weekday_sort, 
        aes(x = reorder(HEX_ID, -PM_TRIPS), y = PM_TRIPS)) +
@@ -333,7 +421,9 @@ ggplot(PM_weekday_sort,
 ```
 
 ## Weekend/PH
+
 In this section, we want to filter the Bus tap on the time between 11am to 8pm as morning peak hours during weekend or holidays.
+
 ```{r}
 weekend_sort <- trips_sort %>%
   filter(HOUR_OF_DAY %in% c(11:20),
@@ -343,6 +433,7 @@ weekend_sort <- trips_sort %>%
   arrange(desc(WKD_TRIPS))
 ```
 
+Next let's plot it out.
 ```{r}
 ggplot(weekend_sort, 
        aes(x = reorder(HEX_ID, -WKD_TRIPS), y = WKD_TRIPS)) +
@@ -354,8 +445,9 @@ ggplot(weekend_sort,
 ```
 
 :::
-Below data are sorted using Hex ID (instead of sorted number of trips) to plot different peak periods.
-We will use this data to join back to hexagon, so we can plot the passenger volumne in the thematic maps with hexagons.
+
+### 3.1 Peak Hour Trips by HexID
+Below data are sorted using Hex ID (instead of sorted number of trips) to plot different peak periods. We will use this data to join back to hexagon, so we can plot the passenger volume in the thematic maps with hexagons.
 
 ```{r}
 #| code-fold: true
@@ -385,8 +477,8 @@ weekend <- trips %>%
 
 ```
 
+Below we plot out all peak hours trips per their Hex ID to have a full picture of the volumne of the passengers.
 
-Below we plot out all peak hours trips per their Hex ID to have a full picture of the volumne of the passengers. 
 ```{r}
 #| fig-width: 12
 #| fig-height: 40
@@ -430,8 +522,9 @@ pm_bar <- ggplot(PM_weekday,
 combined_plot <- am_bar + pm_bar + wknd_bar
 combined_plot
 ```
+### 3.2 Interactive Maps for Peak Hour Trips
+Now let's join the data grouped by HEX_ID with `hexagon`, so we can plot it in tmap later for the three different peak hours of the week.
 
-First we join the data grouped by HEX_ID with `hexagon`. 
 ```{r}
 # Join all three datasets
 hexagon_all <- hexagon %>%
@@ -448,21 +541,24 @@ head(hexagon_all$AM_TRIPS)
 head(hexagon_all$WKD_TRIPS)  
 
 ```
-:::panel-tabset
 
+Below plots demonstrate the geographical distribution of the passenger trips in the 3 peak hour periods. Each page plots one of the peak hour periods. Note that there are two maps, and one plots the actual number of trips while the other has the squar root number of the trips to normalise the data. This is because some hexagons are outliers, and using square root numbers could better help us observe geographical distribution of passenger trips.
+
+::: panel-tabset
 ## AM weekdays
+
 ```{r}
 #| fig-width: 12
-#| fig-height: 7
 #| align: center
+#| code-fold: true
 
-tmap_mode("view")
+#tmap_mode("view")
 am_tm <- tm_shape(mpsz) +
-  tm_polygons(fill = "#A1C2BD", alpha = 0.3) +
+  tm_polygons(fill = "#FFF4EA", alpha = 0.3) +
   tm_text("SUBZONE_N", size = 0.5) +
 tm_shape(hexagon_all) +
-  tm_fill("AM_TRIPS", palette = "Purples", fill_alpha = 0.6) +
-  tm_borders(col = "grey20", lwd = 0.5) +
+  tm_fill("AM_TRIPS", palette = "-Spectral", fill_alpha = 0.5) +
+  tm_borders(col = "#B3C8CF", lwd = 0.1) +
   tm_layout(bg.color = "#D0DDD0",
             outer.margins = c(0.01, 0.01, 0.01, 0.01),
             main.title = "AM Peak Hour Trips by Hexagon",
@@ -470,82 +566,100 @@ tm_shape(hexagon_all) +
             frame = FALSE) +
     tm_view(set_zoom_limits = c(11,18))
 
-# Add sqr-transformed column
+# Add sqr-transformed column (not using)
 hexagon_all <- hexagon_all %>%
   mutate(AM_TRIPS_SQRT = sqrt(AM_TRIPS))
 
-am_tm_sq <- tm_shape(mpsz) +
-  tm_polygons(fill = "#A1C2BD", alpha = 0.3) +
+tmap_mode("view")
+am_tm_qt <- tm_shape(mpsz) +
+  tm_polygons(fill = "#FFF4EA", alpha = 0.3) +
+  tm_text("SUBZONE_N", size = 0.5) +
   tm_shape(hexagon_all) +
-  tm_fill("AM_TRIPS_SQRT", palette = "Purples", fill_alpha = 0.6) +
-  tm_borders(col = "grey20", lwd = 0.5) +
+  tm_fill("AM_TRIPS", palette = "-Spectral", fill_alpha = 0.6,
+          style = "quantile") +
+  tm_borders(col = "#B3C8CF", lwd = 0.1) +
   tm_layout(bg.color = "#D0DDD0",
             outer.margins = c(0.01, 0.01, 0.01, 0.01),
             main.title = "AM Peak Hour Trips (Scale)",
             legend.position = c("right", "bottom"),
             frame = FALSE) +
-    tm_view(set_zoom_limits = c(11,18))
+  tm_shape(mrt_sf) +
+  tm_symbols(   fill = "#CA8787", size = 0.5, col = "#D9E9CF"
+  ) +
+  tm_view(set_zoom_limits = c(11,18)) 
 
-tmap_arrange(am_tm, am_tm_sq, 
+tmap_arrange(am_tm, am_tm_qt, 
              asp=1, ncol=1,
              sync = TRUE)
 tmap_mode("plot")
 ```
 
 ## PM weekdays
+
 ```{r}
 #| fig-width: 12
 #| fig-height: 7
 #| align: center
+#| code-fold: true
 
-tmap_mode("view")
+#tmap_mode("view")
 pm_tm <- tm_shape(mpsz) +
-  tm_polygons(fill = "#A1C2BD", alpha = 0.3) +
+  tm_polygons(fill = "#FFF4EA", alpha = 0.3) +
   tm_text("SUBZONE_N", size = 0.5) +
 tm_shape(hexagon_all) +
-  tm_fill("PM_TRIPS", palette = "Blues", fill_alpha = 0.6) +
-  tm_borders(col = "grey20", lwd = 0.5) +
+  tm_fill("PM_TRIPS", palette = "-Spectral", fill_alpha = 0.5) +
+  tm_borders(col = "#B3C8CF", lwd = 0.1) +
   tm_layout(bg.color = "#D0DDD0",
             outer.margins = c(0.01, 0.01, 0.01, 0.01),
             main.title = "PM Peak Hour Trips by Hexagon",
             legend.position = c("right", "bottom"),
             frame = FALSE) +
-    tm_view(set_zoom_limits = c(11,18))
+  tm_view(set_zoom_limits = c(11,18))
 
 # Add sqr-transformed column
 hexagon_all <- hexagon_all %>%
   mutate(PM_TRIPS_SQRT = sqrt(PM_TRIPS))
 
-pm_tm_sq <- tm_shape(mpsz) +
-  tm_polygons(fill = "#A1C2BD", alpha = 0.3) +
+tmap_mode("view")
+
+pm_tm_qt <- tm_shape(mpsz) +
+  tm_polygons(fill = "#FFF4EA", alpha = 0.3) +
+  tm_text("SUBZONE_N", size = 0.5) +
   tm_shape(hexagon_all) +
-  tm_fill("PM_TRIPS_SQRT", palette = "Blues", fill_alpha = 0.6) +
-  tm_borders(col = "grey20", lwd = 0.5) +
+  tm_fill("PM_TRIPS", palette = "-Spectral", fill_alpha = 0.6,
+          style = "quantile"
+          ) +
+  tm_borders(col = "#B3C8CF", lwd = 0.1) +
   tm_layout(bg.color = "#D0DDD0",
             outer.margins = c(0.01, 0.01, 0.01, 0.01),
             main.title = "PM Peak Hour Trips (Scale)",
             legend.position = c("right", "bottom"),
             frame = FALSE) +
-    tm_view(set_zoom_limits = c(11,18))
+  tm_shape(mrt_sf) +
+  tm_symbols(fill = "#CA8787", size = 0.5, col = "#D9E9CF") +
+  tm_view(set_zoom_limits = c(11,18))
 
-tmap_arrange(pm_tm, pm_tm_sq, 
+tmap_arrange(pm_tm, pm_tm_qt, 
              asp=1, ncol=1,
              sync = TRUE)
+
 tmap_mode("plot")
 ```
 
 ## Weekends
+
 ```{r}
 #| fig-width: 12
 #| fig-height: 7
 #| align: center
+#| code-fold: true
 
-tmap_mode("view")
+#tmap_mode("view")
 wkd_tm <- tm_shape(mpsz) +
   tm_polygons(fill = "#A1C2BD", alpha = 0.3) +
   tm_text("SUBZONE_N", size = 0.5) +
 tm_shape(hexagon_all) +
-  tm_fill("WKD_TRIPS", palette = "Greens", fill_alpha = 0.6) +
+  tm_fill("WKD_TRIPS", palette = "-Spectral", fill_alpha = 0.5) +
   tm_borders(col = "grey20", lwd = 0.5) +
   tm_layout(bg.color = "#D0DDD0",
             outer.margins = c(0.01, 0.01, 0.01, 0.01),
@@ -558,71 +672,101 @@ tm_shape(hexagon_all) +
 hexagon_all <- hexagon_all %>%
   mutate(WKD_TRIPS_SQRT = sqrt(WKD_TRIPS))
 
-wkd_tm_sq <- tm_shape(mpsz) +
+tmap_mode("view")
+wkd_tm_qt <- tm_shape(mpsz) +
   tm_polygons(fill = "#A1C2BD", alpha = 0.3) +
+  tm_text("SUBZONE_N", size = 0.5) +
   tm_shape(hexagon_all) +
-  tm_fill("WKD_TRIPS_SQRT", palette = "Greens", fill_alpha = 0.6) +
-  tm_borders(col = "grey20", lwd = 0.5) +
+  tm_fill("WKD_TRIPS", palette = "-Spectral", fill_alpha = 0.6,
+          style = "quantile") +
+  tm_borders(col = "grey20", lwd = 0.3) +
   tm_layout(bg.color = "#D0DDD0",
             outer.margins = c(0.01, 0.01, 0.01, 0.01),
             main.title = "Weekend Peak Hour Trips (Scale)",
             legend.position = c("right", "bottom"),
             frame = FALSE) +
-    tm_view(set_zoom_limits = c(11,18))
+  tm_shape(mrt_sf) +
+  tm_symbols(fill = "#CA8787", size = 0.5, col = "#D9E9CF"
+  ) +
+  tm_view(set_zoom_limits = c(11,18))
 
-tmap_arrange(wkd_tm, wkd_tm_sq, 
+tmap_arrange(wkd_tm, wkd_tm_qt, 
              asp=1, ncol=1,
              sync = TRUE)
 tmap_mode("plot")
 ```
-
 :::
 
+### 3.3 Comparative Maps for Peak Hour Trips
+
+
 ```{r}
-# Join all three datasets
-hexagon_all <- hexagon %>%
-  left_join(AM_weekday, by = "HEX_ID") %>%
-  left_join(PM_weekday, by = "HEX_ID") %>%
-  left_join(weekend, by = "HEX_ID") %>%
-  mutate(across(c(AM_TRIPS, PM_TRIPS, WKD_TRIPS), 
-                ~replace_na(., 0)))
+#| fig-width: 12
+#| fig-height: 8
+#| code-fold: true
 
 # Create three maps
 am_map <- tm_shape(mpsz) +
+  tm_text("SUBZONE_N", size = 0.5) +
   tm_borders(col = "grey70", lwd = 0.3) +
   tm_shape(hexagon_all) +
-  tm_fill("AM_TRIPS", palette = "Oranges", title = "AM Trips") +
-  tm_borders(col = "white", lwd = 0.1)
+  tm_fill("AM_TRIPS", palette = "Oranges", title = "AM Trips", alpha = 0.5) +
+  tm_borders(col = "grey20", lwd = 0.1) +
+  tm_shape(mrt_sf) +
+  tm_dots(fill = "#D97D55",
+    size = 0.1,
+    title = "MRT Stations") +
+  tm_layout(legend.position = c("right", "bottom"))
 
 pm_map <- tm_shape(mpsz) +
+  tm_text("SUBZONE_N", size = 0.5) +
   tm_borders(col = "grey70", lwd = 0.3) +
+  tm_shape(mrt_sf) +
+  tm_dots(fill = "#D97D55",
+    size = 0.1,
+    title = "MRT Stations") +  
   tm_shape(hexagon_all) +
-  tm_fill("PM_TRIPS", palette = "Blues", title = "PM Trips") +
-  tm_borders(col = "white", lwd = 0.1)
+  tm_fill("PM_TRIPS", palette = "Blues", title = "PM Trips", alpha = 0.5) +
+  tm_borders(col = "grey20", lwd = 0.1) +
+  tm_layout(legend.position = c("right", "bottom"))
 
 wkd_map <- tm_shape(mpsz) +
+  tm_text("SUBZONE_N", size = 0.5) +
   tm_borders(col = "grey70", lwd = 0.3) +
+  tm_shape(mrt_sf) +
+  tm_dots(fill = "#D97D55",
+    size = 0.1,
+    title = "MRT Stations") +
   tm_shape(hexagon_all) +
-  tm_fill("WKD_TRIPS", palette = "Purples", title = "Weekend Trips") +
-  tm_borders(col = "white", lwd = 0.1)
+  tm_fill("WKD_TRIPS", palette = "Purples", title = "Weekend Trips", alpha = 0.5) +
+  tm_borders(col = "grey20", lwd = 0.1) +
+  tm_layout(legend.position = c("right", "bottom"))
 
-# Display together
-tmap_arrange(am_map, pm_map, wkd_map, ncol = 3)
+am_map
+pm_map
+wkd_map
+#tmap_arrange(am_map, pm_map, wkd_map, ncol = 3)
 
 
 ```
 
-## 3 Exploratory spatial analysis
-
-Bus geographical distribution of passenger trips
 
 ## 4 Local Measures of Spatial Autocorrelation (LMSA) Analysis
+Local Measures of Spatial Association (LMSA) Analysis
+Compute LMSA statistic of the passengers trips generate by origin at hexagon level.
+Display the LMSA maps of the passengers trips generate by origin at hexagon level. The maps should only display the significant (i.e. p-value < 0.05)
+With reference to the analysis results, draw statistical conclusions (not more than 200 words per visual).
 
 1.  Calculate Local Moran's I first
 2.  Build complexity: Add Local Geary's C and Getis-Ord Gi\*
 3.  Focus on interpretation: What do the patterns mean for urban planning?
 
 ## 5 Emerging Hot Spot Analysis(EHSA)
+With reference to the passenger trips by origin at the hexagon level for the three time intervals given above:
+
+Perform Mann-Kendall Test by using the spatio-temporal local Gi* values,
+Prepared EHSA maps of the Gi* values of the passenger trips by origin at the hexagon level. The maps should only display the significant (i.e. p-value < 0.05).
+With reference to the EHSA maps and data visualisation prepared, describe the spatial patterns reveled. (not more than 250 words per cluster).
 
 1.  Create space-time cube: Stack the three time periods
 2.  Apply Mann-Kendall test to detect trends

@@ -28,7 +28,7 @@ In this case study, we will use China's data to examine the spatial pattern of a
 We will use the following packages: **spdep, sf, tmap and tidyverse** packages of R.
 
 | Package | Description |
-|-------------------------|----------------------------------------------|
+|--------------------------|----------------------------------------------|
 | **sf** | importing and handling geospatial data in R |
 | **tidyverse** | wrangling attribute data in R |
 | **spdep** | computing spatial weights, global and local spatial autocorrelation statistics |
