@@ -1063,8 +1063,9 @@ Below we will plot Local Moran's I and p-value for each hexagon.
 ::: panel-tabset
 ## AM Weekdays
 ```{r}
+#| fig-width: 12
 # AM Local Moran's I
-tm_shape(mpsz) +
+lmsa_am <- tm_shape(mpsz) +
   tm_polygons(fill = "#FFF4EA", fill_alpha = 0.3) +
 #  tm_text("SUBZONE_N", size = 0.5) +
 tm_shape(lisa_am) +
@@ -1080,10 +1081,10 @@ tm_shape(lisa_am) +
   tm_title("LISA Map - Local Moran's I AM Weeday Trips") +
   tm_layout(
     legend.position = c("right", "bottom"),
-    bg.color = "#F8FAFC")
+    bg.color = "#D0DDD0")
 
 #Local Moran's I p-value
-tm_shape(mpsz) +
+lmsa_am_p <- tm_shape(mpsz) +
   tm_polygons(fill = "#FFF4EA", fill_alpha = 0.3) +
 tm_shape(lisa_am) +
   tm_polygons(fill = "p_ii", 
@@ -1091,12 +1092,13 @@ tm_shape(lisa_am) +
                 breaks = c(-Inf, 0.001, 0.01, 0.05, 0.1, Inf),
                 values = "-brewer.Reds"),
               fill.legend = tm_legend(
-                title = "p-value",
-      position = tm_pos_out())) + 
+                title = "p-value")) + 
   tm_borders(fill_alpha = 0.5) +
   tm_title("LISA Map - p-values of Local Moran's I AM Weeday Trips") +
   tm_layout(legend.position = c("right", "bottom"),
-            bg.color = "#F8FAFC")
+            bg.color = "#D0DDD0")
+lmsa_am
+lmsa_am_p
 ```
 
 
