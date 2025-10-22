@@ -35,7 +35,7 @@ The packages that we will use for this study are outlined below:
 Let's install and load the following packages: **tidyverse, sf, sfdep, tmap, knitr** in R environment.
 
 ```{r}
-pacman::p_load(tidyverse, sf, spdep, sfdep, tmap, knitr, h3, patchwork, rvest, RColorBrewer)
+pacman::p_load(tidyverse, sf, spdep, sfdep, tmap, knitr, h3, patchwork, rvest, RColorBrewer, scales, plotly)
 ```
 
 ### 2.2 Import data
@@ -954,121 +954,217 @@ The Global measures of spatial autocorrelation suggests that all three study per
 
 Below we will continue to use spdep to compute Local Moran's I statistic.
 
-### 4.2.1 Calculate Local Moran's I
+### 4.2.1 Computing Contiguity Spatial Weights
 
 ```{r}
 hexagon_clean <- hexagon_all %>%
   mutate(nb = st_contiguity(geometry),
-         wt = st_weights(
-           nb, style = "W",
-           allow_zero = TRUE),
+         wt = st_weights(nb, style = "W",
+                         , allow_zero = TRUE),
          .before = 1) 
+
 ```
+```{r}
+summary(hexagon_clean$nb)
+```
+Based on the summary report, we understand that there is one hexagon area, HexID = 826, without any neighbors. We will filter this neighbour out to process futher LMSA statistic and analysis as it cannot create any weights. 
+
+### 4.2.2 Computing Local Moran's I
+
+```{.r}
+install.packages("remotes")
+remotes::install_github("JosiahParry/sfdep")
+```
+
+```{r}
+# Remove by HEX_ID
+hexagon_clean_ft <- hexagon_all %>%
+  filter(HEX_ID != "H0826") 
+```
+
+```{r}
+# Recreate nb and wt
+hexagon_clean_ft <- hexagon_clean_ft %>%
+  mutate(
+    nb = st_contiguity(geometry),
+    wt = st_weights(nb, style = "W")
+  )
+```
+
 
 :::panel-tabset
 ## Weekday AM
 ```{r}
-#AM
-lisa_am <- hexagon_clean %>%
-  mutate(local_moran_am = localmoran_perm(
-  hexagon_clean$AM_TRIPS, 
-  rswm_q, 
-  nsim = 999,
-  zero.policy = TRUE
-))
+#| eval: false
+set.seed(1234)
+lisa_am <- hexagon_clean_ft %>%
+  mutate(local_moran = local_moran(
+    AM_TRIPS, nb, wt, nsim = 99
+  ), .before = 1) %>%
+  unnest(local_moran)
 
-lisa_am <- lisa_am %>%
-  mutate(
-    local_i_am = local_moran_am[,1],      # Local Moran's I
-    expected_i = local_moran_am[,2],      # Expected value
-    variance_i = local_moran_am[,3],      # Variance
-    z_score_am = local_moran_am[,4],      # Standard deviation
-    p_value_am = local_moran_am[,5],      # p-value
-    significant_am = p_value_am < 0.05
-  ) %>%
-  select(-local_moran_am) 
+write_rds(lisa_am, "data/rds/lisa_am.rds")
 ```
 
 ```{r}
-names(lisa_am)
+lisa_am <- read_rds("data/rds/lisa_am.rds")
+```
+
+```{r}
+glimpse(lisa_am)
 ```
 
 ## Weekday PM
 ```{r}
-#AM
-lisa_pm <- hexagon_clean %>%
-  mutate(local_moran_pm = localmoran_perm(
-  hexagon_clean$PM_TRIPS, 
-  rswm_q, 
-  nsim = 999,
-  zero.policy = TRUE
-))
+#| eval: false
+set.seed(1234)
+lisa_pm <- hexagon_clean_ft %>%
+  mutate(local_moran = local_moran(
+    PM_TRIPS, nb, wt, nsim = 99
+  ), .before = 1) %>%
+  unnest(local_moran)
 
-lisa_pm <- lisa_pm %>%
-  mutate(
-    local_i_pm = local_moran_pm[,1],      # Local Moran's I
-    expected_i = local_moran_pm[,2],      # Expected value
-    variance_i = local_moran_pm[,3],      # Variance
-    z_score_pm = local_moran_pm[,4],      # Standard deviation
-    p_value_pm = local_moran_pm[,5],      # p-value
-    significant_pm = p_value_pm < 0.05
-  ) %>%
-  select(-local_moran_pm) 
+write_rds(lisa_pm, "data/rds/lisa_pm.rds")
 ```
 
 ```{r}
-names(lisa_pm)
+lisa_pm <- read_rds("data/rds/lisa_pm.rds")
 ```
 
+```{r}
+glimpse(lisa_pm)
+```
 
 ## Weedkend/PH
 ```{r}
-#AM
-lisa_wkd <- hexagon_clean %>%
-  mutate(local_moran_wkd = localmoran_perm(
-  hexagon_clean$WKD_TRIPS, 
-  rswm_q, 
-  nsim = 999,
-  zero.policy = TRUE
-))
+#| eval: false
+set.seed(1234)
+lisa_wkd <- hexagon_clean_ft %>%
+  mutate(local_moran = local_moran(
+    WKD_TRIPS, nb, wt, nsim = 99
+  ), .before = 1) %>%
+  unnest(local_moran)
 
-lisa_wkd <- lisa_wkd %>%
-  mutate(
-    local_i_wkd = local_moran_wkd[,1],      # Local Moran's I
-    expected_i = local_moran_wkd[,2],      # Expected value
-    variance_i = local_moran_wkd[,3],      # Variance
-    z_score_wkd = local_moran_wkd[,4],      # Standard deviation
-    p_value_wkd = local_moran_wkd[,5],      # p-value
-    significant_wkd = p_value_wkd < 0.05
-  ) %>%
-  select(-local_moran_wkd) 
+write_rds(lisa_wkd, "data/rds/lisa_wkd.rds")
 ```
 
 ```{r}
-names(lisa_wkd)
+lisa_wkd <- read_rds("data/rds/lisa_wkd.rds")
 ```
 
+```{r}
+glimpse(lisa_wkd)
+```
 
 :::
 ### 4.2.2 Mapping Local Moran's I
 
+Below we will plot Local Moran's I and p-value for each hexagon.
+::: panel-tabset
+## AM Weekdays
+```{r}
+# AM Local Moran's I
+tm_shape(mpsz) +
+  tm_polygons(fill = "#FFF4EA", fill_alpha = 0.3) +
+#  tm_text("SUBZONE_N", size = 0.5) +
+tm_shape(lisa_am) +
+  tm_polygons(fill = "ii",
+              fill.scale = tm_scale_intervals(
+                style = "pretty",
+                n = 5,
+                values = "-brewer.RdBu"), 
+                fill_alpha = 0.7,
+              fill.legend = tm_legend(
+                title = "Local Moran's I")) + 
+  tm_borders(fill_alpha = 0.5) +
+  tm_title("LISA Map - Local Moran's I AM Weeday Trips") +
+  tm_layout(
+    legend.position = c("right", "bottom"),
+    bg.color = "#F8FAFC")
+
+#Local Moran's I p-value
+tm_shape(mpsz) +
+  tm_polygons(fill = "#FFF4EA", fill_alpha = 0.3) +
+tm_shape(lisa_am) +
+  tm_polygons(fill = "p_ii", 
+              fill.scale = tm_scale_intervals(
+                breaks = c(-Inf, 0.001, 0.01, 0.05, 0.1, Inf),
+                values = "-brewer.Reds"),
+              fill.legend = tm_legend(
+                title = "p-value",
+      position = tm_pos_out())) + 
+  tm_borders(fill_alpha = 0.5) +
+  tm_title("LISA Map - p-values of Local Moran's I AM Weeday Trips") +
+  tm_layout(legend.position = c("right", "bottom"),
+            bg.color = "#F8FAFC")
+```
+
+
+## PM Weekdays
 ```{r}
 
 
 ```
 
+
+## Weekend/PH
 ```{r}
+# Weekend
 
 
 ```
 
+:::
+
+### 4.3 Visualising LISA Maps
+
+#### 4.3.1 Plotting Moran Scatterplot
+We leverage the Moran Scatterplot to visualise the relationship between the trip values and the average of its neighboring locations to identify spatial autocorrelation. 
+
+**Calculate spatial lag of Passenger Trips against its spatial lag version**
 ```{r}
-# AM
-
-
+lisa_am <- lisa_am %>%
+  mutate(lag_AM_TRIPS = st_lag(
+    AM_TRIPS, nb, wt
+  ), .before = 1) %>%
+  unnest(lag_AM_TRIPS)
 ```
 
+**Moran Scatterplot with LISA Quadrands**
+```{r}
+#| fig-width: 12
+p <- ggplot(data = lisa_am, 
+       aes(x = AM_TRIPS, 
+           y = lag_AM_TRIPS, 
+           color = mean,
+           text = paste("HEX_ID:", HEX_ID,           
+                       "\nAM Trips:", AM_TRIPS,
+                       "\nSpatial Lag:", round(lag_AM_TRIPS, 2),
+                       "\nCluster:", mean))) +
+  geom_point(size = 1) +
+  geom_smooth(method = "lm", 
+              se = FALSE, 
+              color = "black") +
+  geom_hline(yintercept=mean(lisa_am$lag_AM_TRIPS), lty=2) + 
+  geom_vline(xintercept=mean(lisa_am$AM_TRIPS), lty=2) +
+  scale_x_continuous(
+    labels = comma,
+    breaks = pretty_breaks(n = 6))+ 
+  scale_y_continuous(
+    labels = comma,
+    breaks = pretty_breaks(n = 6))+ 
+  scale_color_manual(
+    values = c("High-High" = "red", 
+               "Low-Low" = "blue",
+               "Low-High" = "lightblue", 
+               "High-Low" = "pink")) +
+  labs(x = "AM_TRIPS",
+       y = "Spatial Lag of AM_TRIPS",
+       title = "Moran Scatterplot with LISA Quadrants - AM Weekdays") +
+  theme(plot.background = element_rect("#D0DDD0"))
 
+ggplotly(p, tooltip = "text")
+```
 
 Compute LMSA statistic of the passengers trips generate by origin at hexagon level.
 
