@@ -119,11 +119,12 @@ st_crs(odbus)
 
 describe the coordinate system EPSG, SF
 
-## **MRT Station**
+## **MRT Stations**
 
 Below we will import **Master Plan 2019 Subzone Boundary (No Sea).**
 
 ```{r}
+#| eval: false
 mrt <- st_read("data/LTAMRTStationExitKML.kml") %>%
   st_zm(drop = TRUE, what = "ZM") %>%
   st_transform(crs = 3414)
@@ -162,30 +163,30 @@ mrt_sf <- mrt %>%
   relocate(geometry, .after = last_col())
 
 
-write_rds(mrt_sf, "data/mrt_sf.rds")
+write_rds(mrt_sf, "data/rds/mrt_sf.rds")
 ```
 
 ```{r}
-mrt_sf <- read_rds("data/mrt_sf.rds")
+mrt_sf <- read_rds("data/rds/mrt_sf.rds")
 ```
 
 Plot the MRT station exits in a tmap.
 
 ```{r}
+#| fig-width: 12
+#| fig-height: 8
 #tmap_mode("view")
 tm_shape(mpsz) +
-  tm_polygons(fill = "#A1C2BD", filll_alpha = 0.3) +
-  tm_text("SUBZONE_N", size = 0.4) +
+  tm_polygons(fill = "#FAF3F3", filll_alpha = 0.2) +
 tm_shape(mrt_sf) +
   tm_symbols(
-   fill = "#EDA35A", size = 0.4,
-   col = "#D9E9CF",
+   fill = "#87A7B3", size = 0.5,
+   col = "#0C4271",
 #   popup = "STATION"
   ) +
-  tm_layout(
-    main.title = "MRT Station Exits",
-    legend.show = FALSE    # Hide the legend since there are many unique stations
-  )
+  tm_layout(main.title = "MRT Stations",
+            bg.color = "#F6E6E4",
+            outer.margins = c(0.01, 0.01, 0.01, 0.01))
 #tmap_mode("plot")
 ```
 :::
@@ -201,10 +202,11 @@ First we plot the bus stops in Singapore below:
 #| fig-height: 8
 
 tm_shape(mpsz) +
-  tm_polygons() +
+  tm_polygons(fill = "#FAF3F3", filll_alpha = 0.2) +
   tm_shape(BusStop) +
-  tm_dots(size = 0.3, fill = "#DA6C6C", col = "#F49BAB") +
-  tm_layout(bg.color = "#D0DDD0",
+  tm_dots(size = 0.25, fill = "#9A8194", col = "#350B40") +
+  tm_layout(main.title = "All Bus Stops",
+            bg.color = "#F6E6E4",
             outer.margins = c(0.01, 0.01, 0.01, 0.01))
 ```
 
@@ -213,11 +215,14 @@ We see that the dots (bus stops) outside the boundaries are buses for JB, Malays
 If we have mpsz in front of the layer, it will capture all bus stops. When we plot first layer using Busstop before mpsz, these spots for JB will be covered.
 
 ```{r}
+#| eval: false
 BusStop_in_SG <- st_join(
   BusStop, mpsz, #BusStop first
   join = st_within,
   left = FALSE
 )
+
+write_rds(BusStop_in_SG, "data/rds/BusStop_in_SG.rds")
 ```
 
 The, we plot again:
@@ -225,12 +230,14 @@ The, we plot again:
 ```{r}
 #| fig-width: 12
 #| fig-height: 8
+BusStop_in_SG <- read_rds("data/rds/BusStop_in_SG.rds")
 
 tm_shape(mpsz) +
-  tm_polygons() +
+  tm_polygons(fill = "#FAF3F3", filll_alpha = 0.2) +
   tm_shape(BusStop_in_SG) +
-  tm_dots(size = 0.3, fill = "#DA6C6C", col = "#F49BAB") +
-  tm_layout(bg.color = "#D0DDD0",
+  tm_dots(size = 0.25, fill = "#839B97", col = "#184D47") +
+  tm_layout(main.title = "All Bus Stops (within border)",
+            bg.color = "#F6E6E4",
             outer.margins = c(0.01, 0.01, 0.01, 0.01))
 ```
 
@@ -241,6 +248,7 @@ We want to create regular shapes layers with hexagon grid (square and hexagon ar
 We will need to derive the hexagon data of **375m** (this distance is the perpendicular distance between the centre of the hexagon and its edges) to represent the [traffic analysis zone (TAZ)](https://tmg.utoronto.ca/files/Reports/Traffic-Zone-Guidance_March-2021_Final.pdf). `cellsize` is the distance between opposite edges of the hexagon. This distance is twice the perpendicular distance from the center to any edge.
 
 ```{r}
+#| eval: false
 hexagon <- st_make_grid(mpsz, cellsize = 750,
                         what = "polygon",
                         square = FALSE) %>% 
@@ -255,12 +263,15 @@ The output does not have a unique ID.
 We only want to retain hexagons with bus stops. Use `st_intersects()` to return 2 values: True, False (0 or 1). The hexagon with a bus stop would be 1, and without a bus stop would return 0.
 
 ```{r}
+#| eval: false
 hexagon$n_collisions = 
   lengths(st_intersects(
     hexagon, BusStop_in_SG
   )) #n_collisions show the number of bus stops.
 
 hexagon <- filter(hexagon, n_collisions >0) #retain all that have bus stops.
+write_rds(hexagon, "data/rds/hexagon.rds")
+
 ```
 
 #### 2.3.4 Visualise the output
@@ -268,11 +279,14 @@ hexagon <- filter(hexagon, n_collisions >0) #retain all that have bus stops.
 ```{r}
 #| fig-width: 12
 #| fig-height: 8
+hexagon <- read_rds("data/rds/hexagon.rds")
+
 tm_shape(mpsz) +
-  tm_polygons() +
+  tm_polygons(fill = "#FAF3F3", filll_alpha = 0.2) +
   tm_shape(hexagon) +
-  tm_fill(col = "grey20", fill = "#FFE8CD", fill_alpha = 0.7) +
-  tm_layout(bg.color = "#D0DDD0",
+  tm_fill(col = "grey20", fill = "#91ADC8", fill_alpha = 0.7) +
+  tm_layout(main.title = "Analytical Hexagons",
+            bg.color = "#F6E6E4",
             outer.margins = c(0.01, 0.01, 0.01, 0.01))
 ```
 
@@ -283,7 +297,8 @@ The hexagons do not have an ID, so we will give each an ID.
 #### 2.3.5 Assign IDs to each hexagon
 
 ```{r}
-hexagon <- hexagon %>%
+#| eval: false
+hexagon_geo_id<- hexagon %>%
   select(, -n_collisions)
 
 hexagon$HEX_ID <- sprintf(
@@ -292,6 +307,12 @@ hexagon$HEX_ID <- sprintf(
   as.factor() #they will in ordinal scale
 
 kable(head(hexagon))
+
+write_rds(hexagon_geo_id, "data/rds/hexagon_geo_id.rds")
+```
+
+```{r}
+hexagon_geo_id <- read_rds("data/rds/hexagon_geo_id.rds")
 ```
 
 ### 2.4 Prepare trip generation data
@@ -301,6 +322,7 @@ kable(head(hexagon))
 We don't need the destination code. Below we will select the columns we need, including `ORIGIN_PT_CODE`, `DAY_TYPE`, `TIME_PER_HOUR`, and `TOTAL_TRIPS`. We also simplify the code to join the datasets together later.
 
 ```{r}
+#| eval: false
 trips <- odbus %>%
   select(c(YEAR_MONTH, ORIGIN_PT_CODE, DAY_TYPE, TIME_PER_HOUR, TOTAL_TRIPS)) %>%
   rename(BUS_STOP_N = ORIGIN_PT_CODE) %>% #simply the code for joining.
@@ -308,17 +330,31 @@ trips <- odbus %>%
   rename(TRIPS = TOTAL_TRIPS)
 trips$BUS_STOP_N <- as.factor(trips$BUS_STOP_N) #convert to factor so it's not numerical.
 kable(head(trips))
+
+write_rds(trips, "data/rds/trips.rds")
+```
+
+
+```{r}
+trips <- read_rds("data/rds/trips.rds")
 ```
 
 **Combine bus stop with Hex ID into hexagon layer.**
 
 ```{r}
+#| eval: false
+
 bs_hex <- st_intersection(
-  BusStop, hexagon
+  BusStop, hexagon_geo_id
 ) %>%
   st_drop_geometry() %>%
   select(c(BUS_STOP_N, HEX_ID)) #drop away the rest
 kable(head(bs_hex))
+
+write_rds(bs_hex, "data/rds/bs_hex.rds")
+```
+```{r}
+bs_hex <- read_rds("data/rds/bs_hex.rds")
 ```
 
 #### 2.4.2 Add HEX_ID into bus trips data
@@ -326,27 +362,18 @@ kable(head(bs_hex))
 **Use inner_join() to join trips and bus_hex. - Count trips per hexagon.**
 
 ```{r}
-trips <- inner_join(trips, bs_hex)
-kable(head(trips))
+#| eval: false
+
+trips_hex <- inner_join(trips, bs_hex)
+kable(head(trips_hex))
+
+write_rds(trips_hex, "data/rds/trips_hex.rds")
+
 ```
 
-Let's plot the trips in a bar plot:
-
-```{.r}
-trips_sort <- trips %>%
-  arrange(desc(TRIPS)) %>%
-  mutate(HEX_ID = factor(HEX_ID, levels = unique(HEX_ID)))
+```{r}
+trips_hex <- read_rds("data/rds/trips_hex.rds")
 ```
-
-```{.r}
-ggplot(trips_sort,
-  aes(x = HEX_ID, y = TRIPS, fill = HEX_ID)) +
-  geom_col(fill = "blue") +
-  labs(title = "Total Trips by HexID",
-       x = "Hex ID", y = "Number of Trips") + 
-  theme_minimal()
-```
-
 
 ### 2.5 Time preriod filtering
 In section 2.3, we derived an analytical hexagon data of 375m to represent the traffic analysis zone (TAZ). We also processed time period filtering for 3 time intervals to compute passenger trips generated by origin at hexagon level. Below are the 3 time intervals.
@@ -357,57 +384,81 @@ In section 2.3, we derived an analytical hexagon data of 375m to represent the t
 | Weekday afternoon peak | 5pm - 8pm       |
 | Weekend/holiday        | 11am - 8pm      |
 
-#### 2.5.1
-In this section, we want to filter the Bus tap on the time between 6am to 9am as morning peak hours during weekdays.
+#### **2.5.1 Prepare study data**
+
+::: panel-tabset
+
+## 3 peak periods (by month)**
+In this section, we want to filter the Bus tap on the time between 6am to 9am (9.59am) as morning peak hours and 5pm to 8pm as afternoon peak hours during weekdays. For weekend, we will filter for 11am to 8pm.
 
 ```{r}
-AM_weekday_data <- trips %>%
+#| eval: false
+AM_trips_hex <- trips_hex %>%
   filter(HOUR_OF_DAY %in% c(6, 7, 8, 9),
          DAY_TYPE == "WEEKDAY") %>%
-  group_by(HEX_ID) %>%
-  summarise(AM_TRIPS = sum(TRIPS)) %>%
-  arrange(desc(AM_TRIPS))
+  group_by(HEX_ID, YEAR_MONTH) %>%
+  summarise(TRIPS = sum(TRIPS))
 
-PM_weekday_data <- trips %>%
+PM_trips_hex <- trips_hex %>%
   filter(HOUR_OF_DAY %in% c(17, 18, 19, 20),
          DAY_TYPE == "WEEKDAY") %>%
-  group_by(HEX_ID) %>%
-  summarise(PM_TRIPS = sum(TRIPS)) %>%
-  arrange(desc(PM_TRIPS))
+  group_by(HEX_ID, YEAR_MONTH) %>%
+  summarise(TRIPS = sum(TRIPS)) 
 
-weekend_data <- trips %>%
+weekend_trips_hex <- trips_hex %>%
   filter(HOUR_OF_DAY %in% c(11:21),
          DAY_TYPE == "WEEKENDS/HOLIDAY") %>%
-  group_by(HEX_ID) %>%
-  summarise(WKD_TRIPS = sum(TRIPS)) %>%
-  arrange(desc(WKD_TRIPS))
+  group_by(HEX_ID, YEAR_MONTH) %>%
+  summarise(TRIPS = sum(TRIPS)) 
+
+write_rds(AM_trips_hex, "data/rds/AM_trips_hex.rds")
+write_rds(PM_trips_hex, "data/rds/PM_trips_hex.rds")
+write_rds(weekend_trips_hex, "data/rds/Weekend_trips_hex.rds")
 ```
 
-#### 2.5.2
+```{r}
+AM_trips_hex <- read_rds("data/rds/AM_trips_hex.rds")
+PM_trips_hex <- read_rds("data/rds/PM_trips_hex.rds")
+weekend_trips_hex <- read_rds("data/rds/weekend_trips_hex.rds")
+```
+
+## 3 peak periods (by hour)
 In this section, we want to filter for the each period of data with the hour of the day when trips were made.
 ```{r}
-AM_weekday_data_hr <- trips %>%
+#| eval: false
+
+AM_trips_hex_hr <- trips_hex %>%
   filter(HOUR_OF_DAY %in% c(6, 7, 8, 9),
          DAY_TYPE == "WEEKDAY") %>%
   group_by(HEX_ID, HOUR_OF_DAY) %>%
   summarise(TRIPS = sum(TRIPS)) %>%
   arrange(desc(TRIPS))
 
-PM_weekday_data_hr <- trips %>%
+PM_trips_hex_hr <- trips_hex %>%
   filter(HOUR_OF_DAY %in% c(17, 18, 19, 20),
          DAY_TYPE == "WEEKDAY") %>%
   group_by(HEX_ID, HOUR_OF_DAY) %>%
   summarise(TRIPS = sum(TRIPS)) %>%
   arrange(desc(TRIPS))
 
-weekend_data_hr <- trips %>%
+weekend_trips_hex_hr <- trips_hex %>%
   filter(HOUR_OF_DAY %in% c(11:21),
          DAY_TYPE == "WEEKENDS/HOLIDAY") %>%
   group_by(HEX_ID, HOUR_OF_DAY) %>%
   summarise(TRIPS = sum(TRIPS)) %>%
   arrange(desc(TRIPS))
+
+write_rds(AM_trips_hex_hr, "data/rds/AM_trips_hex_hr.rds")
+write_rds(PM_trips_hex_hr, "data/rds/PM_trips_hex_hr.rds")
+write_rds(weekend_trips_hex_hr, "data/rds/weekend_trips_hex_hr.rds")
 ```
 
+```{r}
+AM_trips_hex_hr <- read_rds("data/rds/AM_trips_hex_hr.rds")
+PM_trips_hex_hr <- read_rds("data/rds/PM_trips_hex_hr.rds")
+weekend_trips_hex_hr <- read_rds("data/rds/weekend_trips_hex_hr.rds")
+```
+:::
 
 ## 3 Exploratory spatial analysis
 
@@ -416,50 +467,61 @@ weekend_data_hr <- trips %>%
 Below charts are plotted to have a full picture of the volumn of each Hex ID in a descending manner.
 
 ::: panel-tabset
+Next let's plot it out.
 ## Weekday AM
 
-Next let's plot it out.
-
 ```{r}
-ggplot(AM_weekday_data, 
-       aes(x = reorder(HEX_ID, -AM_TRIPS), y = AM_TRIPS)) +
-  geom_col(fill = "#B8C4A9") +
-  labs(title = "Weekday Morning Peak Hour Trips (6-9 AM) by HexID",
-       x = "Hex ID", y = "Number of Trips") + 
-  theme(panel.background = element_rect(fill = "#D0DDD0"))
+#| align: center
+ggplot(AM_trips_hex_hr, 
+       aes(x = HOUR_OF_DAY, y = TRIPS)) +
+  geom_col(fill = "#9CAFAA") +
+  scale_y_continuous(limits = c(0, 2.8e+07)) +
+  scale_x_continuous(breaks = unique(weekend_trips_hex_hr$HOUR_OF_DAY)) +
+  labs(title = "AM Peak Hour Trips (6-9 AM) by Hours",
+       x = "Hour of Day", y = "Number of Trips") + 
+  theme(panel.background = element_rect(fill = "#D0DDD0"),
+        plot.background = element_rect(fill = "#D6DAC8"))
 ```
+Insight: The bar chart above shows that between 6-9am on weekdays, 7am has most people onboarding the bus (> 25,000,000 passenger trips), followed by 8am, then 6am, and before 9am. 
 
 ## Weekday PM
 
 ```{r}
-
+#| align: center
+ggplot(PM_trips_hex_hr, 
+       aes(x = HOUR_OF_DAY, y = TRIPS)) +
+  geom_col(fill = "#8DBCC7") +
+  scale_y_continuous(limits = c(0, 2.8e+07)) +
+  scale_x_continuous(breaks = unique(weekend_trips_hex_hr$HOUR_OF_DAY)) +
+  labs(title = "PM Peak Hour Trips (5-8 PM) by Hours",
+       x = "Hour of Day", y = "Number of Trips") + 
+  theme(panel.background = element_rect(fill = "#D0DDD0"),
+        plot.background = element_rect(fill = "#D6DAC8"))
 ```
+Insight: The bar chart above shows that between 5-8pm on weekdays, 6pm has most people onboarding the bus (~ 25,000,000 passenger trips), followed by 5pm, then 7pm, and before 9pm. This indicates that most people start to leave office from 5pm. This makes sense as many people have 9am-6pm schedule, and it is also time for dinner. 
 
-Next let's plot it out.
-
-```{r}
-ggplot(PM_weekday_data, 
-       aes(x = reorder(HEX_ID, -PM_TRIPS), y = PM_TRIPS)) +
-  geom_col(fill = "#F2AEBB") +
-  labs(title = "Weekday Afternoon Peak Hour Trips (5-8 PM) by HexID",
-       x = "Hex ID", y = "Number of Trips") + 
-  theme(panel.background = element_rect(fill = "#D0DDD0"))
-
-```
 
 ## Weekend/PH
 
 Next let's plot it out.
 
 ```{r}
-ggplot(weekend_data, 
-       aes(x = reorder(HEX_ID, -WKD_TRIPS), y = WKD_TRIPS)) +
-  geom_col(fill = "#A376A2") +
-  labs(title = "Weekend/Holiday Trips (5-8 PM) by HexID",
-       x = "Hex ID", y = "Number of Trips") + 
-  theme(panel.background = element_rect(fill = "#D0DDD0"))
+#| fig-width: 8
+#| fig-height: 5
+#| align: center
+ggplot(weekend_trips_hex_hr, 
+       aes(x = HOUR_OF_DAY, y = TRIPS)) +
+  geom_col(fill = "#E6B2BA") +
+  scale_y_continuous(limits = c(0, 2.8e+07)) +
+  scale_x_continuous(breaks = unique(weekend_trips_hex_hr$HOUR_OF_DAY)) + 
+  labs(title = "Weekend/PH Peak Hour Trips (11AM-8PM) by Hours",
+       x = "Hour of Day", y = "Number of Trips") + 
+  theme(panel.background = element_rect(fill = "#D0DDD0"),
+        plot.background = element_rect(fill = "#D6DAC8"))
 
 ```
+Insight: We plotted the bar chart in the same scale as AM/PM on weekdays to understand the trip volumes. It appears that on weekend/holidays, passenger trips on the bus have largely reduced. However, we can still observe that the peak hours during the off days are around lunch and dinner times at 12pm and 5-6pm. 
+
 :::
 
 ### 3.1 Peak Hour Trips by HexID
@@ -1745,6 +1807,9 @@ Emerging Hot Spot Analysis (EHSA) is a spatio-temporal analysis method for revea
 
 **1. Create aggregated data:**
 This is data wrangling to include the time (YEAR_MONTH) for the 3 study period, so the dataframe has the trips, time, origin location and Hex ID. 
+
+::: panel-tabset
+## Peaks
 ```{r}
 #| eval: false
 # First create time period categories and aggregate
@@ -1769,8 +1834,41 @@ write_rds(trips_aggregated, "data/rds/trips_aggregated.csv")
 
 ```{r}
 trips_aggregated <- read_rds("data/rds/trips_aggregated.csv")
-head(trips_aggregated)
+glimpse(trips_aggregated)
 ```
+
+## Hours
+```{.r}
+#| eval: false
+# First create time period categories and aggregate
+trips_aggregated_hr_am <- trips %>%
+  mutate(
+    period = case_when(
+      DAY_TYPE == "WEEKDAY" & HOUR_OF_DAY == 6 ~ "6",
+      DAY_TYPE == "WEEKDAY" & HOUR_OF_DAY == 7 ~ "7",
+      DAY_TYPE == "WEEKDAY" & HOUR_OF_DAY == 8 ~ "8",
+      DAY_TYPE == "WEEKDAY" & HOUR_OF_DAY == 9 ~ "9",
+      TRUE ~ "Other"
+    )) %>%
+  filter(period != "Other") %>%  
+  group_by(HEX_ID, period) %>%
+  summarise(
+    TRIPS = sum(TRIPS, na.rm = TRUE),
+    .groups = "drop")
+
+trips_aggregated_hr_am <- trips_aggregated_hr_am %>%
+  mutate(period = as.double(period))
+
+write_rds(trips_aggregated_hr_am, "data/rds/trips_aggregated_hr_am.csv")
+
+```
+
+```{.r}
+trips_aggregated_hr_amd <- read_rds("data/rds/trips_aggregated.csv")
+glimpse(trips_aggregated_hr_am)
+```
+
+:::
 
 **2. Create Individual Dataframe for AM, PM and Weekends:**
 Next we want to create 3 separate dataframes - one for each period, considering this is the most practical approach for EHSA.
@@ -1857,260 +1955,352 @@ glimpse(ehsa_wkd)
 
 ### 6.2 Creating a Time Series Cube
 Below we will use `st_as_star()` from **star** package to create a spatio-temporal cube.
-
 This creates the SF object (826 features) that defines the spatial dimension.
 
-```{r}
-AM_st <- spacetime(ehsa_trips_am, hexagon_all_ft,
-                      .loc_col = "HEX_ID",
-                      .time_col = "YEAR_MONTH")
-```
+## AM
 
 ```{r}
-is_spacetime_cube(AM_st)
+glimpse(hexagon_hr_am)
 ```
-
-```{.r}
-hex_geometry_am <- ehsa_am %>%
-  dplyr::group_by(HEX_ID) %>%
-  dplyr::slice_head(n = 1) %>% # Keep only one row (and its geometry) per HEX_ID
-  dplyr::ungroup() %>%
-  dplyr::select(HEX_ID, geometry) 
-
-hex_geometry_pm <- ehsa_pm %>%
-  dplyr::group_by(HEX_ID) %>%
-  dplyr::slice_head(n = 1) %>% # Keep only one row (and its geometry) per HEX_ID
-  dplyr::ungroup() %>%
-  dplyr::select(HEX_ID, geometry) 
-
-hex_geometry_wkd <- ehsa_wkd %>%
-  dplyr::group_by(HEX_ID) %>%
-  dplyr::slice_head(n = 1) %>% # Keep only one row (and its geometry) per HEX_ID
-  dplyr::ungroup() %>%
-  dplyr::select(HEX_ID, geometry) 
-
-summary(hex_geometry_pm)
-
-
-```
-
-```{r}
-#AM
-ehsa_trips_am <- ehsa_am %>%
-  dplyr::mutate(
-    TRIPS = tidyr::replace_na(TRIPS, 0),
-    YEAR_MONTH_TS = tsibble::yearmonth(YEAR_MONTH), 
-    YEAR_MONTH = as.integer(YEAR_MONTH_TS - min(YEAR_MONTH_TS)) + 1 ) %>%
-  select(
-    HEX_ID, YEAR_MONTH, TRIPS) %>%
-  sf::st_drop_geometry()
-
-#PM
-ehsa_trips_pm <- ehsa_pm %>%
-  dplyr::mutate(
-    TRIPS = tidyr::replace_na(TRIPS, 0),
-    YEAR_MONTH_DATE = lubridate::ymd(paste0(YEAR_MONTH, "-01")),
-    YEAR_MONTH = lubridate::month(YEAR_MONTH_DATE)) %>%
-  select(
-    HEX_ID, YEAR_MONTH, TRIPS) %>%
-  sf::st_drop_geometry()
-
-#Weekend
-ehsa_trips_wkd <- ehsa_wkd %>%
-  dplyr::mutate(
-    TRIPS = tidyr::replace_na(TRIPS, 0),
-    YEAR_MONTH_DATE = lubridate::ymd(paste0(YEAR_MONTH, "-01")),
-    YEAR_MONTH = lubridate::month(YEAR_MONTH_DATE)) %>%
-  select(
-    HEX_ID, YEAR_MONTH, TRIPS) %>%
-  sf::st_drop_geometry()
-
-glimpse(ehsa_trips_am)
-```
-
-
-
-```{r}
-AM_st <- spacetime(ehsa_trips_am, hex_geometry_am,
-                      .loc_col = "HEX_ID",
-                      .time_col = "YEAR_MONTH")
-
-PM_st <- spacetime(ehsa_trips_pm, hex_geometry_pm,
-                      .loc_col = "HEX_ID",
-                      .time_col = "YEAR_MONTH")
-
-WKD_st <- spacetime(ehsa_trips_wkd, hex_geometry_wkd,
-                      .loc_col = "HEX_ID",
-                      .time_col = "YEAR_MONTH")
-```
-
-```{r}
-summary(AM_st)
-```
-
-```{r}
-AM_st_cube_fixed <- AM_st_stars_cube %>%
-  sf::st_as_sf(long = TRUE) %>% 
-  dplyr::left_join(hex_geometry_am_clean, by = "HEX_ID") %>%
-  st_as_stars()
-
-sf::st_as_sf(AM_st_cube_fixed) 
-```
-
-### 6.3 Computing Gi*
-#### **6.3.1 Deriving spatial weights**
-
-:::panel-tabset
+### 6.3 Calculate Local Gi* for Each Time Step
 
 ## AM
 ```{r}
-ehsa_sp_am <- hex_geometry_am %>%
-  as(., "Spatial") # Convert the sf object to the older sp format required by spdep
-
-ehsa_nb_am <- spdep::poly2nb(ehsa_sp_am, queen = TRUE, snap = 0.001)
-
-# 1c. Create the Row-Standardized Spatial Weights List (W)
-# This is the 'W' matrix required for Gi* calculation.
-ehsa_weights_am <- spdep::nb2listw(ehsa_nb_am, style = "W", zero.policy = TRUE)
-```
-## PM
-```{r}
-
-```
-
-## Weekend
-
-```{r}
-
-```
-:::
-#### **6.3.2 Computing Gi**
-
-## AM
-```{r}
-# Convert AM_st object to a long data frame
-trips_long_df <- as.data.frame(AM_st)
-
-# Reshape to wide format, isolating the TRIPS data as a matrix
-trips_wide_df <- trips_long_df %>%
-  dplyr::mutate(HEX_ID = as.factor(HEX_ID)) %>%
-  tidyr::pivot_wider(
-    id_cols = HEX_ID,
-    names_from = YEAR_MONTH, # Time steps 1, 2, 3 become column headers
-    values_from = TRIPS      # TRIPS data fills the cells
-  )
-
-# Isolate the final numeric data matrix for the loop
-trips_data_matrix <- as.matrix(trips_wide_df[, -1]) 
-
-# Set loop parameters based on the new matrix
-time_step_names <- colnames(trips_data_matrix)
-ehsa_num_time_steps <- ncol(trips_data_matrix)
-
-gi_star_results_list_am <- list()
-
-for (i in 1:ehsa_num_time_steps) {
-  # Extract the correct column (a numeric vector of TRIPS for one month)
-  current_trips_vector_am <- trips_data_matrix[, i] 
+calc_gi_star <- function(data, time_step, nb_list, wt_list) {
+  # Filter for specific time step
+  time_data <- data %>%
+    filter(HOUR_OF_DAY == time_step)
   
-  # Compute Gi* 
-  gi_star_output_am <- spdep::localG(x = current_trips_vector_am, listw = ehsa_weights_am)
+  # Ensure order matches hexagon_geom
+  time_data <- hexagon_geom %>% 
+    st_drop_geometry() %>%
+    left_join(time_data, by = "HEX_ID") %>%
+    mutate(TRIPS = replace_na(TRIPS, 0)) %>%
+    arrange(HEX_ID)
   
-  col_name <- paste0("GI_STAR_", time_step_names[i])
-  gi_star_results_list_am[[col_name]] <- as.vector(gi_star_output_am)
+  # Verify dimensions match
+  stopifnot(nrow(time_data) == length(nb_list))
+  
+  # Calculate local Gi*
+  gi_result <- local_g_perm(time_data$TRIPS, nb_list, wt_list, 
+                           nsim = 999)
+  
+  # Extract results - using correct column names
+  time_data$Gi_star <- gi_result$gi              # ✅ Changed from gi_star
+  time_data$p_value <- gi_result$p_folded_sim
+  time_data$p_sim <- gi_result$p_sim             # Optional: keep this too
+  time_data$significant <- time_data$p_value < 0.05
+  time_data$cluster_type <- ifelse(time_data$Gi_star > 0, "Hot Spot", "Cold Spot")
+  time_data$TIME_STEP <- time_step
+  
+  time_data
 }
 
-# Combine results
-ehsa_gi_star_df_am <- as.data.frame(gi_star_results_list_am)
 
-# Attach results back to the original geometry for mapping
-ehsa_final_gi_sf_am <- hex_geometry_am %>%
-  dplyr::bind_cols(ehsa_gi_star_df_am)
-
+gi_results <- map_dfr(time_steps, ~calc_gi_star(gdf_complete, .x, nb_list, wt_list))
 ```
 
-## PM
+### 6.4 Mann-Kendall Test on Gi* Values
 
-
-## Weekend
-
-### 6.4 Prepare data for Mann-Kendall test
-
-#### **6.4.1 Prepare data for Mann-Kendall test**
-
+#### 6.4.1 Run Test
+## AM
 ```{r}
-# Convert the SF object to a long data frame
-gi_star_long <- ehsa_final_gi_sf_am %>%
-  sf::st_drop_geometry() %>%
-  pivot_longer(
-    cols = starts_with("GI_STAR_"),
-    names_to = "TIME_STEP",
-    values_to = "GI_STAR_ZSCORE"
-  ) %>%
+# perform MK test function
+safe_mk_test <- function(x) {
+  if(length(x) < 3 || all(is.na(x))) {
+    return(list(
+      mk_trend = "insufficient data",
+      mk_tau = NA,
+      mk_p_value = NA,
+      mk_S = NA,
+      mk_D = NA,
+      mk_varS = NA,
+      mk_significant = FALSE
+    ))
+  }
   
-arrange(HEX_ID, TIME_STEP)
-```
 
-**Calculate Mann-Kendall trend**
-```{r}
-ehsa_mk_results <- gi_star_long %>%
-  group_by(HEX_ID) %>%
-  reframe(
-    MK_P_VALUE = trend::mk.test(GI_STAR_ZSCORE)$p.value,
-    MK_Z_STATISTIC = trend::mk.test(GI_STAR_ZSCORE)$statistic,
-    MEAN_GI_STAR = mean(GI_STAR_ZSCORE)
-  ) %>%
-  
-  select(HEX_ID, MK_P_VALUE, MK_Z_STATISTIC, MEAN_GI_STAR)
-```
-
-
-#### **6.4.2 Compute Mann-Kendall Trend**
-```{r}
-ehsa_mk_results1 <- gi_star_long %>%
-  group_by(HEX_ID) %>%
-  summarise(
-    mk_result = trend::mk.test(GI_STAR_ZSCORE),
-    MK_P_VALUE = mk_result$p.value,
-    MK_Z_STATISTIC = mk_result$statistic,
-    MK_S_STATISTIC = mk_result$S,
-    MK_TAU_ESTIMATE = mk_result$estimates["tau"],
-    MEAN_GI_STAR = mean(GI_STAR_ZSCORE),
-    .groups = 'drop'
-  ) %>%
-  
-  mutate(
-    MK_TAU_ESTIMATE = unlist(MK_TAU_ESTIMATE)
-  ) %>%
-  
-  select(HEX_ID, MK_P_VALUE, MK_Z_STATISTIC, MK_S_STATISTIC, MK_TAU_ESTIMATE, MEAN_GI_STAR)
-```
-
-
-
-```{r}
-#| eval: false
-ehsa_mk_results <- gi_star_long %>%
-  dplyr::group_by(HEX_ID) %>%
-  dplyr::summarise(
-    # Compute the Mann-Kendall Tau (S) and p-value
-    MK_P_VALUE = trend::mk.test(GI_STAR_ZSCORE)$p.value,
-    MK_Z_STATISTIC = trend::mk.test(GI_STAR_ZSCORE)$statistic,
+    mk_result <- Kendall::MannKendall(x)  
+    tau <- as.numeric(mk_result$tau)
+    p_value <- as.numeric(mk_result$sl)
+    S <- as.numeric(mk_result$S)           
+    D <- as.numeric(mk_result$D)           
+    varS <- as.numeric(mk_result$varS)   
+    trend <- if(p_value < 0.05) {
+      if(tau > 0) "increasing" else "decreasing"
+    } else {
+      "no trend"
+    }
     
-    # Also get the overall trend of the mean (required for classification)
-    MEAN_GI_STAR = mean(GI_STAR_ZSCORE),
-    .groups = 'drop'
-  )
-write_rds(ehsa_mk_results, "data/rds/ehsa_mk_results.rds")
+    list(
+      mk_trend = trend,
+      mk_tau = tau,
+      mk_p_value = p_value,
+      mk_S = S,             
+      mk_D = D,              
+      mk_varS = varS,        
+      mk_significant = p_value < 0.05
+    )
+}
+
+# MK test for each hexagon
+mk_results <- gi_results %>%
+  group_by(HEX_ID) %>%
+  arrange(TIME_STEP) %>%  
+  summarise(
+    n_obs = n(),  
+    mk_test = list(safe_mk_test(Gi_star)),
+    .groups = "drop"
+  ) %>%
+  unnest_wider(mk_test)
+
 ```
 
+### 6.4.2 MK Test Report
 ```{r}
-ehsa_mk_results <- read_rds("data/rds/ehsa_mk_results.rds")
-head(ehsa_mk_results)
+
+# Display results
+cat(sprintf("Total hexagons analyzed: %d\n", nrow(mk_results)))
+cat(sprintf("Significant trends detected: %d hexagons\n", 
+            sum(mk_results$mk_significant, na.rm = TRUE)))
+
+cat("\nTrend breakdown:\n")
+print(table(mk_results$mk_trend))
+
+# Summary statistics
+cat("\nMann-Kendall Tau statistics:\n")
+print(summary(mk_results$mk_tau))
+head(mk_results)
+
+mk_table <- mk_results %>%
+  arrange(mk_p_value) %>%
+  head(30) %>%
+  mutate(
+    tau = round(mk_tau, 3),
+    sl = round(mk_p_value, 5),    
+    S = round(mk_S, 1),
+    D = round(mk_D, 1),
+    varS = round(mk_varS, 1)
+  ) %>%
+  select(HEX_ID, tau, sl, S, D, varS)
+
+kable(mk_table,
+      caption = "Mann-Kendall Test Statistics (Top 30 by p-value)",
+      col.names = c("Hexagon ID", "tau", "sl", "S", "D", "varS"),
+      align = c('l', 'r', 'r', 'r', 'r', 'r', 'c'))
 ```
 
 
-animated time-series maps
+### 6.5 Classify EHSA Patterns
+```{r}
+# Get initial and final time step statistics
+initial_time <- min(time_steps)
+final_time <- max(time_steps)
+
+initial_gi <- gi_results %>%
+  filter(TIME_STEP == initial_time) %>%
+  select(HEX_ID, initial_gi = Gi_star, initial_sig = significant, 
+         initial_type = cluster_type)
+
+final_gi <- gi_results %>%
+  filter(TIME_STEP == final_time) %>%
+  select(HEX_ID, final_gi = Gi_star, final_sig = significant,
+         final_type = cluster_type)
+
+# Merge all results
+ehsa_map <- hexagon_geom %>%
+  left_join(mk_results, by = "HEX_ID") %>%
+  left_join(initial_gi, by = "HEX_ID") %>%
+  left_join(final_gi, by = "HEX_ID")
+
+# Classification function
+classify_ehsa <- function(mk_sig, mk_trend, init_sig, final_sig, 
+                         init_type, final_type, init_gi, final_gi) {
+  
+  if (!mk_sig) return("No Pattern Detected")
+  
+  # Determine if hot or cold spot
+  is_hot <- (init_sig & init_type == "Hot Spot") | 
+            (final_sig & final_type == "Hot Spot")
+  spot_type <- ifelse(is_hot, "Hot Spot", "Cold Spot")
+  
+  # Classification logic
+  if (mk_trend == "increasing") {
+    if (!init_sig & final_sig) {
+      return(paste("New", spot_type))
+    } else if (init_sig & final_sig) {
+      return(paste("Intensifying", spot_type))
+    } else if (init_sig & !final_sig) {
+      return(paste("Diminishing", spot_type))
+    } else {
+      return(paste("Sporadic", spot_type))
+    }
+  } else if (mk_trend == "decreasing") {
+    if (!init_sig & final_sig) {
+      return(paste("New", spot_type))
+    } else if (init_sig & final_sig) {
+      return(paste("Intensifying", spot_type))
+    } else if (init_sig & !final_sig) {
+      return(paste("Diminishing", spot_type))
+    } else {
+      return(paste("Sporadic", spot_type))
+    }
+  }
+  
+  # No clear trend but significant MK test
+  if (init_sig & final_sig) {
+    return(paste("Persistent", spot_type))
+  } else if (init_sig | final_sig) {
+    return(paste("Sporadic", spot_type))
+  } else {
+    return("Oscillating")
+  }
+}
+
+# Apply classification
+ehsa_map <- ehsa_map %>%
+  mutate(
+    EHSA_Pattern = pmap_chr(
+      list(mk_significant, mk_trend, initial_sig, final_sig,
+           initial_type, final_type, initial_gi, final_gi),
+      classify_ehsa
+    )
+  )
+
+# Filter significant patterns only
+ehsa_significant <- ehsa_map %>%
+  filter(mk_significant)
+
+cat("\nEHSA Pattern Distribution (p < 0.05 only):\n")
+print(table(ehsa_significant$EHSA_Pattern))
+```
+
+### 6.6 Create EHSA Maps
+
+#### 6.6.1 Classify EHSA Patterns
+```{r}
+
+ehsa_map <- hexagon_geom %>%
+  left_join(mk_results, by = "HEX_ID")
+
+# Get the latest Gi* significance for each hexagon
+latest_gi <- gi_results %>%
+  group_by(HEX_ID) %>%
+  arrange(TIME_STEP) %>%
+  slice_tail(n = 1) %>%
+  select(HEX_ID, Gi_star, significant, cluster_type)
+
+# Join with latest Gi* results
+ehsa_map <- ehsa_map %>%
+  left_join(latest_gi, by = "HEX_ID")
+
+# Classify EHSA patterns
+ehsa_map <- ehsa_map %>%
+  mutate(
+    EHSA_Pattern = case_when(
+      # Not significant patterns
+      !mk_significant & !significant ~ "No Pattern",
+      
+      # Hot Spot patterns (Gi* > 0)
+      mk_significant & mk_trend == "increasing" & significant & Gi_star > 0 ~ "Intensifying Hot Spot",
+      mk_significant & mk_trend == "decreasing" & significant & Gi_star > 0 ~ "Diminishing Hot Spot",
+      mk_significant & mk_trend == "no trend" & significant & Gi_star > 0 ~ "Persistent Hot Spot",
+      !mk_significant & significant & Gi_star > 0 ~ "Sporadic Hot Spot",
+      
+      # Cold Spot patterns (Gi* < 0)
+      mk_significant & mk_trend == "increasing" & significant & Gi_star < 0 ~ "Intensifying Cold Spot",
+      mk_significant & mk_trend == "decreasing" & significant & Gi_star < 0 ~ "Diminishing Cold Spot",
+      mk_significant & mk_trend == "no trend" & significant & Gi_star < 0 ~ "Persistent Cold Spot",
+      !mk_significant & significant & Gi_star < 0 ~ "Sporadic Cold Spot",
+      
+      # New patterns (significant MK but not significant Gi* currently)
+      mk_significant & mk_trend == "increasing" & !significant ~ "New Hot Spot",
+      mk_significant & mk_trend == "decreasing" & !significant ~ "New Cold Spot",
+      
+      # Oscillating (significant at some point but no clear trend)
+      TRUE ~ "Oscillating"
+    )
+  )
+
+# Filter significant patterns only
+ehsa_significant <- ehsa_map %>%
+  filter(mk_significant | significant)
+
+# Summary
+print(table(ehsa_map$EHSA_Pattern))
+cat(sprintf("\nTotal significant hexagons: %d out of %d (%.1f%%)\n",
+            nrow(ehsa_significant), 
+            nrow(ehsa_map),
+            100 * nrow(ehsa_significant) / nrow(ehsa_map)))
+
+```
+
+#### 6.6.2 Create the Map
+```{r}
+ehsa_colors <- c(
+  "Intensifying Hot Spot" = "#FE7E6D",     
+  "Persistent Hot Spot" = "#DD4A48",        
+  "Sporadic Hot Spot" = "#fee08b",          
+  "Diminishing Hot Spot" = "#CA965C",       
+  "New Hot Spot" = "#DB6B97",               
+  
+  "Intensifying Cold Spot" = "#519259",     
+  "Persistent Cold Spot" = "#0C4271",       
+  "Sporadic Cold Spot" = "#92c5de",         
+  "Diminishing Cold Spot" = "#716F81",      
+  "New Cold Spot" = "#A3A847",              
+  
+  "Oscillating" = "#66c2a5",                
+  "No Pattern" = "#f0f0f0"                  
+)
+
+# Create map
+ehsa_plot <- ggplot() +
+  # Base layer - all hexagons (non-significant)
+  geom_sf(data = ehsa_map %>% filter(EHSA_Pattern == "No Pattern"),
+          fill = "#f0f0f0", color = "#cccccc", size = 0.1, alpha = 0.5) +
+  geom_sf(data = ehsa_significant,
+          aes(fill = EHSA_Pattern), color = "black", size = 0.2) +
+  scale_fill_manual(
+    values = ehsa_colors, 
+    name = "EHSA Pattern",
+    breaks = names(ehsa_colors)[names(ehsa_colors) != "No Pattern"]) +
+  labs(
+    title = "Emerging Hot Spot Analysis: AM Peak Trips",
+    subtitle = sprintf("Hours 6-9AM | Significant trends (p < 0.05): %d hexagons", 
+                       nrow(ehsa_significant))) +
+  
+#  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(size = 12, hjust = 0.5),
+    legend.position = "right",
+    legend.title = element_text(face = "bold", size = 11),
+    legend.text = element_text(size = 9),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    panel.grid = element_blank()
+  )
+
+# Display the map
+print(ehsa_plot)
+
+```
+#### 6.6.3 Summary Report
+```{r}
+ehsa_summary <- ehsa_map %>%
+  st_drop_geometry() %>%
+  count(EHSA_Pattern) %>%
+  mutate(
+    percentage = round(100 * n / sum(n), 1),
+    label = sprintf("%s: %d (%.1f%%)", EHSA_Pattern, n, percentage)
+  ) %>%
+  arrange(desc(n))
+
+kable(ehsa_summary)
+```
+
+
 
 ## 7 Key findings & Conclusions
 
