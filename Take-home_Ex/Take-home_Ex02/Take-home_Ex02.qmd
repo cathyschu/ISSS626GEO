@@ -20,7 +20,7 @@ execute: #how YML page work
 The packages that we will use for this study are outlined below:
 
 | R Package | Description |
-|-----------------------|-------------------------------------------------|
+|-----------------------|------------------------------------------------|
 | **sf** | A package that provides [**simple features access**](https://en.wikipedia.org/wiki/Simple_Features) for R. |
 | **spdep** | Creates spatial weights matrices and to test for and model spatial autocorrelation in geographical data, like Moran's I and Geary's C and Local Moran's I and Getis-Ord G. |
 | **tidyverse** | Includes the core packages like ggplot2, dplyr, readr, purrr, tibble, lubridate, etc. |
@@ -323,6 +323,7 @@ hexagon_geo_id %>%
   arrange(HEX_ID)
 write_rds(hexagon_geo_id, "data/rds/hexagon_geo_id.rds")
 ```
+
 ```{r}
 #| echo: false
 hexagon_geo_id <- read_rds("data/rds/hexagon_geo_id.rds")
@@ -369,10 +370,10 @@ write_rds(bs_hex, "data/rds/bs_hex.rds")
 bs_hex <- read_rds("data/rds/bs_hex.rds")
 ```
 
-
 #### 2.4.2 Add HEX_ID into bus trips data
 
 **Use left_join() to join trips and bus_hex. - Count trips per hexagon.**
+
 ```{r}
 # Step 1: Define all the combinations we need
 all_combinations <- expand_grid(
@@ -407,13 +408,10 @@ n_distinct(trips_hex_complete$HEX_ID)  # 826
 write_rds(trips_hex_complete, "data/rds/trips_hex_complete.rds")
 ```
 
-
 ```{r}
 trips_hex_complete <- read_rds("data/rds/trips_hex_complete.rds")
 head(trips_hex_complete, 8)
 ```
-
-
 
 ### 2.5 Time preriod filtering
 
@@ -430,7 +428,6 @@ In section 2.3, we derived an analytical hexagon data of 375m to represent the t
 Below we will process the trips data with Hex ID for the 3 study periods.
 
 ::: panel-tabset
-
 ## 3 peak periods by hexagon
 
 ```{r}
@@ -458,7 +455,6 @@ write_rds(AM_trips_hex, "data/rds/AM_trips_hex.rds")
 write_rds(PM_trips_hex, "data/rds/PM_trips_hex.rds")
 write_rds(weekend_trips_hex, "data/rds/Weekend_trips_hex.rds")
 ```
-
 
 ```{r}
 #| echo: false
@@ -683,9 +679,6 @@ write_rds(PM_trips_geo_month, "data/rds/PM_trips_geo_month.rds")
 write_rds(PM_trips_geo_hr, "data/rds/PM_trips_geo_hr.rds")
 
 ```
-
-
-
 
 ```{r}
 #| echo: false
@@ -1475,10 +1468,9 @@ tmap_mode("plot")
 
 We leverage the Moran Scatterplot to visualise the relationship between the trip values and the average of its neighboring locations to identify spatial autocorrelation.
 
-**Calculate spatial lag of Passenger Trips against its spatial lag version** 
+**Calculate spatial lag of Passenger Trips against its spatial lag version**
 
 ::: panel-tabset
-
 ## AM
 
 ```{r}
@@ -1529,7 +1521,6 @@ write_rds(lisa_wkd_lag, "data/rds/lisa_wkd_lag.rds")
 ```{r}
 lisa_wkd_lag <- read_rds("data/rds/lisa_wkd_lag.rds")
 ```
-
 :::
 
 **Moran Scatterplot with LISA Quadrands** 
@@ -1661,10 +1652,10 @@ ggplotly(p3, tooltip = "text")
 
 We will use the mean where LISA classes are stored in to derive a new field called LISA-cluster.
 
+**Prepare data for visualisation** 
 ::: panel-tabset
-## AM Weekdays
 
-**Prepare data for visualisation** ::: panel-tabset \## AM
+## AM
 
 ```{r}
 #| eval: false
@@ -1984,9 +1975,9 @@ head(hexagon_fdw_pm)
 head(hexagon_fdw_wkd)
 ```
 
-### 5.2 Computing local Gi*
+### 5.2 Computing local Gi\*
 
-In the following, Local Gi* will be computed for the 3 study periods.
+In the following, Local Gi\* will be computed for the 3 study periods.
 
 ::: panel-tabset
 ## AM
@@ -2047,9 +2038,9 @@ HCSA_fdw_wkd <- read_rds("data/rds/HCSA_fdw_wkd.rds")
 
 ### 5.3 Visualising HCSA Map
 
-We will use tmap to prepare a choropleth map showing the distribution of Gi* values.
+We will use tmap to prepare a choropleth map showing the distribution of Gi\* values.
 
-We use `glimpse()` to check the computation result for Gi*, and confirm that the HCSA classes are stored in the `cluster` column.
+We use `glimpse()` to check the computation result for Gi\*, and confirm that the HCSA classes are stored in the `cluster` column.
 
 ```{r}
 glimpse(HCSA_fdw_am)
@@ -2088,7 +2079,7 @@ HCSA_clst_am <- read_rds("data/rds/HCSA_clst_am.rds")
 glimpse(HCSA_clst_am)
 ```
 
-This confirms that we have HCSA_cluster_am to show the classifications for AM trips. Below we will plot the HCSA map for AM Weekdays & Local Gi* of AM weekday Trips
+This confirms that we have HCSA_cluster_am to show the classifications for AM trips. Below we will plot the HCSA map for AM Weekdays & Local Gi\* of AM weekday Trips
 
 ## PM
 
@@ -2147,10 +2138,9 @@ glimpse(HCSA_clst_wkd)
 
 ### **5.3.2 Plot for HCSA Maps**
 
-Next we will use the data set above to plot HCSA maps to conduct HCSA analysis. 
+Next we will use the data set above to plot HCSA maps to conduct HCSA analysis.
 
 ::: panel-tabset
-
 ## AM
 
 Below we will plot the HCSA map for AM Weekdays.
@@ -2327,7 +2317,6 @@ HCSA_map_wkd
 tmap_mode("plot")
 
 ```
-
 :::
 
 ## 6 Emerging Hot Spot Analysis(EHSA)
@@ -2343,10 +2332,9 @@ Emerging Hot Spot Analysis (EHSA) is a spatio-temporal analysis method for revea
 
 #### **6.1.1 Create Individual Dataframe for AM, PM and Weekends:**
 
-In section 2.5, we have prepared data for EHSA analysis by month and by hour. Let's verify we have all columns we need for EHSA. 
+In section 2.5, we have prepared data for EHSA analysis by month and by hour. Let's verify we have all columns we need for EHSA.
 
 ::: panel-tabset
-
 ## AM
 
 Below we will take a look at the AM trips data by hour.
@@ -2373,10 +2361,9 @@ Below we will take a look at the Weekend trips data by month and by hour.
 # By hour
 glimpse(WKD_trips_geo_hr)
 ```
-
 :::
 
-### 6.2 Calculate Local Gi* for Each Time Step
+### 6.2 Calculate Local Gi\* for Each Time Step
 
 ::: panel-tabset
 ## AM
@@ -2477,7 +2464,6 @@ gi_results_pm <- map_dfr(time_steps_pm, ~calc_gi_star_pm(PM_trips_geo_hr_ft, .x,
 write_rds(gi_results_pm, "data/rds/gi_results_pm.rds")
 ```
 
-
 ```{r}
 #| echo: false
 gi_ehsa_results_pm <- read_rds("data/rds/gi_results_pm.rds")
@@ -2530,7 +2516,6 @@ gi_results_wkd <- map_dfr(time_steps_wkd, ~calc_gi_star_pm(PM_trips_geo_hr_ft, .
 write_rds(gi_results_wkd, "data/rds/gi_results_wkd.rds")
 ```
 
-
 ```{r}
 #| echo: false
 gi_ehsa_results_wkd <- read_rds("data/rds/gi_results_wkd.rds")
@@ -2538,7 +2523,7 @@ glimpse(gi_ehsa_results_wkd)
 ```
 :::
 
-### 6.4 Mann-Kendall Test on Gi* Values
+### 6.4 Mann-Kendall Test on Gi\* Values
 
 #### 6.4.1 Run Test
 
@@ -2622,6 +2607,7 @@ head(ehsa_results_am)
 ```
 
 ## Weekend
+
 ```{r}
 #| eval: false
 library(Kendall)
@@ -2658,7 +2644,6 @@ ehsa_results_wkd <- read_rds("data/rds/ehsa_results_wkd.rds")
 head(ehsa_results_wkd)
 
 ```
-
 :::
 
 ### 6.4.2 MK Test Report
@@ -2701,10 +2686,10 @@ head(ehsa_results_wkd)
 ```
 
 ### 6.5 Create EHSA Map
+
 #### **6.5.1 Classify EHSA Patterns**
 
 ::: panel-tabset
-
 ## AM
 
 ```{r}
@@ -2758,6 +2743,7 @@ is_spacetime_cube(AM_st)
 ```
 
 ## PM
+
 ```{r}
 #| eval: false
 library(sfdep)
@@ -2805,13 +2791,12 @@ ehsa_pm <- read_rds("data/rds/ehsa_pm.rds")
 head(ehsa_pm)
 ```
 
-
 ```{r}
 is_spacetime_cube(PM_st)
 ```
 
-
 ## Weekend
+
 ```{r}
 #| eval: false
 WKD_trips_data <- WKD_trips_geo_hr_ft %>%
@@ -2850,7 +2835,6 @@ write_rds(WKD_st, "data/rds/WKD_st.rds")
 write_rds(ehsa_wkd, "data/rds/ehsa_wkd.rds")
 ```
 
-
 ```{r}
 #| echo: false
 WKD_st <- read_rds("data/rds/WKD_st.rds")
@@ -2861,13 +2845,13 @@ head(ehsa_pm)
 ```{r}
 is_spacetime_cube(WKD_st)
 ```
-
 :::
+
 #### **6.5.2 Visualising EHSA Classes**
 
 ::: panel-tabset
-
 ## AM
+
 ```{r}
 ggplot(data = ehsa_am,
        aes(x = classification)) +
@@ -2880,7 +2864,9 @@ ggplot(data = ehsa_am,
             size = 2.5,             
             color = "black")  
 ```
+
 ## PM
+
 ```{r}
 ggplot(data = ehsa_pm,
        aes(x = classification)) +
@@ -2895,6 +2881,7 @@ ggplot(data = ehsa_pm,
 ```
 
 ## Weekend
+
 ```{r}
 ggplot(data = ehsa_pm,
        aes(x = classification)) +
@@ -2907,10 +2894,8 @@ ggplot(data = ehsa_pm,
             size = 2.5,             
             color = "black")  
 ```
-
-
-
 :::
+
 #### **6.5.3 Visualising EHSA Maps**
 
 **Create color scheme**
@@ -2937,11 +2922,10 @@ ehsa_colors <- c(
 )
 ```
 
-Join EHSA results with geometry
+Join EHSA results with geometry 
 ::: panel-tabset
 
 ## AM
-
 
 ```{r}
 #| eval: false
@@ -2964,6 +2948,7 @@ write_rds(ehsa_am_map, "data/rds/ehsa_am_map.rds")
 ehsa_am_map <- read_rds("data/rds/ehsa_am_map.rds")
 glimpse(ehsa_am_map)
 ```
+
 ## PM
 
 ```{r}
@@ -2987,6 +2972,7 @@ write_rds(ehsa_pm_map, "data/rds/ehsa_pm_map.rds")
 ehsa_pm_map <- read_rds("data/rds/ehsa_pm_map.rds")
 glimpse(ehsa_pm_map)
 ```
+
 ## Weekend
 
 ```{r}
@@ -3014,8 +3000,8 @@ glimpse(ehsa_wkd_map)
 :::
 
 ::: panel-tabset
-
 **Plot the map**
+
 ```{r}
 
 tm_shape(mpsz) +
@@ -3034,7 +3020,6 @@ tm_layout(
 )
 
 ```
-
 
 ## PM
 
@@ -3058,6 +3043,7 @@ tm_layout(
 ```
 
 ## Weekend
+
 ```{r}
 
 tm_shape(mpsz) +
@@ -3076,13 +3062,11 @@ tm_layout(
 )
 
 ```
-
-
 :::
+
 #### 6.6.3 Summary Report
 
 ::: panel-tabset
-
 ## AM
 
 ```{r}
@@ -3104,6 +3088,7 @@ kable(ehsa_summary_am)
 ```
 
 ## PM
+
 ```{r}
 #| eval: false
 ehsa_summary_pm <- ehsa_pm_map %>%
@@ -3151,6 +3136,3 @@ kable(ehsa_summary_wkd)
 **Extra data - MRT data**
 
 ## Reference
-
-
-
