@@ -1,0 +1,255 @@
+---
+title: "08a - Kick starter - Geographically Weighted Predictive Modelling"
+author: "Cathy C."
+date: "Oct 25, 2025"
+date-modified: "last-modified" #auto render date
+format: html
+execute: #how YML page work
+  echo: true #will show code
+  eval: true #will run code every time and show output
+  warning: false #dont show warning msg
+  freeze: true #controls rendering - no render if no changes
+---
+
+## Installing and Loading R packages
+
+
+```{r}
+pacman::p_load(httr, tidyverse, sf, tmap, jsonlite, progress)
+```
+
+### Additional packages for predive modelling
+```{r}
+pacman::p_load(spdep, GWmodel, SpatialML, rsample, Metrics, knitr,
+               kableExtra, spatialRF, randomForestExplainer)
+```
+
+progress - to monitor and track the computation.
+
+## Geocoding HDB resale data
+We use OneMap https://www.onemap.gov.sg/apidocs/
+https://www.onemap.gov.sg/apidocs/reverseGeocode
+
+
+### Basic version
+```{r}
+#| eval: false
+HDBresale <- read_csv(
+  "data/rawdata/HDBresale.csv") %>%
+  filter(flat_type == "4 ROOM") %>%
+  filter(month >= "2025-09" & month < "2025-10") # filter the sample data for the exercise.
+
+write_rds(HDBresale, "data/rds/HDBresale.rds")
+```
+```{r}
+HDBresale <- read_rds("data/rds/HDBresale.rds")
+glimpse(HDBresale)
+```
+
+```{r}
+# street names is ST, but it's actually Sait.
+HDBresale$street_name <- gsub(
+  "ST\\.", "SAINT",
+  HDBresale$street_name
+)
+```
+
+```{r}
+# for multiple queries
+geocode <- function(block, streetname) {
+  base_url <- "https://onemap.gov.sg/api/common/elastic/search"
+  address <- paste(block, streetname, sep = " ")
+  query <- list("searchVal" = address,
+                "returnGeom" = "Y",
+                "getAddrDetails" = "N", #No. can change to Y for comparison
+                "pageNum" = "1") 
+  res <- GET(base_url, query = query) #get URL query
+  restext <- content(res, as = "text")
+  
+  output <- fromJSON(restext) %>%
+    as.data.frame %>%
+    select(results.LATITUDE, results.LONGITUDE)
+  
+  return(output)
+}
+```
+
+Need below to run the functions
+
+```{r}
+HDBresale$LATITUDE <- 0
+HDBresale$LONGITUDE <- 0
+
+for(i in 1:nrow(HDBresale)){
+  temp_output <- geocode(HDBresale[i, 4], HDBresale[i, 5])
+  
+  HDBresale$LATITUDE[i] <- temp_output$results.LATITUDE
+  HDBresale$LONGITUDE[i] <- temp_output$results.LONGITUDE
+}
+```
+
+## Transform to sf data frame
+```{r}
+st_crs(HDBresale)
+HDBresale_sf <- HDBresale %>%
+  st_as_sf(
+    coords = c("LONGITUDE", "LATITUDE"),
+    crs = 4326) %>% #if decimal degree
+  st_transform(crs = 3414)
+
+```
+
+
+## Load preschool data
+```{r}
+preschool = st_read("data/rawdata/PreSchoolsLocation.kml") %>%
+  st_transform(crs = 3414)
+```
+From this we will have the geometry data for the preschools.
+
+Next we will derive a binary data to find out which schools are within 350 meters.
+```{r}
+within_350m <- st_is_within_distance(
+  HDBresale_sf, preschool, dist = 350)
+
+HDBresale_sf <- HDBresale_sf %>%
+  mutate(prischool_350m = map_int(within_350m, length)
+)
+```
+
+
+# Predictive modeling
+## Data import
+```{r}
+mdata <- read_rds("data/rawdata/mdata.rds")
+```
+
+## Data sampling
+Calibrating predictive models are computational intensive, especially random forest method is used.
+For quick prototyping, a 10% sample will be selected at random from the data by using the code chunk below:
+
+```{r}
+set.seed(1234)
+HDB_sample <- mdata %>%
+  sample_n(1500)
+```
+
+### Checking of overlapping point
+
+*** When using GWmodel to calibrate explanaroty or predictive models, it is very important to ensure that there are no overlapping point features *** 
+
+Below is to check if there are overlapping point feature - to do spatial jitter. 
+
+```{r}
+overlapping_points <- HDB_sample %>%
+  mutate(overlap = lengths(st_equals(.,.)) > 1)
+
+```
+
+Below we can have a look at overlapping_points, and see the new column overlap showing whether the location has overlapping points. We then calculate how many has overlapping points. In this sample data, we observed 453 overlapping points. 
+```{r}
+head(overlapping_points)
+sum(overlapping_points$overlap == "TRUE")
+```
+
+## Spatial jitter
+
+st_jitter is used to move the point feature by 5m to avoid overlapping point features.
+
+```{r}
+HDB_sample <- HDB_sample %>%
+  st_jitter(amount = 1)
+```
+
+```{r}
+set.seed(1234)
+resale_split <- initial_split(HDB_sample,
+                              prop = 6.67/10,)
+train_data <- training(resale_split)
+test_data <- testing(resale_split)
+```
+
+
+### Constructing the adaptive bandwidth gwr model
+
+```{r}
+#| eval: false
+bw_adaptive <- bw.gwr(
+  formula = resale_price ~ floor_area_sqm +
+    storey_order + remaining_lease_mths +
+    PROX_CBD + PROX_ELDERLYCARE + PROX_HAWKER +
+    PROX_MRT + PROX_PARK + PROX_MALL + 
+    PROX_SUPERMARKET + WITHIN_350M_KINDERGARTEN +
+    WITHIN_350M_CHILDCARE + WITHIN_350M_BUS +
+    WITHIN_1KM_PRISCH,
+  data=train_data,
+  approach="CV",
+  kernel="gaussian",
+  adaptive=TRUE,
+  longlat=FALSE)
+
+write_rds(bw_adaptive, "data/model/bw_adaptive.rds")
+```
+
+### Constructing the adaptive bandwidth gwr model
+```{r}
+#| echo: false
+bw_adaptive <- read_rds(
+  "data/model/bw_adaptive.rds")
+```
+
+```{r}
+#| eval: false
+gwr_adaptive <- gwr.basic(
+  formula = resale_price ~ floor_area_sqm +
+    storey_order + remaining_lease_mths + 
+    PROX_CBD + PROX_ELDERLYCARE + 
+    PROX_HAWKER + PROX_MRT + PROX_PARK + 
+    PROX_MALL + PROX_SUPERMARKET +
+    WITHIN_350M_KINDERGARTEN +
+    WITHIN_350M_CHILDCARE + 
+    WITHIN_350M_BUS + WITHIN_1KM_PRISCH,
+  data=train_data,
+  bw=bw_adaptive, 
+  kernel = 'gaussian', 
+  adaptive=TRUE,
+  longlat = FALSE)
+
+write_rds(gwr_adaptive, 
+          "data/model/gwr_adaptive.rds")
+```
+
+### Output
+
+```{r}
+#| echo: false
+gwr_adaptive <- read_rds("data/model/gwr_adaptive.rds")
+gwr_adaptive
+```
+
+- Based on the result of the modelling above, p-value is much smaller than 0.05. 
+We see the adjusted R^2 = 0.7387, meaning that this model can explain 73% of the data using the variables. 
+
+- The AICc = 24901.56 for Global Regression model is much larger than Geographically Weighted Regression's AICc = 24103.97. The difference of approximately 797.6 points is quite significant. This suggests the **GWR model provides meaningfully better predictions and fit**. 
+
+
+Explanatory variables:
+
+Plot out the significant variables to show distribution and explain which ones have higher/lower influence over the model. 
+
+## Collinearity
+
+```{r}
+
+```
+
+## Plot VIF
+```{.r}
+plot(vif) +
+  theme(axis.test.x - element_text(
+    angle = 45, hjust = 1
+  ))
+```
+
+
+## Predive Modeling using MLR
