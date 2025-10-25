@@ -40,7 +40,7 @@ In this case study, we are interested to examine the spatial pattern of a select
 We will use **sf**, **sfdep**, **tmap** and **tidyverse** packages of R.
 
 | R package | Description |
-|-------------------------|----------------------------------------------|
+|----|----|
 | sf | importing and handling geospatial data in R |
 | tidyverse | wrangling attribute data in R |
 | sfdep | compute spatial weights, global and local spatial autocorrelation statistics |
@@ -315,8 +315,8 @@ tm_shape(lisa) +
   tm_borders(fill_alpha = 0.5) +
   tm_title("Loal Morans'I of GDPPC (Queen's method)")
 ```
-**Positive ii means:** Location has similar values to its neighbors (clustering)
-**Negative ii means:** Location has different values from neighbors (spatial outlier)
+
+**Positive ii means:** Location has similar values to its neighbors (clustering) **Negative ii means:** Location has different values from neighbors (spatial outlier)
 
 ## Local Moran’s I p-values
 
@@ -683,7 +683,7 @@ tm_shape(HCSA_fdw) +
 
 ## Gi\* with fix distance weights p-value
 
-The choropleth shows there is evidence for both positive and negative Gi* values. However, it is useful to consider the p-values for each of these values, as consider above.
+The choropleth shows there is evidence for both positive and negative Gi\* values. However, it is useful to consider the p-values for each of these values, as consider above.
 
 The code chunk below plots a choropleth map of p-values of Gi\* by using functions of **tmap** package.
 
