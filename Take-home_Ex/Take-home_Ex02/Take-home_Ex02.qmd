@@ -20,7 +20,7 @@ execute: #how YML page work
 The packages that we will use for this study are outlined below:
 
 | R Package | Description |
-|-----------------------|------------------------------------------------|
+|------------------------|------------------------------------------------|
 | **sf** | A package that provides [**simple features access**](https://en.wikipedia.org/wiki/Simple_Features) for R. |
 | **spdep** | Creates spatial weights matrices and to test for and model spatial autocorrelation in geographical data, like Moran's I and Geary's C and Local Moran's I and Getis-Ord G. |
 | **tidyverse** | Includes the core packages like ggplot2, dplyr, readr, purrr, tibble, lubridate, etc. |
@@ -32,7 +32,7 @@ The packages that we will use for this study are outlined below:
 | **rvest** | Provides the HTML parsing and extraction functions |
 | **rsvg** |  |
 
-Let's install and load the following packages: **tidyverse, sf, sfdep, tmap, knitr** in R environment.
+Let's install and load these package in R environment.
 
 ```{r}
 #| warning: false
@@ -48,7 +48,7 @@ We will import 3 data sets for this study:
 3.  Import *Passenger Volume by Origin Destination Bus Stops* from LTA DataMall
 4.  Import *LTA MRT Station Exit (KML)* from <https://data.gov.sg/>
 
-When importing data, need to check first. Make sure busstop code is in character form rather than numeric. If it's latter, need to insert 0 because the stop code can start with zero.
+When importing data, need to check first. Make sure bus stop code is in character form rather than numeric. If it's latter, need to insert 0 because the stop code can start with zero.
 
 Open Bustop.prj and check if the data has the information we need, or need to transform. Below we will start importing the data.
 
@@ -85,13 +85,17 @@ st_crs(BusStop)
 Based on the above, we identify that the the EPSG is not aligned with mpsz, so we need to transform the data for EPSG:3414 Projected coordinate system for Singapore.
 
 ```{r}
+#| eval: false
 BusStop <- BusStop %>%
   st_transform(crs = 3414)
+
+write_rds(BusStop, "data/rds/BusStop.rds")
 ```
 
 Check again on BusStop:
 
 ```{r}
+BusStop <- read_rds("data/rds/BusStop.rds")
 st_crs(BusStop)
 ```
 
@@ -193,6 +197,8 @@ tm_shape(mrt_sf) +
 :::
 
 ### 2.3 Data wrangling: Prepare hexagon data
+
+Instead of using planning zones or subzones determined by Singapore administrations, we will use prepare hexagon data to perform geospatial analysis.
 
 #### 2.3.1 Extracting bus stops in Singapore
 
@@ -316,6 +322,8 @@ write_rds(hexagon_geo_id, "data/rds/hexagon_geo_id.rds")
 sum(hexagon$n_collisions < 1, na.rm = TRUE)
 ```
 
+Below code is to ensure each hexagon is assigned an ID.
+
 ```{r}
 #| eval: false
 hexagon_geo_id %>%
@@ -330,11 +338,13 @@ hexagon_geo_id <- read_rds("data/rds/hexagon_geo_id.rds")
 glimpse(hexagon_geo_id)
 ```
 
+We see that the hexagon file with ID and geometry has 826 rows, meaning there are 826 Hex IDs.
+
 ### 2.4 Prepare trip generation data
 
 #### 2.4.1 Clearing the data
 
-We don't need the destination code. Below we will select the columns we need, including `ORIGIN_PT_CODE`, `DAY_TYPE`, `TIME_PER_HOUR`, and `TOTAL_TRIPS`. We also simplify the code to join the datasets together later.
+We don't need the destination code. Below we will select the columns we need, including `ORIGIN_PT_CODE`, `DAY_TYPE`, `TIME_PER_HOUR`, and `TOTAL_TRIPS`. We also simplify the code to join the data sets together later.
 
 ```{r}
 #| eval: false
@@ -350,7 +360,9 @@ write_rds(trips, "data/rds/trips.rds")
 ```
 
 ```{r}
+#| echo: false
 trips <- read_rds("data/rds/trips.rds")
+glimpse(trips)
 ```
 
 **Combine bus stop with Hex ID into hexagon layer.**
@@ -367,7 +379,9 @@ write_rds(bs_hex, "data/rds/bs_hex.rds")
 ```
 
 ```{r}
+#| echo: false
 bs_hex <- read_rds("data/rds/bs_hex.rds")
+glimpse(bs_hex)
 ```
 
 #### 2.4.2 Add HEX_ID into bus trips data
@@ -375,6 +389,7 @@ bs_hex <- read_rds("data/rds/bs_hex.rds")
 **Use left_join() to join trips and bus_hex. - Count trips per hexagon.**
 
 ```{r}
+#| eval: false
 # Step 1: Define all the combinations we need
 all_combinations <- expand_grid(
   HEX_ID = unique(bs_hex$HEX_ID),  # All 826 hexagons
@@ -409,8 +424,9 @@ write_rds(trips_hex_complete, "data/rds/trips_hex_complete.rds")
 ```
 
 ```{r}
+#| echo: false
 trips_hex_complete <- read_rds("data/rds/trips_hex_complete.rds")
-head(trips_hex_complete, 8)
+glimpse(trips_hex_complete)
 ```
 
 ### 2.5 Time preriod filtering
@@ -462,9 +478,9 @@ AM_trips_hex <- read_rds("data/rds/AM_trips_hex.rds")
 PM_trips_hex <- read_rds("data/rds/PM_trips_hex.rds")
 weekend_trips_hex <- read_rds("data/rds/weekend_trips_hex.rds")
 
-head(AM_trips_hex, 5)
-head(PM_trips_hex, 5)
-head(weekend_trips_hex, 5)
+glimpse(AM_trips_hex, 5)
+glimpse(PM_trips_hex, 5)
+glimpse(weekend_trips_hex, 5)
 
 ```
 
@@ -502,9 +518,9 @@ write_rds(weekend_trips_hex_month, "data/rds/Weekend_trips_hex_month.rds")
 AM_trips_hex_month <- read_rds("data/rds/AM_trips_hex_month.rds")
 PM_trips_hex_month <- read_rds("data/rds/PM_trips_hex_month.rds")
 weekend_trips_hex_month <- read_rds("data/rds/weekend_trips_hex_month.rds")
-head(AM_trips_hex_month)
-head(PM_trips_hex_month)
-head(weekend_trips_hex_month)
+glimpse(AM_trips_hex_month)
+glimpse(PM_trips_hex_month)
+glimpse(weekend_trips_hex_month)
 ```
 
 ## 3 peak periods (by hour)
@@ -543,9 +559,9 @@ AM_trips_hex_hr <- read_rds("data/rds/AM_trips_hex_hr.rds")
 PM_trips_hex_hr <- read_rds("data/rds/PM_trips_hex_hr.rds")
 weekend_trips_hex_hr <- read_rds("data/rds/weekend_trips_hex_hr.rds")
 
-head(AM_trips_hex_hr)
-head(PM_trips_hex_hr)
-head(weekend_trips_hex_hr)
+glimpse(AM_trips_hex_hr)
+glimpse(PM_trips_hex_hr)
+glimpse(weekend_trips_hex_hr)
 ```
 :::
 
@@ -878,25 +894,27 @@ If this proves our assumption, then our next question will be “is there sign o
 
 ### 4.1 Global Measures of Spatial Autocorrelation
 
-In previous section 2, we have prepared the passender trips data per hexagon area. The plots can be observed in section 3 to see equal interval classification and quantile classification.
+In previous section 2, we have prepared the passenger trips data per hexagon area. The plots can be observed in section 3 to see equal interval classification and quantile classification.
 
 Here we want to compute global spatial autocorrelation statistics and to perform spatial complete randomness test for global spatial autocorrelation.
 
 #### 4.1.1 Compute contiguity spatial weights
 
 ```{r}
+#| eval: false
 wm_q <- poly2nb(hexagon, queen = TRUE)
 
 write_rds(wm_q, "data/rds/wm_q.rds")
 ```
 
 ```{r}
+#| echo: false
 wm_q <- read_rds("data/rds/wm_q.rds")
 summary(wm_q)
 
 ```
 
-Summmary Report: There are 826 regions (hexagons) in the Singapore map. The most connected area unit has 6 neighbors (hexagon has 6 edages). There is one unit with no neighbors, and the Hex ID is 826.
+Summary Report: There are 826 regions (hexagons) in the Singapore map. The most connected area unit has 6 neighbors (hexagon has 6 edges). There is one unit with no neighbors, and the Hex ID is 826.
 
 #### 4.1.2 Row-standardised weights matrix
 
@@ -923,13 +941,20 @@ moran.test(AM_trips_geo$TRIPS,
            zero.policy = TRUE, na.action = na.omit)
 ```
 
-Statisticl conclusion: - Given statistically significant spatial autocorrelation (p-value \< 2.2e-16), we can confidently reject the null hypothesis of random spatial distribution. - Moran I statistic is 0.3363, as a postive value that indicates similar values cluster together. - The result indicates that hexagons with high passenger trips tend to be near other high-trip hexagons and hexagons with low passenger trips tend to be near other low passenger trip hexagons (cold spots). There are clear geographic clusters.
+Statisticl conclusion:
+
+-   Given statistically significant spatial autocorrelation (p-value \< 2.2e-16), we can confidently reject the null hypothesis of random spatial distribution.
+
+-   Moran I statistic is 0.3363, as a postive value that indicates similar values cluster together.
+
+-   The result indicates that hexagons with high passenger trips tend to be near other high-trip hexagons and hexagons with low passenger trips tend to be near other low passenger trip hexagons (cold spots). There are clear geographic clusters.
 
 **Monte Carlo Moran's I**
 
 We will run Monte Carlo Moran's I simulation for 1,000 times.
 
 ```{r}
+#| eval: false
 set.seed(1234)
 bperm_am = moran.mc(AM_trips_geo$TRIP,
                  listw = rswm_q,
@@ -940,9 +965,12 @@ write_rds(bperm_am, "data/rds/bperm_am.rds")
 
 ```{r}
 bperm_am <- read_rds("data/rds/bperm_am.rds")
+bperm_am
 ```
 
-Statistical conclusion: - p-value = 0.001 indicates that it is highly significant (little chance that this pattern is reandom) and confirms the analytical test result from the Moran's I test.
+Statistical conclusion:
+
+-   p-value = 0.001 indicates that it is highly significant (little chance that this pattern is random) and confirms the analytical test result from the Moran's I test.
 
 -   The result shows it is statistically significant by both analytical and empirical methods -
 
@@ -982,17 +1010,20 @@ moran.test(PM_trips_geo$TRIP,
            zero.policy = TRUE, na.action = na.omit)
 ```
 
-Statisticl conclusion: - Though not as extreme as AM weekdays, PM weekdays' Moran's I test also shows highly significant evidence to reject the null hypothesis, showing that clustering exists, just much weaker than AM weekdays.
+Statistical conclusion:
+
+-   Though not as extreme as AM weekdays, PM weekdays' Moran's I test also shows highly significant evidence to reject the null hypothesis, showing that clustering exists, just much weaker than AM weekdays.
 
 -   While the Moran's I = 0.140, PM trips show less than half the clustering of AM trips
 
--   PM weekday clustering seems weaker. It may be because afternoon trips are more varied. People start trips from more varied locations (workplaces, shopping, schools, scattered throughout the city), so the trips origins are more spread out across commercialm business and retail areas. In addition, afternoon has more staggered departures across different times. For examples, some may leave office earlier than 5pm to avoid the traffic or fetch children from schools.
+-   PM weekday clustering seems weaker. It may be because afternoon trips are more varied. People start trips from more varied locations (workplaces, shopping, schools, scattered throughout the city), so the trips origins are more spread out across commercial business and retail areas. In addition, afternoon has more staggered departures across different times. For examples, some may leave office earlier than 5pm to avoid the traffic or fetch children from schools.
 
 -   Chain trips like people may go for dinner or shopping from work before going back home. This would create more dispersed origin patterns as well.
 
 **Monte Carlo Moran's I**
 
 ```{r}
+#| eval: false
 set.seed(1234)
 bperm_pm = moran.mc(PM_trips_geo$TRIPS,
                  listw = rswm_q,
@@ -1003,9 +1034,12 @@ write_rds(bperm_pm, "data/rds/bperm_pm.rds")
 
 ```{r}
 bperm_pm <- read_rds("data/rds/bperm_pm.rds")
+bperm_pm
 ```
 
-Statistical conclusion: - p-value = 0.001 shows that there is significant evidence to reject the null hypothesis, indicating that there is clustering in PM passenger trips.
+Statistical conclusion:
+
+-   p-value = 0.001 shows that there is significant evidence to reject the null hypothesis, indicating that there is clustering in PM passenger trips.
 
 -   This confirms the analytical test and matches the analytical result.
 
@@ -1045,15 +1079,18 @@ moran.test(WKD_trips_geo$TRIPS,
            zero.policy = TRUE, na.action = na.omit)
 ```
 
-Statisticl conclusion: - Weekend has p-value \< 2.2e-16 showing extremely significant evidence for us to reject the null hypothesis.
+Statisticl conclusion:
+
+-   Weekend has p-value \< 2.2e-16 showing extremely significant evidence for us to reject the null hypothesis.
 
 -   Its Moran I statistic = 0.21684 is the middle among the 3 periods we study, stronger than PM weekdays.
 
--   Weekend trip origins show moderate spatial clustering, suggesting that while people depart for leisure activities from concentrated residential areas, the pattern is less rigid than weekday morning commutes but more organized than weekday afternoon movements.
+-   Weekend trip origins show **moderate spatial clustering**, suggesting that while people depart for leisure activities from concentrated residential areas, the pattern is less rigid than weekday morning commutes but more organized than weekday afternoon movements.
 
 **Monte Carlo Moran's I**
 
 ```{r}
+#| eval: false
 set.seed(1234)
 bperm_wkd = moran.mc(WKD_trips_geo$TRIPS,
                  listw = rswm_q,
@@ -1064,9 +1101,14 @@ write_rds(bperm_wkd, "data/rds/bperm_wkd.rds")
 
 ```{r}
 bperm_pm <- read_rds("data/rds/bperm_wkd.rds")
+bperm_pm
 ```
 
-Statistical conclusion: - p-value = 0.001 shows highly significant evidence for us to reject tje null hypothesis. This confirms the analytical test result (p \< 2.2e-16) - In 999 random permutations, none produced a Moran's I as high as 0.217. Therefore, weekend spatial clustering is definitely NOT due to chance.
+Statistical conclusion:
+
+-   p-value = 0.001 shows highly significant evidence for us to reject tje null hypothesis. This confirms the analytical test result (p \< 2.2e-16)
+
+-   In 1000 random permutations, none produced a Moran's I as high as 0.217. Therefore, weekend spatial clustering is definitely NOT due to chance.
 
 **Visualise Moran's I Test**
 
@@ -1095,7 +1137,9 @@ ggplot(perm_data_wkd, aes(x = moran_i)) +
 ```
 :::
 
-Conclusion: - AM weekday passenger trips exhibit statistically significant positive spatial autocorrelation (Moran's I = 0.336, p \< 0.001). Monte Carlo simulation with 999 permutations confirmed this finding. The observed statistic ranked highest among all simulations (p = 0.001), which indicates extremely strong evidence of spatial clustering.
+Conclusion: -
+
+-   AM weekday passenger trips exhibit statistically significant positive spatial autocorrelation (Moran's I = 0.336, p \< 0.001). Monte Carlo simulation with 999 permutations confirmed this finding. The observed statistic ranked highest among all simulations (p = 0.001), which indicates extremely strong evidence of spatial clustering.
 
 -   Spatial autocorrelation analysis reveals significant temporal variations in trip clustering patterns. Morning weekday trips exhibit the strongest spatial clustering (Moran's I = 0.336, p \< 0.001), while afternoon trips show significantly weaker but still statistically significant clustering (Moran's I = 0.140, p \< 0.001). Weekend trips display intermediate clustering strength (Moran's I = 0.217, p \< 0.001). This suggests that trip patterns are **most concentrated during morning commutes** and **more dispersed during afternoon and weekend periods**.
 
@@ -1124,18 +1168,29 @@ hexagon_contiguity <- read_rds("data/rds/hexagon_contiguity.rds")
 summary(hexagon_contiguity$nb)
 ```
 
-Based on the summary report, we understand that there is one hexagon area, HexID = 826, without any neighbors. We will filter this neighbour out to process futher LMSA statistic and analysis as it cannot create any weights.
+Based on the summary report, we understand that there is one hexagon area, HexID = 826, without any neighbors. We will filter this neighbour out to process further LMSA statistic and analysis as it cannot create any weights.
 
 ### 4.2.2 Computing Local Moran's I
 
-Sinnce there is a hexagon without no neighbor, we will filter it out and remove it from the data. We will also join the Passenger Trips to to the hexagon sf object for the 3 periods respectively.
+Since there is a hexagon without no neighbor, we will filter it out and remove it from the data. We will also join the Passenger Trips to to the hexagon sf object for the 3 periods respectively.
 
 ```{r}
+#| eval: false
 # Remove 826
 hexagon_contiguity_ft <- hexagon_contiguity %>%
   filter(HEX_ID != "H0826") 
+
+write_rds(hexagon_contiguity_ft, "data/rds/hexagon_contiguity_ft.rds")
   
 ```
+
+```{r}
+#| echo: false
+hexagon_contiguity_ft <- read_rds("data/rds/hexagon_contiguity_ft.rds")
+glimpse(hexagon_contiguity_ft)
+```
+
+From the above, we can confirm that `hexagon_contiguity_ft` now has 825 hexagons, with nb and wt data.
 
 ::: panel-tabset
 ## AM
@@ -1161,9 +1216,10 @@ write_rds(hexagon_data_moranI_am, "data/rds/hexagon_data_moranI_am.rds")
 ```{r}
 #| eval: false
 hexagon_data_moranI_am <- read_rds("data/rds/hexagon_data_moranI_am.rds")
+glimpse(hexagon_data_moranI_am)
 ```
 
-**Computing Local Moran's I**
+**Computing Local Moran's I (AM)**
 
 ```{r}
 #| eval: false
@@ -1178,6 +1234,7 @@ write_rds(lisa_am, "data/rds/lisa_am.rds")
 ```
 
 ```{r}
+#| echo: false
 lisa_am <- read_rds("data/rds/lisa_am.rds")
 glimpse(lisa_am)
 ```
@@ -1203,11 +1260,12 @@ write_rds(hexagon_data_moranI_pm, "data/rds/hexagon_data_moranI_pm.rds")
 ```
 
 ```{r}
-#| eval: false
+#| echo: false
 hexagon_data_moranI_pm <- read_rds("data/rds/hexagon_data_moranI_pm.rds")
+hexagon_data_moranI_pm
 ```
 
-**Computing Local Moran's I**
+**Computing Local Moran's I (PM)**
 
 ```{r}
 #| eval: false
@@ -1222,11 +1280,12 @@ write_rds(lisa_pm, "data/rds/lisa_pm.rds")
 ```
 
 ```{r}
+#| echo: false
 lisa_pm <- read_rds("data/rds/lisa_pm.rds")
 glimpse(lisa_pm)
 ```
 
-## Weedkend/PH
+## Weekend/PH
 
 ```{r}
 #| eval: false
@@ -1247,11 +1306,11 @@ write_rds(hexagon_data_moranI_wkd, "data/rds/hexagon_data_moranI_wkd.rds")
 ```
 
 ```{r}
-#| eval: false
+#| echo: false
 hexagon_data_moranI_wkd <- read_rds("data/rds/hexagon_data_moranI_wkd.rds")
 ```
 
-**Computing Local Moran's I**
+**Computing Local Moran's I (weekend)**
 
 ```{r}
 #| eval: false
@@ -1266,6 +1325,7 @@ write_rds(lisa_wkd, "data/rds/lisa_wkd.rds")
 ```
 
 ```{r}
+#| echo: false
 lisa_wkd <- read_rds("data/rds/lisa_wkd.rds")
 glimpse(lisa_wkd)
 ```
@@ -1305,7 +1365,7 @@ tm_shape(lisa_am) +
   
   tm_shape(mrt_sf) +
   tm_symbols(
-   fill = "#8C00FF", size = 0.5,
+   fill = "#8C00FF", size = 0.3,
    col = "#450693") +
   tm_view(set_zoom_limits = c(11,14))
 
@@ -1328,7 +1388,7 @@ tm_shape(lisa_am) +
   
   tm_shape(mrt_sf) +
   tm_symbols(
-   fill = "#8C00FF", size = 0.5,
+   fill = "#8C00FF", size = 0.3,
    col = "#450693") +
   
   tm_view(set_zoom_limits = c(11,14))
@@ -1367,7 +1427,7 @@ tm_shape(lisa_pm) +
   
   tm_shape(mrt_sf) +
   tm_symbols(
-   fill = "#33A1E0", size = 0.5,
+   fill = "#33A1E0", size = 0.3,
    col = "#05339C") +
   tm_view(set_zoom_limits = c(11,14))
 
@@ -1388,7 +1448,7 @@ tm_shape(lisa_pm) +
   
   tm_shape(mrt_sf) +
   tm_symbols(
-   fill = "#33A1E0", size = 0.5,
+   fill = "#33A1E0", size = 0.3,
    col = "#05339C") +
   tm_view(set_zoom_limits = c(11,14))
 
@@ -1404,7 +1464,7 @@ tmap_mode("plot")
 
 ```{r}
 #| fig-width: 12
-#| fig-height: 18
+#| fig-height: 20
 #| code-fold: true
 #tmap_mode("view")
 
@@ -1428,8 +1488,8 @@ tm_shape(lisa_wkd) +
   
   tm_shape(mrt_sf) +
   tm_symbols(
-   fill = "#FF8282", size = 0.5,
-   col = "#D50B8B") +
+   fill = "#63A361", size = 0.5,
+   col = "#3A6F43") +
   tm_view(set_zoom_limits = c(11,14))
 
 #Local Moran's I p-value
@@ -1449,8 +1509,8 @@ tm_shape(lisa_wkd) +
   
   tm_shape(mrt_sf) +
   tm_symbols(
-   fill = "#FF8282", size = 0.5,
-   col = "#C71E64") +
+   fill = "#63A361", size = 0.5,
+   col = "#3A6F43") +
   tm_view(set_zoom_limits = c(11,14))
 
 tmap_arrange(lmsa_wkd, lmsa_wkd_p, 
@@ -1485,7 +1545,9 @@ write_rds(lisa_am_lag, "data/rds/lisa_am_lag.rds")
 ```
 
 ```{r}
+#| echo: false
 lisa_am_lag <- read_rds("data/rds/lisa_am_lag.rds")
+glimpse(lisa_am_lag)
 ```
 
 ## PM
@@ -1502,7 +1564,9 @@ write_rds(lisa_pm_lag, "data/rds/lisa_pm_lag.rds")
 ```
 
 ```{r}
+#| echo: false
 lisa_pm_lag <- read_rds("data/rds/lisa_pm_lag.rds")
+glimpse(lisa_pm_lag)
 ```
 
 ## Weekend
@@ -1519,11 +1583,14 @@ write_rds(lisa_wkd_lag, "data/rds/lisa_wkd_lag.rds")
 ```
 
 ```{r}
+#| echo: false
 lisa_wkd_lag <- read_rds("data/rds/lisa_wkd_lag.rds")
+glimpse(lisa_wkd_lag)
 ```
 :::
 
-**Moran Scatterplot with LISA Quadrands** 
+**Moran Scatterplot with LISA Quadrands**
+
 ::: panel-tabset
 
 ## AM
@@ -1652,8 +1719,7 @@ ggplotly(p3, tooltip = "text")
 
 We will use the mean where LISA classes are stored in to derive a new field called LISA-cluster.
 
-**Prepare data for visualisation** 
-::: panel-tabset
+**Prepare data for visualisation** ::: panel-tabset
 
 ## AM
 
@@ -1723,10 +1789,10 @@ write_rds(lisa_wkd_map, "data/rds/lisa_wkd_map.rds")
 ```{r}
 lisa_wkd_map <- read_rds("data/rds/lisa_wkd_map.rds")
 ```
+
 :::
 
-**Plot the LISA map below** 
-::: panel-tabset
+**Plot the LISA map below** ::: panel-tabset
 
 ## AM
 
@@ -2922,8 +2988,7 @@ ehsa_colors <- c(
 )
 ```
 
-Join EHSA results with geometry 
-::: panel-tabset
+Join EHSA results with geometry ::: panel-tabset
 
 ## AM
 

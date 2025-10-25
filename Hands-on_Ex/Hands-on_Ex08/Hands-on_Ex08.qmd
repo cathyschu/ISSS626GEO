@@ -79,22 +79,26 @@ This code chunk performs 3 tasks:
 -   Check if R packages on package have been installed in R and if not, they will be installed.
 -   After all the R packages have been installed, they will be loaded.
 
-```{r}
+```{.r}
 pacman::p_load(sf, spdep, GWmodel, SpatialML, 
                tmap, rsample, Metrics, tidyverse)
 ```
 
 ## 5 Prepare data
+
 ### 5.1 Reading data file to rds
+
 Reading the input data sets. It is in simple feature data frame.
-```{r}
+
+```{.r}
 mdata <- read_rds("data/rawdata/mdata.rds")
 ```
 
 ### 5.2 Data Sampling
+
 The entire data are split into training and test data sets with 65% and 35% respectively by using initial_split() of rsample package. rsample is one of the package of tigymodels.
 
-```{r}
+```{.r}
 set.seed(1234)
 resale_split <- initial_split(mdata, 
                               prop = 6.5/10,)
@@ -102,15 +106,16 @@ train_data <- training(resale_split)
 test_data <- testing(resale_split)
 ```
 
-```{r}
+```{.r}
 write_rds(train_data, "chap14/data/model/train_data.rds")
 write_rds(test_data, "chap14/data/model/test_data.rds")
 ```
 
 ### 5.3 Computing Correlation Matrix
+
 Before loading the predictors into a predictive model, it is always a good practice to use correlation matrix to examine if there is sign of multicolinearity.
 
-```{r}
+```{.r}
 mdata_nogeo <- mdata %>%
   st_drop_geometry()
 corrplot::corrplot(cor(mdata_nogeo[, 2:17]), 
@@ -124,17 +129,16 @@ corrplot::corrplot(cor(mdata_nogeo[, 2:17]),
 
 ### 5.4
 
-
 ## 6 Retriving the Stored Data
-```{r}
+
+```{.r}
 train_data <- read_rds("chap14/data/model/train_data.rds")
 test_data <- read_rds("chap14/data/model/test_data.rds")
 ```
 
-
 ## 7 Building a non-spatial multiple linear regression
 
-```{r}
+```{.r}
 price_mlr <- lm(resale_price ~ floor_area_sqm +
                   storey_order + remaining_lease_mths +
                   PROX_CBD + PROX_ELDERLYCARE + PROX_HAWKER +
@@ -147,13 +151,14 @@ summary(price_mlr)
 ```
 
 ## 8 gwr predictive method
+
 In this section, you will learn how to calibrate a model to predict HDB resale price by using geographically weighted regression method of GWmodel package.
 
 ### 8.1 Computing adaptive bandwidth
 
 Firstly, bw.gwr() of GWmodel package will be used to determine the optimal bandwidth to be used.
 
-```{r}
+```{.r}
 bw_adaptive <- bw.gwr(
   formula = resale_price ~ floor_area_sqm +
     storey_order + remaining_lease_mths +
