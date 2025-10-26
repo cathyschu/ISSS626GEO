@@ -12,6 +12,7 @@ execute: #how YML page work
 ---
 
 ## 1 Overview
+
 <last>
 
 ## 2 Data sources & preparation
@@ -21,7 +22,7 @@ execute: #how YML page work
 The packages that we will use for this study are outlined below:
 
 | R Package | Description |
-|------------------------|-----------------------------------------------|
+|--------------------------|----------------------------------------------|
 | **sf** | A package that provides [**simple features access**](https://en.wikipedia.org/wiki/Simple_Features) for R. |
 | **spdep** | Creates spatial weights matrices and to test for and model spatial autocorrelation in geographical data, like Moran's I and Geary's C and Local Moran's I and Getis-Ord G. |
 | **tidyverse** | Includes the core packages like ggplot2, dplyr, readr, purrr, tibble, lubridate, etc. |
@@ -34,7 +35,7 @@ The packages that we will use for this study are outlined below:
 | **scales** | Graphical scales map data to aesthetics, and provide methods for automatically determining breaks and labels for axes and legends. |
 | **RColorBrewer** | Provides color schemes for maps (and other graphics) designed by Cynthia Brewer as described at http://colorbrewer2.org. |
 | **plotly** | Plotly's R graphing library makes interactive, publication-quality graphs. |
-| **Kendall** | Computes the Kendall rank correlation and Mann-Kendall trend test.  |
+| **Kendall** | Computes the Kendall rank correlation and Mann-Kendall trend test. |
 | **tsibble** | The 'tsibble' provides tools to easily manipulate and analyse temporal data, such as filling in time gaps and aggregating over calendar periods. |
 | **sftime** | Classes and methods for spatial objects that have a registered time column, in particular for irregular spatiotemporal data. The time column can be of any type, but needs to be ordinal. Regularly laid out spatiotemporal data (vector or raster data cubes) are handled by package 'stars'. |
 | **trend** | This package includes tests for trend detection, including Mann-Kendall Trend Test, partial Mann-Kendall Trend Test, multivariate (multisite) Mann-Kendall Trend Test, and more. |
@@ -62,8 +63,6 @@ When importing data, need to check first. Make sure bus stop code is in characte
 Open Bustop.prj and check if the data has the information we need, or need to transform. Below we will start importing the data.
 
 ::: panel-tabset
-
-
 ## **Master Plan Subzone Boundary**
 
 Below we will import *Master Plan 2019 Subzone Boundary (No Sea).*
@@ -132,7 +131,6 @@ odbus <- read_csv("data/odbus.csv")
 ```{r}
 st_crs(odbus)
 ```
-
 
 ## **MRT Stations**
 
@@ -464,8 +462,6 @@ In section 2.3, we derived an analytical hexagon data of 375m to represent the t
 Below we will process the trips data with Hex ID for the 3 study periods.
 
 ::: panel-tabset
-
-
 ## 3 peak periods by hexagon
 
 ```{r}
@@ -602,11 +598,9 @@ glimpse(weekend_trips_hex_hr)
 
 ### 3.1 Peak Hour Trips by HexID
 
-Below charts are plotted to have a full picture of the volume of each Hex ID in a descending manner.
-Next let's plot it out. 
+Below charts are plotted to have a full picture of the volume of each Hex ID in a descending manner. Next let's plot it out.
 
 ::: panel-tabset
-
 ## AM
 
 ```{r}
@@ -673,8 +667,7 @@ ggplot(weekend_trips_hex_hr,
 
 Now let's join the data grouped by HEX_ID with `hexagon`, so we can plot it in tmap later for the three different peak hours of the week.
 
-::: panel-tabset 
-
+::: panel-tabset
 ## AM
 
 ```{r}
@@ -789,8 +782,6 @@ glimpse(WKD_trips_geo_hr)
 Below plots demonstrate the geographical distribution of the passenger trips in the 3 peak hour periods. Each page plots one of the peak hour periods. Note that there are two maps, and one plots the actual number of trips while the other uses quantile of the trips to avoid some outlier colors dominating the map.
 
 ::: panel-tabset
-
-
 ## AM
 
 ```{r}
@@ -799,7 +790,8 @@ Below plots demonstrate the geographical distribution of the passenger trips in 
 #| align: center
 #| code-fold: true
 
-tmap_mode("view")
+#tmap_mode("view")
+
 am_tm <- tm_shape(mpsz) +
   tm_polygons(fill = "#FFF4EA", alpha = 0.3) +
   tm_text("SUBZONE_N", size = 0.5) +
@@ -808,7 +800,7 @@ tm_shape(AM_trips_geo) +
   tm_borders(col = "grey20", lwd = 0.1) +
   tm_layout(bg.color = "#D0DDD0",
             outer.margins = c(0.01, 0.01, 0.01, 0.01),
-            main.title = "AM Peak Hour Trips by Hexagon",
+            main.title = "PM Peak Hour Trips by Hexagon",
             legend.position = c("right", "bottom"),
             frame = FALSE) +
   tm_shape(mrt_all) +
@@ -821,26 +813,35 @@ am_tm_qt <- tm_shape(mpsz) +
   tm_text("SUBZONE_N", size = 0.5) +
   tm_shape(AM_trips_geo) +
   tm_fill("TRIPS", palette = "-Spectral", fill_alpha = 0.6,
-          style = "quantile") +
+          style = "quantile"
+          ) +
   tm_borders(col = "grey20", lwd = 0.1) +
   tm_layout(bg.color = "#D0DDD0",
             outer.margins = c(0.01, 0.01, 0.01, 0.01),
             main.title = "AM Peak Hour Trips (Quantile)",
             legend.position = c("right", "bottom"),
             frame = FALSE) +
-  tm_shape(mrt_sf) +
+  tm_shape(mrt_all) +
   tm_symbols(fill = "#DD7BDF", size = 0.3, col = "#6A0066") +
-  tm_view(set_zoom_limits = c(11,14)) 
+  tm_view(set_zoom_limits = c(11,14))
+
 
 tmap_arrange(am_tm, am_tm_qt, 
              asp=1, ncol=1,
              sync = TRUE)
+
 tmap_mode("plot")
 ```
 
-Insights:
+**Insights:**
 
+*Note the following count of trips are aggregated figures from Jul-Sep 2025.*
 
+-   During AM peak hours, the majority of hexagons show 200K trips or fewer (3 month data), with one hexagon near Boon Lay MRT station in **Jurong West Central** displaying significantly higher activity, indicating strong morning commute demand. Three hexagons in **Woodlands Regional Center**, area near the checkpoint and **Tampines** show the next highest volumes. The Woodlands check point likely reflects cross-border Malaysia-Singapore commuters.
+
+-   The quantile plot analysis reveals the top 20% of trips distributed across residential areas islandwide, while the lowest 20% (< 2,442 trips) concentrate along borders in **Tuas, Lim Chu Kang, Central Water Catchment, and Seletar Aerospace** - typically less residential zones.
+
+-   High-ridership hexagons during AM peak tend to form **connected clusters** across residential neighborhoods rather than appearing as isolated points. This pattern suggests that morning bus boarding reflects broader neighborhood-level commute behavior, where **entire residential areas** generate sustained high demand rather than activity being concentrated only at individual transit points.
 
 ## PM
 
@@ -850,7 +851,7 @@ Insights:
 #| align: center
 #| code-fold: true
 
-tmap_mode("view")
+#tmap_mode("view")
 pm_tm <- tm_shape(mpsz) +
   tm_polygons(fill = "#FFF4EA", alpha = 0.3) +
   tm_text("SUBZONE_N", size = 0.5) +
@@ -863,7 +864,7 @@ tm_shape(PM_trips_geo) +
             legend.position = c("right", "bottom"),
             frame = FALSE) +
   tm_shape(mrt_all) +
-  tm_symbols(fill = "#BE5985", size = 0.3, col = "#E195AB") +  
+  tm_symbols(fill = "#DD7BDF", size = 0.3, col = "#6A0066") +  
   tm_view(set_zoom_limits = c(11,14))
 
 pm_tm_qt <- tm_shape(mpsz) +
@@ -880,7 +881,7 @@ pm_tm_qt <- tm_shape(mpsz) +
             legend.position = c("right", "bottom"),
             frame = FALSE) +
   tm_shape(mrt_all) +
-  tm_symbols(fill = "#BE5985", size = 0.3, col = "#E195AB") +
+  tm_symbols(fill = "#DD7BDF", size = 0.3, col = "#6A0066") +
   tm_view(set_zoom_limits = c(11,14))
 
 tmap_arrange(pm_tm, pm_tm_qt, 
@@ -889,11 +890,18 @@ tmap_arrange(pm_tm, pm_tm_qt,
 
 tmap_mode("plot")
 ```
-**Insight: **
-- When looking at the fixed internal of PM peak hour trips, majority of the areas are below 500K, several between 500K-1000K. We hardly see any hexagon area between 1000K-1,500K. However, there are a few hexagon areas showing trips totalling more than 1,500K in PM peak hours; these hexagons fall into the Woodlands regional centre subzone, Jurong West Central, Tampines West. We noticed that these hexagons have Woodlands, Boon Lay and Tampines MRT stations within or around the border of the respective hexagons. 
-- This shows that at the PM peak time, many people board the bus from these areas. This could be due to passengers take bus after they get off from the MRT stations and take the bus to the stop near their homes.
-- <fill in>
 
+**Insight:**
+
+*Note the following count of trips are aggregated figures from Jul-Sep 2025.*
+
+-   In the **fixed interval plot** for PM peak hours, most hexagons show 500K trips or fewer (for 3 months). Several hexagons show significantly higher boarding activity (500K - 1,000K trips), located in **Woodlands Regional Centre, Jurong West Central, and Tampines West** subzones.
+
+-   These high-boarding hexagons contain or are adjacent to **Woodlands, Boon Lay, and Tampines MRT stations**. During PM peak hours, this suggests passengers are **arriving via MRT and transferring to buses** for their onward journey (likely the last mile home), or the areas have major activity centers (workplaces, shopping centers) where people begin their evening commute.
+
+-   Several hexagons stand out in green (500K-1,000K trips, July-Sep 2025), located at or near major MRT stations including **Khatib, Yishun, Punggol, Sengkang, Hougang, Serangoon, Ang Mo Kio, Bishan, Bedok, Toa Payoh, Clementi, Bukit Batok, Bukit Panjang, Lakeside, Choa Chu Kang**, and **Woodlands checkpoint**.
+
+-   During PM peak hours, high bus boarding activity is concentrated around major MRT stations island-wide. This could indicate several possibilities: 1/Commuters transferring from MRT to buses for last-mile connectivity home; 2/People finishing work/activities near these transit hubs and boarding bus; 3/ High residential density around these stations generating bus demand; 4/The widespread distribution across the island suggests that areas surrounding MRT stations are key activity centers for PM peak hour bus ridership, regardless of the specific origin of passengers.
 
 ## Weekends
 
@@ -903,7 +911,7 @@ tmap_mode("plot")
 #| align: center
 #| code-fold: true
 
-tmap_mode("view")
+#tmap_mode("view")
 wkd_tm <- tm_shape(mpsz) +
   tm_polygons(fill = "#A1C2BD", alpha = 0.3) +
   tm_text("SUBZONE_N", size = 0.5) +
@@ -915,8 +923,8 @@ tm_shape(WKD_trips_geo) +
             main.title = "Weekend Peak Hour Trips by Hexagon",
             legend.position = c("right", "bottom"),
             frame = FALSE) +
-  tm_shape(mrt_sf) +
-  tm_symbols(fill = "#BE5985", size = 0.5, col = "#E195AB") +
+  tm_shape(mrt_all) +
+  tm_symbols(fill = "#DD7BDF", size = 0.3, col = "#6A0066") +
   tm_view(set_zoom_limits = c(11,14))
 
 wkd_tm_qt <- tm_shape(mpsz) +
@@ -931,8 +939,8 @@ wkd_tm_qt <- tm_shape(mpsz) +
             main.title = "Weekend Peak Hour Trips (Quantile)",
             legend.position = c("right", "bottom"),
             frame = FALSE) +
-  tm_shape(mrt_sf) +
-  tm_symbols(fill = "#BE5985", size = 0.5, col = "#E195AB") +
+  tm_shape(mrt_all) +
+  tm_symbols(fill = "#DD7BDF", size = 0.3, col = "#6A0066") +
   tm_view(set_zoom_limits = c(11,14))
 
 tmap_arrange(wkd_tm, wkd_tm_qt, 
@@ -940,6 +948,18 @@ tmap_arrange(wkd_tm, wkd_tm_qt,
              sync = TRUE)
 tmap_mode("plot")
 ```
+
+**Insights:**
+
+*Note the following count of trips are aggregated figures from Jul-Sep 2025.*
+
+-   **Woodlands Regional Centre** shows the highest bus boarding activity on weekends, followed by **Jurong West Central (Boon Lay MRT)** and **Tampines (Tampines MRT)**, while **Woodlands checkpoint** and **Bukit Panjang MRT** areas fall in the next tier with 600K-800K trips during July-September 2025.
+
+-   Hexagons with moderate-to-high ridership form two distinct patterns: clusters around MRT/LRT stations in residential areas across the island (including **Woodlands, Yishun, Punggol, Sengkang, Bishan, Ang Mo Kio, Toa Payoh, Jurong East, Clementi, Choa Chu Kang, Bedok, and Tampines**), and a continuous zone across central shopping and entertainment districts spanning **Orchard, Little India, Chinatown, Clarke Quay, Bugis, and Harbourfront**. This suggests weekend bus activity centers around leisure, shopping, and social destinations rather than work-related commutes.
+
+-   Comparing weekend patterns with weekday PM peaks reveals similar overall distributions but notable differences in specific areas. Locations like Macpherson, Tanjong Pagar, Pasir Panjang, Ang Mo Kio Town Centre, and areas near Joo Koon show higher weekday ridership, likely reflecting office and industrial employment centers that quiet down on weekends.
+
+-   Conversely, areas like **Changi Point, Reservoir View, and Sembawang Straits** become comparatively more active on weekends, while **Woodlands, Yishun, Tampines, and Bedok** display more spatially clustered high-ridership hexagons on weekends, suggesting these regional centers host localized leisure and social activities.
 :::
 
 ## 4 Local Measures of Spatial Autocorrelation (LMSA) Analysis
@@ -970,7 +990,9 @@ summary(wm_q)
 
 ```
 
-Summary Report: There are 826 regions (hexagons) in the Singapore map. The most connected area unit has 6 neighbors (hexagon has 6 edges). There is one unit with no neighbors, and the Hex ID is 826.
+**Summary Report:**
+
+There are 826 regions (hexagons) in the Singapore map. The most connected area unit has 6 neighbors (hexagon has 6 edges). There is one unit with no neighbors, and the Hex ID is 826.
 
 #### 4.1.2 Row-standardised weights matrix
 
@@ -992,18 +1014,32 @@ Below we will perform Moran's I statistics testing by using `moran.test()` from 
 **Moran's I Test**
 
 ```{r}
-moran.test(AM_trips_geo$TRIPS,
+#| code-fold: true
+moran_test_lmsa_am <- moran.test(AM_trips_geo$TRIPS,
            listw = rswm_q,
            zero.policy = TRUE, na.action = na.omit)
+write_rds(moran_test_lmsa_am, "data/rds/moran_test_lmsa_am.rds")
 ```
 
-Statisticl conclusion:
+```{r}
+#| echo: false
+moran_test_lmsa_am <- read_rds("data/rds/moran_test_lmsa_am.rds")
+moran_test_lmsa_am
+```
 
+::::: notegoals
+::: notegoals-header
+**Statistical conclusion**
+:::
+
+::: notegoals-container
 -   Given statistically significant spatial autocorrelation (p-value \< 2.2e-16), we can confidently reject the null hypothesis of random spatial distribution.
 
--   Moran I statistic is 0.3363, as a postive value that indicates similar values cluster together.
+-   Moran I statistic is **0.3363**, as a postive value that indicates similar values cluster together.
 
--   The result indicates that hexagons with high passenger trips tend to be near other high-trip hexagons and hexagons with low passenger trips tend to be near other low passenger trip hexagons (cold spots). There are clear geographic clusters.
+-   The result indicates that **hexagons with high passenger trips tend to be near other high-trip hexagons** and **hexagons with low passenger trips tend to be near other low passenger trip hexagons (cold spots)**. There are clear geographic clusters.
+:::
+:::::
 
 **Monte Carlo Moran's I**
 
@@ -1011,6 +1047,7 @@ We will run Monte Carlo Moran's I simulation for 1,000 times.
 
 ```{r}
 #| eval: false
+#| code-fold: true
 set.seed(1234)
 bperm_am = moran.mc(AM_trips_geo$TRIP,
                  listw = rswm_q,
@@ -1020,21 +1057,28 @@ write_rds(bperm_am, "data/rds/bperm_am.rds")
 ```
 
 ```{r}
+#| echo: false
 bperm_am <- read_rds("data/rds/bperm_am.rds")
 bperm_am
 ```
 
-Statistical conclusion:
+::::: notegoals
+::: notegoals-header
+**Statistical conclusion**
+:::
 
--   p-value = 0.001 indicates that it is highly significant (little chance that this pattern is random) and confirms the analytical test result from the Moran's I test.
-
--   The result shows it is statistically significant by both analytical and empirical methods -
+::: notegoals-container
+-   p-value = 0.001 indicates that it is highly significant evidence to reject null hypothesis (that this pattern is random), and confirms the analytical test result from the Moran's I test.
+-   AM peak Moran's I = 0.336 Shows strong spatial clustering with multiple connected hexagons forming larger contiguous areas of higher ridership across residential zones, indicating broader neighborhood-level boarding patterns
+:::
+:::::
 
 **Visualise Moran's I Test**
 
 We plot the distribution of statistical values below.
 
 ```{r}
+#| code-fold: true
 mean_bperm_am <- mean(bperm_am$res[1:999])
 print(paste0("Mean of permutations: ", mean_bperm_am))
 
@@ -1045,6 +1089,7 @@ summary(bperm_am$res[1:999])
 ```
 
 ```{r}
+#| code-fold: true
 perm_data_am <- data.frame(moran_i = bperm_am$res)
 
 ggplot(perm_data_am, aes(x = moran_i)) +
@@ -1056,30 +1101,51 @@ ggplot(perm_data_am, aes(x = moran_i)) +
         panel.background = element_rect(fill = "#D0DDD0"))
 ```
 
-## Weekday PM
+**Insights:**
+
+-   The observed Moran's I value of approximately 0.33 (red line) falls far outside the distribution of simulated random values (green histogram centered near 0). This provides strong statistical evidence that bus ridership during Weekday AM peak hours exhibits **significant positive spatial autocorrelation**
+
+-   This means high-ridership hexagons are clustered together rather than randomly distributed across Singapore, and validates the earlier observations about hotspots around Boon Lay, Woodlands, and Tampines.
+
+## PM
 
 **Moran's I Test**
 
 ```{r}
-moran.test(PM_trips_geo$TRIP,
+#| eval: false
+#| code-fold: true
+
+moran_test_lmsa_pm <- moran.test(PM_trips_geo$TRIP,
            listw = rswm_q,
            zero.policy = TRUE, na.action = na.omit)
+
+write_rds(moran_test_lmsa_pm, "data/rds/moran_test_lmsa_pm.rds")
 ```
 
-Statistical conclusion:
+```{r}
+#| echo: false
+moran_test_lmsa_pm <- read_rds("data/rds/moran_test_lmsa_pm.rds")
+moran_test_lmsa_pm
+```
+::::: notegoals
+::: notegoals-header
+**Statistical conclusion**
+:::
+
+::: notegoals-container
 
 -   Though not as extreme as AM weekdays, PM weekdays' Moran's I test also shows highly significant evidence to reject the null hypothesis, showing that clustering exists, just much weaker than AM weekdays.
 
--   While the Moran's I = 0.140, PM trips show less than half the clustering of AM trips
+-   PM peak Moran's I = 0.14 Shows weaker spatial clustering because high-ridership hexagons tend to be isolated single hexagons concentrated around individual MRT stations rather than forming large connected clusters
 
--   PM weekday clustering seems weaker. It may be because afternoon trips are more varied. People start trips from more varied locations (workplaces, shopping, schools, scattered throughout the city), so the trips origins are more spread out across commercial business and retail areas. In addition, afternoon has more staggered departures across different times. For examples, some may leave office earlier than 5pm to avoid the traffic or fetch children from schools.
-
--   Chain trips like people may go for dinner or shopping from work before going back home. This would create more dispersed origin patterns as well.
+:::
+:::::
 
 **Monte Carlo Moran's I**
 
 ```{r}
 #| eval: false
+#| code-fold: true
 set.seed(1234)
 bperm_pm = moran.mc(PM_trips_geo$TRIPS,
                  listw = rswm_q,
@@ -1089,21 +1155,29 @@ write_rds(bperm_pm, "data/rds/bperm_pm.rds")
 ```
 
 ```{r}
+#| echo: false
 bperm_pm <- read_rds("data/rds/bperm_pm.rds")
 bperm_pm
 ```
 
-Statistical conclusion:
+::::: notegoals
+::: notegoals-header
+**Statistical conclusion**
+:::
 
--   p-value = 0.001 shows that there is significant evidence to reject the null hypothesis, indicating that there is clustering in PM passenger trips.
+::: notegoals-container
 
--   This confirms the analytical test and matches the analytical result.
+-   p-value = 0.001 shows that there is significant evidence to reject the null hypothesis, indicating that there is clustering in PM passenger trips. This confirms the analytical test and matches the analytical result.
+
+:::
+:::::
 
 **Visualise Moran's I Test**
 
 We plot the distribution of statistical values below.
 
 ```{r}
+#| code-fold: true
 mean_bperm_pm <- mean(bperm_pm$res[1:999])
 print(paste0("Mean of permutations: ", mean_bperm_pm))
 
@@ -1114,6 +1188,7 @@ summary(bperm_pm$res[1:999])
 ```
 
 ```{r}
+#| code-fold: true
 perm_data_pm <- data.frame(moran_i = bperm_pm$res)
 
 ggplot(perm_data_pm, aes(x = moran_i)) +
@@ -1121,32 +1196,53 @@ ggplot(perm_data_pm, aes(x = moran_i)) +
   geom_vline(xintercept = 0, color = "blue", linewidth = 0.5) +
   geom_vline(xintercept = 0.1401003174, color = "red", linewidth = 0.5) +
   labs(x = "Simulated Moran's I (Weekday PM)", y = "Frequency") +
+  xlim(-0.15, 0.35) +
   theme(plot.background = element_rect("#D0DDD0"),
         panel.background = element_rect(fill = "#D0DDD0"))
 ```
+**Insights**
+-   The observed Moran's I value of approximately 0.14 (red line) falls well outside the distribution of simulated random values (blue histogram centered near 0), providing strong statistical evidence (p-value = 4.625e-10) that bus ridership during Weekday PM peak hours exhibits **significant positive spatial autocorrelation**, though the clustering pattern differs from AM peak.
+
+-   The lower Moran's I for PM peak reflects that high boarding activity is more localized and point-based (centered on specific transit hubs) rather than spread across connected residential areas. While both periods show statistically significant clustering, AM peak exhibits broader spatial continuity of high ridership across neighborhoods, whereas PM peak shows more dispersed, station-specific hotspots.
 
 ## Weekend/Public holiday
 
 **Moran's I Test**
 
 ```{r}
-moran.test(WKD_trips_geo$TRIPS,
+#| eval: false
+#| code-fold: true
+moran_test_lmsa_wkd <- moran.test(WKD_trips_geo$TRIPS,
            listw = rswm_q,
            zero.policy = TRUE, na.action = na.omit)
+write_rds(moran_test_lmsa_wkd, "data/rds/moran_test_lmsa_wkd.rds")
 ```
 
-Statisticl conclusion:
+```{r}
+#| echo: false
+moran_test_lmsa_wkd <- read_rds("data/rds/moran_test_lmsa_wkd.rds")
+moran_test_lmsa_wkd
+```
 
+::::: notegoals
+::: notegoals-header
+**Statistical conclusion**
+:::
+
+::: notegoals-container
 -   Weekend has p-value \< 2.2e-16 showing extremely significant evidence for us to reject the null hypothesis.
 
 -   Its Moran I statistic = 0.21684 is the middle among the 3 periods we study, stronger than PM weekdays.
 
 -   Weekend trip origins show **moderate spatial clustering**, suggesting that while people depart for leisure activities from concentrated residential areas, the pattern is less rigid than weekday morning commutes but more organized than weekday afternoon movements.
+:::
+:::::
 
 **Monte Carlo Moran's I**
 
 ```{r}
 #| eval: false
+#| code-fold: true
 set.seed(1234)
 bperm_wkd = moran.mc(WKD_trips_geo$TRIPS,
                  listw = rswm_q,
@@ -1156,21 +1252,31 @@ write_rds(bperm_wkd, "data/rds/bperm_wkd.rds")
 ```
 
 ```{r}
+#| echo: false
 bperm_wkd <- read_rds("data/rds/bperm_wkd.rds")
 bperm_wkd
 ```
 
-Statistical conclusion:
+::::: notegoals
+::: notegoals-header
+**Statistical conclusion**
+:::
+
+::: notegoals-container
 
 -   p-value = 0.001 shows highly significant evidence for us to reject tje null hypothesis. This confirms the analytical test result (p \< 2.2e-16)
 
 -   In 1000 random permutations, none produced a Moran's I as high as 0.217. Therefore, weekend spatial clustering is definitely NOT due to chance.
+
+:::
+:::::
 
 **Visualise Moran's I Test**
 
 We plot the distribution of statistical values below.
 
 ```{r}
+#| code-fold: true
 mean_bperm_wkd <- mean(bperm_wkd$res[1:999])
 print(paste("Mean of permutations: ", mean_bperm_wkd))
 
@@ -1181,6 +1287,7 @@ summary(bperm_wkd$res[1:999])
 ```
 
 ```{r}
+#| code-fold: true
 perm_data_wkd <- data.frame(moran_i = bperm_wkd$res)
 
 ggplot(perm_data_wkd, aes(x = moran_i)) +
@@ -1188,18 +1295,15 @@ ggplot(perm_data_wkd, aes(x = moran_i)) +
   geom_vline(xintercept = 0, color = "blue", linewidth = 0.5) +
   geom_vline(xintercept = 0.2168371154, color = "red", linewidth = 0.5) +
   labs(x = "Simulated Moran's I (Weekend)", y = "Frequency") +
+  xlim(-0.15, 0.35) +  
   theme(plot.background = element_rect(fill = "#D0DDD0"),
         panel.background = element_rect(fill = "#D0DDD0"))
 ```
+**Observation**
+The observed Moran's I value of approximately 0.22 (red line) falls far outside the distribution of simulated random values (pink histogram centered near 0). This provides extremely strong statistical evidence (p-value < 2.2e-16) that bus ridership during weekends exhibits significant positive spatial autocorrelation.
+
 :::
 
-Conclusion: -
-
--   AM weekday passenger trips exhibit statistically significant positive spatial autocorrelation (Moran's I = 0.336, p \< 0.001). Monte Carlo simulation with 999 permutations confirmed this finding. The observed statistic ranked highest among all simulations (p = 0.001), which indicates extremely strong evidence of spatial clustering.
-
--   Spatial autocorrelation analysis reveals significant temporal variations in trip clustering patterns. Morning weekday trips exhibit the strongest spatial clustering (Moran's I = 0.336, p \< 0.001), while afternoon trips show significantly weaker but still statistically significant clustering (Moran's I = 0.140, p \< 0.001). Weekend trips display intermediate clustering strength (Moran's I = 0.217, p \< 0.001). This suggests that trip patterns are **most concentrated during morning commutes** and **more dispersed during afternoon and weekend periods**.
-
--   The result suggests a spatial pattern for leisure/weekend activities and people start weekend trips from clustered areas but not as rigidly as weekday commutes. It is distinctly different from both weekday morning and afternoon patterns. This validates that Singapore's weekend travel behavior follows predictable spatial patterns worth investigating further with LISA maps.
 
 ## 4.2 Local Measures of Spatial Autocorrelation (LMSA)
 
@@ -1220,6 +1324,8 @@ write_rds(hexagon_contiguity, "data/rds/hexagon_contiguity.rds")
 ```
 
 ```{r}
+#| echo: false
+
 hexagon_contiguity <- read_rds("data/rds/hexagon_contiguity.rds")
 summary(hexagon_contiguity$nb)
 ```
@@ -1232,6 +1338,7 @@ Since there is a hexagon without no neighbor, we will filter it out and remove i
 
 ```{r}
 #| eval: false
+#| code-fold: true
 # Remove 826
 hexagon_contiguity_ft <- hexagon_contiguity %>%
   filter(HEX_ID != "H0826") 
@@ -1249,10 +1356,12 @@ glimpse(hexagon_contiguity_ft)
 From the above, we can confirm that `hexagon_contiguity_ft` now has 825 hexagons, with nb and wt data.
 
 ::: panel-tabset
+
 ## AM
 
 ```{r}
 #| eval: false
+#| code-fold: true
 # Add TRIPS data
 hexagon_data_moranI_am <- hexagon_contiguity_ft %>%
   left_join(AM_trips_hex %>% 
@@ -1270,7 +1379,7 @@ write_rds(hexagon_data_moranI_am, "data/rds/hexagon_data_moranI_am.rds")
 ```
 
 ```{r}
-#| eval: false
+#| echo: false
 hexagon_data_moranI_am <- read_rds("data/rds/hexagon_data_moranI_am.rds")
 glimpse(hexagon_data_moranI_am)
 ```
@@ -1279,6 +1388,7 @@ glimpse(hexagon_data_moranI_am)
 
 ```{r}
 #| eval: false
+#| code-fold: true
 set.seed(1234)
 lisa_am <- hexagon_data_moranI_am %>%
   mutate(TRIPS = replace_na(TRIPS, 0)) %>% 
@@ -1299,6 +1409,7 @@ glimpse(lisa_am)
 
 ```{r}
 #| eval: false
+#| code-fold: true
 # Add TRIPS data
 hexagon_data_moranI_pm <- hexagon_contiguity_ft %>%
   left_join(PM_trips_hex %>% 
@@ -1318,13 +1429,14 @@ write_rds(hexagon_data_moranI_pm, "data/rds/hexagon_data_moranI_pm.rds")
 ```{r}
 #| echo: false
 hexagon_data_moranI_pm <- read_rds("data/rds/hexagon_data_moranI_pm.rds")
-hexagon_data_moranI_pm
+glimpse(hexagon_data_moranI_pm)
 ```
 
 **Computing Local Moran's I (PM)**
 
 ```{r}
 #| eval: false
+#| code-fold: true
 set.seed(1234)
 lisa_pm <- hexagon_data_moranI_pm %>%
   mutate(TRIPS = replace_na(TRIPS, 0)) %>% 
@@ -1345,6 +1457,7 @@ glimpse(lisa_pm)
 
 ```{r}
 #| eval: false
+#| code-fold: true
 # Add TRIPS data
 hexagon_data_moranI_wkd <- hexagon_contiguity_ft %>%
   left_join(weekend_trips_hex %>% 
@@ -1364,12 +1477,14 @@ write_rds(hexagon_data_moranI_wkd, "data/rds/hexagon_data_moranI_wkd.rds")
 ```{r}
 #| echo: false
 hexagon_data_moranI_wkd <- read_rds("data/rds/hexagon_data_moranI_wkd.rds")
+glimpse(hexagon_data_moranI_wkd)
 ```
 
 **Computing Local Moran's I (weekend)**
 
 ```{r}
 #| eval: false
+#| code-fold: true
 set.seed(1234)
 lisa_wkd <- hexagon_data_moranI_wkd %>%
   mutate(TRIPS = replace_na(TRIPS, 0)) %>% 
@@ -1396,13 +1511,14 @@ Below we will plot Local Moran's I and p-value for each hexagon.
 
 ```{r}
 #| fig-width: 12
+#| fig-height: 8
 #| code-fold: true
 
 #tmap_mode("view")
 
 # AM Local Moran's I
 lmsa_am <- tm_shape(mpsz) +
-  tm_polygons(fill = "#FFF4EA", fill_alpha = 0.3) +
+  tm_polygons(fill = "#FAF3F3", fill_alpha = 0.3) +
   tm_text("SUBZONE_N", size = 0.5) +
   
 tm_shape(lisa_am) +
@@ -1416,56 +1532,54 @@ tm_shape(lisa_am) +
   tm_title("LISA Map - Local Moran's I AM Weeday Trips") +
   tm_layout(
     legend.position = c("right", "bottom"),
-    bg.color = "#D0DDD0",
-    outer.margins = c(0.01, 0.01, 0.01, 0.01),    ) +
-  
-  tm_shape(mrt_sf) +
-  tm_symbols(
-   fill = "#8C00FF", size = 0.3,
-   col = "#450693") +
-  tm_view(set_zoom_limits = c(11,14))
+#    bg.color = "#FAF3F3",
+    outer.margins = c(0.01, 0.01, 0.01, 0.01),    ) 
 
 #Local Moran's I p-value
 lmsa_am_p <- tm_shape(mpsz) +
-  tm_polygons(fill = "#FFF4EA", fill_alpha = 0.3) +
+  tm_polygons(fill = "#FAF3F3", fill_alpha = 0.3) +
   tm_text("SUBZONE_N", size = 0.5) +
 
 tm_shape(lisa_am) +
   tm_polygons(fill = "p_ii", 
               fill.scale = tm_scale_intervals(
               breaks = c(-Inf, 0.001, 0.01, 0.05, 0.1, Inf),
-              values = "-brewer.Reds")) + 
+              values = "-brewer.Reds"),
+              fill_alpha = 0.7) + 
   tm_borders(fill_alpha = 0.5) +
   tm_title("LISA Map - p-values of Local Moran's I AM Weeday Trips") +
   tm_layout(legend.position = c("right", "bottom"),
-            bg.color = "#D0DDD0",
-            outer.margins = c(0.01, 0.01, 0.01, 0.01),) +
-  
-  
-  tm_shape(mrt_sf) +
-  tm_symbols(
-   fill = "#8C00FF", size = 0.3,
-   col = "#450693") +
-  
-  tm_view(set_zoom_limits = c(11,14))
+#            bg.color = "#D0DDD0",
+            outer.margins = c(0.01, 0.01, 0.01, 0.01),) 
 
-tmap_arrange(lmsa_am, lmsa_am_p, 
-             asp=1, ncol=1,
-             sync = TRUE)
+lmsa_am
+lmsa_am_p
 
-tmap_mode("plot")
+#  tm_view(set_zoom_limits = c(11,14))
+
+# tmap_arrange(lmsa_am, lmsa_am_p, 
+#              asp=1, ncol=1,
+#              sync = TRUE)
+
 ```
+**Observations**
 
-## PM Weekdays
+-   The highest positive ii (Moran's I) is the hexagon where Boon Lay station is, which has the highest ridership among all period of time, followed by some of its neighbor hexagons, Tampines, Sengkang Town Center, Clementi, and Ang Moh Kio Town Center.  
+-   The lowest negative ii is the hexagon where Joo Koon station is, which differs from its neighbors (surrounding neighbors all have very low riderships.) Possibly because there are some factories in this area, and people would have to take the bus from here to the nearest point to their work.
+-   High ii + Low p-value includes Jurong West Central area, Tampines, Sengkang Town Center, Clementi, and Ang Moh Kio Town Center, showing strong, statistically significant clustering.
+-   Negative ii + High p-value includes Joo Koon, meaning that there could be apparent clustering but could be random. In this case, we can probably ignore this.
+
+## PM 
 
 ```{r}
 #| fig-width: 12
+#| fig-height: 8
 #| code-fold: true
 #tmap_mode("view")
 
 # AM Local Moran's I
 lmsa_pm <- tm_shape(mpsz) +
-  tm_polygons(fill = "#FFF4EA", fill_alpha = 0.3) +
+  tm_polygons(fill = "#FAF3F3", fill_alpha = 0.3) +
   tm_text("SUBZONE_N", size = 0.5) +
   
 tm_shape(lisa_pm) +
@@ -1478,55 +1592,55 @@ tm_shape(lisa_pm) +
   tm_borders(fill_alpha = 0.5) +
   tm_title("LISA Map - Local Moran's I PM Weeday Trips") +
   tm_layout(
-    legend.position = c("right", "bottom"),
-    bg.color = "#D0DDD0") +
-  
-  tm_shape(mrt_sf) +
-  tm_symbols(
-   fill = "#33A1E0", size = 0.3,
-   col = "#05339C") +
-  tm_view(set_zoom_limits = c(11,14))
+    legend.position = c("right", "bottom")) 
+
 
 #Local Moran's I p-value
 lmsa_pm_p <- tm_shape(mpsz) +
-  tm_polygons(fill = "#FFF4EA", fill_alpha = 0.3) +
+  tm_polygons(fill = "#FAF3F3", fill_alpha = 0.3) +
   tm_text("SUBZONE_N", size = 0.5) +
 
 tm_shape(lisa_pm) +
   tm_polygons(fill = "p_ii", 
               fill.scale = tm_scale_intervals(
               breaks = c(-Inf, 0.001, 0.01, 0.05, 0.1, Inf),
-              values = "-brewer.Reds")) + 
+              values = "-brewer.Reds"),
+              fill_alpha = 0.6) + 
   tm_borders(fill_alpha = 0.5) +
   tm_title("LISA Map - p-values of Local Moran's I PM Weeday Trips") +
-  tm_layout(legend.position = c("right", "bottom"),
-            bg.color = "#D0DDD0") +
+  tm_layout(legend.position = c("right", "bottom")) 
   
-  tm_shape(mrt_sf) +
-  tm_symbols(
-   fill = "#33A1E0", size = 0.3,
-   col = "#05339C") +
-  tm_view(set_zoom_limits = c(11,14))
 
-tmap_arrange(lmsa_pm, lmsa_pm_p, 
-             asp=1, ncol=1,
-             sync = TRUE)
+lmsa_pm
+lmsa_pm_p
 
-tmap_mode("plot")
+# tmap_arrange(lmsa_pm, lmsa_pm_p, 
+#              asp=1, ncol=1,
+#              sync = TRUE)
+# 
+# tmap_mode("plot")
 
 ```
+
+**Observations**
+
+-   The highest positive ii (Moran's I) is the hexagon at **Tampines and Sengkang Town Center**, followed by **Bras basah, Jurong West Central, Bedok, and Ang Mo Kio**. 
+-   The lowest negative ii is the hexagon at **Choa Chu Kang**. Choa Chu Kang and the neighboring hexagons differ from their neighbors.
+-   High ii + Low p-value includes **Bedok, Tampines, Sengkang Town Center, Bras basah, Ang Mo Kio, as well as Jurong West Central**, showing strong, statistically significant clustering.
+-   Negative ii + Low p-value includes Choa Chu Kang, hexagons near Woodlands checkpoint, and Bukit Panjang areas, indicating they are significant spatial outliers. For this case, it's more likely they have lower ridership.
+
 
 ## Weekend/PH
 
 ```{r}
 #| fig-width: 12
-#| fig-height: 20
+#| fig-height: 8
 #| code-fold: true
 #tmap_mode("view")
 
 # AM Local Moran's I
 lmsa_wkd <- tm_shape(mpsz) +
-  tm_polygons(fill = "#FFF4EA", fill_alpha = 0.3) +
+  tm_polygons(fill = "#FAF3F3", fill_alpha = 0.3) +
   tm_text("SUBZONE_N", size = 0.5) +
   
 tm_shape(lisa_wkd) +
@@ -1539,48 +1653,45 @@ tm_shape(lisa_wkd) +
   tm_borders(fill_alpha = 0.5) +
   tm_title("LISA Map - Local Moran's I Weekend Trips") +
   tm_layout(
-    legend.position = c("right", "bottom"),
-    bg.color = "#D0DDD0") +
-  
-  tm_shape(mrt_sf) +
-  tm_symbols(
-   fill = "#63A361", size = 0.5,
-   col = "#3A6F43") +
-  tm_view(set_zoom_limits = c(11,14))
+    legend.position = c("right", "bottom")) 
 
 #Local Moran's I p-value
 lmsa_wkd_p <- tm_shape(mpsz) +
-  tm_polygons(fill = "#FFF4EA", fill_alpha = 0.3) +
+  tm_polygons(fill = "#FAF3F3", fill_alpha = 0.3) +
   tm_text("SUBZONE_N", size = 0.5) +
 
 tm_shape(lisa_wkd) +
   tm_polygons(fill = "p_ii", 
               fill.scale = tm_scale_intervals(
               breaks = c(-Inf, 0.001, 0.01, 0.05, 0.1, Inf),
-              values = "-brewer.Reds")) + 
+              values = "-brewer.Reds"),
+              fill_alpha = 0.7) + 
   tm_borders(fill_alpha = 0.5) +
   tm_title("LISA Map - p-values of Local Moran's I Weekend Trips") +
-  tm_layout(legend.position = c("right", "bottom"),
-            bg.color = "#D0DDD0") +
-  
-  tm_shape(mrt_sf) +
-  tm_symbols(
-   fill = "#63A361", size = 0.5,
-   col = "#3A6F43") +
-  tm_view(set_zoom_limits = c(11,14))
+  tm_layout(legend.position = c("right", "bottom"))
 
-tmap_arrange(lmsa_wkd, lmsa_wkd_p, 
-             asp=1, ncol=1,
-             sync = TRUE)
+lmsa_wkd
+lmsa_wkd_p
+# tmap_arrange(lmsa_wkd, lmsa_wkd_p, 
+#              asp=1, ncol=1,
+#              sync = TRUE)
 
-tmap_mode("plot")
+#tmap_mode("plot")
 
 ```
+**Observations**
+
+-   The highest positive ii (Moran's I) is the hexagon at **Bedok and Tampines**, which has the consistently very high ridership among all period of time, followed by one of its neighbor hexagons, **Sengkang Town Center, Bras basah, and Ang Mo Kio**. Jurong West Central is also high, but not as the previously mentioned areas.
+-   The lowest negative ii is the hexagon at **Choa Chu Kang and Woodlands Checkpoint**. They differs from its neighbors.
+-   High ii + Low p-value includes **Bedok, Tampines, Sengkang Town Center, Bras basah, Ang Mo Kio, as well as Jurong West Central**, showing strong, statistically significant clustering. Bras Basah & Bugis areas are especially strong.
+-   Negative ii + Low p-value includes hexagons near Woodlands checkpoint, indicating they are significant spatial outliers. For this case, it's more likely they have lower ridership despite being near Woodlands checkpoint - higher-ridership zones.
+
 :::
+
 
 ### 4.3 Visualising LISA Maps
 
-#### 4.3.1 Plotting Moran Scatterplot
+####** 4.3.1 Plotting Moran Scatterplot**
 
 We leverage the Moran Scatterplot to visualise the relationship between the trip values and the average of its neighboring locations to identify spatial autocorrelation.
 
@@ -1771,18 +1882,30 @@ ggplotly(p3, tooltip = "text")
 ```
 :::
 
-#### 4.3.2 Visualising LISA Map
+::::: notegoals
+::: notegoals-header
+**Observation**
+:::
+
+::: notegoals-container
+
+The Moran Scatterplot with LISA Quadrands show similar patterns for all 3 periods.
+:::
+:::::
+
+
+#### **4.3.2 Visualising LISA Map**
 
 We will use the mean where LISA classes are stored in to derive a new field called LISA-cluster.
 
-**Prepare data for visualisation** 
+**Prepare data for visualisation**
 
 ::: panel-tabset
-
 ## AM
 
 ```{r}
 #| eval: false
+#| code-fold: true
 lisa_am_map <- lisa_am %>%
   mutate(
     LISA_cluster_am = ifelse(
@@ -1808,6 +1931,7 @@ glimpse(lisa_am_map)
 
 ```{r}
 #| eval: false
+#| code-fold: true
 lisa_pm_map <- lisa_pm %>%
   mutate(
     LISA_cluster_pm = ifelse(
@@ -1833,6 +1957,7 @@ glimpse(lisa_am_map)
 
 ```{r}
 #| eval: false
+#| code-fold: true
 lisa_wkd_map <- lisa_wkd %>%
   mutate(
     LISA_cluster_wkd = ifelse(
@@ -1853,10 +1978,9 @@ write_rds(lisa_wkd_map, "data/rds/lisa_wkd_map.rds")
 lisa_wkd_map <- read_rds("data/rds/lisa_wkd_map.rds")
 glimpse(lisa_wkd_map)
 ```
-
 :::
 
-**Plot the LISA map below** 
+**Plot the LISA map below**
 
 ::: panel-tabset
 
@@ -1864,7 +1988,7 @@ glimpse(lisa_wkd_map)
 
 ```{r}
 #| code-fold: true
-#tmap_mode("view")
+tmap_mode("view")
 # Local Moran's I Clusters
 lisa_maps_am <- 
   tm_shape(mpsz) +
@@ -1921,7 +2045,8 @@ tmap_arrange(lisa_maps_am, lmsa_am,
 
 tmap_mode("plot")
 ```
-Insights: 
+
+Insights:
 
 ## PM
 
@@ -1982,7 +2107,8 @@ tmap_arrange(lisa_map_pm, lmsa_pm,
 
 tmap_mode("plot")
 ```
-Insights: 
+
+Insights:
 
 ## Weekend/PH
 
@@ -2042,14 +2168,12 @@ tmap_arrange(lisa_map_wkd, lmsa_wkd,
 tmap_mode("plot")
 ```
 
-Insights: 
-
+Insights:
 :::
 
-Analysis: 
-- LMSA statistic of the passengers trips generate by origin at hexagon level.
+Analysis: - LMSA statistic of the passengers trips generate by origin at hexagon level.
 
-- With reference to the analysis results, draw statistical conclusions (not more than 200 words per visual).
+-   With reference to the analysis results, draw statistical conclusions (not more than 200 words per visual).
 
 ## 5 Hot Spots and Cold Spots Analysis (HCSA)
 
@@ -2133,8 +2257,8 @@ HCSA_fdw_am <- hexagon_fdw_am %>%
 write_rds(HCSA_fdw_am, "data/rds/HCSA_fdw_am.rds")
 ```
 
-
 We use `glimpse()` to check the computation result for Gi\*, and confirm that the HCSA classes are stored in the `cluster` column.
+
 ```{r}
 HCSA_fdw_am <- read_rds("data/rds/HCSA_fdw_am.rds")
 glimpse(HCSA_fdw_am)
@@ -2154,6 +2278,7 @@ write_rds(HCSA_fdw_pm, "data/rds/HCSA_fdw_pm.rds")
 ```
 
 We use `glimpse()` to check the computation result for Gi\*, and confirm that the HCSA classes are stored in the `cluster` column.
+
 ```{r}
 HCSA_fdw_pm <- read_rds("data/rds/HCSA_fdw_pm.rds")
 glimpse(HCSA_fdw_pm)
@@ -2173,6 +2298,7 @@ write_rds(HCSA_fdw_wkd, "data/rds/HCSA_fdw_wkd.rds")
 ```
 
 We use `glimpse()` to check the computation result for Gi\*, and confirm that the HCSA classes are stored in the `cluster` column.
+
 ```{r}
 HCSA_fdw_wkd <- read_rds("data/rds/HCSA_fdw_wkd.rds")
 glimpse(HCSA_fdw_wkd)
@@ -2188,7 +2314,6 @@ We will use tmap to prepare a choropleth map showing the distribution of Gi\* va
 To prepare the HSCA map, we will derive a new field called **HCSA_cluster** from the `cluster` column.
 
 ::: panel-tabset
-
 ## AM
 
 Prepare a new field **HCSA_cluster_am** for AM Weekdays HCSA map.
@@ -2279,7 +2404,6 @@ glimpse(HCSA_clst_wkd)
 Next we will use the data set above to plot HCSA maps to conduct HCSA analysis.
 
 ::: panel-tabset
-
 ## AM
 
 Below we will plot the HCSA map for AM Weekdays.
@@ -2474,7 +2598,6 @@ Emerging Hot Spot Analysis (EHSA) is a spatio-temporal analysis method for revea
 In section 2.5, we have prepared data for EHSA analysis by month and by hour. Let's verify we have all columns we need for EHSA.
 
 ::: panel-tabset
-
 ## AM
 
 Below we will take a look at the AM trips data by hour.
@@ -2506,7 +2629,6 @@ glimpse(WKD_trips_geo_hr)
 ### 6.2 Calculate Local Gi\* for Each Time Step
 
 ::: panel-tabset
-
 ## AM
 
 ```{r}
@@ -2669,7 +2791,6 @@ glimpse(gi_ehsa_results_wkd)
 #### 6.4.1 Run Test
 
 ::: panel-tabset
-
 ## AM
 
 ```{r}
@@ -2791,7 +2912,6 @@ glimpse(ehsa_results_wkd)
 ### 6.4.2 MK Test Report
 
 ::: panel-tabset
-
 ## AM
 
 ```{r}
@@ -2832,8 +2952,6 @@ kable(head(ehsa_results_am))
 
 ```
 
-
-
 ## PM
 
 ```{r}
@@ -2873,6 +2991,7 @@ ehsa_results_wkd <- read_rds("data/rds/ehsa_results_wkd.rds")
 kable(head(ehsa_results_wkd))
 
 ```
+
 ## Weekend
 
 ```{r}
@@ -2912,7 +3031,6 @@ ehsa_results_wkd <- read_rds("data/rds/ehsa_results_wkd.rds")
 kable(head(ehsa_results_wkd))
 
 ```
-
 :::
 
 ### 6.5 Create EHSA Map
@@ -2920,7 +3038,6 @@ kable(head(ehsa_results_wkd))
 #### **6.5.1 Classify EHSA Patterns**
 
 ::: panel-tabset
-
 ## AM
 
 ```{r}
@@ -3081,7 +3198,6 @@ is_spacetime_cube(WKD_st)
 #### **6.5.2 Visualising EHSA Classes**
 
 ::: panel-tabset
-
 ## AM
 
 ```{r}
@@ -3126,7 +3242,6 @@ ggplot(data = ehsa_pm,
             size = 2.5,             
             color = "black")  
 ```
-
 :::
 
 #### **6.5.3 Visualising EHSA Maps**
@@ -3156,10 +3271,9 @@ ehsa_colors <- c(
 )
 ```
 
-Join EHSA results with geometry 
+Join EHSA results with geometry
 
 ::: panel-tabset
-
 ## AM
 
 ```{r}
@@ -3234,14 +3348,13 @@ write_rds(ehsa_wkd_map, "data/rds/ehsa_wkd_map.rds")
 ehsa_wkd_map <- read_rds("data/rds/ehsa_wkd_map.rds")
 glimpse(ehsa_wkd_map)
 ```
-
 :::
 
 ::: panel-tabset
-
 **Plot the map**
 
 ## AM
+
 ```{r}
 
 tm_shape(mpsz) +
@@ -3302,13 +3415,11 @@ tm_layout(
 )
 
 ```
-
 :::
 
 #### 6.6.3 Summary Report
 
 ::: panel-tabset
-
 ## AM
 
 ```{r}
@@ -3369,7 +3480,6 @@ write_rds(ehsa_summary_wkd, "data/rds/ehsa_summary_wkd.rds")
 ehsa_summary_wkd <- read_rds("data/rds/ehsa_summary_wkd.rds")
 kable(ehsa_summary_wkd)
 ```
-
 :::
 
 ## 7 Key findings & Conclusions
@@ -3379,3 +3489,13 @@ kable(ehsa_summary_wkd)
 **Extra data - MRT data**
 
 ## Reference
+
+::::: notegoals
+::: notegoals-header
+**Analysis**
+:::
+
+::: notegoals-container
+-   
+:::
+:::::
