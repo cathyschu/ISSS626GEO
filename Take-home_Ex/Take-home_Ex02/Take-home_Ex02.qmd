@@ -12,6 +12,7 @@ execute: #how YML page work
 ---
 
 ## 1 Overview
+<last>
 
 ## 2 Data sources & preparation
 
@@ -20,7 +21,7 @@ execute: #how YML page work
 The packages that we will use for this study are outlined below:
 
 | R Package | Description |
-|------------------------|------------------------------------------------|
+|------------------------|-----------------------------------------------|
 | **sf** | A package that provides [**simple features access**](https://en.wikipedia.org/wiki/Simple_Features) for R. |
 | **spdep** | Creates spatial weights matrices and to test for and model spatial autocorrelation in geographical data, like Moran's I and Geary's C and Local Moran's I and Getis-Ord G. |
 | **tidyverse** | Includes the core packages like ggplot2, dplyr, readr, purrr, tibble, lubridate, etc. |
@@ -28,15 +29,23 @@ The packages that we will use for this study are outlined below:
 | **h3** | H3 is a geospatial indexing system using a hexagonal grid that can be (approximately) subdivided into finer and finer hexagonal grids, combining the benefits of a hexagonal grid with [S2](https://code.google.com/archive/p/s2-geometry-library/)'s hierarchical subdivisions. |
 | **knitr** | Color maps designed to improve graph readability for readers with common forms of color blindness and/or color vision deficiency. |
 | **tmap** | geographical maps in which spatial data distributions are visualized. This package offers a flexible, layer-based, and easy to use approach to create thematic maps, such as choropleths and bubble maps. |
-| **patchwork** |  |
+| **patchwork** | A package that expands the API to allow for arbitrarily complex composition of plots by, among others, providing mathematical operators for combining multiple plots. |
 | **rvest** | Provides the HTML parsing and extraction functions |
-| **rsvg** |  |
+| **scales** | Graphical scales map data to aesthetics, and provide methods for automatically determining breaks and labels for axes and legends. |
+| **RColorBrewer** | Provides color schemes for maps (and other graphics) designed by Cynthia Brewer as described at http://colorbrewer2.org. |
+| **plotly** | Plotly's R graphing library makes interactive, publication-quality graphs. |
+| **Kendall** | Computes the Kendall rank correlation and Mann-Kendall trend test.  |
+| **tsibble** | The 'tsibble' provides tools to easily manipulate and analyse temporal data, such as filling in time gaps and aggregating over calendar periods. |
+| **sftime** | Classes and methods for spatial objects that have a registered time column, in particular for irregular spatiotemporal data. The time column can be of any type, but needs to be ordinal. Regularly laid out spatiotemporal data (vector or raster data cubes) are handled by package 'stars'. |
+| **trend** | This package includes tests for trend detection, including Mann-Kendall Trend Test, partial Mann-Kendall Trend Test, multivariate (multisite) Mann-Kendall Trend Test, and more. |
 
 Let's install and load these package in R environment.
 
 ```{r}
 #| warning: false
-pacman::p_load(tidyverse, sf, spdep, sfdep, tmap, knitr, h3, patchwork, rvest, RColorBrewer, scales, plotly, Kendall, stars, tsibble, sftime, gisltools, trend)
+pacman::p_load(tidyverse, sf, spdep, sfdep, tmap, knitr, 
+               h3, patchwork, rvest, RColorBrewer, scales, 
+               plotly, Kendall, tsibble, sftime, trend)
 ```
 
 ### 2.2 Import data
@@ -53,6 +62,8 @@ When importing data, need to check first. Make sure bus stop code is in characte
 Open Bustop.prj and check if the data has the information we need, or need to transform. Below we will start importing the data.
 
 ::: panel-tabset
+
+
 ## **Master Plan Subzone Boundary**
 
 Below we will import *Master Plan 2019 Subzone Boundary (No Sea).*
@@ -122,7 +133,6 @@ odbus <- read_csv("data/odbus.csv")
 st_crs(odbus)
 ```
 
-describe the coordinate system EPSG, SF
 
 ## **MRT Stations**
 
@@ -153,25 +163,30 @@ extract_kml_field <- function(html_text, field_name) {
   if (length(value) == 0) NA_character_ else value
 }
 
-mrt_sf <- mrt %>%
+mrt_all <- mrt %>%
   mutate(
     STATION = map_chr(Description, extract_kml_field, "STATION_NA"),
     EXIT_CODE = map_chr(Description, extract_kml_field, "EXIT_CODE"),
     INC_CRC = map_chr(Description, extract_kml_field, "INC_CRC"),
     FMEL_UPD_D = map_chr(Description, extract_kml_field, "FMEL_UPD_D")
   ) %>%
-  
-  # Just one exit for each station to avoid multiple points.
-  filter(EXIT_CODE == "Exit A") %>%
-  
   select(-Name, -Description) %>%
   relocate(geometry, .after = last_col())
 
+mrt_sf <- mrt_all %>%
+  # Get just one exit per station 
+  distinct(STATION, .keep_all = TRUE) 
+  
+#  select(-Name, -Description) %>%
+#  relocate(geometry, .after = last_col())
 
+write_rds(mrt_all, "data/rds/mrt_all.rds")
 write_rds(mrt_sf, "data/rds/mrt_sf.rds")
 ```
 
 ```{r}
+#| echo: false
+mrt_all <- read_rds("data/rds/mrt_all.rds")
 mrt_sf <- read_rds("data/rds/mrt_sf.rds")
 ```
 
@@ -180,6 +195,7 @@ Plot the MRT station exits in a tmap.
 ```{r}
 #| fig-width: 12
 #| fig-height: 8
+#| code-fold: true
 #tmap_mode("view")
 tm_shape(mpsz) +
   tm_polygons(fill = "#FAF3F3", fill_alpha = 0.2) +
@@ -198,7 +214,7 @@ tm_shape(mrt_sf) +
 
 ### 2.3 Data wrangling: Prepare hexagon data
 
-Instead of using planning zones or subzones determined by Singapore administrations, we will use prepare hexagon data to perform geospatial analysis.
+Instead of using planning zones or subzones determined by Singapore administrations, we will use prepare hexagon data in a regular and smaller unit to perform geospatial analysis.
 
 #### 2.3.1 Extracting bus stops in Singapore
 
@@ -207,6 +223,7 @@ First we plot the bus stops in Singapore below:
 ```{r}
 #| fig-width: 12
 #| fig-height: 8
+#| code-fold: true
 
 tm_shape(mpsz) +
   tm_polygons(fill = "#FAF3F3", filll_alpha = 0.2) +
@@ -237,6 +254,7 @@ The, we plot again:
 ```{r}
 #| fig-width: 12
 #| fig-height: 8
+#| code-fold: true
 BusStop_in_SG <- read_rds("data/rds/BusStop_in_SG.rds")
 
 tm_shape(mpsz) +
@@ -286,6 +304,7 @@ write_rds(hexagon, "data/rds/hexagon.rds")
 ```{r}
 #| fig-width: 12
 #| fig-height: 8
+#| code-fold: true
 hexagon <- read_rds("data/rds/hexagon.rds")
 
 tm_shape(mpsz) +
@@ -297,9 +316,9 @@ tm_shape(mpsz) +
             outer.margins = c(0.01, 0.01, 0.01, 0.01))
 ```
 
-%%We want to know the trips occurred in each hexagon in certain time periods.%%
+We want to know the trips occurred in each hexagon in certain time periods.
 
-The hexagons do not have an ID, so we will give each an ID.
+The hexagons do not have an ID yet, so we will give each an ID.
 
 #### 2.3.5 Assign IDs to each hexagon
 
@@ -390,7 +409,8 @@ glimpse(bs_hex)
 
 ```{r}
 #| eval: false
-# Step 1: Define all the combinations we need
+#| code-fold: true
+# **Define all the combinations we need
 all_combinations <- expand_grid(
   HEX_ID = unique(bs_hex$HEX_ID),  # All 826 hexagons
   YEAR_MONTH = c("2025-07", "2025-08", "2025-09"),
@@ -444,6 +464,8 @@ In section 2.3, we derived an analytical hexagon data of 375m to represent the t
 Below we will process the trips data with Hex ID for the 3 study periods.
 
 ::: panel-tabset
+
+
 ## 3 peak periods by hexagon
 
 ```{r}
@@ -478,9 +500,12 @@ AM_trips_hex <- read_rds("data/rds/AM_trips_hex.rds")
 PM_trips_hex <- read_rds("data/rds/PM_trips_hex.rds")
 weekend_trips_hex <- read_rds("data/rds/weekend_trips_hex.rds")
 
-glimpse(AM_trips_hex, 5)
-glimpse(PM_trips_hex, 5)
-glimpse(weekend_trips_hex, 5)
+cat("View AM_trips_hex\n")
+glimpse(AM_trips_hex)
+cat("\nView PM_trips_hex\n")
+glimpse(PM_trips_hex)
+cat("\nView weekend_trips_hex\n")
+glimpse(weekend_trips_hex)
 
 ```
 
@@ -490,6 +515,7 @@ In this section, we want to filter the Bus tap on the time between 6am to 9am (9
 
 ```{r}
 #| eval: false
+#| code-fold: true
 AM_trips_hex_month <- trips_hex_complete %>%
   filter(HOUR_OF_DAY %in% c(6, 7, 8, 9),
          DAY_TYPE == "WEEKDAY") %>%
@@ -518,8 +544,12 @@ write_rds(weekend_trips_hex_month, "data/rds/Weekend_trips_hex_month.rds")
 AM_trips_hex_month <- read_rds("data/rds/AM_trips_hex_month.rds")
 PM_trips_hex_month <- read_rds("data/rds/PM_trips_hex_month.rds")
 weekend_trips_hex_month <- read_rds("data/rds/weekend_trips_hex_month.rds")
+
+cat("View AM_trips_hex_month\n")
 glimpse(AM_trips_hex_month)
+cat("\nView PM_trips_hex_month\n")
 glimpse(PM_trips_hex_month)
+cat("\nView weekend_trips_hex_month\n")
 glimpse(weekend_trips_hex_month)
 ```
 
@@ -559,8 +589,11 @@ AM_trips_hex_hr <- read_rds("data/rds/AM_trips_hex_hr.rds")
 PM_trips_hex_hr <- read_rds("data/rds/PM_trips_hex_hr.rds")
 weekend_trips_hex_hr <- read_rds("data/rds/weekend_trips_hex_hr.rds")
 
+cat("View AM_trips_hex_hr\n")
 glimpse(AM_trips_hex_hr)
+cat("\nView PM_trips_hex_hr\n")
 glimpse(PM_trips_hex_hr)
+cat("\nView weekend_trips_hex_hr\n")
 glimpse(weekend_trips_hex_hr)
 ```
 :::
@@ -569,13 +602,16 @@ glimpse(weekend_trips_hex_hr)
 
 ### 3.1 Peak Hour Trips by HexID
 
-Below charts are plotted to have a full picture of the volumn of each Hex ID in a descending manner.
+Below charts are plotted to have a full picture of the volume of each Hex ID in a descending manner.
+Next let's plot it out. 
 
 ::: panel-tabset
-Next let's plot it out. \## Weekday AM
+
+## AM
 
 ```{r}
 #| align: center
+#| code-fold: true
 ggplot(AM_trips_hex_hr, 
        aes(x = HOUR_OF_DAY, y = TRIPS)) +
   geom_col(fill = "#9CAFAA") +
@@ -587,12 +623,13 @@ ggplot(AM_trips_hex_hr,
         plot.background = element_rect(fill = "#D6DAC8"))
 ```
 
-Insight: The bar chart above shows that between 6-9am on weekdays, 7am has most people onboarding the bus (\> 25,000,000 passenger trips), followed by 8am, then 6am, and before 9am.
+**Insight:** The bar chart above shows that between 6-9am on weekdays, 7am has most people onboarding the bus (\> 25,000,000 passenger trips), followed by 8am, then 6am, and before 9am.
 
-## Weekday PM
+## PM
 
 ```{r}
 #| align: center
+#| code-fold: true
 ggplot(PM_trips_hex_hr, 
        aes(x = HOUR_OF_DAY, y = TRIPS)) +
   geom_col(fill = "#8DBCC7") +
@@ -604,7 +641,7 @@ ggplot(PM_trips_hex_hr,
         plot.background = element_rect(fill = "#D6DAC8"))
 ```
 
-Insight: The bar chart above shows that between 5-8pm on weekdays, 6pm has most people onboarding the bus (\~ 25,000,000 passenger trips), followed by 5pm, then 7pm, and before 9pm. This indicates that most people start to leave office from 5pm. This makes sense as many people have 9am-6pm schedule, and it is also time for dinner.
+**Insight:** The bar chart above shows that between 5-8pm on weekdays, 6pm has most people onboarding the bus (\~ 25,000,000 passenger trips), followed by 5pm, then 7pm, and before 9pm. This indicates that most people start to leave office from 5pm. This makes sense as many people have 9am-6pm schedule, and it is also time for dinner.
 
 ## Weekend/PH
 
@@ -614,6 +651,7 @@ Next let's plot it out.
 #| fig-width: 8
 #| fig-height: 5
 #| align: center
+#| code-fold: true
 ggplot(weekend_trips_hex_hr, 
        aes(x = HOUR_OF_DAY, y = TRIPS)) +
   geom_col(fill = "#E6B2BA") +
@@ -626,7 +664,7 @@ ggplot(weekend_trips_hex_hr,
 
 ```
 
-Insight: We plotted the bar chart in the same scale as AM/PM on weekdays to understand the trip volumes. It appears that on weekend/holidays, passenger trips on the bus have largely reduced. However, we can still observe that the peak hours during the off days are around lunch and dinner times at 12pm and 5-6pm.
+**Insight:** We plotted the bar chart in the same scale as AM/PM on weekdays to understand the trip volumes. It appears that on weekend/holidays, passenger trips on the bus have largely reduced. However, we can still observe that the peak hours during the off days are around lunch and dinner times at 12pm and 5-6pm.
 :::
 
 ### 3.2 Interactive Maps for Peak Hour Trips
@@ -635,20 +673,13 @@ Insight: We plotted the bar chart in the same scale as AM/PM on weekdays to unde
 
 Now let's join the data grouped by HEX_ID with `hexagon`, so we can plot it in tmap later for the three different peak hours of the week.
 
-::: panel-tabset
-```{r}
-AM_trips_geo_hr <- hexagon_geo_id %>%
-  left_join(AM_trips_hex_hr, by = "HEX_ID") %>%
-  mutate(TRIPS = replace_na(TRIPS, 0)) 
-
-summary(AM_trips_geo_hr)
-n_distinct(AM_trips_geo_hr$HEX_ID)
-```
+::: panel-tabset 
 
 ## AM
 
 ```{r}
 #| eval: false
+#| code-fold: true
 
 AM_trips_geo <- hexagon_geo_id %>%
   left_join(AM_trips_hex, by = "HEX_ID")
@@ -671,15 +702,19 @@ AM_trips_geo <- read_rds("data/rds/AM_trips_geo.rds")
 AM_trips_geo_month <- read_rds("data/rds/AM_trips_geo_month.rds")
 AM_trips_geo_hr <- read_rds("data/rds/AM_trips_geo_hr.rds")
 
-head(AM_trips_geo) 
-head(AM_trips_geo_month)
-head(AM_trips_geo_hr)
+cat("View AM_trips_geo\n")
+glimpse(AM_trips_geo) 
+cat("\nView AM_trips_geo_month\n")
+glimpse(AM_trips_geo_month)
+cat("\nView AM_trips_geo_hr\n")
+glimpse(AM_trips_geo_hr)
 ```
 
 ## PM
 
 ```{r}
 #| eval: false
+#| code-fold: true
 
 PM_trips_geo <- hexagon_geo_id %>%
   left_join(PM_trips_hex, by = "HEX_ID")
@@ -698,19 +733,26 @@ write_rds(PM_trips_geo_hr, "data/rds/PM_trips_geo_hr.rds")
 
 ```{r}
 #| echo: false
+#| code-fold: true
+
+
 PM_trips_geo <- read_rds("data/rds/PM_trips_geo.rds")
 PM_trips_geo_month <- read_rds("data/rds/PM_trips_geo_month.rds")
 PM_trips_geo_hr <- read_rds("data/rds/PM_trips_geo_hr.rds")
 
-head(PM_trips_geo) 
-head(PM_trips_geo_month)
-head(PM_trips_geo_hr)
+cat("View PM_trips_geo\n")
+glimpse(PM_trips_geo) 
+cat("\nView PM_trips_geo_month\n")
+glimpse(PM_trips_geo_month)
+cat("\nView PM_trips_geo_hr\n")
+glimpse(PM_trips_geo_hr)
 ```
 
 ## Weekend
 
 ```{r}
 #| eval: false
+#| code-fold: true
 
 WKD_trips_geo <- hexagon_geo_id %>%
   left_join(weekend_trips_hex, by = "HEX_ID")
@@ -733,9 +775,12 @@ WKD_trips_geo <- read_rds("data/rds/WKD_trips_geo.rds")
 WKD_trips_geo_month <- read_rds("data/rds/WKD_trips_geo_month.rds")
 WKD_trips_geo_hr <- read_rds("data/rds/WKD_trips_geo_hr.rds")
 
-head(WKD_trips_geo) 
-head(WKD_trips_geo_month)
-head(WKD_trips_geo_hr)
+cat("View WKD_trips_geo\n")
+glimpse(WKD_trips_geo) 
+cat("\nView WKD_trips_geo_month\n")
+glimpse(WKD_trips_geo_month)
+cat("\nView WKD_trips_geo_hr\n")
+glimpse(WKD_trips_geo_hr)
 ```
 :::
 
@@ -744,6 +789,8 @@ head(WKD_trips_geo_hr)
 Below plots demonstrate the geographical distribution of the passenger trips in the 3 peak hour periods. Each page plots one of the peak hour periods. Note that there are two maps, and one plots the actual number of trips while the other uses quantile of the trips to avoid some outlier colors dominating the map.
 
 ::: panel-tabset
+
+
 ## AM
 
 ```{r}
@@ -752,7 +799,7 @@ Below plots demonstrate the geographical distribution of the passenger trips in 
 #| align: center
 #| code-fold: true
 
-#tmap_mode("view")
+tmap_mode("view")
 am_tm <- tm_shape(mpsz) +
   tm_polygons(fill = "#FFF4EA", alpha = 0.3) +
   tm_text("SUBZONE_N", size = 0.5) +
@@ -764,8 +811,8 @@ tm_shape(AM_trips_geo) +
             main.title = "AM Peak Hour Trips by Hexagon",
             legend.position = c("right", "bottom"),
             frame = FALSE) +
-  tm_shape(mrt_sf) +
-  tm_symbols(fill = "#BE5985", size = 0.3, col = "#E195AB") +  
+  tm_shape(mrt_all) +
+  tm_symbols(fill = "#DD7BDF", size = 0.3, col = "#6A0066") +  
   tm_view(set_zoom_limits = c(11,14))
 
 
@@ -782,7 +829,7 @@ am_tm_qt <- tm_shape(mpsz) +
             legend.position = c("right", "bottom"),
             frame = FALSE) +
   tm_shape(mrt_sf) +
-  tm_symbols(fill = "#BE5985", size = 0.3, col = "#E195AB") +
+  tm_symbols(fill = "#DD7BDF", size = 0.3, col = "#6A0066") +
   tm_view(set_zoom_limits = c(11,14)) 
 
 tmap_arrange(am_tm, am_tm_qt, 
@@ -791,7 +838,11 @@ tmap_arrange(am_tm, am_tm_qt,
 tmap_mode("plot")
 ```
 
-## PM weekdays
+Insights:
+
+
+
+## PM
 
 ```{r}
 #| fig-width: 12
@@ -799,7 +850,7 @@ tmap_mode("plot")
 #| align: center
 #| code-fold: true
 
-#tmap_mode("view")
+tmap_mode("view")
 pm_tm <- tm_shape(mpsz) +
   tm_polygons(fill = "#FFF4EA", alpha = 0.3) +
   tm_text("SUBZONE_N", size = 0.5) +
@@ -811,7 +862,7 @@ tm_shape(PM_trips_geo) +
             main.title = "PM Peak Hour Trips by Hexagon",
             legend.position = c("right", "bottom"),
             frame = FALSE) +
-  tm_shape(mrt_sf) +
+  tm_shape(mrt_all) +
   tm_symbols(fill = "#BE5985", size = 0.3, col = "#E195AB") +  
   tm_view(set_zoom_limits = c(11,14))
 
@@ -828,7 +879,7 @@ pm_tm_qt <- tm_shape(mpsz) +
             main.title = "PM Peak Hour Trips (Quantile)",
             legend.position = c("right", "bottom"),
             frame = FALSE) +
-  tm_shape(mrt_sf) +
+  tm_shape(mrt_all) +
   tm_symbols(fill = "#BE5985", size = 0.3, col = "#E195AB") +
   tm_view(set_zoom_limits = c(11,14))
 
@@ -838,6 +889,11 @@ tmap_arrange(pm_tm, pm_tm_qt,
 
 tmap_mode("plot")
 ```
+**Insight: **
+- When looking at the fixed internal of PM peak hour trips, majority of the areas are below 500K, several between 500K-1000K. We hardly see any hexagon area between 1000K-1,500K. However, there are a few hexagon areas showing trips totalling more than 1,500K in PM peak hours; these hexagons fall into the Woodlands regional centre subzone, Jurong West Central, Tampines West. We noticed that these hexagons have Woodlands, Boon Lay and Tampines MRT stations within or around the border of the respective hexagons. 
+- This shows that at the PM peak time, many people board the bus from these areas. This could be due to passengers take bus after they get off from the MRT stations and take the bus to the stop near their homes.
+- <fill in>
+
 
 ## Weekends
 
@@ -847,7 +903,7 @@ tmap_mode("plot")
 #| align: center
 #| code-fold: true
 
-#tmap_mode("view")
+tmap_mode("view")
 wkd_tm <- tm_shape(mpsz) +
   tm_polygons(fill = "#A1C2BD", alpha = 0.3) +
   tm_text("SUBZONE_N", size = 0.5) +
@@ -1100,8 +1156,8 @@ write_rds(bperm_wkd, "data/rds/bperm_wkd.rds")
 ```
 
 ```{r}
-bperm_pm <- read_rds("data/rds/bperm_wkd.rds")
-bperm_pm
+bperm_wkd <- read_rds("data/rds/bperm_wkd.rds")
+bperm_wkd
 ```
 
 Statistical conclusion:
@@ -1342,7 +1398,7 @@ Below we will plot Local Moran's I and p-value for each hexagon.
 #| fig-width: 12
 #| code-fold: true
 
-tmap_mode("view")
+#tmap_mode("view")
 
 # AM Local Moran's I
 lmsa_am <- tm_shape(mpsz) +
@@ -1405,7 +1461,7 @@ tmap_mode("plot")
 ```{r}
 #| fig-width: 12
 #| code-fold: true
-tmap_mode("view")
+#tmap_mode("view")
 
 # AM Local Moran's I
 lmsa_pm <- tm_shape(mpsz) +
@@ -1531,6 +1587,7 @@ We leverage the Moran Scatterplot to visualise the relationship between the trip
 **Calculate spatial lag of Passenger Trips against its spatial lag version**
 
 ::: panel-tabset
+
 ## AM
 
 ```{r}
@@ -1712,14 +1769,15 @@ p3 <- ggplot(data = lisa_wkd_lag,
 
 ggplotly(p3, tooltip = "text")
 ```
-
 :::
 
 #### 4.3.2 Visualising LISA Map
 
 We will use the mean where LISA classes are stored in to derive a new field called LISA-cluster.
 
-**Prepare data for visualisation** ::: panel-tabset
+**Prepare data for visualisation** 
+
+::: panel-tabset
 
 ## AM
 
@@ -1741,7 +1799,9 @@ write_rds(lisa_am_map, "data/rds/lisa_am_map.rds")
 ```
 
 ```{r}
+#| echo: false
 lisa_am_map <- read_rds("data/rds/lisa_am_map.rds")
+glimpse(lisa_am_map)
 ```
 
 ## PM
@@ -1764,7 +1824,9 @@ write_rds(lisa_pm_map, "data/rds/lisa_pm_map.rds")
 ```
 
 ```{r}
+#| echo: false
 lisa_pm_map <- read_rds("data/rds/lisa_pm_map.rds")
+glimpse(lisa_am_map)
 ```
 
 ## Weekend
@@ -1787,18 +1849,22 @@ write_rds(lisa_wkd_map, "data/rds/lisa_wkd_map.rds")
 ```
 
 ```{r}
+#| echo: false
 lisa_wkd_map <- read_rds("data/rds/lisa_wkd_map.rds")
+glimpse(lisa_wkd_map)
 ```
 
 :::
 
-**Plot the LISA map below** ::: panel-tabset
+**Plot the LISA map below** 
+
+::: panel-tabset
 
 ## AM
 
 ```{r}
 #| code-fold: true
-tmap_mode("view")
+#tmap_mode("view")
 # Local Moran's I Clusters
 lisa_maps_am <- 
   tm_shape(mpsz) +
@@ -1817,9 +1883,10 @@ lisa_maps_am <-
         "#842A3B")),          # High-High
     fill.legend = tm_legend(
       title = "LISA Cluster",
-      position = tm_pos_in("right", "bottom"))
+      position = tm_pos_in("right", "bottom"),
+      lwd = 0.1),
   ) +
-  tm_borders() +
+  tm_borders(col = "grey20", lwd = 0.1) +
   tm_title("Local Moran's I Clusters - AM Weekdays (p < 0.05)") +
   tm_layout(
     legend.position = c("right", "bottom"),
@@ -1838,8 +1905,10 @@ tm_shape(lisa_am_map) +
                 values = "-brewer.RdBu"), 
                 fill_alpha = 0.7,
               fill.legend = tm_legend(
-                title = "Local Moran's I")) + 
-  tm_borders(fill_alpha = 0.5) +
+                title = "Local Moran's I"),
+              lwd = 0.1) + 
+  
+  tm_borders(col = "grey20", lwd = 0.1) +
   tm_title("LISA Map - Local Moran's I AM Weeday Trips") +
   tm_layout(
     legend.position = c("right", "bottom"),
@@ -1852,13 +1921,14 @@ tmap_arrange(lisa_maps_am, lmsa_am,
 
 tmap_mode("plot")
 ```
+Insights: 
 
 ## PM
 
 ```{r}
 #| code-fold: true
 
-tmap_mode("view")
+#tmap_mode("view")
 # Local Moran's I Clusters
 lisa_map_pm <- 
   tm_shape(mpsz) +
@@ -1912,12 +1982,13 @@ tmap_arrange(lisa_map_pm, lmsa_pm,
 
 tmap_mode("plot")
 ```
+Insights: 
 
 ## Weekend/PH
 
 ```{r}
 #| code-fold: true
-tmap_mode("view")
+#tmap_mode("view")
 # Local Moran's I Clusters
 lisa_map_wkd <- 
   tm_shape(mpsz) +
@@ -1971,13 +2042,14 @@ tmap_arrange(lisa_map_wkd, lmsa_wkd,
 tmap_mode("plot")
 ```
 
+Insights: 
+
 :::
 
-Compute LMSA statistic of the passengers trips generate by origin at hexagon level.
+Analysis: 
+- LMSA statistic of the passengers trips generate by origin at hexagon level.
 
-Display the LMSA maps of the passengers trips generate by origin at hexagon level. The maps should only display the significant (i.e. p-value \< 0.05)
-
-With reference to the analysis results, draw statistical conclusions (not more than 200 words per visual).
+- With reference to the analysis results, draw statistical conclusions (not more than 200 words per visual).
 
 ## 5 Hot Spots and Cold Spots Analysis (HCSA)
 
@@ -2001,6 +2073,7 @@ We will compute fixed distance weights for local Gi\* computation, as each geogr
 ```{r}
 #| eval: false
 #| warning: false
+#| code-fold: true
 hexagon_fdw_am <- AM_trips_geo %>% 
   mutate(nb = include_self(
     st_dist_band(
@@ -2036,9 +2109,9 @@ hexagon_fdw_am <- read_rds("data/rds/hexagon_fdw_am.rds")
 hexagon_fdw_pm <- read_rds("data/rds/hexagon_fdw_pm.rds")
 hexagon_fdw_wkd <- read_rds("data/rds/hexagon_fdw_wkd.rds")
 
-head(hexagon_fdw_am)
-head(hexagon_fdw_pm)
-head(hexagon_fdw_wkd)
+glimpse(hexagon_fdw_am)
+glimpse(hexagon_fdw_pm)
+glimpse(hexagon_fdw_wkd)
 ```
 
 ### 5.2 Computing local Gi\*
@@ -2060,9 +2133,11 @@ HCSA_fdw_am <- hexagon_fdw_am %>%
 write_rds(HCSA_fdw_am, "data/rds/HCSA_fdw_am.rds")
 ```
 
+
+We use `glimpse()` to check the computation result for Gi\*, and confirm that the HCSA classes are stored in the `cluster` column.
 ```{r}
-#| echo: false
 HCSA_fdw_am <- read_rds("data/rds/HCSA_fdw_am.rds")
+glimpse(HCSA_fdw_am)
 ```
 
 ## PM
@@ -2078,9 +2153,10 @@ HCSA_fdw_pm <- hexagon_fdw_pm %>%
 write_rds(HCSA_fdw_pm, "data/rds/HCSA_fdw_pm.rds")
 ```
 
+We use `glimpse()` to check the computation result for Gi\*, and confirm that the HCSA classes are stored in the `cluster` column.
 ```{r}
-#| echo: false
 HCSA_fdw_pm <- read_rds("data/rds/HCSA_fdw_pm.rds")
+glimpse(HCSA_fdw_pm)
 ```
 
 ## Weekend/PH
@@ -2096,9 +2172,10 @@ HCSA_fdw_wkd <- hexagon_fdw_wkd %>%
 write_rds(HCSA_fdw_wkd, "data/rds/HCSA_fdw_wkd.rds")
 ```
 
+We use `glimpse()` to check the computation result for Gi\*, and confirm that the HCSA classes are stored in the `cluster` column.
 ```{r}
-#| echo: false
 HCSA_fdw_wkd <- read_rds("data/rds/HCSA_fdw_wkd.rds")
+glimpse(HCSA_fdw_wkd)
 ```
 :::
 
@@ -2106,17 +2183,12 @@ HCSA_fdw_wkd <- read_rds("data/rds/HCSA_fdw_wkd.rds")
 
 We will use tmap to prepare a choropleth map showing the distribution of Gi\* values.
 
-We use `glimpse()` to check the computation result for Gi\*, and confirm that the HCSA classes are stored in the `cluster` column.
-
-```{r}
-glimpse(HCSA_fdw_am)
-```
-
 ### **5.3.1 Prepare data for HCSA Maps**
 
 To prepare the HSCA map, we will derive a new field called **HCSA_cluster** from the `cluster` column.
 
 ::: panel-tabset
+
 ## AM
 
 Prepare a new field **HCSA_cluster_am** for AM Weekdays HCSA map.
@@ -2207,6 +2279,7 @@ glimpse(HCSA_clst_wkd)
 Next we will use the data set above to plot HCSA maps to conduct HCSA analysis.
 
 ::: panel-tabset
+
 ## AM
 
 Below we will plot the HCSA map for AM Weekdays.
@@ -2401,6 +2474,7 @@ Emerging Hot Spot Analysis (EHSA) is a spatio-temporal analysis method for revea
 In section 2.5, we have prepared data for EHSA analysis by month and by hour. Let's verify we have all columns we need for EHSA.
 
 ::: panel-tabset
+
 ## AM
 
 Below we will take a look at the AM trips data by hour.
@@ -2432,6 +2506,7 @@ glimpse(WKD_trips_geo_hr)
 ### 6.2 Calculate Local Gi\* for Each Time Step
 
 ::: panel-tabset
+
 ## AM
 
 ```{r}
@@ -2594,6 +2669,7 @@ glimpse(gi_ehsa_results_wkd)
 #### 6.4.1 Run Test
 
 ::: panel-tabset
+
 ## AM
 
 ```{r}
@@ -2629,7 +2705,7 @@ write_rds(ehsa_results_am, "data/rds/ehsa_results_am.rds")
 ```{r}
 #| echo: false
 ehsa_results_am <- read_rds("data/rds/ehsa_results_am.rds")
-head(ehsa_results_am)
+glimpse(ehsa_results_am)
 
 ```
 
@@ -2668,7 +2744,7 @@ write_rds(ehsa_results_pm, "data/rds/ehsa_results_pm.rds")
 ```{r}
 #| echo: false
 ehsa_results_pm <- read_rds("data/rds/ehsa_results_pm.rds")
-head(ehsa_results_am)
+glimpse(ehsa_results_am)
 
 ```
 
@@ -2707,15 +2783,101 @@ write_rds(ehsa_results_wkd, "data/rds/ehsa_results_wkd.rds")
 ```{r}
 #| echo: false
 ehsa_results_wkd <- read_rds("data/rds/ehsa_results_wkd.rds")
-head(ehsa_results_wkd)
+glimpse(ehsa_results_wkd)
 
 ```
 :::
 
 ### 6.4.2 MK Test Report
 
+::: panel-tabset
+
+## AM
+
 ```{r}
 #| eval: false
+#| code-fold: true
+library(Kendall)
+
+# Mann-Kendall test for each hexagon
+mk_results_am <- gi_ehsa_results_am %>%
+  group_by(HEX_ID) %>%
+  arrange(HOUR_OF_DAY) %>%
+  summarise(
+    mk_tau = MannKendall(GI_STAR)$tau[[1]],      # Kendall's tau
+    mk_sl = MannKendall(GI_STAR)$sl[[1]],        # p-value 
+    mk_S = MannKendall(GI_STAR)$S[[1]],          # S statistic
+    mk_D = MannKendall(GI_STAR)$D[[1]],          # Denominator for tau
+    mk_varS = MannKendall(GI_STAR)$varS[[1]],    # Variance of S
+    mk_trend = case_when(
+      mk_sl >= 0.05 ~ "No trend",
+      mk_tau > 0 ~ "Increasing",
+      mk_tau < 0 ~ "Decreasing"
+    ),
+    .groups = 'drop'
+  )
+
+# Join back with geometry for mapping
+ehsa_results_am <- hexagon_fdw_am_ft %>%
+  left_join(mk_results_am, by = "HEX_ID")
+
+write_rds(ehsa_results_am, "data/rds/ehsa_results_am.rds")
+
+```
+
+```{r}
+#| echo: false
+ehsa_results_am <- read_rds("data/rds/ehsa_results_am.rds")
+kable(head(ehsa_results_am))
+
+```
+
+
+
+## PM
+
+```{r}
+#| eval: false
+#| code-fold: true
+library(Kendall)
+
+# Mann-Kendall test for each hexagon
+mk_results_pm <- gi_ehsa_results_pm %>%
+  group_by(HEX_ID) %>%
+  arrange(HOUR_OF_DAY) %>%
+  summarise(
+    mk_tau = MannKendall(GI_STAR)$tau[[1]],      # Kendall's tau
+    mk_sl = MannKendall(GI_STAR)$sl[[1]],        # p-value 
+    mk_S = MannKendall(GI_STAR)$S[[1]],          # S statistic
+    mk_D = MannKendall(GI_STAR)$D[[1]],          # Denominator for tau
+    mk_varS = MannKendall(GI_STAR)$varS[[1]],    # Variance of S
+    mk_trend = case_when(
+      mk_sl >= 0.05 ~ "No trend",
+      mk_tau > 0 ~ "Increasing",
+      mk_tau < 0 ~ "Decreasing"
+    ),
+    .groups = 'drop'
+  )
+
+# Join back with geometry for mapping
+ehsa_results_pm <- hexagon_fdw_pm_ft %>%
+  left_join(mk_results_pm, by = "HEX_ID")
+
+write_rds(ehsa_results_pm, "data/rds/ehsa_results_pm.rds")
+
+```
+
+```{r}
+#| echo: false
+ehsa_results_wkd <- read_rds("data/rds/ehsa_results_wkd.rds")
+kable(head(ehsa_results_wkd))
+
+```
+## Weekend
+
+```{r}
+#| eval: false
+#| code-fold: true
 library(Kendall)
 
 # Mann-Kendall test for each hexagon
@@ -2747,15 +2909,18 @@ write_rds(ehsa_results_wkd, "data/rds/ehsa_results_wkd.rds")
 ```{r}
 #| echo: false
 ehsa_results_wkd <- read_rds("data/rds/ehsa_results_wkd.rds")
-head(ehsa_results_wkd)
+kable(head(ehsa_results_wkd))
 
 ```
+
+:::
 
 ### 6.5 Create EHSA Map
 
 #### **6.5.1 Classify EHSA Patterns**
 
 ::: panel-tabset
+
 ## AM
 
 ```{r}
@@ -2801,7 +2966,7 @@ write_rds(ehsa_am, "data/rds/ehsa_am.rds")
 #| echo: false
 AM_st <- read_rds("data/rds/AM_st.rds")
 ehsa_am <- read_rds("data/rds/ehsa_am.rds")
-head(ehsa_am)
+glimpse(ehsa_am)
 ```
 
 ```{r}
@@ -2854,7 +3019,7 @@ write_rds(ehsa_am, "data/rds/ehsa_pm.rds")
 #| echo: false
 PM_st <- read_rds("data/rds/PM_st.rds")
 ehsa_pm <- read_rds("data/rds/ehsa_pm.rds")
-head(ehsa_pm)
+glimpse(ehsa_pm)
 ```
 
 ```{r}
@@ -2916,6 +3081,7 @@ is_spacetime_cube(WKD_st)
 #### **6.5.2 Visualising EHSA Classes**
 
 ::: panel-tabset
+
 ## AM
 
 ```{r}
@@ -2960,6 +3126,7 @@ ggplot(data = ehsa_pm,
             size = 2.5,             
             color = "black")  
 ```
+
 :::
 
 #### **6.5.3 Visualising EHSA Maps**
@@ -2967,6 +3134,7 @@ ggplot(data = ehsa_pm,
 **Create color scheme**
 
 ```{r}
+#| code-fold: true
 ehsa_colors <- c(
   "consecutive hotspot" = "#F86F03",     
   "persistent hotspot" = "#DD4A48",        
@@ -2988,12 +3156,15 @@ ehsa_colors <- c(
 )
 ```
 
-Join EHSA results with geometry ::: panel-tabset
+Join EHSA results with geometry 
+
+::: panel-tabset
 
 ## AM
 
 ```{r}
 #| eval: false
+#| code-fold: true
 ehsa_am_map <- hexagon_fdw_am_ft %>%
   mutate(HEX_ID = as.character(HEX_ID)) %>%
   left_join(
@@ -3018,6 +3189,7 @@ glimpse(ehsa_am_map)
 
 ```{r}
 #| eval: false
+#| code-fold: true
 ehsa_pm_map <- hexagon_fdw_pm_ft %>%
   mutate(HEX_ID = as.character(HEX_ID)) %>%
   left_join(
@@ -3042,6 +3214,7 @@ glimpse(ehsa_pm_map)
 
 ```{r}
 #| eval: false
+#| code-fold: true
 ehsa_wkd_map <- hexagon_fdw_wkd_ft %>%
   mutate(HEX_ID = as.character(HEX_ID)) %>%
   left_join(
@@ -3065,8 +3238,10 @@ glimpse(ehsa_wkd_map)
 :::
 
 ::: panel-tabset
+
 **Plot the map**
 
+## AM
 ```{r}
 
 tm_shape(mpsz) +
@@ -3127,11 +3302,13 @@ tm_layout(
 )
 
 ```
+
 :::
 
 #### 6.6.3 Summary Report
 
 ::: panel-tabset
+
 ## AM
 
 ```{r}
@@ -3192,6 +3369,7 @@ write_rds(ehsa_summary_wkd, "data/rds/ehsa_summary_wkd.rds")
 ehsa_summary_wkd <- read_rds("data/rds/ehsa_summary_wkd.rds")
 kable(ehsa_summary_wkd)
 ```
+
 :::
 
 ## 7 Key findings & Conclusions
