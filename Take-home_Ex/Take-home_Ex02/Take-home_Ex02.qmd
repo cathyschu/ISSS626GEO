@@ -3243,7 +3243,73 @@ is_spacetime_cube(WKD_st)
 ```
 :::
 
-#### **6.5.2 Visualising EHSA Classes**
+#### 6.5.2 Summary Report
+
+::: panel-tabset
+
+## AM
+
+```{r}
+#| eval: false
+ehsa_summary_am <- ehsa_am_map %>%
+  st_drop_geometry() %>%
+  count(classification) %>%
+  mutate(
+    percentage = round(100 * n / sum(n), 1),
+    label = sprintf("%s: %d (%.1f%%)", classification, n, percentage)
+  ) 
+write_rds(ehsa_summary_am, "data/rds/ehsa_summary_am.rds")
+```
+
+```{r}
+ehsa_summary_am <- read_rds("data/rds/ehsa_summary_am.rds")
+
+kable(ehsa_summary_am)
+```
+
+## PM
+
+```{r}
+#| eval: false
+ehsa_summary_pm <- ehsa_pm_map %>%
+  st_drop_geometry() %>%
+  count(classification) %>%
+  mutate(
+    percentage = round(100 * n / sum(n), 1),
+    label = sprintf("%s: %d (%.1f%%)", classification, n, percentage)
+  ) 
+write_rds(ehsa_summary_pm, "data/rds/ehsa_summary_pm.rds")
+```
+
+```{r}
+#| echo: false
+ehsa_summary_pm <- read_rds("data/rds/ehsa_summary_pm.rds")
+kable(ehsa_summary_am)
+```
+
+## Weekend
+
+```{r}
+#| eval: false
+ehsa_summary_wkd <- ehsa_wkd_map %>%
+  st_drop_geometry() %>%
+  count(classification) %>%
+  mutate(
+    percentage = round(100 * n / sum(n), 1),
+    label = sprintf("%s: %d (%.1f%%)", classification, n, percentage)
+  )
+write_rds(ehsa_summary_wkd, "data/rds/ehsa_summary_wkd.rds")
+
+```
+
+```{r}
+#| echo: false
+ehsa_summary_wkd <- read_rds("data/rds/ehsa_summary_wkd.rds")
+kable(ehsa_summary_wkd)
+```
+:::
+
+#### **6.5.3 Visualising EHSA Classes**
 
 ::: panel-tabset
 ## AM
@@ -3321,7 +3387,7 @@ ggplot(data = ehsa_wkd,
 ::: notegoals-container
 
 
-#### **6.5.3 Visualising EHSA Maps**
+#### **6.5.4 Visualising EHSA Maps**
 
 **Create color scheme**
 
@@ -3329,18 +3395,18 @@ ggplot(data = ehsa_wkd,
 #| code-fold: true
 ehsa_colors <- c(
   "consecutive hotspot" = "#F86F03",     
-  "persistent hotspot" = "#DD4A48",        
-  "sporadic hotspot" = "#fee08b",          
-  "diminishing hotspot" = "#B17F59",       
-  "new hotspot" = "#FCBAAD",
+  "persistent hotspot" = "#D92C54",        
+  "sporadic hotspot" = "#D6A99D",          
+  "diminishing hotspot" = "#FFD5D5",       
+  "new hotspot" = "#B45253",
   "intensifying hotspot" = "#FF2DD1",
   
   "consecutive coldspot" = "#00FF9C",     
-  "persistent coldspot" = "#0C4271",       
+  "persistent coldspot" = "#0D5EA6",       
   "sporadic coldspot" = "#92c5de",         
-  "diminishing coldspot" = "#BBBFCA",
+  "diminishing coldspot" = "#BFBBA9",
   "intensifying hotspot" = "#255F38",
-  "new coldspot" = "#5EABD6",          
+  "new coldspot" = "#AAB99A",          
   
   "oscillating hotspot" = "#8644A2",     
   "oscillating coldspot" = "#CB9DF0", 
@@ -3348,9 +3414,10 @@ ehsa_colors <- c(
 )
 ```
 
-Join EHSA results with geometry
+**Join EHSA results with geometry**
 
 ::: panel-tabset
+
 ## AM
 
 ```{r}
@@ -3427,137 +3494,86 @@ glimpse(ehsa_wkd_map)
 ```
 :::
 
-::: panel-tabset
 **Plot the map**
+
+::: panel-tabset
 
 ## AM
 
 ```{r}
-
+#| code-fold: true
+tmap_mode("view")
 tm_shape(mpsz) +
   tm_polygons(fill = "#FAF3F3", fill_alpha = 0.2) +
+  tm_text("SUBZONE_N", size = 0.6) +  
 tm_shape(ehsa_am_map) +
   tm_fill(col = "classification",
           palette = ehsa_colors,
-          title = "EHSA Classification") +
-  tm_borders(col = "white", lwd = 0.5) +
-tm_shape(mrt_sf) +
+          title = "EHSA Classification",
+                    fill_alpha = 0.7) +
+  tm_borders(col = "grey", lwd = 0.3) +
+tm_shape(mrt_all) +
   tm_symbols(fill = "#0C4271", size = 0.2,
    col = "#0C4271") +
 tm_layout(
   main.title = "EHSA - AM Weekdays",
   legend.position = c("right", "top")
 )
-
+tmap_mode("plot")
 ```
+**Observation**
+-   
 
 ## PM
 
 ```{r}
-
+#| code-fold: true
+tmap_mode("view")
 tm_shape(mpsz) +
   tm_polygons(fill = "#FAF3F3", fill_alpha = 0.2) +
+  tm_text("SUBZONE_N", size = 0.6) +
 tm_shape(ehsa_pm_map) +
   tm_fill(col = "classification",
           palette = ehsa_colors,
-          title = "EHSA Classification") +
-  tm_borders(col = "white", lwd = 0.5) +
-tm_shape(mrt_sf) +
+          title = "EHSA Classification",
+            fill_alpha = 0.7) +
+  tm_borders(col = "grey", lwd = 0.3) +
+tm_shape(mrt_all) +
   tm_symbols(fill = "#0C4271", size = 0.2,
    col = "#0C4271") +
 tm_layout(
   main.title = "EHSA - PM Weekdays",
   legend.position = c("right", "top")
 )
-
+tmap_mode("plot")
 ```
 
 ## Weekend
 
 ```{r}
-
+#| code-fold: true
+tmap_mode("view")
 tm_shape(mpsz) +
   tm_polygons(fill = "#FAF3F3", fill_alpha = 0.2) +
+  tm_text("SUBZONE_N", size = 0.6) +
 tm_shape(ehsa_wkd_map) +
   tm_fill(col = "classification",
           palette = ehsa_colors,
-          title = "EHSA Classification") +
-  tm_borders(col = "white", lwd = 0.5) +
-tm_shape(mrt_sf) +
+          title = "EHSA Classification",
+          fill_alpha = 0.7) +
+  tm_borders(col = "grey", lwd = 0.3) +
+tm_shape(mrt_all) +
   tm_symbols(fill = "#0C4271", size = 0.2,
    col = "#0C4271") +
 tm_layout(
   main.title = "EHSA - Weekend",
   legend.position = c("right", "top")
 )
-
+tmap_mode("plot")
 ```
 :::
 
-#### 6.6.3 Summary Report
 
-::: panel-tabset
-## AM
-
-```{r}
-#| eval: false
-ehsa_summary_am <- ehsa_am_map %>%
-  st_drop_geometry() %>%
-  count(classification) %>%
-  mutate(
-    percentage = round(100 * n / sum(n), 1),
-    label = sprintf("%s: %d (%.1f%%)", classification, n, percentage)
-  ) 
-write_rds(ehsa_summary_am, "data/rds/ehsa_summary_am.rds")
-```
-
-```{r}
-ehsa_summary_am <- read_rds("data/rds/ehsa_summary_am.rds")
-
-kable(ehsa_summary_am)
-```
-
-## PM
-
-```{r}
-#| eval: false
-ehsa_summary_pm <- ehsa_pm_map %>%
-  st_drop_geometry() %>%
-  count(classification) %>%
-  mutate(
-    percentage = round(100 * n / sum(n), 1),
-    label = sprintf("%s: %d (%.1f%%)", classification, n, percentage)
-  ) 
-write_rds(ehsa_summary_pm, "data/rds/ehsa_summary_pm.rds")
-```
-
-```{r}
-#| echo: false
-ehsa_summary_pm <- read_rds("data/rds/ehsa_summary_pm.rds")
-kable(ehsa_summary_am)
-```
-
-## Weekend
-
-```{r}
-#| eval: false
-ehsa_summary_wkd <- ehsa_wkd_map %>%
-  st_drop_geometry() %>%
-  count(classification) %>%
-  mutate(
-    percentage = round(100 * n / sum(n), 1),
-    label = sprintf("%s: %d (%.1f%%)", classification, n, percentage)
-  )
-write_rds(ehsa_summary_wkd, "data/rds/ehsa_summary_wkd.rds")
-
-```
-
-```{r}
-#| echo: false
-ehsa_summary_wkd <- read_rds("data/rds/ehsa_summary_wkd.rds")
-kable(ehsa_summary_wkd)
-```
-:::
 
 ## 7 Key findings & Conclusions
 
