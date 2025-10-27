@@ -3613,7 +3613,10 @@ tmap_mode("plot")
 ```
 
 **Observation**
--   
+
+-   Unlike AM where coldspots are firmly established (persistent), PM shows more temporal variation in low-ridership areas. Areas like Bayfront & Straits View, Tanjong Rhu, Changi, Punggol, and Tuas shift between cold and non-cold states. The shift from persistent to consecutive/sporadic coldspots indicates these areas occasionally experience higher ridership during PM peaks. This could be due to return trips from work or evening activities like dining and shopping temporarily boost demand.
+
+-   Persistent and consecutive hotspots are significantly reduced in PM peaks, appearing only in Tampines and Jurong West. Notably, Woodlands - a major AM persistent hotspot - shows no persistent hotspots in PM, only consecutive and sporadic patterns. The remaining hotspot clusters across Bukit Panjang, Bukit Batok, Clementi, Toa Payoh, Serangoon, Hougang, Sengkang, Bedok, Little India, Boat Quay, Maxwell, Tanjong Pagar, and Redhill consist mainly of sporadic hotspots.
 
 ## Weekend
 
@@ -3639,7 +3642,11 @@ tm_layout(
 tmap_mode("plot")
 ```
 **Observation**
--   
+-   On the weekend, the boarder areas are mostly persistent coldspots, indicating rare activities during time off and that people only travel to and fro due to work activities.
+-   Intensifying hotspot appear on the weekend to constitute bigger hotspot cluster in Boo Lay / Jurong West area, while most of the cold spots remain persistent coldposts & sporadic coldspots along the borders. 
+-   We observed more persistent hotspots on the weekend, and they constitute the existing transfer hubs like Tampines, Woodlands, Ang Mo Kio, Sengkang, as well as city center covering Little India, Bras Basah, Dhoby Ghaut. 
+-   The biggesst hotspot cluster consisting of sporadic hotspots and persistent hotspots are in the city center area from Lavendar to Chiantown and Redhill. 
+
 :::
 
 
