@@ -617,7 +617,9 @@ ggplot(AM_trips_hex_hr,
         plot.background = element_rect(fill = "#D6DAC8"))
 ```
 
-**Insight:** The bar chart above shows that between 6-9am on weekdays, 7am has most people onboarding the bus (\> 25,000,000 passenger trips), followed by 8am, then 6am, and before 9am.
+**Insight** 
+
+The bar chart above shows that between 6-9am on weekdays, 7am has most people onboarding the bus (\> 25,000,000 passenger trips), followed by 8am, then 6am, and before 9am.
 
 ## PM
 
@@ -635,7 +637,9 @@ ggplot(PM_trips_hex_hr,
         plot.background = element_rect(fill = "#D6DAC8"))
 ```
 
-**Insight:** The bar chart above shows that between 5-8pm on weekdays, 6pm has most people onboarding the bus (\~ 25,000,000 passenger trips), followed by 5pm, then 7pm, and before 9pm. This indicates that most people start to leave office from 5pm. This makes sense as many people have 9am-6pm schedule, and it is also time for dinner.
+**Insight** 
+
+The bar chart above shows that between 5-8pm on weekdays, 6pm has most people onboarding the bus (\~ 25,000,000 passenger trips), followed by 5pm, then 7pm, and before 9pm. This indicates that most people start to leave office from 5pm. This makes sense as many people have 9am-6pm schedule, and it is also time for dinner.
 
 ## Weekend/PH
 
@@ -658,7 +662,9 @@ ggplot(weekend_trips_hex_hr,
 
 ```
 
-**Insight:** We plotted the bar chart in the same scale as AM/PM on weekdays to understand the trip volumes. It appears that on weekend/holidays, passenger trips on the bus have largely reduced. However, we can still observe that the peak hours during the off days are around lunch and dinner times at 12pm and 5-6pm.
+**Insight:** 
+
+We plotted the bar chart in the same scale as AM/PM on weekdays to understand the trip volumes. It appears that on weekend/holidays, passenger trips on the bus have largely reduced. However, we can still observe that the peak hours during the off days are around lunch and dinner times at 12pm and 5-6pm.
 :::
 
 ### 3.2 Interactive Maps for Peak Hour Trips
@@ -1008,7 +1014,7 @@ rswm_q
 
 Below we will perform Moran's I statistics testing by using `moran.test()` from spdep package. The test is being performed for the 3 different periods of time.
 
-::::::::::::::::::::: panel-tabset
+::: panel-tabset
 ## AM
 
 **Moran's I Test**
@@ -1198,7 +1204,8 @@ ggplot(perm_data_pm, aes(x = moran_i)) +
         panel.background = element_rect(fill = "#D0DDD0"))
 ```
 
-**Insights** - The observed Moran's I value of approximately 0.14 (red line) falls well outside the distribution of simulated random values (blue histogram centered near 0), providing strong statistical evidence (p-value = 4.625e-10) that bus ridership during Weekday PM peak hours exhibits **significant positive spatial autocorrelation**, though the clustering pattern differs from AM peak.
+**Insights** 
+-   The observed Moran's I value of approximately 0.14 (red line) falls well outside the distribution of simulated random values (blue histogram centered near 0), providing strong statistical evidence (p-value = 4.625e-10) that bus ridership during Weekday PM peak hours exhibits **significant positive spatial autocorrelation**, though the clustering pattern differs from AM peak.
 
 -   The lower Moran's I for PM peak reflects that high boarding activity is more localized and point-based (centered on specific transit hubs) rather than spread across connected residential areas. While both periods show statistically significant clustering, AM peak exhibits broader spatial continuity of high ridership across neighborhoods, whereas PM peak shows more dispersed, station-specific hotspots.
 
@@ -1295,18 +1302,18 @@ ggplot(perm_data_wkd, aes(x = moran_i)) +
         panel.background = element_rect(fill = "#D0DDD0"))
 ```
 
-**Observation:**
+**Observation**
 
-The observed Moran's I value of approximately 0.22 (red line) falls far outside the distribution of simulated random values (pink histogram centered near 0). This provides extremely strong statistical evidence (p-value \< 2.2e-16) that bus ridership during weekends exhibits significant positive spatial autocorrelation.
-:::::::::::::::::::::
+-   The observed Moran's I value of approximately 0.22 (red line) falls far outside the distribution of simulated random values (pink histogram centered near 0). This provides extremely strong statistical evidence (p-value \< 2.2e-16) that bus ridership during weekends exhibits significant positive spatial autocorrelation.
+:::
 
-## 4.2 Local Measures of Spatial Autocorrelation (LMSA)
+### 4.2 Local Measures of Spatial Autocorrelation (LMSA)
 
 The Global Measures of Spatial Autocorrelation suggests that all three study periods have clustering spatial patterns. We will now use Local Measures of Spatial Autocorrelation to compute the statistic of the passenger trips, and understand where the significant clusters are located by displaying the LMSA maps.
 
 Below we will continue to use spdep to compute Local Moran's I statistic.
 
-### 4.2.1 Computing Contiguity Spatial Weights
+#### **4.2.1 Computing Contiguity Spatial Weights**
 
 ```{r}
 #| eval: false
@@ -1327,7 +1334,7 @@ summary(hexagon_contiguity$nb)
 
 Based on the summary report, we understand that there is one hexagon area, HexID = 826, without any neighbors. We will filter this neighbour out to process further LMSA statistic and analysis as it cannot create any weights.
 
-### 4.2.2 Computing Local Moran's I
+#### **4.2.2 Computing Local Moran's I**
 
 Since there is a hexagon without no neighbor, we will filter it out and remove it from the data. We will also join the Passenger Trips to to the hexagon sf object for the 3 periods respectively.
 
@@ -1353,6 +1360,7 @@ From the above, we can confirm that `hexagon_contiguity_ft` now has 825 hexagons
 ::: panel-tabset
 ## AM
 
+** Join Moran's I to trips data**
 ```{r}
 #| eval: false
 #| code-fold: true
@@ -1401,6 +1409,7 @@ glimpse(lisa_am)
 
 ## PM
 
+** Join Moran's I to trips data**
 ```{r}
 #| eval: false
 #| code-fold: true
@@ -1448,7 +1457,7 @@ glimpse(lisa_pm)
 ```
 
 ## Weekend/PH
-
+** Join Moran's I to trips data**
 ```{r}
 #| eval: false
 #| code-fold: true
@@ -1496,7 +1505,7 @@ glimpse(lisa_wkd)
 ```
 :::
 
-### 4.2.3 Mapping Local Moran's I
+#### **4.2.3 Mapping Local Moran's I**
 
 Below we will plot Local Moran's I and p-value for each hexagon.
 
@@ -1559,10 +1568,13 @@ lmsa_am_p
 
 **Observations**
 
--   The highest positive ii (Moran's I) is the hexagon where Boon Lay station is, which has the highest ridership among all period of time, followed by some of its neighbor hexagons, Tampines, Sengkang Town Center, Clementi, and Ang Moh Kio Town Center.\
--   The lowest negative ii is the hexagon where Joo Koon station is, which differs from its neighbors (surrounding neighbors all have very low riderships.) Possibly because there are some factories in this area, and people would have to take the bus from here to the nearest point to their work.
--   High ii + Low p-value includes Jurong West Central area, Tampines, Sengkang Town Center, Clementi, and Ang Moh Kio Town Center, showing strong, statistically significant clustering.
--   Negative ii + High p-value includes Joo Koon, meaning that there could be apparent clustering but could be random. In this case, we can probably ignore this.
+-   The **highest positive ii (Moran's I)** is the hexagon where **Boon Lay station** is, which has the highest ridership among all period of time, followed by some of its neighbor hexagons, Tampines, Sengkang Town Center, Clementi, and Ang Moh Kio Town Center.
+
+-   The **lowest negative ii** is the hexagon where **Joo Koon station** is, which differs from its neighbors (surrounding neighbors all have very low riderships.) Possibly because there are some factories in this area, and people would have to take the bus from here to the nearest point to their work.
+
+-   **High ii + Low p-value** includes Jurong West Central area, Tampines, Sengkang Town Center, Clementi, and Ang Moh Kio Town Center, showing strong, statistically significant clustering.
+
+-   **Negative ii + High p-value** includes Joo Koon, meaning that there could be apparent clustering but could be random. In this case, we can probably ignore this.
 
 ## PM
 
@@ -1999,7 +2011,7 @@ lisa_maps_am <-
       lwd = 0.1),
   ) +
   tm_borders(col = "grey20", lwd = 0.1) +
-  tm_title("Local Moran's I Clusters - AM Weekdays (p < 0.05)") +
+  tm_title("LISA - Local Moran's I Clusters - AM Weekdays (p < 0.05)") +
   tm_layout(
     legend.position = c("right", "bottom"),
     bg.color = "#D0DDD0") +
@@ -2021,7 +2033,7 @@ tm_shape(lisa_am_map) +
               lwd = 0.1) + 
   
   tm_borders(col = "grey20", lwd = 0.1) +
-  tm_title("LISA Map - Local Moran's I AM Weeday Trips") +
+  tm_title("Local Moran's I AM Weekday Trips") +
   tm_layout(
     legend.position = c("right", "bottom"),
     bg.color = "#D0DDD0") +
@@ -2067,7 +2079,7 @@ lisa_map_pm <-
       position = tm_pos_in("right", "bottom"))
   ) +
   tm_borders() +
-  tm_title("Local Moran's I Clusters - PM Weekdays (p < 0.05)") +
+  tm_title("LISA - Local Moran's I Clusters - PM Weekdays (p < 0.05)") +
   tm_layout(
     legend.position = c("right", "bottom"),
     bg.color = "#D0DDD0") +
@@ -2087,7 +2099,7 @@ tm_shape(lisa_pm_map) +
               fill.legend = tm_legend(
                 title = "Local Moran's I")) + 
   tm_borders(fill_alpha = 0.5) +
-  tm_title("LISA Map - Local Moran's I PM Weeday Trips") +
+  tm_title("Local Moran's I PM Weeday Trips") +
   tm_layout(
     legend.position = c("right", "bottom"),
     bg.color = "#D0DDD0") +
@@ -2134,7 +2146,7 @@ lisa_map_wkd <-
       title = "LISA Cluster",
       position = tm_pos_in("left", "bottom"))) +
   tm_borders() +
-  tm_title("Local Moran's I Clusters - Weekend/PH (p < 0.05)") +
+  tm_title("LISA - Local Moran's I Clusters - Weekends (p < 0.05)") +
   tm_layout(
     legend.position = c("right", "bottom"),
     bg.color = "#D0DDD0") +
@@ -2154,7 +2166,7 @@ tm_shape(lisa_wkd_map) +
               fill.legend = tm_legend(
               title = "Local Moran's I")) + 
   tm_borders(fill_alpha = 0.5) +
-  tm_title("LISA Map - Local Moran's I Weekend/PH Trips") +
+  tm_title("Local Moran's I Weekend/PH Trips") +
   tm_layout(
     legend.position = c("right", "bottom"),
     bg.color = "#D0DDD0") +
@@ -2321,6 +2333,7 @@ We will use tmap to prepare a choropleth map showing the distribution of Gi\* va
 To prepare the HSCA map, we will derive a new field called **HCSA_cluster** from the `cluster` column.
 
 ::: panel-tabset
+
 ## AM
 
 Prepare a new field **HCSA_cluster_am** for AM Weekdays HCSA map.
@@ -2414,6 +2427,7 @@ glimpse(HCSA_clst_wkd)
 Next we will use the data set above to plot HCSA maps to conduct HCSA analysis.
 
 ::: panel-tabset
+
 ## AM
 
 Below we will plot the HCSA map for AM Weekdays.
@@ -2466,6 +2480,7 @@ HCSA_map_am <-
   tm_view(set_zoom_limits = c(11,14))
 
 Gi_star_map_am
+
 tmap_mode("view")
 HCSA_map_am
 
@@ -2479,7 +2494,6 @@ tmap_mode("plot")
 
 **Insight**
 
--   The statistically significatn hot spots and cold spots help us determine which areas are significantly evident for the high / low riderships.
 -   **Hot Spots:** The bigger hot spots clustered around **Tampines, Punggol, Woodlands, Jurong West Central (Boon Lay MRT), Serangon & Hougang**, consisting of 4-6 connected hexagons. These are the transfer hub or boarding hub during AM peak hours when people go to work.
 -   Other hot spots with 2 hexagons connected are in Ang Mo Kio, Yishun and Toa Payoh, incicating a smaller scale of hub. Other independent hot spots are **either adjacent to MRT stations or have an MRT station within the hexagon**, including Fajar, Bendemeer, Bedok North, Springleaf, Bukit Batok Central, Yuhua East, Joo Koon, Tuas, Tuas Promenade, Clememti Central.
 -   **Cold Spots**: Large number of connected cold spots are located at west, Reservoir View, Lim Chu Kang, Seletar park, Changi Point, Straits View & Marina South area.
@@ -2552,9 +2566,11 @@ tmap_mode("plot")
 
 **Insight**
 
--   Hot spots: Hot spots in PM peak hours are mostly isolated, except in the Tampines East subzone where some cold spots are connected in between. 
--   Cold spots: 
+-  **Hot spots:** Hot spots during PM peak hours are not as large as AM peak hours. At most, we only see 2 hexagons connected together as hot spot cluster in Tampines and SengKang & Rivervale. The rest are connected to cold spots in between or are isolated hexagons among insignificants, such as Woodlands, Ang Mo Kio, Boon Lay place, and Clementi. This shows that PM peak hours the riderships are more dispersed rather than concentrating in a place. It could also be due to more people avoid peak hours after work.
 
+-   **Cold spots:** Extensive cold spot zones are mainly in non-residential areas, including Tuas (West),  Woodlands, and Reservoir View. Smaller cold spot clusters (1-2 hexagons) appear in Straits View, Lorong Halus North & Paya Lebar West, Kovan & Lorong Ah Soo, Seletar Airport Punggol, Tampines, and Changi Point. 
+
+-   PM peak hours show fewer statistically significant hot and cold spot clusters compared to AM peak hours. This indicates weaker spatial clustering overall, with PM boarding demand more evenly distributed across the network and results in more areas with neutral or random spatial patterns that do not reach statistical significance thresholds.
 
 ## Weekend / PH
 
@@ -2620,6 +2636,14 @@ HCSA_map_wkd
 tmap_mode("plot")
 
 ```
+
+
+**Insight**
+
+-   **Hot spots:** Some hot spots clusters on the weekend are bigger than PM peak hours, such places like Boon Lay/Jurong West Central, and Tampines. Small scale of hot spot clusters appear in the area of Fajar, Ang Mo Kio, SengKang & Punggol, Bedok (near Bedok Resevoir), Bukit Merah, Bras Basah & Little India subzones. 
+
+-   **Cold spots:** Extensive cold spot zones are mainly in non-residential areas, including Tuas (West), Seletar Airport, Changi Point, Woodlands checkpoint, Straits View, and Reservoir View. Smaller cold spot clusters (1-2 hexagons) appear in Lorong Halus, Changi Airbase, Xilin, Townsville, Robertson Quay, Istana, and NUS. These areas are where low ridership happens on the weekends.
+
 :::
 
 ## 6 Emerging Hot Spot Analysis(EHSA)
@@ -3142,6 +3166,7 @@ is_spacetime_cube(AM_st)
 
 ```{r}
 #| eval: false
+#| code-fold: true
 library(sfdep)
 
 PM_trips_data <- PM_trips_geo_hr_ft %>%
@@ -3195,6 +3220,7 @@ is_spacetime_cube(PM_st)
 
 ```{r}
 #| eval: false
+#| code-fold: true
 WKD_trips_data <- WKD_trips_geo_hr_ft %>%
   st_drop_geometry() %>%
   mutate(HEX_ID = as.character(HEX_ID)) %>%
@@ -3243,7 +3269,7 @@ is_spacetime_cube(WKD_st)
 ```
 :::
 
-#### 6.5.2 Summary Report
+#### **6.5.2 Summary Report**
 
 ::: panel-tabset
 
@@ -3262,6 +3288,7 @@ write_rds(ehsa_summary_am, "data/rds/ehsa_summary_am.rds")
 ```
 
 ```{r}
+#| echo: false
 ehsa_summary_am <- read_rds("data/rds/ehsa_summary_am.rds")
 
 kable(ehsa_summary_am)
@@ -3312,9 +3339,11 @@ kable(ehsa_summary_wkd)
 #### **6.5.3 Visualising EHSA Classes**
 
 ::: panel-tabset
+
 ## AM
 
 ```{r}
+#| code-fold: true
 ggplot(data = ehsa_am,
        aes(x = classification)) +
   geom_bar(fill = "#96A78D") +
@@ -3328,14 +3357,18 @@ ggplot(data = ehsa_am,
             color = "black")  
 ```
 **Observation**
+
 -   AM peak hours: Majority are Persistent cold spot (12.8%) and Sporadic hotspot (12.1%), followed by consecutive hotspot (5.7%), consecitive coldspot (6.1%), and then sporadic coldspot. Persistent hotspot is only 1.3%.
+
 -   With growth indicators including consecutive hotspots (5.7%), persistent hotspots (1.3%), and other emerging patterns totaling approximately 7-8%, AM shows slightly more trend development than PM peaks (~3%) and weekends (~4%).
+
 -   Unlike PM's coldspot dominance or weekend's extreme concentration, AM shows more even distribution between hot and cold patterns. This suggests diverse travel needs across the network.
 
 
 ## PM
 
 ```{r}
+#| code-fold: true
 ggplot(data = ehsa_pm,
        aes(x = classification)) +
   geom_bar(fill = "#93BFC7") +
@@ -3348,14 +3381,19 @@ ggplot(data = ehsa_pm,
             size = 2.5,             
             color = "black")  
 ```
+
 **Observation**
+
 -   Majority are Consecitive cold spot (12.2%), followed by Sporadic hotspot (8,5%), Persistent coldspot (5.8%), new coldspot (5.0%)
+
 -   Sporadic coldspot (1.6%)  and consecutive hotspot(1.5%) are seen, while the lowest are New hotspot and Persistent hotspot - both are less than 1%.
+
 -   PM peak ridership exhibits the most spatially dispersed patterns across all time periods, characterized by dominance of coldspot activity. Consecutive coldspots (12.2%) lead all categories, followed by persistent coldspots (5.8%) and new coldspots (5.0%), collectively accounting for 23% of significant patterns. This concentration of coldspot patterns suggests PM boarding demand is more scattered across the network compared to AM peaks.
 
 ## Weekend
 
 ```{r}
+#| code-fold: true
 ggplot(data = ehsa_wkd,
        aes(x = classification)) +
   geom_bar(fill = "#FFA4A4") +
@@ -3368,23 +3406,32 @@ ggplot(data = ehsa_wkd,
             size = 2.5,             
             color = "black")  
 ```
+**Observation**
+
 -   Majority are **Persistent cold spot** (15.5%), followed by **Sporadic hotspot** (12.4%) and **Sporadic coldspot** (11.8%). The rest are very few, led by Persistent hotspot (2.7%), New coldspot (1.7%) 
+
 -   Most of the network is underutilized: Nearly 40% of areas either never have high demand or only occasionally do, suggesting weekend bus travel is concentrated in specific locations not captured by these patterns.
+
 -   Volatility is common: The high proportion of sporadic patterns (24.2%) indicates weekend demand is influenced by variable factors like weather, events, or discretionary activities rather than routine travel.
 :::
 
 
 ::::: notegoals
+
 ::: notegoals-header
 **Insights**
 :::
--   Around 50% Majority of the points scross 3 peak periods have no patterns detected.
-
--   **AM peak patterns** demonstrate moderate spatial stability with pockets of consecutive activity. Growth indicators (new, intensifying, consecutive, and persistent hotspots) collectively account for approximately 8% of patterns. This is higher than PM peaks (~3%) and weekends (~4%), indicating AM ridership has slightly more spatial momentum. However, most of the network experiences either stable underutilization or intermittent high demand rather than sustained strengthening. Persistent coldspots dominate at 12.8%, while sporadic hotspots lead high-demand patterns at 12.1%. The presence of consecutive hotspots (5.7%) and consecutive coldspots (6.1%) suggests some areas are experiencing short-term trend development, though few solidify into persistent patterns. Overall, AM boarding demand **remains spatially concentrated in established locations** during July-September 2025, like Woodlands, Boon Lay and Tampines areas.
--   **PM peak patterns show spatial dispersion with minimal growth momentum**. Growth indicators account for only ~3% of patterns, the lowest across all time periods. Coldspot patterns dominate at 23%, indicating large portions of the network experience consistently low or declining PM boarding activity. The prevalence of consecutive coldspots (12.2%) suggests some areas are experiencing short-term weakening trends. Sporadic hotspots (8.5%) lead high-demand patterns but remain less prevalent than AM (12.1%) or weekends (12.4%). Overall, PM boarding demand is more spatially scattered and shows no evidence of strengthening or emerging new activity centers during July-September 2025.
--   **Weekend ridership** patterns are spatially entrenched with no evidence of shifting demand centers or emerging hotspots during the study period. Growth indicators like New, Intensifying, and Consecutive hotspots collectively account for less than 4% of significant patterns, while Persistent coldspots alone comprise 15.5%. High-demand areas experience volatility rather than growth, explained by Sporadic hotspots (12.4%) being 4-5 times more prevalent than stable hotspot patterns. Low-demand areas remain consistently underutilised, with persistent and sporadic coldspots totaling 27.3%. This indicates **weekend bus travel patterns were spatially fixed during July-September 2025**, with demand fluctuating within established locations rather than creating new activity centers.
 
 ::: notegoals-container
+
+-   **AM peak patterns** demonstrate moderate spatial stability with pockets of consecutive activity. Growth indicators (new, intensifying, consecutive, and persistent hotspots) collectively account for approximately 8% of patterns. This is higher than PM peaks (~3%) and weekends (~4%), indicating AM ridership has slightly more spatial momentum. However, most of the network experiences either stable underutilization or intermittent high demand rather than sustained strengthening. Persistent coldspots dominate at 12.8%, while sporadic hotspots lead high-demand patterns at 12.1%. The presence of consecutive hotspots (5.7%) and consecutive coldspots (6.1%) suggests some areas are experiencing short-term trend development, though few solidify into persistent patterns. Overall, AM boarding demand **remains spatially concentrated in established locations** during July-September 2025, like Woodlands, Boon Lay and Tampines areas.
+
+-   **PM peak patterns show spatial dispersion with minimal growth momentum**. Growth indicators account for only ~3% of patterns, the lowest across all time periods. Coldspot patterns dominate at 23%, indicating large portions of the network experience consistently low or declining PM boarding activity. The prevalence of consecutive coldspots (12.2%) suggests some areas are experiencing short-term weakening trends. Sporadic hotspots (8.5%) lead high-demand patterns but remain less prevalent than AM (12.1%) or weekends (12.4%). Overall, PM boarding demand is more spatially scattered and shows no evidence of strengthening or emerging new activity centers during July-September 2025.
+
+-   **Weekend ridership** patterns are spatially entrenched with no evidence of shifting demand centers or emerging hotspots during the study period. Growth indicators like New, Intensifying, and Consecutive hotspots collectively account for less than 4% of significant patterns, while Persistent coldspots alone comprise 15.5%. High-demand areas experience volatility rather than growth, explained by Sporadic hotspots (12.4%) being 4-5 times more prevalent than stable hotspot patterns. Low-demand areas remain consistently underutilised, with persistent and sporadic coldspots totaling 27.3%. This indicates **weekend bus travel patterns were spatially fixed during July-September 2025**, with demand fluctuating within established locations rather than creating new activity centers.
+
+:::
+:::::
 
 
 #### **6.5.4 Visualising EHSA Maps**
@@ -3442,6 +3489,16 @@ write_rds(ehsa_am_map, "data/rds/ehsa_am_map.rds")
 ehsa_am_map <- read_rds("data/rds/ehsa_am_map.rds")
 glimpse(ehsa_am_map)
 ```
+**Observation**
+
+-   AM ridership is entrenched around established hubs. Major transfer locations (Woodlands, Tampines, Sengkang, Punggol, Hougang & Serangoon, Boon Lay & Jurong West Central, Ang Mo Kio, Yishun, Bedok) show persistent/consecutive/sporadic hotspot clusters, while border areas (Tuas, Lim Chu Kang, Changi Point, Bayfront) remain persistent coldspots throughout the study period.
+
+-   Coldspot patterns are spreading outward at the periphery. Tuas, Lim Chu Kang, and Changi Point show persistent coldspots at their cores with consecutive coldspots adjacent and new coldspots at the outermost edges. This suggests declining demand is diffusing spatially from border centers.
+
+-   Transfer hubs show mixed hotspot patterns (persistent/sporadic/consecutive), indicating high but fluctuating demand. Border areas show only coldspot patterns with no volatility, suggesting completely stabilized low demand.
+
+-   **Minimal Network Evolution: **
+New coldspots appear predominantly at border areas adjacent to persistent coldspots, while Kampong Ubi is the only new hotspot observed. The absence of emerging high-demand centers indicates the network is **consolidating around existing hubs rather than expanding during July-September 2025.**
 
 ## PM
 
@@ -3521,6 +3578,7 @@ tm_layout(
 )
 tmap_mode("plot")
 ```
+
 **Observation**
 -   
 
@@ -3548,6 +3606,9 @@ tm_layout(
 tmap_mode("plot")
 ```
 
+**Observation**
+-   
+
 ## Weekend
 
 ```{r}
@@ -3571,6 +3632,8 @@ tm_layout(
 )
 tmap_mode("plot")
 ```
+**Observation**
+-   
 :::
 
 
