@@ -3489,6 +3489,7 @@ write_rds(ehsa_am_map, "data/rds/ehsa_am_map.rds")
 ehsa_am_map <- read_rds("data/rds/ehsa_am_map.rds")
 glimpse(ehsa_am_map)
 ```
+
 **Observation**
 
 -   AM ridership is entrenched around established hubs. Major transfer locations (Woodlands, Tampines, Sengkang, Punggol, Hougang & Serangoon, Boon Lay & Jurong West Central, Ang Mo Kio, Yishun, Bedok) show persistent/consecutive/sporadic hotspot clusters, while border areas (Tuas, Lim Chu Kang, Changi Point, Bayfront) remain persistent coldspots throughout the study period.
@@ -3580,7 +3581,12 @@ tmap_mode("plot")
 ```
 
 **Observation**
--   
+-   AM ridership is entrenched around established hubs. Major transfer locations (Woodlands, Tampines, Sengkang, Punggol, Hougang & Serangoon, Boon Lay & Jurong West Central, Ang Mo Kio, Yishun, Bedok) show persistent/consecutive/sporadic hotspot clusters, while border areas (Tuas, Lim Chu Kang, Changi Point, Bayfront) remain persistent coldspots throughout the study period.
+
+-   Coldspot patterns are spreading outward at the periphery. Tuas, Lim Chu Kang, and Changi Point show persistent coldspots at their cores with consecutive coldspots adjacent and new coldspots at the outermost edges. This suggests declining demand is diffusing spatially from border centers.
+
+-   **Minimal Network Evolution**
+New coldspots appear predominantly at border areas adjacent to persistent coldspots, while Kampong Ubi is the only new hotspot observed. The absence of emerging high-demand centers indicates **the network is consolidating around existing hubs rather than expanding** during July-September 2025.
 
 ## PM
 
