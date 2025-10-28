@@ -806,7 +806,7 @@ Below plots demonstrate the geographical distribution of the passenger trips in 
 #| align: center
 #| code-fold: true
 
-#tmap_mode("view")
+tmap_mode("view")
 
 am_tm <- tm_shape(mpsz) +
   tm_polygons(fill = "#FFF4EA", alpha = 0.3) +
@@ -867,7 +867,7 @@ tmap_mode("plot")
 #| align: center
 #| code-fold: true
 
-#tmap_mode("view")
+tmap_mode("view")
 pm_tm <- tm_shape(mpsz) +
   tm_polygons(fill = "#FFF4EA", alpha = 0.3) +
   tm_text("SUBZONE_N", size = 0.5) +
@@ -927,7 +927,7 @@ tmap_mode("plot")
 #| align: center
 #| code-fold: true
 
-#tmap_mode("view")
+tmap_mode("view")
 wkd_tm <- tm_shape(mpsz) +
   tm_polygons(fill = "#A1C2BD", alpha = 0.3) +
   tm_text("SUBZONE_N", size = 0.5) +
