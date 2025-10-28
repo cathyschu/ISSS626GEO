@@ -11,9 +11,19 @@ execute: #how YML page work
   freeze: true #controls rendering - no render if no changes
 ---
 
+![](images/bus.png){fig-align="center"}
+
 ## 1 Overview
 
-<last>
+Public bus services form a critical component of Singapore's multimodal transportation network, providing essential first-mile, last-mile, and direct connectivity for millions of daily commuters. Understanding spatial and temporal patterns in bus ridership is fundamental to optimising service provision, allocating resources efficiently, and enhancing user experience. As travel behaviors evolve and urban development continues, systematic analysis of boarding patterns enables evidence-based service planning that balances operational efficiency with accessibility requirements.
+
+In this study, we aim to examine bus passenger boarding patterns across Singapore during July-September 2025, focusing on three distinct time periods: AM peak hours (6-9am), PM peak hours (5-8pm), and weekends (11am-8pm).
+
+The primary objectives are to:
+
+1.  Identify spatial clustering patterns of high and low ridership across different time periods
+2.  Analyse temporal trends to determine whether demand is strengthening, weakening, or shifting spatially
+3.  Detect spatial outliers and service gaps within the network
 
 ## 2 Data sources & preparation
 
@@ -617,7 +627,7 @@ ggplot(AM_trips_hex_hr,
         plot.background = element_rect(fill = "#D6DAC8"))
 ```
 
-**Insight** 
+**Insight**
 
 The bar chart above shows that between 6-9am on weekdays, 7am has most people onboarding the bus (\> 25,000,000 passenger trips), followed by 8am, then 6am, and before 9am.
 
@@ -637,7 +647,7 @@ ggplot(PM_trips_hex_hr,
         plot.background = element_rect(fill = "#D6DAC8"))
 ```
 
-**Insight** 
+**Insight**
 
 The bar chart above shows that between 5-8pm on weekdays, 6pm has most people onboarding the bus (\~ 25,000,000 passenger trips), followed by 5pm, then 7pm, and before 9pm. This indicates that most people start to leave office from 5pm. This makes sense as many people have 9am-6pm schedule, and it is also time for dinner.
 
@@ -662,7 +672,7 @@ ggplot(weekend_trips_hex_hr,
 
 ```
 
-**Insight:** 
+**Insight:**
 
 We plotted the bar chart in the same scale as AM/PM on weekdays to understand the trip volumes. It appears that on weekend/holidays, passenger trips on the bus have largely reduced. However, we can still observe that the peak hours during the off days are around lunch and dinner times at 12pm and 5-6pm.
 :::
@@ -1014,7 +1024,7 @@ rswm_q
 
 Below we will perform Moran's I statistics testing by using `moran.test()` from spdep package. The test is being performed for the 3 different periods of time.
 
-::: panel-tabset
+::::::::::::::::::::: panel-tabset
 ## AM
 
 **Moran's I Test**
@@ -1204,8 +1214,7 @@ ggplot(perm_data_pm, aes(x = moran_i)) +
         panel.background = element_rect(fill = "#D0DDD0"))
 ```
 
-**Insights** 
--   The observed Moran's I value of approximately 0.14 (red line) falls well outside the distribution of simulated random values (blue histogram centered near 0), providing strong statistical evidence (p-value = 4.625e-10) that bus ridership during Weekday PM peak hours exhibits **significant positive spatial autocorrelation**, though the clustering pattern differs from AM peak.
+**Insights** - The observed Moran's I value of approximately 0.14 (red line) falls well outside the distribution of simulated random values (blue histogram centered near 0), providing strong statistical evidence (p-value = 4.625e-10) that bus ridership during Weekday PM peak hours exhibits **significant positive spatial autocorrelation**, though the clustering pattern differs from AM peak.
 
 -   The lower Moran's I for PM peak reflects that high boarding activity is more localized and point-based (centered on specific transit hubs) rather than spread across connected residential areas. While both periods show statistically significant clustering, AM peak exhibits broader spatial continuity of high ridership across neighborhoods, whereas PM peak shows more dispersed, station-specific hotspots.
 
@@ -1305,7 +1314,7 @@ ggplot(perm_data_wkd, aes(x = moran_i)) +
 **Observation**
 
 -   The observed Moran's I value of approximately 0.22 (red line) falls far outside the distribution of simulated random values (pink histogram centered near 0). This provides extremely strong statistical evidence (p-value \< 2.2e-16) that bus ridership during weekends exhibits significant positive spatial autocorrelation.
-:::
+:::::::::::::::::::::
 
 ### 4.2 Local Measures of Spatial Autocorrelation (LMSA)
 
@@ -1360,7 +1369,8 @@ From the above, we can confirm that `hexagon_contiguity_ft` now has 825 hexagons
 ::: panel-tabset
 ## AM
 
-** Join Moran's I to trips data**
+\*\* Join Moran's I to trips data\*\*
+
 ```{r}
 #| eval: false
 #| code-fold: true
@@ -1409,7 +1419,8 @@ glimpse(lisa_am)
 
 ## PM
 
-** Join Moran's I to trips data**
+\*\* Join Moran's I to trips data\*\*
+
 ```{r}
 #| eval: false
 #| code-fold: true
@@ -1457,7 +1468,9 @@ glimpse(lisa_pm)
 ```
 
 ## Weekend/PH
-** Join Moran's I to trips data**
+
+\*\* Join Moran's I to trips data\*\*
+
 ```{r}
 #| eval: false
 #| code-fold: true
@@ -1568,13 +1581,11 @@ lmsa_am_p
 
 **Observations**
 
--   The **highest positive ii (Moran's I)** is the hexagon where **Boon Lay station** is, which has the highest ridership among all period of time, followed by some of its neighbor hexagons, Tampines, Sengkang Town Center, Clementi, and Ang Moh Kio Town Center.
+-   Statistically significant High-High clusters (high ii + p-value \< 0.05) are identified at Jurong West Central area, Tampines, Sengkang Town Center, Clementi, and Ang Mo Kio Town Center, showing strong spatial autocorrelation where high ridership areas cluster together. Among these, the hexagon at Boon Lay station shows the highest positive local Moran's I value, indicating the strongest spatial autocorrelation, followed by neighboring hexagons in Jurong West Central, Tampines, Sengkang Town Center, Clementi, and Ang Mo Kio Town Center.
 
--   The **lowest negative ii** is the hexagon where **Joo Koon station** is, which differs from its neighbors (surrounding neighbors all have very low riderships.) Possibly because there are some factories in this area, and people would have to take the bus from here to the nearest point to their work.
+-   Joo Koon station area shows the lowest negative local Moran's I value but with high p-value (p \> 0.05), indicating this pattern is not statistically significant and could be due to random variation rather than a genuine spatial outlier. While the hexagon differs from its low-ridership neighbors (potentially due to factories generating some boarding demand for workers traveling to nearby employment areas), this pattern should not be considered a reliable spatial anomaly.
 
--   **High ii + Low p-value** includes Jurong West Central area, Tampines, Sengkang Town Center, Clementi, and Ang Moh Kio Town Center, showing strong, statistically significant clustering.
-
--   **Negative ii + High p-value** includes Joo Koon, meaning that there could be apparent clustering but could be random. In this case, we can probably ignore this.
+-   No statistically significant Low-High or High-Low outliers were identified in AM peak at the p \< 0.05 threshold, suggesting spatial patterns are predominantly characterized by clustering (High-High and Low-Low) rather than spatial anomalies during morning hours.
 
 ## PM
 
@@ -1631,10 +1642,11 @@ lmsa_pm_p
 
 **Observations**
 
--   The highest positive ii (Moran's I) is the hexagon at **Tampines and Sengkang Town Center**, followed by **Bras basah, Jurong West Central, Bedok, and Ang Mo Kio**.
--   The lowest negative ii is the hexagon at **Choa Chu Kang**. Choa Chu Kang and the neighboring hexagons differ from their neighbors.
--   High ii + Low p-value includes **Bedok, Tampines, Sengkang Town Center, Bras basah, Ang Mo Kio, as well as Jurong West Central**, showing strong, statistically significant clustering.
--   Negative ii + Low p-value includes Choa Chu Kang, hexagons near Woodlands checkpoint, and Bukit Panjang areas, indicating they are significant spatial outliers. For this case, it's more likely they have lower ridership.
+-   Statistically significant High-High clusters (high ii + p-value \< 0.05) are identified at Bedok, Tampines, Sengkang Town Center, Bras Basah, Ang Mo Kio, and Jurong West Central, showing strong spatial autocorrelation where high ridership areas cluster together. Among these, Tampines and Sengkang Town Center show the highest positive local Moran's I values, indicating the strongest spatial autocorrelation, followed by Bras Basah, Jurong West Central, Bedok, and Ang Mo Kio.
+
+-   Statistically significant Low-High outliers (negative ii + p-value \< 0.05) appear at Choa Chu Kang, hexagons near Woodlands checkpoint, and Bukit Panjang areas, indicating these are significant spatial anomalies with low ridership surrounded by high-ridership neighbors. These outliers suggest service gaps, barriers, or areas where residents use alternative transportation modes despite proximity to high-demand zones.
+
+-   Choa Chu Kang shows the lowest negative local Moran's I value among Low-High outliers, indicating it differs most distinctly from its higher-ridership neighbors..
 
 ## Weekend/PH
 
@@ -1688,10 +1700,11 @@ lmsa_wkd_p
 
 **Observations**
 
--   The highest positive ii (Moran's I) is the hexagon at **Bedok and Tampines**, which has the consistently very high ridership among all period of time, followed by one of its neighbor hexagons, **Sengkang Town Center, Bras basah, and Ang Mo Kio**. Jurong West Central is also high, but not as the previously mentioned areas.
--   The lowest negative ii is the hexagon at **Choa Chu Kang and Woodlands Checkpoint**. They differs from its neighbors.
--   High ii + Low p-value includes **Bedok, Tampines, Sengkang Town Center, Bras basah, Ang Mo Kio, as well as Jurong West Central**, showing strong, statistically significant clustering. Bras Basah & Bugis areas are especially strong.
--   Negative ii + Low p-value includes hexagons near Woodlands checkpoint, indicating they are significant spatial outliers. For this case, it's more likely they have lower ridership despite being near Woodlands checkpoint - higher-ridership zones.
+-   Statistically significant High-High clusters (high ii + p-value \< 0.05) are identified at **Bedok, Tampines, Sengkang Town Center, Bras Basah, Ang Mo Kio, and Jurong West Central**, showing strong spatial autocorrelation where high ridership areas cluster together. Bras Basah & Bugis areas demonstrate especially strong clustering. Among these, Bedok and Tampines show the highest positive local Moran's I values, indicating the strongest spatial autocorrelation, followed by Sengkang Town Center, Bras Basah, and Ang Mo Kio, with Jurong West Central showing moderate but still significant clustering.
+
+-   Statistically significant Low-High outliers (negative ii + p-value \< 0.05) appear at hexagons near Woodlands checkpoint, indicating these are significant spatial anomalies with low ridership surrounded by high-ridership neighbors. These outliers likely have lower ridership despite proximity to Woodlands checkpoint's higher-ridership zones, suggesting service gaps or barriers.
+
+-   Choa Chu Kang and Woodlands Checkpoint areas show the lowest negative local Moran's I values, indicating they differ from their neighbors with statistical significance.
 :::
 
 ### 4.3 Visualising LISA Maps
@@ -2050,7 +2063,7 @@ tmap_mode("plot")
 
 -   The High-High clusters form extensive zones around Woodlands, Yishun, Bukit Panjang, Sengkang & Hougang, Clementi & West Coast, Jurong West, Ang Mo Kio, Bedok, and Tampines, spanning multiple connected hexagons.
 
--   Low-Low clusters are mainly located in the west, with isolated hexagons. Some are attached to the High-High clusters like Toa payoh, Bendemeer, Bedok, Upper Thomson, Sengkang, Tampines, Punggol, Yishun, Clementi and Woodlands. Some possible reasons could be transit coverage gaps (like poor bus connectivity), land use differences (maybe non-residential land uses like parks), and last-mile connectivity issues (maybe people use different modes of transportation).
+-   Low-Low clusters are mainly located in the west like Joo Koon, with isolated hexagons. Some Low-High are attached to the High-High clusters like Toa payoh, Bendemeer, Bedok, Upper Thomson, Sengkang, Tampines, Punggol, Yishun, Clementi and Woodlands. Some possible reasons could be transit coverage gaps (like poor bus connectivity), land use differences (maybe non-residential land uses like parks), and last-mile connectivity issues (maybe people use different modes of transportation).
 
 ## PM
 
@@ -2122,7 +2135,6 @@ tmap_mode("plot")
 
 ## Weekend/PH
 
-
 ```{r}
 #| code-fold: true
 tmap_mode("view")
@@ -2187,6 +2199,24 @@ tmap_mode("plot")
 
 -   Low-High clusters are observed in several locations, indicating areas with low ridership surrounded by high ridership neighbors. These include hexagons near major activity centers: Boat Quay and Robertson Quay (near Dhoby Ghaut and City Hall), Chin Bee & Kian Teck (adjacent to Jurong West Central), Toa Payoh West (near Toa Payoh Central & Braddell), and Tampines North (near Tampines East & West). Additional isolated Low-High hexagons appear in Katong, Bendemeer, Bukit Batok Central, and Choa Chu Kang North.
 :::
+
+::::: notegoals
+::: notegoals-header
+**Analysis**
+:::
+
+::: notegoals-container
+**1. AM Peak shows strongest and most extensive spatial clustering** - AM peak exhibits the largest High-High clusters across the network: Woodlands (9 hexagons), Bedok (6 hexagons), Clementi (5 hexagons), plus large clusters at Boon Lay/Jurong West Central, Tampines, Sengkang, and Ang Mo Kio. This extensive clustering reflects synchronised morning commutes from residential areas, with statistically significant spatial autocorrelation indicating neighbors consistently share similar high ridership patterns.
+
+-   Low-Low clusters concentrate in western border areas like Joo Koon and other non-residential zones where people travel to for work rather than from, explaining minimal boarding demand.
+
+*\**2. PM and Weekend Patterns Show Reduced Clustering with Spatial Fragmentation\*\* - PM and weekend periods exhibit significantly smaller High-High clusters compared to AM. Clementi shrinks from 5 hexagons (AM) to only 2 hexagons (PM/Weekend), reflecting dispersed evening and weekend travel. - Tampines and Sengkang maintain the strongest clustering in PM, while Bedok and Tampines lead in weekends. Bras Basah appears in observational data but does not reach LISA significance thresholds. This fragmentation confirms that evening and weekend boarding demand is less spatially concentrated than morning commutes.
+
+**3. Low-High outliers reveal service gaps and barriers within high-demand qreas** - Low-High hexagons consistently appear adjacent to High-High clusters at major hubs (Toa Payoh, Bendemeer, Bedok, Upper Thomson, Sengkang, Tampines, Punggol, Yishun, Clementi, Woodlands), indicating pockets of low ridership surrounded by high-demand neighbors.
+
+-   These spatial outliers suggest transit coverage gaps (poor bus connectivity), land use discontinuities (parks or non-residential areas within residential zones), or last-mile connectivity issues where residents use alternative transportation modes. PM and weekend periods show additional Low-High patterns that highlightsg areas with barriers or limited service despite proximity to high-ridership zones.
+:::
+:::::
 
 ## 5 Hot Spots and Cold Spots Analysis (HCSA)
 
@@ -2333,7 +2363,6 @@ We will use tmap to prepare a choropleth map showing the distribution of Gi\* va
 To prepare the HSCA map, we will derive a new field called **HCSA_cluster** from the `cluster` column.
 
 ::: panel-tabset
-
 ## AM
 
 Prepare a new field **HCSA_cluster_am** for AM Weekdays HCSA map.
@@ -2427,7 +2456,6 @@ glimpse(HCSA_clst_wkd)
 Next we will use the data set above to plot HCSA maps to conduct HCSA analysis.
 
 ::: panel-tabset
-
 ## AM
 
 Below we will plot the HCSA map for AM Weekdays.
@@ -2566,9 +2594,9 @@ tmap_mode("plot")
 
 **Insight**
 
--  **Hot spots:** Hot spots during PM peak hours are not as large as AM peak hours. At most, we only see 2 hexagons connected together as hot spot cluster in Tampines and SengKang & Rivervale. The rest are connected to cold spots in between or are isolated hexagons among insignificants, such as Woodlands, Ang Mo Kio, Boon Lay place, and Clementi. This shows that PM peak hours the riderships are more dispersed rather than concentrating in a place. It could also be due to more people avoid peak hours after work.
+-   **Hot spots:** Hot spots during PM peak hours are not as large as AM peak hours. At most, we only see 2 hexagons connected together as hot spot cluster in Tampines and SengKang & Rivervale. The rest are connected to cold spots in between or are isolated hexagons among insignificants, such as Woodlands, Ang Mo Kio, Boon Lay place, and Clementi. This shows that PM peak hours the riderships are more dispersed rather than concentrating in a place. It could also be due to more people avoid peak hours after work.
 
--   **Cold spots:** Extensive cold spot zones are mainly in non-residential areas, including Tuas (West),  Woodlands, and Reservoir View. Smaller cold spot clusters (1-2 hexagons) appear in Straits View, Lorong Halus North & Paya Lebar West, Kovan & Lorong Ah Soo, Seletar Airport Punggol, Tampines, and Changi Point. 
+-   **Cold spots:** Extensive cold spot zones are mainly in non-residential areas, including Tuas (West), Woodlands, and Reservoir View. Smaller cold spot clusters (1-2 hexagons) appear in Straits View, Lorong Halus North & Paya Lebar West, Kovan & Lorong Ah Soo, Seletar Airport Punggol, Tampines, and Changi Point.
 
 -   PM peak hours show fewer statistically significant hot and cold spot clusters compared to AM peak hours. This indicates weaker spatial clustering overall, with PM boarding demand more evenly distributed across the network and results in more areas with neutral or random spatial patterns that do not reach statistical significance thresholds.
 
@@ -2637,16 +2665,39 @@ tmap_mode("plot")
 
 ```
 
-
 **Insight**
 
--   **Hot spots:** Some hot spots clusters on the weekend are bigger than PM peak hours, such places like Boon Lay/Jurong West Central, and Tampines. Small scale of hot spot clusters appear in the area of Fajar, Ang Mo Kio, SengKang & Punggol, Bedok (near Bedok Resevoir), Bukit Merah, Bras Basah & Little India subzones. 
+-   **Hot spots:** Some hot spots clusters on the weekend are bigger than PM peak hours, such places like Boon Lay/Jurong West Central, and Tampines. Small scale of hot spot clusters appear in the area of Fajar, Ang Mo Kio, SengKang & Punggol, Bedok (near Bedok Resevoir), Bukit Merah, Bras Basah & Little India subzones.
 
 -   **Cold spots:** Extensive cold spot zones are mainly in non-residential areas, including Tuas (West), Seletar Airport, Changi Point, Woodlands checkpoint, Straits View, and Reservoir View. Smaller cold spot clusters (1-2 hexagons) appear in Lorong Halus, Changi Airbase, Xilin, Townsville, Robertson Quay, Istana, and NUS. These areas are where low ridership happens on the weekends.
-
 :::
 
-## 6 Emerging Hot Spot Analysis(EHSA)
+::::: notegoals
+::: notegoals-header
+**Analysis**
+:::
+
+::: notegoals-container
+1.  **AM has strong clustering, PM is dispersed, weekends are moderate**
+
+-   AM peak forms large hot spot clusters (4-6 hexagons) at Tampines, Punggol, Woodlands, Jurong West Central, and Serangoon & Hougang. PM peak has weak clustering with only 2-hexagon hot spots at Tampines and Sengkang & Rivervale, while other hot spots (Woodlands, Ang Mo Kio, Boon Lay Place, Clementi) appear as isolated hexagons connected to cold spots or surrounded by non-significant areas, suggesting **people avoid peak hours after work or travel from dispersed destinations**.
+
+-   PM shows fewer statistically significant clusters overall, meaning more areas have neutral patterns that don't reach significance thresholds. Weekends show moderate clusters at Boon Lay/Jurong West, Tampines, and city center areas.
+
+2.  **Border areas are always cold spots, plus institutional/tourist areas on weekends**
+
+-   Tuas, Reservoir View, Lim Chu Kang, Seletar, Changi Point, Straits View, and Woodlands checkpoint show cold spots across all periods. Low-population zones (Lorong Halus North: 0, Paya Lebar West: 0) also consistently have cold spots.
+
+-   Weekends add cold spots at institutional and tourist areas (Robertson Quay, Istana, NUS, Changi Airbase) that have minimal weekend boarding at these locations. These areas are employment-driven, not residential, making them candidates for service reduction.
+
+3.  **MRT stations create hot spots**
+
+-   Hot spots consistently appear at or near MRT/LRT stations (Fajar, Bendemeer, Bedok North, Springleaf, Bukit Batok Central) across all periods.
+-   Larger clusters indicate major transfer hubs, smaller ones indicate minor hubs. AM creates the largest clusters because morning commutes are concentrated, while PM creates isolated hot spots because evening travel is dispersed.
+:::
+:::::
+
+## 6 Emerging Hot Spot Analysis (EHSA)
 
 Emerging Hot Spot Analysis (EHSA) is a spatio-temporal analysis method for revealing and describing how hot spot and cold spot areas evolve over time. In the following, we will perform Mann-Kendall Test by using the spatio-temporal local Gi\* values, Prepared EHSA maps of the Gi\* values of the passenger trips by origin at the hexagon level. The analysis consist of four main steps:
 
@@ -2693,7 +2744,6 @@ glimpse(WKD_trips_geo_hr)
 ### 6.2 Calculate Local Gi\* for Each Time Step
 
 ::: panel-tabset
-
 ## AM
 
 ```{r}
@@ -2859,7 +2909,6 @@ glimpse(gi_ehsa_results_wkd)
 #### 6.4.1 Run Test
 
 ::: panel-tabset
-
 ## AM
 
 ```{r}
@@ -3272,7 +3321,6 @@ is_spacetime_cube(WKD_st)
 #### **6.5.2 Summary Report**
 
 ::: panel-tabset
-
 ## AM
 
 ```{r}
@@ -3339,7 +3387,6 @@ kable(ehsa_summary_wkd)
 #### **6.5.3 Visualising EHSA Classes**
 
 ::: panel-tabset
-
 ## AM
 
 ```{r}
@@ -3356,14 +3403,14 @@ ggplot(data = ehsa_am,
             size = 2.5,             
             color = "black")  
 ```
+
 **Observation**
 
 -   AM peak hours: Majority are Persistent cold spot (12.8%) and Sporadic hotspot (12.1%), followed by consecutive hotspot (5.7%), consecitive coldspot (6.1%), and then sporadic coldspot. Persistent hotspot is only 1.3%.
 
--   With growth indicators including consecutive hotspots (5.7%), persistent hotspots (1.3%), and other emerging patterns totaling approximately 7-8%, AM shows slightly more trend development than PM peaks (~3%) and weekends (~4%).
+-   With growth indicators including consecutive hotspots (5.7%), persistent hotspots (1.3%), and other emerging patterns totaling approximately 7-8%, AM shows slightly more trend development than PM peaks (\~3%) and weekends (\~4%).
 
 -   Unlike PM's coldspot dominance or weekend's extreme concentration, AM shows more even distribution between hot and cold patterns. This suggests diverse travel needs across the network.
-
 
 ## PM
 
@@ -3386,7 +3433,7 @@ ggplot(data = ehsa_pm,
 
 -   Majority are Consecitive cold spot (12.2%), followed by Sporadic hotspot (8,5%), Persistent coldspot (5.8%), new coldspot (5.0%)
 
--   Sporadic coldspot (1.6%)  and consecutive hotspot(1.5%) are seen, while the lowest are New hotspot and Persistent hotspot - both are less than 1%.
+-   Sporadic coldspot (1.6%) and consecutive hotspot(1.5%) are seen, while the lowest are New hotspot and Persistent hotspot - both are less than 1%.
 
 -   PM peak ridership exhibits the most spatially dispersed patterns across all time periods, characterized by dominance of coldspot activity. Consecutive coldspots (12.2%) lead all categories, followed by persistent coldspots (5.8%) and new coldspots (5.0%), collectively accounting for 23% of significant patterns. This concentration of coldspot patterns suggests PM boarding demand is more scattered across the network compared to AM peaks.
 
@@ -3406,33 +3453,29 @@ ggplot(data = ehsa_wkd,
             size = 2.5,             
             color = "black")  
 ```
+
 **Observation**
 
--   Majority are **Persistent cold spot** (15.5%), followed by **Sporadic hotspot** (12.4%) and **Sporadic coldspot** (11.8%). The rest are very few, led by Persistent hotspot (2.7%), New coldspot (1.7%) 
+-   Majority are **Persistent cold spot** (15.5%), followed by **Sporadic hotspot** (12.4%) and **Sporadic coldspot** (11.8%). The rest are very few, led by Persistent hotspot (2.7%), New coldspot (1.7%)
 
 -   Most of the network is underutilized: Nearly 40% of areas either never have high demand or only occasionally do, suggesting weekend bus travel is concentrated in specific locations not captured by these patterns.
 
 -   Volatility is common: The high proportion of sporadic patterns (24.2%) indicates weekend demand is influenced by variable factors like weather, events, or discretionary activities rather than routine travel.
 :::
 
-
 ::::: notegoals
-
 ::: notegoals-header
 **Insights**
 :::
 
 ::: notegoals-container
+-   **AM peak patterns** demonstrate moderate spatial stability with pockets of consecutive activity. Growth indicators (new, intensifying, consecutive, and persistent hotspots) collectively account for approximately 8% of patterns. This is higher than PM peaks (\~3%) and weekends (\~4%), indicating AM ridership has slightly more spatial momentum. However, most of the network experiences either stable underutilization or intermittent high demand rather than sustained strengthening. Persistent coldspots dominate at 12.8%, while sporadic hotspots lead high-demand patterns at 12.1%. The presence of consecutive hotspots (5.7%) and consecutive coldspots (6.1%) suggests some areas are experiencing short-term trend development, though few solidify into persistent patterns. Overall, AM boarding demand **remains spatially concentrated in established locations** during July-September 2025, like Woodlands, Boon Lay and Tampines areas.
 
--   **AM peak patterns** demonstrate moderate spatial stability with pockets of consecutive activity. Growth indicators (new, intensifying, consecutive, and persistent hotspots) collectively account for approximately 8% of patterns. This is higher than PM peaks (~3%) and weekends (~4%), indicating AM ridership has slightly more spatial momentum. However, most of the network experiences either stable underutilization or intermittent high demand rather than sustained strengthening. Persistent coldspots dominate at 12.8%, while sporadic hotspots lead high-demand patterns at 12.1%. The presence of consecutive hotspots (5.7%) and consecutive coldspots (6.1%) suggests some areas are experiencing short-term trend development, though few solidify into persistent patterns. Overall, AM boarding demand **remains spatially concentrated in established locations** during July-September 2025, like Woodlands, Boon Lay and Tampines areas.
-
--   **PM peak patterns show spatial dispersion with minimal growth momentum**. Growth indicators account for only ~3% of patterns, the lowest across all time periods. Coldspot patterns dominate at 23%, indicating large portions of the network experience consistently low or declining PM boarding activity. The prevalence of consecutive coldspots (12.2%) suggests some areas are experiencing short-term weakening trends. Sporadic hotspots (8.5%) lead high-demand patterns but remain less prevalent than AM (12.1%) or weekends (12.4%). Overall, PM boarding demand is more spatially scattered and shows no evidence of strengthening or emerging new activity centers during July-September 2025.
+-   **PM peak patterns show spatial dispersion with minimal growth momentum**. Growth indicators account for only \~3% of patterns, the lowest across all time periods. Coldspot patterns dominate at 23%, indicating large portions of the network experience consistently low or declining PM boarding activity. The prevalence of consecutive coldspots (12.2%) suggests some areas are experiencing short-term weakening trends. Sporadic hotspots (8.5%) lead high-demand patterns but remain less prevalent than AM (12.1%) or weekends (12.4%). Overall, PM boarding demand is more spatially scattered and shows no evidence of strengthening or emerging new activity centers during July-September 2025.
 
 -   **Weekend ridership** patterns are spatially entrenched with no evidence of shifting demand centers or emerging hotspots during the study period. Growth indicators like New, Intensifying, and Consecutive hotspots collectively account for less than 4% of significant patterns, while Persistent coldspots alone comprise 15.5%. High-demand areas experience volatility rather than growth, explained by Sporadic hotspots (12.4%) being 4-5 times more prevalent than stable hotspot patterns. Low-demand areas remain consistently underutilised, with persistent and sporadic coldspots totaling 27.3%. This indicates **weekend bus travel patterns were spatially fixed during July-September 2025**, with demand fluctuating within established locations rather than creating new activity centers.
-
 :::
 :::::
-
 
 #### **6.5.4 Visualising EHSA Maps**
 
@@ -3464,7 +3507,6 @@ ehsa_colors <- c(
 **Join EHSA results with geometry**
 
 ::: panel-tabset
-
 ## AM
 
 ```{r}
@@ -3498,8 +3540,7 @@ glimpse(ehsa_am_map)
 
 -   Transfer hubs show mixed hotspot patterns (persistent/sporadic/consecutive), indicating high but fluctuating demand. Border areas show only coldspot patterns with no volatility, suggesting completely stabilized low demand.
 
--   **Minimal Network Evolution: **
-New coldspots appear predominantly at border areas adjacent to persistent coldspots, while Kampong Ubi is the only new hotspot observed. The absence of emerging high-demand centers indicates the network is **consolidating around existing hubs rather than expanding during July-September 2025.**
+-   **Minimal Network Evolution:** New coldspots appear predominantly at border areas adjacent to persistent coldspots, while Kampong Ubi is the only new hotspot observed. The absence of emerging high-demand centers indicates the network is **consolidating around existing hubs rather than expanding during July-September 2025.**
 
 ## PM
 
@@ -3555,7 +3596,6 @@ glimpse(ehsa_wkd_map)
 **Plot the map**
 
 ::: panel-tabset
-
 ## AM
 
 ```{r}
@@ -3582,12 +3622,11 @@ tmap_mode("plot")
 
 **Observation**
 
--   AM ridership is entrenched around established hubs. Major transfer locations (Woodlands, Tampines, Sengkang, Punggol, Hougang & Serangoon, Boon Lay & Jurong West Central, Ang Mo Kio, Yishun, Bedok) show persistent/consecutive/sporadic hotspot clusters, while border areas (Tuas, Lim Chu Kang, Changi Point, Bayfront) remain persistent coldspots throughout the study period.
+-   AM ridership (6-9am) is entrenched around established residential hubs. Major transfer locations (Woodlands, Tampines, Sengkang, Punggol, Hougang & Serangoon, Boon Lay & Jurong West Central, Ang Mo Kio, Yishun, Bedok) show persistent/consecutive/sporadic hotspot clusters, reflecting predictable morning commute patterns within the 4-hour departure window. Border areas (Tuas, Lim Chu Kang, Changi Point, Bayfront) remain persistent coldspots throughout the study period, confirming these industrial/commercial zones generate minimal morning boarding demand.
 
--   Coldspot patterns are spreading outward at the periphery. Tuas, Lim Chu Kang, and Changi Point show persistent coldspots at their cores with consecutive coldspots adjacent and new coldspots at the outermost edges. This suggests declining demand is diffusing spatially from border centers.
+-   Coldspot patterns are spreading outward at the periphery. Tuas, Lim Chu Kang, and Changi Point show persistent coldspots at their cores with consecutive coldspots adjacent and new coldspots at the outermost edges. This spatial diffusion suggests declining morning boarding demand is expanding from established low-activity border centers, potentially reflecting limited residential development or service coverage at the urban fringe.
 
--   **Minimal Network Evolution**
-New coldspots appear predominantly at border areas adjacent to persistent coldspots, while Kampong Ubi is the only new hotspot observed. The absence of emerging high-demand centers indicates **the network is consolidating around existing hubs rather than expanding** during July-September 2025.
+-   **Minimal Network Evolution** With the data from July-September 2025, new coldspots appear predominantly at border areas adjacent to persistent coldspots, while Kampong Ubi is the only new hotspot observed during AM peak hours (6-9am). The absence of emerging high-demand centers indicates the AM network is consolidating around existing residential hubs rather than expanding, with no new significant boarding locations developing during the study period. This suggests the spatial structure of morning commuting patterns is mature and stable.
 
 ## PM
 
@@ -3615,9 +3654,9 @@ tmap_mode("plot")
 
 **Observation**
 
--   Unlike AM where coldspots are firmly established (persistent), PM shows more temporal variation in low-ridership areas. Areas like Bayfront & Straits View, Tanjong Rhu, Changi, Punggol, and Tuas shift between cold and non-cold states. The shift from persistent to consecutive/sporadic coldspots indicates these areas occasionally experience higher ridership during PM peaks. This could be due to return trips from work or evening activities like dining and shopping temporarily boost demand.
+-   Unlike AM where coldspots are firmly established as persistent patterns, PM (5-9pm) shows more temporal variation in low-ridership areas. Areas like Bayfront & Straits View, Tanjong Rhu, Changi, Punggol, and Tuas shift between cold and non-cold states. The shift from persistent to consecutive/sporadic coldspots indicates these areas occasionally experience higher ridership during evening hours, likely due to return trips from work, evening dining and shopping activities that temporarily boost demand on certain days.
 
--   Persistent and consecutive hotspots are significantly reduced in PM peaks, appearing only in Tampines and Jurong West. Notably, Woodlands - a major AM persistent hotspot - shows no persistent hotspots in PM, only consecutive and sporadic patterns. The remaining hotspot clusters across Bukit Panjang, Bukit Batok, Clementi, Toa Payoh, Serangoon, Hougang, Sengkang, Bedok, Little India, Boat Quay, Maxwell, Tanjong Pagar, and Redhill consist mainly of sporadic hotspots.
+-   Persistent and consecutive hotspots are significantly reduced during PM peak hours and appear only in Tampines and Jurong West. Notably, Woodlands, as a major AM persistent hotspot, shows no persistent hotspots in PM, only consecutive and sporadic patterns. This reflects the dispersed nature of evening return trips across the 4-hour window. The remaining hotspot clusters across Bukit Panjang, Bukit Batok, Clementi, Toa Payoh, Serangoon, Hougang, Sengkang, Bedok, Little India, Boat Quay, Maxwell, Tanjong Pagar, and Redhill consist mainly of sporadic hotspots, indicating highly variable PM boarding patterns driven by diverse evening destinations and staggered travel timing.
 
 ## Weekend
 
@@ -3645,30 +3684,144 @@ tmap_mode("plot")
 
 **Observation**
 
--   Weekend patterns show more persistent hotspots compared to PM peaks, concentrated at major hubs like Tampines, Woodlands, Ang Mo Kio, Sengkang, and the city center corridor from Lavender to Chinatown and Redhill, encompassing Little India, Bras Basah, Dhoby Ghaut. Notably, Boon Lay/Jurong West show intensifying hotspots, forming larger consolidated clusters. The city center forms the most extensive hotspot zone, combining sporadic and persistent patterns, with Woodlands, Tampines, and Boon Lay standing out as the most prominent weekend boarding hubs.
+-   Weekend patterns during peak activity hours show more persistent hotspots (2.7%) compared to PM peaks (\<1%), concentrated at major hubs like Tampines, Woodlands, Ang Mo Kio, Sengkang, and the city center corridor like Tampines, Woodlands, Ang Mo Kio, Sengkang, and the city center corridor from Lavender to Chinatown and Redhill, encompassing Little India, Bras Basah, Dhoby Ghaut. Notably, Boon Lay/Jurong West show intensifying hotspots, forming larger consolidated clusters. The city center forms the most extensive hotspot zone, combining sporadic and persistent patterns, with Woodlands, Tampines, and Boon Lay standing out as the most prominent weekend boarding hubs.
 
--  **Border locations display persistent coldspots during weekends**, contrasting with weekday activity. New coldspots continue expanding at borders, connecting to existing persistent coldspot clusters. This weekend-weekday disparity confirms border areas are primarily industrial/commercial zones where ridership is employment-driven rather than residential or recreational, with minimal activity during time off.
+-   **Border locations display persistent coldspots during weekend peak hours (11am-8pm)**, contrasting with weekday activity. This indicates minimal boarding activity during prime weekend leisure hours. It confirms that border areas are primarily industrial/commercial zones where ridership is employment-driven rather than residential or recreational.
 
--   New coldspots emerge not only at borders (connecting persistent coldspot clusters) but also at Ulu Pandan and Tagore, suggesting **expanding underutilisation in non-border areas**. Interestingly, some new coldspots like Waterway East and Toh Tuck appear adjacent to hotspot clusters, indicating pockets of low ridership surrounded by high-demand zones - potentially reflecting physical barriers, land use discontinuities, or service coverage gaps.
-
+-   New coldspots emerge not only at borders (connecting persistent coldspot clusters) but also at Ulu Pandan and Tagore, suggesting **expanding underutilisation in non-border areas**. Some new coldspots like Waterway East and Toh Tuck appear adjacent to hotspot clusters, indicating pockets of low ridership surrounded by high-demand zones, potentially reflecting physical barriers, land use discontinuities, or service coverage gaps.
 :::
 
+:::::: notegoals
+::: notegoals-header
+**Insights**
+:::
 
+:::: notegoals-container
+| Pattern              | AM Peak    | PM Peak  | Weekends |
+|----------------------|------------|----------|----------|
+| Persistent hotspots  | 1.3%       | \<1%     | 2.7%     |
+| Consecutive hotspots | 5.7%       | 1.5%     | \<1%     |
+| Sporadic hotspots    | 12.1%      | 8.5%     | 12.4%    |
+| Dominant pattern     | Sporadic   | Sporadic | Sporadic |
+| Persistent           | coldspots  | 12.8%    | 5.8%     |
+| Consecutive          | coldspots  | 6.1%     | 12.2%    |
+| Sporadic coldspots   | 4.7%       | 1.6%     | 11.8%    |
+| New coldspots        | At borders | 5.0%     | 1.7%     |
+
+We identified the following clusters through EHSA maps.
+
+::: panel-tabset
+## **West**
+
+-   **Tuas** forms a large coldspot cluster across all periods, with over 50% transitioning from persistent to consecutive coldspots in AM and remaining persistent on weekends, confirming this industrial area has minimal residential population and declining weekday boarding demand. The exception is one hexagon at Tuas South Ave 9 (CSL building and grocery shops) showing activity, indicating sparse residential presence with localised weekend demand around essential services, but overall the area remains consistently underutilised for bus services.
+
+-   **Boon Lay/Jurong West** forms a large AM hotspot cluster (15 hexagons: 6 consecutive, 8 sporadic, 1 persistent) centered on Boon Lay MRT that shrinks in PM but expands on weekends with intensifying hotspots covering logistics offices, data centers, and foreign worker lodging services. The unique weekend intensification pattern, where some new coldspots transition to intensifying hotspots, warrants investigation as it suggests growing weekend activity potentially driven by foreign worker travel patterns or increased commercial/logistics operations during off-peak days.
+
+-   **Bukit Panjang / Choa Chu Kang** form a large sporadic hotspot cluster that is larger during AM peak and weekends, which confirms this residential area generates strong but inconsistent morning commuting demand and active weekend local travel, though the sporadic nature suggests **day-to-day volatility rather than stable patterns**.
+
+-   **Lim Chu Kang, Reservoir View (Kranji)** form a coldspot cluster extending to Turf Club. It is consitituted by persisten coldspots, consecutive coldspots and few new coldspots & sporadic coldspots and mostlyy persistent / Sporadic coldspots on the weekend. As there are some industrial estate and dormitories here, it makes sense that it has some activities during weekdays and totally quiet on the weekend.
+
+-   **Choa Chu Kang, Bukit Panjang** form a large sporadic hotspot cluster, too. It is a mainly residential area so the scale of cluster is larger in the morning peak hours and on the weekend.
+
+-   **Clementi** forms a medium-scale AM hotspot cluster (6 hexagons) with mostly consecutive hotspots that shrinks during PM and weekends, indicating strong morning residential departures with short-term strengthening trends but dispersed evening returns and moderate weekend activity.
+
+-   **Kentridge**and NUS form a 7-hexagon sporadic coldspot cluster in AM and weekends but become insignificant during PM, reflecting the area's institutional character (university, hospital, tech offices) where people travel to rather than from. Minimal outbound morning boarding with some PM departures when the cluster disappears as workers/students leave via dispersed routes or alternative modes.
+
+## **North**
+
+-   **Woodlands** forms one of the largest AM hotspot cluster (17 hexagons) spanning the checkpoint, Woodlands, and Admiralty residential areas with 50% persistent hotspots, indicating exceptionally strong and stable morning boarding demand. The cluster shrinks to 7 hexagons centered on Woodlands MRT during PM (mostly consecutive hotspots) but remains strong on weekends, confirming this is a **major residential hub with active local activities** and consistent cross-border commuting patterns throughout the week.
+
+-   **Senoko** forms a medium coldspot cluster with consecutive and new patterns in AM that disappears during PM and returns as sporadic coldspots on weekends, except for one hexagon at Senoko Power Station showing an intensifying hotspot with only one visible bus stop. This anomaly warrants investigation as it suggests either data collection issues, shift worker patterns, or unreported service activity.
+
+-   **Yishun** is another noticeble cluster comprised of mostly sporadic hotspot and one consecutive hotspot covering Yishun MRT. In the afternoon, this cluster is much smaller (from 11 to 3 hexagons). On the weekend, it is a medium cluster with purely sporadic hotspots. This shows its **strong morning commutes but highly dispersed evening and weekend demand**.
+
+-   **Ang Mo Kio** forms a solid hotspot cluster with sporadic and consecutive hotspots. Similar to Yishun, the cluster shrinks in the PM peak hours (9 to 5 hexagons) and increased slight on the weekends (7 hexagons), which mirrors Yishun's pattern of **strong morning residential departures, dispersed evening returns, and moderate weekend activity**.
+
+-   **Yio Chu Kang North** forms a sporadic coldspot cluster connecting with the Kranji cluster. This cluster only shows up on the weekend, showing occasional activities in this area only. This reflects **occasional low activity and poor transit connectivity** (1-3km from nearest MRT), resulting in inconsistent bus demand.
+
+-   **Seletar Airport** forms a consistent size of coldspot cluster with 7-8 hexagons. It shows mostly persistent coldspots on the weekend, while in the morning there are 2 consecutive spots and in the PM peak hours it's mostly consecutive coldspots. This indicats limited airport-related bus demand with declining weekday trends.
+
+## **Central**
+
+-   **CBD areas** together form a long line of cluster of 9 hexagons, spanning across Rocher, City hall, Bugis, Tanjong Pagar and Outram Park. This cluster only forms during PM peak hours and expands larger to connect with Bendemeer and the Tiong Baruh cluster on the weekend, resulting in a very large cluster in the central area. While in PM peak hours it is mostly sporadic hotspots, it has some persisten hotspots along Orchard, Clarke Quay and Bras Basah. This indicates that this area is hotspots for people to take the bus after work, and on the weekend the area expands to be shopping and creational spots. This confirms the area's dual role as a **major departure point after work** and a **weekend shopping/leisure destination**, contrasting with AM's minimal boarding activity.
+
+-   **Bayfront and Staits View** also form a coldspot cluster, spanning across City Hall till Staits View. This cluster in the morning is comprised of persistent coldspots, with sporadic coldspots in City Hall & Shenton Way, as well as sporadic coldspots in Marina South and Marina South Pier station. In the PM peak hour it becomes smaller - City Hall is no longer part of the cluster, and shows half sporadic coldspots and half consecutive coldspots. On the weekend is even quieter with half persistent coldspots and half sporadic coldspots. As this cluster maintains coldspot patterns across all periods, it confirms it as an employment destination with minimal bus boarding due to strong MRT connectivity and lack of residential population.
+
+-   **Toa Payoh** forms a large AM hotspot cluster with sporadic and consecutive hotspots that shrinks to one-third its size in PM (sporadic only) and recovers slightly on weekends (8 hexagons) with one persistent hotspot near Toa Payoh MRT. This explains strong morning residential departures that disperse significantly in the evening with moderate but more stable weekend activity centered on the MRT hub.
+
+-   **Tiong Bahru** shows a unique spatial shift from a medium AM residential cluster (5 hexagons at Tiong Bahru MRT) toward Redhill in PM peak, then merges with CBD/Orchard on weekends to form the largest cluster. It possesses a multifaceted role as a residential departure hub, evening activity center with local dining/shopping, and a weekend commercial-leisure destination that integrates with central city activities.
+
+## **East**
+
+-   **Lorong/Paya Lebar** (near Paya Lebar Air Base) forms a 5-7 hexagon coldspot cluster across all periods, showing declining weekday patterns (persistent, consecutive, and new coldspots in AM; more new coldspots in PM) but stabilising on weekends (persistent/sporadic), indicating this military-adjacent area has minimal residential population and weakening weekday boarding demand, likely due to restricted access, limited public transit needs for military personnel, or reliance on alternative transportation modes.
+
+-   **Bedok** forms a medium AM cluster (8 hexagons) with consecutive and sporadic hotspots indicating strengthening trends near the MRT, indicating volatile demand outwards the cluster, shrinking to 4 hexagons in PM but expanding to 6 on weekends with 2 persistent hotspots at Bedok MRT. The weekend persistent hotspots reveal Bedok MRT functions as a stable, major transit hub and commercial/leisure destination beyond its residential role.
+
+-   **Tampines** forms a large, stable hotspot cluster across all periods (13 hexagons AM, 7 PM, 8 weekends) with persistent hotspots consistently centered on Tampines and Tampines East MRT stations, surrounded by consecutive and sporadic patterns at cluster edges. The increase to 5 persistent hotspot hexagons on weekends (compared to fewer in AM/PM) reveals Tampines functions as one of Singapore's most consistently active regional hubs, serving as both a major residential commuting center and a premier weekend commercial/leisure destination with exceptionally stable demand across all time periods.
+
+-   **Aljunied/Paya Lebar** forms a small AM sporadic cluster (4 hexagons) spanning Aljunied, Paya Lebar, and Dakota stations that becomes insignificant in PM but resurfaces on weekends, shifting to center only on Paya Lebar toward Eunos MRT. This spatial shift reflects the area's mixed character: **volatile morning commuting demand** across multiple stations driven by offices in Paya Lebar, but weekend activity concentrates exclusively at Paya Lebar MRT's shopping mall (Paya Lebar Quarter). Possibly shpping/dinning-driven weekend demand for local activities while Aljunied and Dakota revert to purely residential functions with minimal weekend boarding.
+
+-   **Changi/Changi Point** has two distinct AM coldspot clusters: Changi Business Park (7 hexagons) and Changi Airbase (14 hexagons). The Business Park cluster shrinks dramatically to just 2 new coldspots in PM, indicating declining demand. On weekends, both clusters merge into a continuous corridor of persistent and sporadic coldspots. The pattern progression—from mixed patterns in AM, to new/consecutive coldspots in PM, to persistent/sporadic on weekends—reveals weakening weekday demand with stabilised low weekend activity. This reflects the area's employment-driven (Business Park) and restricted-access (Airbase) character with minimal residential population, resulting in consistently low bus boarding across all periods.
+
+## **NorthEast**
+
+-   **Punggol, Sengkang, Hougang, Serangoon and Kovan** form the largest AM hotspot cluster (27 hexagons) with predominantly sporadic patterns, 7 consecutive hotspots, and 2 persistent hotspots at Hougang and Sengkang MRT stations.
+
+-   This massive cluster fragments dramatically in PM into **3 separate small clusters** (Sengkang, Hougang, Serangoon), all dominated by sporadic hotspots. The fragmentation reveals this northeastern corridor's strong residential character—extensive morning departures become dispersed, volatile evening returns. On weekends, the 3 clusters persist but grow slightly larger than PM, indicating more active weekend local activities.
+
+-   Sengkang shows unique patterns: new coldspots emerge in PM (indicating some areas experience declining evening demand), but 2 persistent hotspots remain at Sengkang MRT and LRT stations on weekends, confirming these transit nodes function as stable weekend activity hubs. The persistence of sporadic patterns across PM and weekends, despite fragmentation, indicates this region maintains active but inconsistent demand driven by diverse travel purposes rather than concentrated, predictable flows.
+:::
+::::
+::::::
 
 ## 7 Key findings & Conclusions
 
-**Visualisation** Create comparison layouts (e.g., side-by-side time periods) Highlight only significant results (p \< 0.05) Write concise, insightful captions focusing on: What the pattern shows, Why it matters for transportation planning, Potential causes or implications
+### Summary
 
-**Extra data - MRT data**
+This study analysed bus ridership patterns across AM peak (6-9am), PM peak (5-8pm), and weekend (11am-8pm) periods using three complementary spatial analysis methods: LISA for spatial autocorrelation, HCSA for hot/cold spot identification, and EHSA for temporal trend classification.
+
+**1. Time Periods Show Fundamentally Different Spatial Patterns**
+
+AM peak exhibits strong spatial clustering at major residential hubs, with concentrated and predictable boarding demand. PM peak shows dramatic dispersion with fragmented clusters and isolated hot spots, reflecting diverse evening destinations. Weekends display the highest spatial entrenchment, with 15.5% persistent coldspots at borders but concentrated activity at specific commercial and leisure hubs.
+
+**2. Major Residential Hubs Demonstrate Directional Asymmetry**
+
+Large morning boarding clusters at residential areas (Woodlands, Tampines, Punggol/Sengkang/Hougang/Serangoon/Kovan, Boon Lay/Jurong West) do not translate to concentrated evening returns. Morning outflows are synchronized and spatially concentrated, while evening patterns fragment and disperse. This asymmetry confirms directional travel behavior where residential areas serve as departure origins in the morning but not concentrated destinations in the evening.
+
+**3. Border and Non-Residential Areas Show Persistent Underutilisation**
+
+Border areas (Tuas, Lim Chu Kang, Changi Point, Seletar) and non-residential zones (Bayfront, institutional areas) consistently show coldspot patterns across all periods with declining trends. These areas function as employment destinations where people travel to via alternative modes rather than from via bus, indicating minimal boarding demand and presenting clear service rationalization opportunities.
+
+**4. Network Shows Consolidation Rather Than Expansion**
+
+Growth indicators remain minimal across all periods, with only one new hotspot emerging (Kampong Ubi) against multiple expanding border coldspots. The network consolidates around existing hubs rather than creating new demand centers, indicating a mature spatial structure where demand fluctuates within established patterns rather than generating new activity centers.
+
+**5. Sporadic Patterns Dominate High-Demand Locations**
+
+-   Across all time periods, sporadic hotspots (on-and-off high ridership) dominate (AM: 12.1%, PM: 8.5%, Weekends: 12.4%), while persistent hotspots (stable high ridership) remain rare (AM: 1.3%, PM: \<1%, Weekends: 2.7%). This volatility indicates inconsistent demand even at high-ridership locations, requiring flexible service capacity rather than fixed schedules. 6. Unique Patterns Warrant Further Investigation
+
+-   Boon Lay/Jurong West uniquely shows intensifying weekend hotspots around foreign worker lodging and logistics facilities. Low-High spatial outliers (low ridership pockets surrounded by high-demand neighbors) appear at multiple major hubs, indicating service gaps, land use barriers, or last-mile connectivity issues within high-demand areas.
+
+**7. Multi-Method Validation Strengthens Confidence**
+
+The convergence of LISA, HCSA, and EHSA findings provides robust evidence for our findings. Locations showing consistent patterns across all three methods (such as Woodlands, Tampines, border coldspots). They together demonstrate high analytical confidence, while discrepancies between methods reveal nuances in spatial versus temporal patterns.
+
+### Future Study
+
+-   Studying the entire map of Singapore is a fulfilling task to understand Singapore better. To understand better and elicit the actual reasons would need deeper research in the geographical data to explain why certain places would form clusters and some not.
+
+-   In this study, we analysed the data with 3 periods by hour. Further study can focus on month or track multi-year trends to distinguish long-term structural changes from temporary fluctuations.
+
+-   It will insightful to combine bus boarding/alighting with MRT tap-in/tap-out data for comprehensive multimodal journey analysis. In addition, further research can validate directional asymmetry findings by confirming whether AM boarding origins correspond to PM alighting destinations.
+
+It is amazing to explore how to manipulate data and the methods to understsand geographical insights on the maps. The hands-on experience was time-consuming, but worthwhile to know much better how certain methods and codes work to polulate the results. I feel there are much more to learn and to do - looking forward to the next.
 
 ## Reference
 
-::::: notegoals
-::: notegoals-header
-**Analysis**
-:::
+-   Government of Singapore. (n.d.). Data.gov.sg: Singapore's open data portal. Retrieved October 15, 2025, from https://data.gov.sg
 
-::: notegoals-container
--   
-:::
-:::::
+-   Kam, T. S. (2022, December 8). R for geospatial data science and analytics. https://r4gdsa.netlify.app/
+
+-   Land Transport Authority (LTA). (n.d.). DataMall. Retrieved October 28, 2025, from https://datamall.lta.gov.sg/content/datamall/en.html
+
+-   Wikipedia. (n.d.). Subzones of Singapore. Retrieved October 20, 2025, from https://en.wikipedia.org/wiki/Subzones_of_Singapore
