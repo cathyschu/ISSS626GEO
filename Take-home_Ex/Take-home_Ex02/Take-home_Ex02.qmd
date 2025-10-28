@@ -3581,6 +3581,7 @@ tmap_mode("plot")
 ```
 
 **Observation**
+
 -   AM ridership is entrenched around established hubs. Major transfer locations (Woodlands, Tampines, Sengkang, Punggol, Hougang & Serangoon, Boon Lay & Jurong West Central, Ang Mo Kio, Yishun, Bedok) show persistent/consecutive/sporadic hotspot clusters, while border areas (Tuas, Lim Chu Kang, Changi Point, Bayfront) remain persistent coldspots throughout the study period.
 
 -   Coldspot patterns are spreading outward at the periphery. Tuas, Lim Chu Kang, and Changi Point show persistent coldspots at their cores with consecutive coldspots adjacent and new coldspots at the outermost edges. This suggests declining demand is diffusing spatially from border centers.
@@ -3641,11 +3642,14 @@ tm_layout(
 )
 tmap_mode("plot")
 ```
+
 **Observation**
--   On the weekend, the boarder areas are mostly persistent coldspots, indicating rare activities during time off and that people only travel to and fro due to work activities.
--   Intensifying hotspot appear on the weekend to constitute bigger hotspot cluster in Boo Lay / Jurong West area, while most of the cold spots remain persistent coldposts & sporadic coldspots along the borders. 
--   We observed more persistent hotspots on the weekend, and they constitute the existing transfer hubs like Tampines, Woodlands, Ang Mo Kio, Sengkang, as well as city center covering Little India, Bras Basah, Dhoby Ghaut. 
--   The biggesst hotspot cluster consisting of sporadic hotspots and persistent hotspots are in the city center area from Lavendar to Chiantown and Redhill. 
+
+-   Weekend patterns show more persistent hotspots compared to PM peaks, concentrated at major hubs like Tampines, Woodlands, Ang Mo Kio, Sengkang, and the city center corridor from Lavender to Chinatown and Redhill, encompassing Little India, Bras Basah, Dhoby Ghaut. Notably, Boon Lay/Jurong West show intensifying hotspots, forming larger consolidated clusters. The city center forms the most extensive hotspot zone, combining sporadic and persistent patterns, with Woodlands, Tampines, and Boon Lay standing out as the most prominent weekend boarding hubs.
+
+-  **Border locations display persistent coldspots during weekends**, contrasting with weekday activity. New coldspots continue expanding at borders, connecting to existing persistent coldspot clusters. This weekend-weekday disparity confirms border areas are primarily industrial/commercial zones where ridership is employment-driven rather than residential or recreational, with minimal activity during time off.
+
+-   New coldspots emerge not only at borders (connecting persistent coldspot clusters) but also at Ulu Pandan and Tagore, suggesting **expanding underutilisation in non-border areas**. Interestingly, some new coldspots like Waterway East and Toh Tuck appear adjacent to hotspot clusters, indicating pockets of low ridership surrounded by high-demand zones - potentially reflecting physical barriers, land use discontinuities, or service coverage gaps.
 
 :::
 
