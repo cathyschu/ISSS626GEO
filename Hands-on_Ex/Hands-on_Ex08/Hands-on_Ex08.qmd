@@ -134,7 +134,15 @@ corrplot::corrplot(cor(mdata_nogeo[, 2:17]),
                    number.cex = 0.8,
                    bg = "white")
 ```
+::::: markgoals
+::: markgoals-header
+**Note**
+:::
 
+::: markgoals-container
+There is no sign of multicolinearity as all the correlation values are < 0.8.
+:::
+:::::
 
 ### 5.4
 

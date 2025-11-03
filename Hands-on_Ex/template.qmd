@@ -12,21 +12,16 @@ execute: #how YML page work
 ---
 
 ## 1 Overview
-We will learn to compute **Global Measures of Spatial Autocorrelation (GMSA)** by using **spdep** package. We will do the following in this hands-on exercise.
--   import geospatial data using appropriate function(s) of **sf** package
--   import csv file using appropriate function of readr package
--   perform relational join using appropriate join function of **dplyr** package
--   compute Global Spatial Autocorrelation (GSA) statistics using appropriate functions of **spdep** package,
-plot Moran scatterplot
--   compute and plot spatial correlogram using appropriate function of **spdep** package
--   provide statistically correct interpretation of GSA statistics.
+
+We will learn to compute **Global Measures of Spatial Autocorrelation (GMSA)** by using **spdep** package. We will do the following in this hands-on exercise. - import geospatial data using appropriate function(s) of **sf** package - import csv file using appropriate function of readr package - perform relational join using appropriate join function of **dplyr** package - compute Global Spatial Autocorrelation (GSA) statistics using appropriate functions of **spdep** package, plot Moran scatterplot - compute and plot spatial correlogram using appropriate function of **spdep** package - provide statistically correct interpretation of GSA statistics.
 
 ## 2 Getting started
 
 ### 2.1 The analytical question
+
 Generally spatial policies would have development objectives from local government and planners to ensure equal distribution of development in the province, taking China for an example. Our task in this study, hence, is to apply appropriate spatial statistical methods to discover if [*development are evenly distributed geographically*]{style="color: #B95E82;"}. If the answer is **No**. Then, our next question will be “*is there sign of spatial clustering?*”. And, if the answer for this question is **yes**, then our next question will be “*where are these clusters?*”
 
-### 2.2 
+### 2.2
 
 ## 3 The data
 
@@ -38,3 +33,11 @@ Generally spatial policies would have development objectives from local governme
 
 ## 7 Spatial Correlogram
 
+::::: markgoals
+::: markgoals-header
+**Note**
+:::
+
+::: markgoals-container
+:::
+:::::
