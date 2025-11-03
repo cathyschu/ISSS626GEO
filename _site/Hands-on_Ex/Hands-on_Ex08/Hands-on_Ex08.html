@@ -173,6 +173,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07.html">
  <span class="dropdown-text">Exercise 7</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html">
+ <span class="dropdown-text">Exercise 8</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex09/Hands-on_Ex09.qmd">
+ <span class="dropdown-text">Exercise 9</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
@@ -305,7 +313,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">October 26, 2025</p>
+      <p class="date-modified">November 4, 2025</p>
     </div>
   </div>
     
@@ -318,12 +326,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="overview" class="level2">
 <h2 class="anchored" data-anchor-id="overview">1 Overview</h2>
-<p>Predictive modelling uses statistical learning or machine learning techniques to predict outcomes. By and large, the event one wants to predict is in the future. However, a set of known outcome and predictors (also known as variables) will be used to calibrate the predictive models.</p>
-<p>Geospatial predictive modelling is conceptually rooted in the principle that the occurrences of events being modeled are limited in distribution. When geographically referenced data are used, occurrences of events are neither uniform nor random in distribution over space. There are geospatial factors (infrastructure, sociocultural, topographic, etc.) that constrain and influence where the locations of events occur. Geospatial predictive modeling attempts to describe those constraints and influences by spatially correlating occurrences of historical geospatial locations with environmental factors that represent those constraints and influences.</p>
+<p>Predictive modelling uses statistical learning or machine learning techniques to <strong>predict outcomes</strong>. By and large, the event wants to predict is in the future. However, a set of known outcome and predictors (also known as variables) will be used to calibrate the predictive models.</p>
+<p>Geospatial predictive modelling is conceptually rooted in the principle that the occurrences of events being modeled are limited in distribution. When geographically referenced data are used, occurrences of events are neither uniform nor random in distribution over space. There are geospatial factors (infrastructure, sociocultural, topographic, etc.) that constrain and influence where the locations of events occur. <strong>Geospatial predictive modeling attempts to describe those constraints and influences by spatially correlating occurrences of historical geospatial locations with environmental factors that represent those constraints and influences.</strong></p>
 </section>
 <section id="getting-started" class="level2">
 <h2 class="anchored" data-anchor-id="getting-started">2 Getting started</h2>
-<p>In this in-class exercise, you will learn how to build predictive model by using geographical random forest method. By the end of this hands-on exercise, you will acquire the skills of:</p>
+<p>In this in-class exercise, we will build predictive model by using <strong>geographical random forest method</strong>. By the end of this hands-on exercise, we will achieve:</p>
 <ul>
 <li><p>preparing training and test data sets by using appropriate data sampling methods,</p></li>
 <li><p>calibrating predictive models by using both geospatial statistical learning and machine learning methods,</p></li>
@@ -346,13 +354,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li><p>Downloaded from <strong>Data.gov.sg</strong>.</p>
 <ul>
-<li><p><strong>Eldercare</strong> data is a list of eldercare in Singapore. It is in shapefile format.</p></li>
-<li><p><strong>Hawker Centre</strong> data is a list of hawker centres in Singapore. It is in geojson format.</p></li>
-<li><p><strong>Parks</strong> data is a list of parks in Singapore. It is in geojson format.</p></li>
-<li><p><strong>Supermarket</strong> data is a list of supermarkets in Singapore. It is in geojson format.</p></li>
-<li><p><strong>CHAS clinics</strong> data is a list of CHAS clinics in Singapore. It is in geojson format.</p></li>
-<li><p><strong>Childcare service</strong> data is a list of childcare services in Singapore. It is in geojson format.</p></li>
-<li><p><strong>Kindergartens</strong> data is a list of kindergartens in Singapore. It is in geojson format.</p></li>
+<li><strong>Eldercare</strong> data is a list of eldercare in Singapore. It is in shapefile format.</li>
+<li><strong>Hawker Centre</strong> data is a list of hawker centres in Singapore. It is in geojson format.</li>
+<li><strong>Parks</strong> data is a list of parks in Singapore. It is in geojson format.</li>
+<li><strong>Supermarket</strong> data is a list of supermarkets in Singapore. It is in geojson format.</li>
+<li><strong>CHAS clinics</strong> data is a list of CHAS clinics in Singapore. It is in geojson format.</li>
+<li><strong>Childcare service</strong> data is a list of childcare services in Singapore. It is in geojson format.</li>
+<li><strong>Kindergartens</strong> data is a list of kindergartens in Singapore. It is in geojson format.</li>
 </ul></li>
 <li><p>Downloaded from <strong>Datamall.lta.gov.sg</strong>.</p>
 <ul>
@@ -377,45 +385,103 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="installing-and-loading-r-packages" class="level2">
 <h2 class="anchored" data-anchor-id="installing-and-loading-r-packages">4 <strong>Installing and Loading R packages</strong></h2>
-<p>This code chunk performs 3 tasks:</p>
-<ul>
-<li>A list called packages will be created and will consists of all the R packages required to accomplish this exercise.</li>
-<li>Check if R packages on package have been installed in R and if not, they will be installed.</li>
-<li>After all the R packages have been installed, they will be loaded.</li>
-</ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(sf, spdep, GWmodel, SpatialML, </span>
+<p>This code chunk performs 3 tasks: - A list called packages will be created and will consists of all the R packages required to accomplish this exercise. - Check if R packages on package have been installed in R and if not, they will be installed. - After all the R packages have been installed, they will be loaded.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(sf, spdep, GWmodel, SpatialML, </span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>               tmap, rsample, Metrics, tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>R Package</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>sf</strong></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>spdep</strong></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>GWmodel</strong></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>SpatialML</strong></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>tmap</strong></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>rsample</strong></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Metrics</strong></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>tidyvers</strong>e</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="prepare-data" class="level2">
 <h2 class="anchored" data-anchor-id="prepare-data">5 Prepare data</h2>
 <section id="reading-data-file-to-rds" class="level3">
 <h3 class="anchored" data-anchor-id="reading-data-file-to-rds">5.1 Reading data file to rds</h3>
 <p>Reading the input data sets. It is in simple feature data frame.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>mdata <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rawdata/mdata.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>mdata <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rawdata/mdata.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="data-sampling" class="level3">
 <h3 class="anchored" data-anchor-id="data-sampling">5.2 Data Sampling</h3>
-<p>The entire data are split into training and test data sets with 65% and 35% respectively by using initial_split() of rsample package. rsample is one of the package of tigymodels.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<p>The entire data are split into training and test data sets with 65% and 35% respectively by using <em>initial_split()</em> of <strong>rsample</strong> package. rsample is one of the packages of <strong>tigymodels</strong>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>resale_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(mdata, </span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                              <span class="at">prop =</span> <span class="fl">6.5</span><span class="sc">/</span><span class="dv">10</span>,)</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> <span class="fu">training</span>(resale_split)</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>test_data <span class="ot">&lt;-</span> <span class="fu">testing</span>(resale_split)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(train_data, <span class="st">"chap14/data/model/train_data.rds"</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(test_data, <span class="st">"chap14/data/model/test_data.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(train_data, <span class="st">"data/model/train_data.rds"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(test_data, <span class="st">"data/model/test_data.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="computing-correlation-matrix" class="level3">
 <h3 class="anchored" data-anchor-id="computing-correlation-matrix">5.3 Computing Correlation Matrix</h3>
-<p>Before loading the predictors into a predictive model, it is always a good practice to use correlation matrix to examine if there is sign of multicolinearity.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>mdata_nogeo <span class="ot">&lt;-</span> mdata <span class="sc">%&gt;%</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>()</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>corrplot<span class="sc">::</span><span class="fu">corrplot</span>(<span class="fu">cor</span>(mdata_nogeo[, <span class="dv">2</span><span class="sc">:</span><span class="dv">17</span>]), </span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">diag =</span> <span class="cn">FALSE</span>, </span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">order =</span> <span class="st">"AOE"</span>,</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">tl.pos =</span> <span class="st">"td"</span>, </span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                   <span class="at">tl.cex =</span> <span class="fl">0.5</span>, </span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>                   <span class="at">method =</span> <span class="st">"number"</span>, </span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>                   <span class="at">type =</span> <span class="st">"upper"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Before loading the predictors into a predictive model, it is always a good practice to <strong>use correlation matrix</strong> to examine if there is sign of <strong>multicolinearity</strong>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#D0DDD0"</span>) </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>mdata_nogeo <span class="ot">&lt;-</span> mdata <span class="sc">%&gt;%</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>()</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>corrplot<span class="sc">::</span><span class="fu">corrplot</span>(<span class="fu">cor</span>(mdata_nogeo[, <span class="dv">2</span><span class="sc">:</span><span class="dv">17</span>]), </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">diag =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                   <span class="at">order =</span> <span class="st">"AOE"</span>,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>                   <span class="at">tl.pos =</span> <span class="st">"td"</span>, </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>                   <span class="at">tl.cex =</span> <span class="fl">0.5</span>, </span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>                   <span class="at">method =</span> <span class="st">"number"</span>, </span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>                   <span class="at">type =</span> <span class="st">"upper"</span>,</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>                   <span class="at">number.cex =</span> <span class="fl">0.4</span>,</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>                   <span class="at">bg =</span> <span class="st">"white"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex08_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="section" class="level3">
 <h3 class="anchored" data-anchor-id="section">5.4</h3>
