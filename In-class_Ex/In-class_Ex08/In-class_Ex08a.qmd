@@ -456,9 +456,24 @@ gwRF_adaptive <- read_rds("data/model/gwRF_adaptive.rds")
 
 ```
 
-### 7.4.1 Predicting with test data
 
-#### 7.4.1.1 Prepare data
+::::: markgoals
+::: markgoals-header
+Training results
+:::
+
+::: markgoals-container
+-   **MLR vs GWR:** Use **AICc** → GWR wins (24,104 \< 24,902)
+-   **RF vs GRF:** Use **OOB R²** → GRF slightly better (84.87% \> 84.11%)
+-   Need to test predictions to determine which is the best.
+:::
+:::::
+
+# 8 Predicting with test data
+
+## 8.1 GW Radnom Forest
+
+### 8.1.1 Prepare data
 
 ```{r}
 test_data_nogeom <- cbind(
@@ -466,7 +481,7 @@ test_data_nogeom <- cbind(
   st_drop_geometry()
 ```
 
-#### 7.4.1.1 Predicting with test data
+### 8.1.2 Predicting with test data
 
 ```{r}
 #| eval: false
@@ -485,7 +500,7 @@ write_rds(gwRF_pred, "data/model/GRF_pred.rds")
 GRF_pred <- read_rds("data/model/GRF_pred.rds")
 ```
 
-#### 7.4.1.1 Converting the predicting output into a data frame
+### 81.3 Converting the predicting output into a data frame
 
 ```{r}
 GRF_pred <- read_rds("data/model/GRF_pred.rds")
@@ -498,14 +513,14 @@ test_data_p <- cbind(
   select(resale_price, GRF_pred)
 ```
 
-### 7.4.2 Calculating Root Mean Square Error
+### 8.1.4 Calculating Root Mean Square Error
 
 ```{r}
 rmse(test_data_p$resale_price, 
      test_data_p$GRF_pred)
 ```
 
-### 7.4.3 Visualising the predicted values
+### 8.1.5 Visualising the predicted values
 
 ```{r}
 ggplot(data = test_data_p,
@@ -513,13 +528,25 @@ ggplot(data = test_data_p,
            y = resale_price)) +
   geom_point()
 ```
-::::: markgoals
-::: markgoals-header
-Training results
-:::
-::: markgoals-container
--   **MLR vs GWR:** Use **AICc** → GWR wins (24,104 \< 24,902)
--   **RF vs GRF:** Use **OOB R²** → GRF slightly better (84.87% \> 84.11%)
--   Need to test predictions to determine which is the best.
-:::
-:::::
+## 8.1 GWR Predictive model
+
+### 8.1.1 Computing predicted values of the test data
+```{r}
+gwr_pred <- gwr.predict(
+  formula = resale_price ~ floor_area_sqm + 
+    storey_order + remaining_lease_mths + 
+    PROX_CBD + PROX_ELDERLYCARE + PROX_HAWKER + 
+    PROX_MRT + PROX_PARK + PROX_MALL + 
+    PROX_SUPERMARKET + WITHIN_350M_KINDERGARTEN +
+    WITHIN_350M_CHILDCARE + WITHIN_350M_BUS + 
+    WITHIN_1KM_PRISCH, 
+  data=train_data, 
+  predictdata = test_data, 
+  bw=40, 
+  kernel = 'gaussian', 
+  adaptive=TRUE, 
+  longlat = FALSE)
+
+write_rds(gwr_pred, "data/model/gwr_pred.rds")
+```
+
