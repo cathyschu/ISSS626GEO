@@ -11,6 +11,8 @@ execute: #how YML page work
   freeze: true #controls rendering - no render if no changes
 ---
 
+
+
 ## 1 Overview
 
 This exercise is to:
@@ -22,16 +24,24 @@ This exercise is to:
 
 One new package called [jsonlite]{style="color: #F08787;"} will be installed and loaded onto R environment. It will be used to parse json file into R as data frame.
 
+
+
 ```{r}
 pacman::p_load(httr, tidyverse, sf, tmap, jsonlite, progress)
 ```
 
+
+
 ### Additional packages for predive modelling
+
+
 
 ```{r}
 pacman::p_load(spdep, GWmodel, SpatialML, rsample, Metrics, knitr,
                kableExtra, spatialRF, randomForestExplainer)
 ```
+
+
 
 progress - to monitor and track the computation.
 
@@ -49,6 +59,8 @@ One must download *Resale flat prices based on registration date from Jan-2017 o
 
 This data set comprises of HDB resale transactions from Jan 2017 onwards. For the purpose of this in-class exercise, the code chunk below will be used to extract a sub-set of transaction records on 4-Room flat transacted on the month September 2025.
 
+
+
 ```{r}
 #| eval: false
 HDBresale <- read_csv(
@@ -65,7 +77,11 @@ HDBresale <- read_rds("data/rds/HDBresale.rds")
 glimpse(HDBresale)
 ```
 
+
+
 We do further processing for the data as the street names with Saint are usually written as St.
+
+
 
 ```{r}
 # street names is ST, but it's actually Sait.
@@ -75,6 +91,8 @@ HDBresale$street_name <- gsub(
 )
 ```
 
+
+
 Now we will prepare a geocoding function. It aims to perform the following tasks:
 
 -   Combining the block and street name into an address. The addresses will be used to geocode instead of postal code that you learned in In-class Exercise 3b,
@@ -83,6 +101,8 @@ Now we will prepare a geocoding function. It aims to perform the following tasks
 -   Converting response (JSON object) to text,
 -   Saving response in text form as a dataframe, and
 -   Retain the latitude and longitude for our output.
+
+
 
 ```{r}
 # for multiple queries
@@ -104,7 +124,11 @@ geocode <- function(block, streetname) {
 }
 ```
 
+
+
 Need below to run the functions
+
+
 
 ```{r}
 HDBresale$LATITUDE <- 0
@@ -117,6 +141,8 @@ for(i in 1:nrow(HDBresale)){
   HDBresale$LONGITUDE[i] <- temp_output$results.LONGITUDE
 }
 ```
+
+
 
 ## 4 Proximity analysis
 
@@ -131,6 +157,8 @@ Before performing proximity analysis, it is important to ensure that:
 -   both input data sets must be in sf objects, and
 -   they must be in similar projected coordinates systems.
 
+
+
 ```{r}
 st_crs(HDBresale)
 HDBresale_sf <- HDBresale %>%
@@ -140,6 +168,8 @@ HDBresale_sf <- HDBresale %>%
   st_transform(crs = 3414)
 
 ```
+
+
 
 ::::: markgoals
 ::: markgoals-header
@@ -155,16 +185,22 @@ HDBresale_sf <- HDBresale %>%
 
 ### 4.2 Load preschool data
 
+
+
 ```{r}
 preschool = st_read("data/rawdata/PreSchoolsLocation.kml") %>%
   st_transform(crs = 3414)
 ```
+
+
 
 From this we will have the geometry data for the preschools.
 
 ### 4.3 Counting number of preschools
 
 Next we will derive a binary data to find out which schools are within 350 meters.
+
+
 
 ```{r}
 within_350m <- st_is_within_distance(
@@ -174,6 +210,8 @@ HDBresale_sf <- HDBresale_sf %>%
   mutate(prischool_350m = map_int(within_350m, length)
 )
 ```
+
+
 
 ::::: markgoals
 ::: markgoals-header
@@ -190,6 +228,8 @@ HDBresale_sf <- HDBresale_sf %>%
 
 Instead of counting number of preschools located within 350m of each HDB resale property, code chunk below is used to compute the distance between the nearest preschool from each HDB resale property.
 
+
+
 ```{r}
 HDBresale_sf <- HDBresale_sf %>%
   mutate(
@@ -202,19 +242,27 @@ HDBresale_sf <- HDBresale_sf %>%
     )
 ```
 
+
+
 # 5 Predictive modeling
 
 ## 5.1 Data set
 
 ### 5.1.1 Data import
 
+
+
 ```{r}
 mdata <- read_rds("data/rawdata/mdata.rds")
 ```
 
+
+
 ### 5.1.2 Data sampling
 
 Calibrating predictive models are computational intensive, especially random forest method is used. For quick prototyping, a 10% sample will be selected at random from the data by using the code chunk below:
+
+
 
 ```{r}
 set.seed(1234)
@@ -222,11 +270,15 @@ HDB_sample <- mdata %>%
   sample_n(1500)
 ```
 
+
+
 ## 5.2 Checking of overlapping point
 
 \*\*\* When using GWmodel to calibrate explanaroty or predictive models, it is very important to ensure that there are no overlapping point features \*\*\*
 
 Below is to check if there are overlapping point feature - to do spatial jitter.
+
+
 
 ```{r}
 overlapping_points <- HDB_sample %>%
@@ -234,16 +286,24 @@ overlapping_points <- HDB_sample %>%
 
 ```
 
+
+
 Below we can have a look at overlapping_points, and see the new column overlap showing whether the location has overlapping points. We then calculate how many has overlapping points. In this sample data, we observed 453 overlapping points.
+
+
 
 ```{r}
 head(overlapping_points)
 sum(overlapping_points$overlap == "TRUE")
 ```
 
+
+
 ## 5.3 Spatial jitter
 
 st_jitter is used to move the point feature by 5m to avoid overlapping point features.
+
+
 
 ```{r}
 HDB_sample <- HDB_sample %>%
@@ -258,7 +318,11 @@ train_data <- training(resale_split)
 test_data <- testing(resale_split)
 ```
 
+
+
 ## 5.4 Constructing the adaptive bandwidth gwr model
+
+
 
 ```{r}
 #| eval: false
@@ -279,7 +343,11 @@ bw_adaptive <- bw.gwr(
 write_rds(bw_adaptive, "data/model/bw_adaptive.rds")
 ```
 
+
+
 ## 5.5 Constructing the adaptive bandwidth gwr model
+
+
 
 ```{r}
 #| echo: false
@@ -307,13 +375,19 @@ write_rds(gwr_adaptive,
           "data/model/gwr_adaptive.rds")
 ```
 
+
+
 ## 5.6 GWR Output
+
+
 
 ```{r}
 #| echo: false
 gwr_adaptive <- read_rds("data/model/gwr_adaptive.rds")
 gwr_adaptive
 ```
+
+
 
 -   Based on the result of the modelling above, p-value is much smaller than 0.05. We see the adjusted R\^2 = 0.7387, meaning that this model can explain 73% of the data using the variables.
 
@@ -324,6 +398,8 @@ Explanatory variables:
 Plot out the significant variables to show distribution and explain which ones have higher/lower influence over the model.
 
 ## 5.7 Compute Collinearity Matrix
+
+
 
 ```{r}
 #| fig-width: 12
@@ -343,9 +419,13 @@ corrplot::corrplot(cor(mdata_nogeo[, 2:17]),
                    bg = "white")
 ```
 
+
+
 # 6 Predictive Modeling using MLR
 
 ## 6.1 **Building a non-spatial multiple linear regression**
+
+
 
 ```{r}
 #| eval: false
@@ -366,9 +446,13 @@ price_mlr <- read_rds("data/model/price_mlr.rds")
 summary(price_mlr)
 ```
 
+
+
 # 7 **Random Forest Model**
 
 ## 7.1 Prepare data
+
+
 
 ```{r}
 coords <- st_coordinates(mdata)
@@ -384,9 +468,13 @@ coords_test <- write_rds(
   "data/model/coords_test.rds" )
 ```
 
+
+
 ## 7.2 Dropping geometry field
 
 We will drop geometry column of the sf data.frame by using `st_drop_geometry()` of sf package.
+
+
 
 ```{r}
 train_data_nogeom <- train_data %>% 
@@ -396,7 +484,11 @@ test_data_nogeom <- test_data %>%
   st_drop_geometry()
 ```
 
+
+
 ## 7.3 Calibrating a non-spatial random forest model
+
+
 
 ```{r}
 #| eval: false
@@ -423,11 +515,15 @@ rf <- read_rds("data/model/rf.rds")
 rf
 ```
 
+
+
 ## 7.4 **Calibrating Geographical Weighted Random Forest Model**
 
 ### 7.4.1 Calibrating with training data
 
 Below we calibrate a **geographic random forest model** by using `grf()` of **SpatialML** package.
+
+
 
 ```{r}
 #| eval: false
@@ -456,9 +552,13 @@ gwRF_adaptive <- read_rds("data/model/gwRF_adaptive.rds")
 
 ```
 
+
+
 ### 7.4.1 Predicting with test data
 
 #### 7.4.1.1 Prepare data
+
+
 
 ```{r}
 test_data_nogeom <- cbind(
@@ -466,7 +566,11 @@ test_data_nogeom <- cbind(
   st_drop_geometry()
 ```
 
+
+
 #### 7.4.1.1 Predicting with test data
+
+
 
 ```{r}
 #| eval: false
@@ -485,7 +589,11 @@ write_rds(gwRF_pred, "data/model/GRF_pred.rds")
 GRF_pred <- read_rds("data/model/GRF_pred.rds")
 ```
 
+
+
 #### 7.4.1.1 Converting the predicting output into a data frame
+
+
 
 ```{r}
 GRF_pred <- read_rds("data/model/GRF_pred.rds")
@@ -498,14 +606,22 @@ test_data_p <- cbind(
   select(resale_price, GRF_pred)
 ```
 
+
+
 ### 7.4.2 Calculating Root Mean Square Error
+
+
 
 ```{r}
 rmse(test_data_p$resale_price, 
      test_data_p$GRF_pred)
 ```
 
+
+
 ### 7.4.3 Visualising the predicted values
+
+
 
 ```{r}
 ggplot(data = test_data_p,
@@ -513,6 +629,8 @@ ggplot(data = test_data_p,
            y = resale_price)) +
   geom_point()
 ```
+
+
 ::::: markgoals
 ::: markgoals-header
 Training results show:
@@ -524,3 +642,4 @@ Training results show:
 -   Need to test predictions to determine which is the best.
 :::
 :::::
+
