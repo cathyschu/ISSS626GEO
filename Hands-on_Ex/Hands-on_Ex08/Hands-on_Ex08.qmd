@@ -528,11 +528,3 @@ A better predictive model should have the scatter point close to the diagonal li
 
 -   Kam, T. S. (2022, December 8). R for geospatial data science and analytics. <https://r4gdsa.netlify.app/>
 
-::::: markgoals
-::: markgoals-header
-**Note**
-:::
-
-::: markgoals-container
-:::
-:::::
