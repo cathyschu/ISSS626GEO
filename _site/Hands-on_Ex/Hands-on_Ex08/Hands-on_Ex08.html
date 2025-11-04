@@ -407,6 +407,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>               tmap, rsample, Metrics, tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <table class="caption-top table">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 77%">
+</colgroup>
 <thead>
 <tr class="header">
 <th>R Package</th>
@@ -416,35 +420,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td><strong>sf</strong></td>
-<td></td>
+<td>Provides standardized support for encoding spatial vector data (points, lines, polygons) and handles spatial operations.</td>
 </tr>
 <tr class="even">
 <td><strong>spdep</strong></td>
-<td></td>
+<td>A comprehensive package for spatial econometrics and spatial statistics, including tools for creating spatial weights matrices and testing for spatial autocorrelation (like Moran’s I).</td>
 </tr>
 <tr class="odd">
 <td><strong>GWmodel</strong></td>
-<td></td>
+<td>Implements geographically weighted regression (GWR) and other spatially varying coefficient models, allowing relationships between variables to vary across geographic space.</td>
 </tr>
 <tr class="even">
 <td><strong>SpatialML</strong></td>
-<td></td>
+<td>Provides machine learning methods specifically designed for spatial data, including spatially-aware versions of random forests and other algorithms that account for spatial autocorrelation.</td>
 </tr>
 <tr class="odd">
 <td><strong>tmap</strong></td>
-<td></td>
+<td>A flexible package for creating static and interactive thematic maps with a layered grammar of graphics approach, similar to ggplot2 but for cartography.</td>
 </tr>
 <tr class="even">
 <td><strong>rsample</strong></td>
-<td></td>
+<td>Part of the tidymodels ecosystem, it provides tools for creating training/testing splits, cross-validation folds, and bootstrap samples for statistical modeling.</td>
 </tr>
 <tr class="odd">
 <td><strong>Metrics</strong></td>
-<td></td>
+<td>Implements common performance metrics for regression and classification tasks, including RMSE, MAE, accuracy, precision, recall, and F1 scores.</td>
 </tr>
 <tr class="even">
 <td><strong>tidyvers</strong>e</td>
-<td></td>
+<td>A collection of R packages designed for data science that share an underlying design philosophy and grammar, including ggplot2, dplyr, tidyr, readr, and others for data manipulation and visualization.</td>
 </tr>
 </tbody>
 </table>
@@ -647,7 +651,7 @@ F-statistic:  2069 on 14 and 10320 DF,  p-value: &lt; 2.2e-16</code></pre>
 <pre><code>   ***********************************************************************
    *                       Package   GWmodel                             *
    ***********************************************************************
-   Program starts at: 2025-11-04 02:14:00.599334 
+   Program starts at: 2025-11-04 20:54:25.353224 
    Call:
    gwr.basic(formula = resale_price ~ floor_area_sqm + storey_order + 
     remaining_lease_mths + PROX_CBD + PROX_ELDERLYCARE + PROX_HAWKER + 
@@ -755,7 +759,7 @@ F-statistic:  2069 on 14 and 10320 DF,  p-value: &lt; 2.2e-16</code></pre>
    Adjusted R-square value:  0.9611527 
 
    ***********************************************************************
-   Program stops at: 2025-11-04 02:15:06.082352 </code></pre>
+   Program stops at: 2025-11-04 20:55:32.563709 </code></pre>
 </div>
 </div>
 </section>
@@ -792,51 +796,24 @@ F-statistic:  2069 on 14 and 10320 DF,  p-value: &lt; 2.2e-16</code></pre>
 </section>
 <section id="computing-predicted-values-of-the-test-data" class="level3">
 <h3 class="anchored" data-anchor-id="computing-predicted-values-of-the-test-data">9.5 Computing predicted values of the test data</h3>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the local coefficients from fitted model</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>betas <span class="ot">&lt;-</span> gwr_model<span class="sc">$</span>SDF<span class="sc">@</span>data</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Get coefficient column names (exclude non-coefficient columns)</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>coef_names <span class="ot">&lt;-</span> <span class="fu">names</span>(betas)[<span class="fu">grep</span>(<span class="st">"^(Intercept|floor_area|storey|remaining|PROX|WITHIN)"</span>, <span class="fu">names</span>(betas))]</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>predictions <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">nrow</span>(test_sp))</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(test_sp)) {</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Find distances from this test point to all train points</span></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  dists <span class="ot">&lt;-</span> <span class="fu">spDists</span>(test_sp[i,], train_sp)</span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Find k nearest neighbors (k=40 for adaptive bandwidth)</span></span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  nearest <span class="ot">&lt;-</span> <span class="fu">order</span>(dists)[<span class="dv">1</span><span class="sc">:</span><span class="dv">40</span>]</span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Get weighted average of coefficients from nearest neighbors</span></span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>  local_betas <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(betas[nearest, coef_names])</span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create predictor vector matching coefficient order</span></span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>  X <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">Intercept =</span> <span class="dv">1</span>,</span>
-<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">floor_area_sqm =</span> test_sp<span class="sc">@</span>data[i, <span class="st">"floor_area_sqm"</span>],</span>
-<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">storey_order =</span> test_sp<span class="sc">@</span>data[i, <span class="st">"storey_order"</span>],</span>
-<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">remaining_lease_mths =</span> test_sp<span class="sc">@</span>data[i, <span class="st">"remaining_lease_mths"</span>],</span>
-<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">PROX_CBD =</span> test_sp<span class="sc">@</span>data[i, <span class="st">"PROX_CBD"</span>],</span>
-<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">PROX_ELDERLYCARE =</span> test_sp<span class="sc">@</span>data[i, <span class="st">"PROX_ELDERLYCARE"</span>],</span>
-<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">PROX_HAWKER =</span> test_sp<span class="sc">@</span>data[i, <span class="st">"PROX_HAWKER"</span>],</span>
-<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">PROX_MRT =</span> test_sp<span class="sc">@</span>data[i, <span class="st">"PROX_MRT"</span>],</span>
-<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">PROX_PARK =</span> test_sp<span class="sc">@</span>data[i, <span class="st">"PROX_PARK"</span>],</span>
-<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">PROX_MALL =</span> test_sp<span class="sc">@</span>data[i, <span class="st">"PROX_MALL"</span>],</span>
-<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">PROX_SUPERMARKET =</span> test_sp<span class="sc">@</span>data[i, <span class="st">"PROX_SUPERMARKET"</span>],</span>
-<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">WITHIN_350M_KINDERGARTEN =</span> test_sp<span class="sc">@</span>data[i, <span class="st">"WITHIN_350M_KINDERGARTEN"</span>],</span>
-<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">WITHIN_350M_CHILDCARE =</span> test_sp<span class="sc">@</span>data[i, <span class="st">"WITHIN_350M_CHILDCARE"</span>],</span>
-<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">WITHIN_350M_BUS =</span> test_sp<span class="sc">@</span>data[i, <span class="st">"WITHIN_350M_BUS"</span>],</span>
-<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">WITHIN_1KM_PRISCH =</span> test_sp<span class="sc">@</span>data[i, <span class="st">"WITHIN_1KM_PRISCH"</span>]</span>
-<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Ensure same length and order</span></span>
-<span id="cb16-39"><a href="#cb16-39" aria-hidden="true" tabindex="-1"></a>  predictions[i] <span class="ot">&lt;-</span> <span class="fu">sum</span>(local_betas[<span class="fu">names</span>(X)] <span class="sc">*</span> X)</span>
-<span id="cb16-40"><a href="#cb16-40" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb16-41"><a href="#cb16-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-42"><a href="#cb16-42" aria-hidden="true" tabindex="-1"></a>gwr_pred <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">predictions =</span> predictions)</span>
-<span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(gwr_pred, <span class="st">"data/model/gwr_pred.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#|eval: false</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>gwr_pred <span class="ot">&lt;-</span> <span class="fu">gwr.predict</span>(</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> resale_price <span class="sc">~</span> floor_area_sqm <span class="sc">+</span> </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    storey_order <span class="sc">+</span> remaining_lease_mths <span class="sc">+</span> </span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    PROX_CBD <span class="sc">+</span> PROX_ELDERLYCARE <span class="sc">+</span> PROX_HAWKER <span class="sc">+</span> </span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    PROX_MRT <span class="sc">+</span> PROX_PARK <span class="sc">+</span> PROX_MALL <span class="sc">+</span> </span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    PROX_SUPERMARKET <span class="sc">+</span> WITHIN_350M_KINDERGARTEN <span class="sc">+</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    WITHIN_350M_CHILDCARE <span class="sc">+</span> WITHIN_350M_BUS <span class="sc">+</span> </span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    WITHIN_1KM_PRISCH, </span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">data=</span>train_data, </span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">predictdata =</span> test_data, </span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">bw=</span><span class="dv">40</span>, </span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">kernel =</span> <span class="st">'gaussian'</span>, </span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">adaptive=</span><span class="cn">TRUE</span>, </span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">longlat =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(gwr_pred, </span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>          <span class="st">"data/model/gwr_pred.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">args</span>(gwr.predict)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">

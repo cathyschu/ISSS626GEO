@@ -74,16 +74,16 @@ pacman::p_load(sf, spdep, GWmodel, SpatialML,
                tmap, rsample, Metrics, tidyverse)
 ```
 
-| R Package     | Description |
-|---------------|-------------|
-| **sf**        |             |
-| **spdep**     |             |
-| **GWmodel**   |             |
-| **SpatialML** |             |
-| **tmap**      |             |
-| **rsample**   |             |
-| **Metrics**   |             |
-| **tidyvers**e |             |
+| R Package | Description |
+|----------------|--------------------------------------------------------|
+| **sf** | Provides standardized support for encoding spatial vector data (points, lines, polygons) and handles spatial operations. |
+| **spdep** | A comprehensive package for spatial econometrics and spatial statistics, including tools for creating spatial weights matrices and testing for spatial autocorrelation (like Moran's I). |
+| **GWmodel** | Implements geographically weighted regression (GWR) and other spatially varying coefficient models, allowing relationships between variables to vary across geographic space. |
+| **SpatialML** | Provides machine learning methods specifically designed for spatial data, including spatially-aware versions of random forests and other algorithms that account for spatial autocorrelation. |
+| **tmap** | A flexible package for creating static and interactive thematic maps with a layered grammar of graphics approach, similar to ggplot2 but for cartography. |
+| **rsample** | Part of the tidymodels ecosystem, it provides tools for creating training/testing splits, cross-validation folds, and bootstrap samples for statistical modeling. |
+| **Metrics** | Implements common performance metrics for regression and classification tasks, including RMSE, MAE, accuracy, precision, recall, and F1 scores. |
+| **tidyvers**e | A collection of R packages designed for data science that share an underlying design philosophy and grammar, including ggplot2, dplyr, tidyr, readr, and others for data manipulation and visualization. |
 
 ## 5 Prepare data
 
@@ -291,10 +291,52 @@ write_rds(gwr_bw_test_adaptive,
 
 ### 9.5 Computing predicted values of the test data
 
+```{.r}
+#|eval: false
+gwr_pred <- gwr.predict(
+  formula = resale_price ~ floor_area_sqm + 
+    storey_order + remaining_lease_mths + 
+    PROX_CBD + PROX_ELDERLYCARE + PROX_HAWKER + 
+    PROX_MRT + PROX_PARK + PROX_MALL + 
+    PROX_SUPERMARKET + WITHIN_350M_KINDERGARTEN +
+    WITHIN_350M_CHILDCARE + WITHIN_350M_BUS + 
+    WITHIN_1KM_PRISCH, 
+  data=train_data, 
+  predictdata = test_data, 
+  bw=40, 
+  kernel = 'gaussian', 
+  adaptive=TRUE, 
+  longlat = FALSE)
+
+write_rds(gwr_pred, 
+          "data/model/gwr_pred.rds")
+```
+
 ```{r}
 #| eval: false
+#| echo: false
+
+# alternative
+# fit the GWR model on training data
+train_sp <- as(train_data, "Spatial")
+test_sp <- as(test_data, "Spatial")
+
+gwr_model <- gwr.basic(
+  resale_price ~ floor_area_sqm + 
+    storey_order + remaining_lease_mths + 
+    PROX_CBD + PROX_ELDERLYCARE + PROX_HAWKER + 
+    PROX_MRT + PROX_PARK + PROX_MALL + 
+    PROX_SUPERMARKET + WITHIN_350M_KINDERGARTEN +
+    WITHIN_350M_CHILDCARE + WITHIN_350M_BUS + 
+    WITHIN_1KM_PRISCH, 
+  data = train_data,
+  bw = 40, 
+  kernel = 'gaussian', 
+  adaptive = TRUE)
+
+
 # Get the local coefficients from fitted model
-betas <- gwr_model$SDF@data
+betas <- st_drop_geometry(gwr_model$SDF)
 
 # Get coefficient column names (exclude non-coefficient columns)
 coef_names <- names(betas)[grep("^(Intercept|floor_area|storey|remaining|PROX|WITHIN)", names(betas))]
@@ -336,7 +378,6 @@ for(i in 1:nrow(test_sp)) {
 
 gwr_pred <- list(predictions = predictions)
 write_rds(gwr_pred, "data/model/gwr_pred.rds")
-
 ```
 
 ```{r}
@@ -520,11 +561,9 @@ ggplot(data = test_data_p,
 
 ::: markgoals-container
 A better predictive model should have the scatter point close to the diagonal line. The scatter plot can be also used to detect if any outliers in the model.
-
 :::
 :::::
 
 ## References
 
 -   Kam, T. S. (2022, December 8). R for geospatial data science and analytics. <https://r4gdsa.netlify.app/>
-
