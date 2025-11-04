@@ -65,7 +65,7 @@ In this in-class exercise, we will build predictive model by using **geographica
         -   **Shopping malls** data is a list of Shopping malls in Singapore obtained from [Wikipedia](https://en.wikipedia.org/wiki/List_of_shopping_malls_in_Singapore).
         -   **Good primary schools** is a list of primary schools that are ordered in ranking in terms of popularity and this can be found at [Local Salary Forum](https://www.salary.sg/2021/best-primary-schools-2021-by-popularity).
 
-## 4 **Installing and Loading R packages**
+## 4 Installing and Loading R packages
 
 This code chunk performs 3 tasks: - A list called packages will be created and will consists of all the R packages required to accomplish this exercise. - Check if R packages on package have been installed in R and if not, they will be installed. - After all the R packages have been installed, they will be loaded.
 
@@ -112,7 +112,7 @@ write_rds(train_data, "data/model/train_data.rds")
 write_rds(test_data, "data/model/test_data.rds")
 ```
 
-### 5.3 Computing Correlation Matrix
+## 6 Computing Correlation Matrix
 
 Before loading the predictors into a predictive model, it is always a good practice to **use correlation matrix** to examine if there is sign of **multicolinearity**.
 
@@ -134,28 +134,27 @@ corrplot::corrplot(cor(mdata_nogeo[, 2:17]),
                    number.cex = 0.8,
                    bg = "white")
 ```
+
 ::::: markgoals
 ::: markgoals-header
 **Note**
 :::
 
 ::: markgoals-container
-There is no sign of multicolinearity as all the correlation values are < 0.8.
+There is no sign of multicolinearity as all the correlation values are \< 0.8.
 :::
 :::::
 
-### 5.4
+## 7 Retriving the Stored Data
 
-## 6 Retriving the Stored Data
-
-``` r
-train_data <- read_rds("chap14/data/model/train_data.rds")
-test_data <- read_rds("chap14/data/model/test_data.rds")
+```{r}
+train_data <- read_rds("data/model/train_data.rds")
+test_data <- read_rds("data/model/test_data.rds")
 ```
 
-## 7 Building a non-spatial multiple linear regression
+## 8 Building a non-spatial multiple linear regression
 
-``` r
+```{r}
 price_mlr <- lm(resale_price ~ floor_area_sqm +
                   storey_order + remaining_lease_mths +
                   PROX_CBD + PROX_ELDERLYCARE + PROX_HAWKER +
@@ -167,15 +166,18 @@ price_mlr <- lm(resale_price ~ floor_area_sqm +
 summary(price_mlr)
 ```
 
-## 8 gwr predictive method
+## 9 gwr predictive method
 
-In this section, you will learn how to calibrate a model to predict HDB resale price by using geographically weighted regression method of GWmodel package.
+In this section, we will calibrate a model to **predict HDB resale price** by using **geographically weighted regression method** of [**GWmodel**](https://cran.r-project.org/web/packages/GWmodel/index.html) package.
 
-### 8.1 Computing adaptive bandwidth
+### 9.1 Computing adaptive bandwidth
 
-Firstly, bw.gwr() of GWmodel package will be used to determine the optimal bandwidth to be used.
+Firstly, `bw.gwr()` of **GWmodel** package will be used to determine the optimal bandwidth to be used. The `bw.gwr()` function in R is part of the GWmodel package and is used for automatic bandwidth selection to calibrate a basic Geographically Weighted Regression (GWR) model.
 
-``` r
+We use below code to determine adaptive bandwidth and CV method is used to determine the optimal bandwidth.
+
+```{r}
+#| eval: false
 bw_adaptive <- bw.gwr(
   formula = resale_price ~ floor_area_sqm +
     storey_order + remaining_lease_mths +
@@ -190,8 +192,161 @@ bw_adaptive <- bw.gwr(
   adaptive=TRUE,
   longlat=FALSE)
 
-write_rds(bw_adaptive, "chap14/data/model/bw_adaptive.rds")
+write_rds(bw_adaptive, "data/model/bw_adaptive.rds")
 ```
+
+::::: markgoals
+::: markgoals-header
+**Note**
+:::
+
+::: markgoals-container
+-   The result shows that 40 neighbour points will be the optimal bandwidth to be used if adaptive bandwidth is used for this data set.
+
+-   The `bw.gwr()` function in R is part of the GWmodel package and is used for automatic bandwidth selection to calibrate a basic Geographically Weighted Regression (GWR) model. The algorithm searches for the bandwidth that minimizes the CV score. Lower CV score means better model fit.
+
+-   **Function Purpose**
+
+    -   It determines the optimal bandwidth (either fixed distance or adaptive, representing the number of nearest neighbors) for a GWR model.
+    -   This optimal bandwidth minimizes a chosen criterion, typically the Cross-Validation (CV) score or the corrected Akaike Information Criterion (AICc).
+:::
+:::::
+
+### 9.2 Constructing the adaptive bandwidth gwr model
+
+First, call the saved bandwidth:
+
+```{r}
+bw_adaptive <- read_rds("data/model/bw_adaptive.rds")
+```
+
+Now, we can go ahead to calibrate the gwr-based hedonic pricing model by using adaptive bandwidth and Gaussian kernel as shown in the code chunk below.
+
+```{r}
+#| eval: false
+gwr_adaptive <- gwr.basic(
+  formula = resale_price ~ floor_area_sqm +
+    storey_order + remaining_lease_mths + 
+    PROX_CBD + PROX_ELDERLYCARE + 
+    PROX_HAWKER + PROX_MRT + PROX_PARK + 
+    PROX_MALL + PROX_SUPERMARKET +
+    WITHIN_350M_KINDERGARTEN +
+    WITHIN_350M_CHILDCARE + 
+    WITHIN_350M_BUS + WITHIN_1KM_PRISCH,
+  data=train_data,
+  bw=bw_adaptive, 
+  kernel = 'gaussian', 
+  adaptive=TRUE,
+  longlat = FALSE)
+
+write_rds(gwr_adaptive, 
+          "data/model/gwr_adaptive.rds")
+```
+
+### 9.3 Retrieve gwr output object
+
+First we retrieve the saved gwr model object.
+
+```{r}
+gwr_adaptive <- read_rds("data/model/gwr_adaptive.rds")
+```
+
+Below code displays the model output:
+
+```{r}
+gwr_adaptive
+```
+
+### 9.4 Computing adaptive bandwidth for the test data
+
+```{r}
+#| eval: false
+gwr_bw_test_adaptive <- bw.gwr(
+  formula = resale_price ~ floor_area_sqm +
+    storey_order + remaining_lease_mths +
+    PROX_CBD + PROX_ELDERLYCARE + PROX_HAWKER +
+    PROX_MRT + PROX_PARK + PROX_MALL + 
+    PROX_SUPERMARKET + WITHIN_350M_KINDERGARTEN +
+    WITHIN_350M_CHILDCARE + WITHIN_350M_BUS +
+    WITHIN_1KM_PRISCH,
+  data=test_data,
+  approach="CV",
+  kernel="gaussian",
+  adaptive=TRUE,
+  longlat=FALSE)
+
+write_rds(gwr_bw_test_adaptive, 
+          "data/model/gwr_bw_test_adaptive.rds")
+```
+
+::::: markgoals
+::: markgoals-header
+**Note**
+:::
+
+::: markgoals-container
+-   The result shows that 25 neighbour points will be the optimal bandwidth to be used if adaptive bandwidth is used for this data set.
+:::
+:::::
+
+### 9.5 Computing predicted values of the test data
+
+
+```{r}
+#| eval: false
+# Get the local coefficients from fitted model
+betas <- gwr_model$SDF@data
+
+# Get coefficient column names (exclude non-coefficient columns)
+coef_names <- names(betas)[grep("^(Intercept|floor_area|storey|remaining|PROX|WITHIN)", names(betas))]
+
+predictions <- numeric(nrow(test_sp))
+
+for(i in 1:nrow(test_sp)) {
+  # Find distances from this test point to all train points
+  dists <- spDists(test_sp[i,], train_sp)
+  
+  # Find k nearest neighbors (k=40 for adaptive bandwidth)
+  nearest <- order(dists)[1:40]
+  
+  # Get weighted average of coefficients from nearest neighbors
+  local_betas <- colMeans(betas[nearest, coef_names])
+  
+  # Create predictor vector matching coefficient order
+  X <- c(
+    Intercept = 1,
+    floor_area_sqm = test_sp@data[i, "floor_area_sqm"],
+    storey_order = test_sp@data[i, "storey_order"],
+    remaining_lease_mths = test_sp@data[i, "remaining_lease_mths"],
+    PROX_CBD = test_sp@data[i, "PROX_CBD"],
+    PROX_ELDERLYCARE = test_sp@data[i, "PROX_ELDERLYCARE"],
+    PROX_HAWKER = test_sp@data[i, "PROX_HAWKER"],
+    PROX_MRT = test_sp@data[i, "PROX_MRT"],
+    PROX_PARK = test_sp@data[i, "PROX_PARK"],
+    PROX_MALL = test_sp@data[i, "PROX_MALL"],
+    PROX_SUPERMARKET = test_sp@data[i, "PROX_SUPERMARKET"],
+    WITHIN_350M_KINDERGARTEN = test_sp@data[i, "WITHIN_350M_KINDERGARTEN"],
+    WITHIN_350M_CHILDCARE = test_sp@data[i, "WITHIN_350M_CHILDCARE"],
+    WITHIN_350M_BUS = test_sp@data[i, "WITHIN_350M_BUS"],
+    WITHIN_1KM_PRISCH = test_sp@data[i, "WITHIN_1KM_PRISCH"]
+  )
+  
+  # Ensure same length and order
+  predictions[i] <- sum(local_betas[names(X)] * X)
+}
+
+gwr_pred <- list(predictions = predictions)
+write_rds(gwr_pred, "data/model/gwr_pred.rds")
+
+```
+
+```{r}
+args(gwr.predict)
+```
+
+## 10 Calibrating Random Forest Model
+
+In this section, we will calibrate a model to predict HDB resale price by using random forest function of [**ranger**](https://cran.r-project.org/web/packages/ranger/index.html) package.
 
 ## References
 

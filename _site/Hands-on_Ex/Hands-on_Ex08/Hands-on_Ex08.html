@@ -266,20 +266,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">1 Overview</a></li>
   <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started">2 Getting started</a></li>
   <li><a href="#the-data" id="toc-the-data" class="nav-link" data-scroll-target="#the-data">3 The data</a></li>
-  <li><a href="#installing-and-loading-r-packages" id="toc-installing-and-loading-r-packages" class="nav-link" data-scroll-target="#installing-and-loading-r-packages">4 <strong>Installing and Loading R packages</strong></a></li>
+  <li><a href="#installing-and-loading-r-packages" id="toc-installing-and-loading-r-packages" class="nav-link" data-scroll-target="#installing-and-loading-r-packages">4 Installing and Loading R packages</a></li>
   <li><a href="#prepare-data" id="toc-prepare-data" class="nav-link" data-scroll-target="#prepare-data">5 Prepare data</a>
   <ul class="collapse">
   <li><a href="#reading-data-file-to-rds" id="toc-reading-data-file-to-rds" class="nav-link" data-scroll-target="#reading-data-file-to-rds">5.1 Reading data file to rds</a></li>
   <li><a href="#data-sampling" id="toc-data-sampling" class="nav-link" data-scroll-target="#data-sampling">5.2 Data Sampling</a></li>
-  <li><a href="#computing-correlation-matrix" id="toc-computing-correlation-matrix" class="nav-link" data-scroll-target="#computing-correlation-matrix">5.3 Computing Correlation Matrix</a></li>
-  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section">5.4</a></li>
   </ul></li>
-  <li><a href="#retriving-the-stored-data" id="toc-retriving-the-stored-data" class="nav-link" data-scroll-target="#retriving-the-stored-data">6 Retriving the Stored Data</a></li>
-  <li><a href="#building-a-non-spatial-multiple-linear-regression" id="toc-building-a-non-spatial-multiple-linear-regression" class="nav-link" data-scroll-target="#building-a-non-spatial-multiple-linear-regression">7 Building a non-spatial multiple linear regression</a></li>
-  <li><a href="#gwr-predictive-method" id="toc-gwr-predictive-method" class="nav-link" data-scroll-target="#gwr-predictive-method">8 gwr predictive method</a>
+  <li><a href="#computing-correlation-matrix" id="toc-computing-correlation-matrix" class="nav-link" data-scroll-target="#computing-correlation-matrix">6 Computing Correlation Matrix</a></li>
+  <li><a href="#retriving-the-stored-data" id="toc-retriving-the-stored-data" class="nav-link" data-scroll-target="#retriving-the-stored-data">7 Retriving the Stored Data</a></li>
+  <li><a href="#building-a-non-spatial-multiple-linear-regression" id="toc-building-a-non-spatial-multiple-linear-regression" class="nav-link" data-scroll-target="#building-a-non-spatial-multiple-linear-regression">8 Building a non-spatial multiple linear regression</a></li>
+  <li><a href="#gwr-predictive-method" id="toc-gwr-predictive-method" class="nav-link" data-scroll-target="#gwr-predictive-method">9 gwr predictive method</a>
   <ul class="collapse">
-  <li><a href="#computing-adaptive-bandwidth" id="toc-computing-adaptive-bandwidth" class="nav-link" data-scroll-target="#computing-adaptive-bandwidth">8.1 Computing adaptive bandwidth</a></li>
+  <li><a href="#computing-adaptive-bandwidth" id="toc-computing-adaptive-bandwidth" class="nav-link" data-scroll-target="#computing-adaptive-bandwidth">9.1 Computing adaptive bandwidth</a></li>
+  <li><a href="#constructing-the-adaptive-bandwidth-gwr-model" id="toc-constructing-the-adaptive-bandwidth-gwr-model" class="nav-link" data-scroll-target="#constructing-the-adaptive-bandwidth-gwr-model">9.2 Constructing the adaptive bandwidth gwr model</a></li>
+  <li><a href="#retrieve-gwr-output-object" id="toc-retrieve-gwr-output-object" class="nav-link" data-scroll-target="#retrieve-gwr-output-object">9.3 Retrieve gwr output object</a></li>
+  <li><a href="#computing-adaptive-bandwidth-for-the-test-data" id="toc-computing-adaptive-bandwidth-for-the-test-data" class="nav-link" data-scroll-target="#computing-adaptive-bandwidth-for-the-test-data">9.4 Computing adaptive bandwidth for the test data</a></li>
+  <li><a href="#computing-predicted-values-of-the-test-data" id="toc-computing-predicted-values-of-the-test-data" class="nav-link" data-scroll-target="#computing-predicted-values-of-the-test-data">9.5 Computing predicted values of the test data</a></li>
   </ul></li>
+  <li><a href="#calibrating-random-forest-model" id="toc-calibrating-random-forest-model" class="nav-link" data-scroll-target="#calibrating-random-forest-model">10 Calibrating Random Forest Model</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 </nav>
@@ -384,7 +388,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 </section>
 <section id="installing-and-loading-r-packages" class="level2">
-<h2 class="anchored" data-anchor-id="installing-and-loading-r-packages">4 <strong>Installing and Loading R packages</strong></h2>
+<h2 class="anchored" data-anchor-id="installing-and-loading-r-packages">4 Installing and Loading R packages</h2>
 <p>This code chunk performs 3 tasks: - A list called packages will be created and will consists of all the R packages required to accomplish this exercise. - Check if R packages on package have been installed in R and if not, they will be installed. - After all the R packages have been installed, they will be loaded.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(sf, spdep, GWmodel, SpatialML, </span>
@@ -457,8 +461,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(test_data, <span class="st">"data/model/test_data.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="computing-correlation-matrix" class="level3">
-<h3 class="anchored" data-anchor-id="computing-correlation-matrix">5.3 Computing Correlation Matrix</h3>
+</section>
+<section id="computing-correlation-matrix" class="level2">
+<h2 class="anchored" data-anchor-id="computing-correlation-matrix">6 Computing Correlation Matrix</h2>
 <p>Before loading the predictors into a predictive model, it is always a good practice to <strong>use correlation matrix</strong> to examine if there is sign of <strong>multicolinearity</strong>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#D0DDD0"</span>) </span>
@@ -491,18 +496,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="section" class="level3">
-<h3 class="anchored" data-anchor-id="section">5.4</h3>
-</section>
-</section>
 <section id="retriving-the-stored-data" class="level2">
-<h2 class="anchored" data-anchor-id="retriving-the-stored-data">6 Retriving the Stored Data</h2>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"chap14/data/model/train_data.rds"</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>test_data <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"chap14/data/model/test_data.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<h2 class="anchored" data-anchor-id="retriving-the-stored-data">7 Retriving the Stored Data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/model/train_data.rds"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>test_data <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/model/test_data.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="building-a-non-spatial-multiple-linear-regression" class="level2">
-<h2 class="anchored" data-anchor-id="building-a-non-spatial-multiple-linear-regression">7 Building a non-spatial multiple linear regression</h2>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>price_mlr <span class="ot">&lt;-</span> <span class="fu">lm</span>(resale_price <span class="sc">~</span> floor_area_sqm <span class="sc">+</span></span>
+<h2 class="anchored" data-anchor-id="building-a-non-spatial-multiple-linear-regression">8 Building a non-spatial multiple linear regression</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>price_mlr <span class="ot">&lt;-</span> <span class="fu">lm</span>(resale_price <span class="sc">~</span> floor_area_sqm <span class="sc">+</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                  storey_order <span class="sc">+</span> remaining_lease_mths <span class="sc">+</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                  PROX_CBD <span class="sc">+</span> PROX_ELDERLYCARE <span class="sc">+</span> PROX_HAWKER <span class="sc">+</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                  PROX_MRT <span class="sc">+</span> PROX_PARK <span class="sc">+</span> PROX_MALL <span class="sc">+</span> </span>
@@ -511,29 +515,329 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>                  WITHIN_1KM_PRISCH,</span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">data=</span>train_data)</span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(price_mlr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = resale_price ~ floor_area_sqm + storey_order + remaining_lease_mths + 
+    PROX_CBD + PROX_ELDERLYCARE + PROX_HAWKER + PROX_MRT + PROX_PARK + 
+    PROX_MALL + PROX_SUPERMARKET + WITHIN_350M_KINDERGARTEN + 
+    WITHIN_350M_CHILDCARE + WITHIN_350M_BUS + WITHIN_1KM_PRISCH, 
+    data = train_data)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-205193  -39120   -1930   36545  472355 
+
+Coefficients:
+                           Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)              107601.073  10601.261  10.150  &lt; 2e-16 ***
+floor_area_sqm             2780.698     90.579  30.699  &lt; 2e-16 ***
+storey_order              14299.298    339.115  42.167  &lt; 2e-16 ***
+remaining_lease_mths        344.490      4.592  75.027  &lt; 2e-16 ***
+PROX_CBD                 -16930.196    201.254 -84.124  &lt; 2e-16 ***
+PROX_ELDERLYCARE         -14441.025    994.867 -14.516  &lt; 2e-16 ***
+PROX_HAWKER              -19265.648   1273.597 -15.127  &lt; 2e-16 ***
+PROX_MRT                 -32564.272   1744.232 -18.670  &lt; 2e-16 ***
+PROX_PARK                 -5712.625   1483.885  -3.850 0.000119 ***
+PROX_MALL                -14717.388   2007.818  -7.330 2.47e-13 ***
+PROX_SUPERMARKET         -26881.938   4189.624  -6.416 1.46e-10 ***
+WITHIN_350M_KINDERGARTEN   8520.472    632.812  13.464  &lt; 2e-16 ***
+WITHIN_350M_CHILDCARE     -4510.650    354.015 -12.741  &lt; 2e-16 ***
+WITHIN_350M_BUS             813.493    222.574   3.655 0.000259 ***
+WITHIN_1KM_PRISCH         -8010.834    491.512 -16.298  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 61650 on 10320 degrees of freedom
+Multiple R-squared:  0.7373,    Adjusted R-squared:  0.737 
+F-statistic:  2069 on 14 and 10320 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
 </section>
 <section id="gwr-predictive-method" class="level2">
-<h2 class="anchored" data-anchor-id="gwr-predictive-method">8 gwr predictive method</h2>
-<p>In this section, you will learn how to calibrate a model to predict HDB resale price by using geographically weighted regression method of GWmodel package.</p>
+<h2 class="anchored" data-anchor-id="gwr-predictive-method">9 gwr predictive method</h2>
+<p>In this section, we will calibrate a model to <strong>predict HDB resale price</strong> by using <strong>geographically weighted regression method</strong> of <a href="https://cran.r-project.org/web/packages/GWmodel/index.html"><strong>GWmodel</strong></a> package.</p>
 <section id="computing-adaptive-bandwidth" class="level3">
-<h3 class="anchored" data-anchor-id="computing-adaptive-bandwidth">8.1 Computing adaptive bandwidth</h3>
-<p>Firstly, bw.gwr() of GWmodel package will be used to determine the optimal bandwidth to be used.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>bw_adaptive <span class="ot">&lt;-</span> <span class="fu">bw.gwr</span>(</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> resale_price <span class="sc">~</span> floor_area_sqm <span class="sc">+</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    storey_order <span class="sc">+</span> remaining_lease_mths <span class="sc">+</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    PROX_CBD <span class="sc">+</span> PROX_ELDERLYCARE <span class="sc">+</span> PROX_HAWKER <span class="sc">+</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    PROX_MRT <span class="sc">+</span> PROX_PARK <span class="sc">+</span> PROX_MALL <span class="sc">+</span> </span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    PROX_SUPERMARKET <span class="sc">+</span> WITHIN_350M_KINDERGARTEN <span class="sc">+</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    WITHIN_350M_CHILDCARE <span class="sc">+</span> WITHIN_350M_BUS <span class="sc">+</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    WITHIN_1KM_PRISCH,</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data=</span>train_data,</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">approach=</span><span class="st">"CV"</span>,</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">kernel=</span><span class="st">"gaussian"</span>,</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">adaptive=</span><span class="cn">TRUE</span>,</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">longlat=</span><span class="cn">FALSE</span>)</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(bw_adaptive, <span class="st">"chap14/data/model/bw_adaptive.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<h3 class="anchored" data-anchor-id="computing-adaptive-bandwidth">9.1 Computing adaptive bandwidth</h3>
+<p>Firstly, <code>bw.gwr()</code> of <strong>GWmodel</strong> package will be used to determine the optimal bandwidth to be used. The <code>bw.gwr()</code> function in R is part of the GWmodel package and is used for automatic bandwidth selection to calibrate a basic Geographically Weighted Regression (GWR) model.</p>
+<p>We use below code to determine adaptive bandwidth and CV method is used to determine the optimal bandwidth.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>bw_adaptive <span class="ot">&lt;-</span> <span class="fu">bw.gwr</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> resale_price <span class="sc">~</span> floor_area_sqm <span class="sc">+</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    storey_order <span class="sc">+</span> remaining_lease_mths <span class="sc">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    PROX_CBD <span class="sc">+</span> PROX_ELDERLYCARE <span class="sc">+</span> PROX_HAWKER <span class="sc">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    PROX_MRT <span class="sc">+</span> PROX_PARK <span class="sc">+</span> PROX_MALL <span class="sc">+</span> </span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    PROX_SUPERMARKET <span class="sc">+</span> WITHIN_350M_KINDERGARTEN <span class="sc">+</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    WITHIN_350M_CHILDCARE <span class="sc">+</span> WITHIN_350M_BUS <span class="sc">+</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    WITHIN_1KM_PRISCH,</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data=</span>train_data,</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">approach=</span><span class="st">"CV"</span>,</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">kernel=</span><span class="st">"gaussian"</span>,</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">adaptive=</span><span class="cn">TRUE</span>,</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">longlat=</span><span class="cn">FALSE</span>)</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(bw_adaptive, <span class="st">"data/model/bw_adaptive.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="markgoals">
+<div class="markgoals-header">
+<p><strong>Note</strong></p>
+</div>
+<div class="markgoals-container">
+<ul>
+<li><p>The result shows that 40 neighbour points will be the optimal bandwidth to be used if adaptive bandwidth is used for this data set.</p></li>
+<li><p>The <code>bw.gwr()</code> function in R is part of the GWmodel package and is used for automatic bandwidth selection to calibrate a basic Geographically Weighted Regression (GWR) model. The algorithm searches for the bandwidth that minimizes the CV score. Lower CV score means better model fit.</p></li>
+<li><p><strong>Function Purpose</strong></p>
+<ul>
+<li>It determines the optimal bandwidth (either fixed distance or adaptive, representing the number of nearest neighbors) for a GWR model.</li>
+<li>This optimal bandwidth minimizes a chosen criterion, typically the Cross-Validation (CV) score or the corrected Akaike Information Criterion (AICc).</li>
+</ul></li>
+</ul>
+</div>
+</div>
 </section>
+<section id="constructing-the-adaptive-bandwidth-gwr-model" class="level3">
+<h3 class="anchored" data-anchor-id="constructing-the-adaptive-bandwidth-gwr-model">9.2 Constructing the adaptive bandwidth gwr model</h3>
+<p>First, call the saved bandwidth:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>bw_adaptive <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/model/bw_adaptive.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now, we can go ahead to calibrate the gwr-based hedonic pricing model by using adaptive bandwidth and Gaussian kernel as shown in the code chunk below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>gwr_adaptive <span class="ot">&lt;-</span> <span class="fu">gwr.basic</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> resale_price <span class="sc">~</span> floor_area_sqm <span class="sc">+</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    storey_order <span class="sc">+</span> remaining_lease_mths <span class="sc">+</span> </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    PROX_CBD <span class="sc">+</span> PROX_ELDERLYCARE <span class="sc">+</span> </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    PROX_HAWKER <span class="sc">+</span> PROX_MRT <span class="sc">+</span> PROX_PARK <span class="sc">+</span> </span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    PROX_MALL <span class="sc">+</span> PROX_SUPERMARKET <span class="sc">+</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    WITHIN_350M_KINDERGARTEN <span class="sc">+</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    WITHIN_350M_CHILDCARE <span class="sc">+</span> </span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    WITHIN_350M_BUS <span class="sc">+</span> WITHIN_1KM_PRISCH,</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">data=</span>train_data,</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">bw=</span>bw_adaptive, </span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">kernel =</span> <span class="st">'gaussian'</span>, </span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">adaptive=</span><span class="cn">TRUE</span>,</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">longlat =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(gwr_adaptive, </span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>          <span class="st">"data/model/gwr_adaptive.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="retrieve-gwr-output-object" class="level3">
+<h3 class="anchored" data-anchor-id="retrieve-gwr-output-object">9.3 Retrieve gwr output object</h3>
+<p>First we retrieve the saved gwr model object.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>gwr_adaptive <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/model/gwr_adaptive.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Below code displays the model output:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>gwr_adaptive</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   ***********************************************************************
+   *                       Package   GWmodel                             *
+   ***********************************************************************
+   Program starts at: 2025-11-04 02:14:00.599334 
+   Call:
+   gwr.basic(formula = resale_price ~ floor_area_sqm + storey_order + 
+    remaining_lease_mths + PROX_CBD + PROX_ELDERLYCARE + PROX_HAWKER + 
+    PROX_MRT + PROX_PARK + PROX_MALL + PROX_SUPERMARKET + WITHIN_350M_KINDERGARTEN + 
+    WITHIN_350M_CHILDCARE + WITHIN_350M_BUS + WITHIN_1KM_PRISCH, 
+    data = train_data, bw = bw_adaptive, kernel = "gaussian", 
+    adaptive = TRUE, longlat = FALSE)
+
+   Dependent (y) variable:  resale_price
+   Independent variables:  floor_area_sqm storey_order remaining_lease_mths PROX_CBD PROX_ELDERLYCARE PROX_HAWKER PROX_MRT PROX_PARK PROX_MALL PROX_SUPERMARKET WITHIN_350M_KINDERGARTEN WITHIN_350M_CHILDCARE WITHIN_350M_BUS WITHIN_1KM_PRISCH
+   Number of data points: 10335
+   ***********************************************************************
+   *                    Results of Global Regression                     *
+   ***********************************************************************
+
+   Call:
+    lm(formula = formula, data = data)
+
+   Residuals:
+    Min      1Q  Median      3Q     Max 
+-205193  -39120   -1930   36545  472355 
+
+   Coefficients:
+                              Estimate Std. Error t value Pr(&gt;|t|)    
+   (Intercept)              107601.073  10601.261  10.150  &lt; 2e-16 ***
+   floor_area_sqm             2780.698     90.579  30.699  &lt; 2e-16 ***
+   storey_order              14299.298    339.115  42.167  &lt; 2e-16 ***
+   remaining_lease_mths        344.490      4.592  75.027  &lt; 2e-16 ***
+   PROX_CBD                 -16930.196    201.254 -84.124  &lt; 2e-16 ***
+   PROX_ELDERLYCARE         -14441.025    994.867 -14.516  &lt; 2e-16 ***
+   PROX_HAWKER              -19265.648   1273.597 -15.127  &lt; 2e-16 ***
+   PROX_MRT                 -32564.272   1744.232 -18.670  &lt; 2e-16 ***
+   PROX_PARK                 -5712.625   1483.885  -3.850 0.000119 ***
+   PROX_MALL                -14717.388   2007.818  -7.330 2.47e-13 ***
+   PROX_SUPERMARKET         -26881.938   4189.624  -6.416 1.46e-10 ***
+   WITHIN_350M_KINDERGARTEN   8520.472    632.812  13.464  &lt; 2e-16 ***
+   WITHIN_350M_CHILDCARE     -4510.650    354.015 -12.741  &lt; 2e-16 ***
+   WITHIN_350M_BUS             813.493    222.574   3.655 0.000259 ***
+   WITHIN_1KM_PRISCH         -8010.834    491.512 -16.298  &lt; 2e-16 ***
+
+   ---Significance stars
+   Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+   Residual standard error: 61650 on 10320 degrees of freedom
+   Multiple R-squared: 0.7373
+   Adjusted R-squared: 0.737 
+   F-statistic:  2069 on 14 and 10320 DF,  p-value: &lt; 2.2e-16 
+   ***Extra Diagnostic information
+   Residual sum of squares: 3.922202e+13
+   Sigma(hat): 61610.08
+   AIC:  257320.2
+   AICc:  257320.3
+   BIC:  247249
+   ***********************************************************************
+   *          Results of Geographically Weighted Regression              *
+   ***********************************************************************
+
+   *********************Model calibration information*********************
+   Kernel function: gaussian 
+   Adaptive bandwidth: 40 (number of nearest neighbours)
+   Regression points: the same locations as observations are used.
+   Distance metric: Euclidean distance metric is used.
+
+   ****************Summary of GWR coefficient estimates:******************
+                                   Min.     1st Qu.      Median     3rd Qu.
+   Intercept                -3.2437e+08 -4.7727e+05 -8.3004e+03  5.5025e+05
+   floor_area_sqm           -2.8714e+04  1.4475e+03  2.3011e+03  3.3900e+03
+   storey_order              3.3186e+03  8.5899e+03  1.0826e+04  1.3397e+04
+   remaining_lease_mths     -1.4431e+03  2.6063e+02  3.9048e+02  5.2865e+02
+   PROX_CBD                 -1.0837e+07 -5.7697e+04 -1.3787e+04  2.6552e+04
+   PROX_ELDERLYCARE         -3.2161e+07 -4.0643e+04  1.0562e+04  6.1054e+04
+   PROX_HAWKER              -2.3984e+08 -5.1365e+04  3.0026e+03  6.4287e+04
+   PROX_MRT                 -1.1622e+07 -1.0488e+05 -4.9373e+04  5.1037e+03
+   PROX_PARK                -6.5961e+06 -4.8671e+04 -8.8128e+02  5.3498e+04
+   PROX_MALL                -1.8113e+07 -7.4238e+04 -1.3982e+04  4.9779e+04
+   PROX_SUPERMARKET         -4.5761e+06 -6.3461e+04 -1.7429e+04  3.5616e+04
+   WITHIN_350M_KINDERGARTEN -4.1802e+05 -6.0040e+03  9.0209e+01  4.7127e+03
+   WITHIN_350M_CHILDCARE    -1.0273e+05 -2.2375e+03  2.6668e+02  2.6388e+03
+   WITHIN_350M_BUS          -1.1757e+05 -1.4719e+03  1.1626e+02  1.7584e+03
+   WITHIN_1KM_PRISCH        -6.6465e+05 -5.5959e+03  2.6916e+02  5.7500e+03
+                                  Max.
+   Intercept                1.6493e+08
+   floor_area_sqm           5.0907e+04
+   storey_order             2.9537e+04
+   remaining_lease_mths     1.8119e+03
+   PROX_CBD                 2.2384e+07
+   PROX_ELDERLYCARE         8.2444e+07
+   PROX_HAWKER              5.9654e+06
+   PROX_MRT                 2.0188e+08
+   PROX_PARK                1.5174e+07
+   PROX_MALL                1.0443e+07
+   PROX_SUPERMARKET         3.8330e+06
+   WITHIN_350M_KINDERGARTEN 6.6799e+05
+   WITHIN_350M_CHILDCARE    1.0802e+05
+   WITHIN_350M_BUS          3.7313e+04
+   WITHIN_1KM_PRISCH        5.0219e+05
+   ************************Diagnostic information*************************
+   Number of data points: 10335 
+   Effective number of parameters (2trace(S) - trace(S'S)): 1730.101 
+   Effective degrees of freedom (n-2trace(S) + trace(S'S)): 8604.899 
+   AICc (GWR book, Fotheringham, et al. 2002, p. 61, eq 2.33): 238872 
+   AIC (GWR book, Fotheringham, et al. 2002,GWR p. 96, eq. 4.22): 237037.1 
+   BIC (GWR book, Fotheringham, et al. 2002,GWR p. 61, eq. 2.34): 238209.3 
+   Residual sum of squares: 4.82927e+12 
+   R-square value:  0.9676565 
+   Adjusted R-square value:  0.9611527 
+
+   ***********************************************************************
+   Program stops at: 2025-11-04 02:15:06.082352 </code></pre>
+</div>
+</div>
+</section>
+<section id="computing-adaptive-bandwidth-for-the-test-data" class="level3">
+<h3 class="anchored" data-anchor-id="computing-adaptive-bandwidth-for-the-test-data">9.4 Computing adaptive bandwidth for the test data</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>gwr_bw_test_adaptive <span class="ot">&lt;-</span> <span class="fu">bw.gwr</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> resale_price <span class="sc">~</span> floor_area_sqm <span class="sc">+</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    storey_order <span class="sc">+</span> remaining_lease_mths <span class="sc">+</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    PROX_CBD <span class="sc">+</span> PROX_ELDERLYCARE <span class="sc">+</span> PROX_HAWKER <span class="sc">+</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    PROX_MRT <span class="sc">+</span> PROX_PARK <span class="sc">+</span> PROX_MALL <span class="sc">+</span> </span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    PROX_SUPERMARKET <span class="sc">+</span> WITHIN_350M_KINDERGARTEN <span class="sc">+</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    WITHIN_350M_CHILDCARE <span class="sc">+</span> WITHIN_350M_BUS <span class="sc">+</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    WITHIN_1KM_PRISCH,</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data=</span>test_data,</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">approach=</span><span class="st">"CV"</span>,</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">kernel=</span><span class="st">"gaussian"</span>,</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">adaptive=</span><span class="cn">TRUE</span>,</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">longlat=</span><span class="cn">FALSE</span>)</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(gwr_bw_test_adaptive, </span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>          <span class="st">"data/model/gwr_bw_test_adaptive.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="markgoals">
+<div class="markgoals-header">
+<p><strong>Note</strong></p>
+</div>
+<div class="markgoals-container">
+<ul>
+<li>The result shows that 25 neighbour points will be the optimal bandwidth to be used if adaptive bandwidth is used for this data set.</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="computing-predicted-values-of-the-test-data" class="level3">
+<h3 class="anchored" data-anchor-id="computing-predicted-values-of-the-test-data">9.5 Computing predicted values of the test data</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the local coefficients from fitted model</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>betas <span class="ot">&lt;-</span> gwr_model<span class="sc">$</span>SDF<span class="sc">@</span>data</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Get coefficient column names (exclude non-coefficient columns)</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>coef_names <span class="ot">&lt;-</span> <span class="fu">names</span>(betas)[<span class="fu">grep</span>(<span class="st">"^(Intercept|floor_area|storey|remaining|PROX|WITHIN)"</span>, <span class="fu">names</span>(betas))]</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>predictions <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">nrow</span>(test_sp))</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(test_sp)) {</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Find distances from this test point to all train points</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  dists <span class="ot">&lt;-</span> <span class="fu">spDists</span>(test_sp[i,], train_sp)</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Find k nearest neighbors (k=40 for adaptive bandwidth)</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  nearest <span class="ot">&lt;-</span> <span class="fu">order</span>(dists)[<span class="dv">1</span><span class="sc">:</span><span class="dv">40</span>]</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Get weighted average of coefficients from nearest neighbors</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>  local_betas <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(betas[nearest, coef_names])</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create predictor vector matching coefficient order</span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>  X <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">Intercept =</span> <span class="dv">1</span>,</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">floor_area_sqm =</span> test_sp<span class="sc">@</span>data[i, <span class="st">"floor_area_sqm"</span>],</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">storey_order =</span> test_sp<span class="sc">@</span>data[i, <span class="st">"storey_order"</span>],</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">remaining_lease_mths =</span> test_sp<span class="sc">@</span>data[i, <span class="st">"remaining_lease_mths"</span>],</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">PROX_CBD =</span> test_sp<span class="sc">@</span>data[i, <span class="st">"PROX_CBD"</span>],</span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">PROX_ELDERLYCARE =</span> test_sp<span class="sc">@</span>data[i, <span class="st">"PROX_ELDERLYCARE"</span>],</span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">PROX_HAWKER =</span> test_sp<span class="sc">@</span>data[i, <span class="st">"PROX_HAWKER"</span>],</span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">PROX_MRT =</span> test_sp<span class="sc">@</span>data[i, <span class="st">"PROX_MRT"</span>],</span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">PROX_PARK =</span> test_sp<span class="sc">@</span>data[i, <span class="st">"PROX_PARK"</span>],</span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">PROX_MALL =</span> test_sp<span class="sc">@</span>data[i, <span class="st">"PROX_MALL"</span>],</span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">PROX_SUPERMARKET =</span> test_sp<span class="sc">@</span>data[i, <span class="st">"PROX_SUPERMARKET"</span>],</span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">WITHIN_350M_KINDERGARTEN =</span> test_sp<span class="sc">@</span>data[i, <span class="st">"WITHIN_350M_KINDERGARTEN"</span>],</span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">WITHIN_350M_CHILDCARE =</span> test_sp<span class="sc">@</span>data[i, <span class="st">"WITHIN_350M_CHILDCARE"</span>],</span>
+<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">WITHIN_350M_BUS =</span> test_sp<span class="sc">@</span>data[i, <span class="st">"WITHIN_350M_BUS"</span>],</span>
+<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">WITHIN_1KM_PRISCH =</span> test_sp<span class="sc">@</span>data[i, <span class="st">"WITHIN_1KM_PRISCH"</span>]</span>
+<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Ensure same length and order</span></span>
+<span id="cb16-39"><a href="#cb16-39" aria-hidden="true" tabindex="-1"></a>  predictions[i] <span class="ot">&lt;-</span> <span class="fu">sum</span>(local_betas[<span class="fu">names</span>(X)] <span class="sc">*</span> X)</span>
+<span id="cb16-40"><a href="#cb16-40" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb16-41"><a href="#cb16-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-42"><a href="#cb16-42" aria-hidden="true" tabindex="-1"></a>gwr_pred <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">predictions =</span> predictions)</span>
+<span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(gwr_pred, <span class="st">"data/model/gwr_pred.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">args</span>(gwr.predict)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>function (formula, data, predictdata, bw, kernel = "bisquare", 
+    adaptive = FALSE, p = 2, theta = 0, longlat = F, dMat1, dMat2) 
+NULL</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="calibrating-random-forest-model" class="level2">
+<h2 class="anchored" data-anchor-id="calibrating-random-forest-model">10 Calibrating Random Forest Model</h2>
+<p>In this section, we will calibrate a model to predict HDB resale price by using random forest function of <a href="https://cran.r-project.org/web/packages/ranger/index.html"><strong>ranger</strong></a> package.</p>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
