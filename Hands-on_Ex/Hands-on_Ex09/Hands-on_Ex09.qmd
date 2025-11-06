@@ -15,7 +15,15 @@ execute: #how YML page work
 
 In this chapter, we will learn how to **model geographical accessibility** by using R’s geospatial analysis packages.
 
-We have the following objectives to achieve: - to import GIS polygon data into R and save them as simple feature data frame by using appropriate functions of sf package of R - to import aspatial data into R and save them as simple feature data frame by using appropriate functions of sf package of R - to computer accessibility measure by using Hansen’s potential model and Spatial Accessibility Measure (SAM) - to visualise the accessibility measures by using tmap and ggplot2 packages
+We have the following objectives to achieve:
+
+-   to import GIS polygon data into R and save them as simple feature data frame by using appropriate functions of sf package of R
+
+-   to import aspatial data into R and save them as simple feature data frame by using appropriate functions of sf package of R
+
+-   to computer accessibility measure by using Hansen’s potential model and Spatial Accessibility Measure (SAM)
+
+-   to visualise the accessibility measures by using tmap and ggplot2 packages
 
 ## 2 The data
 
@@ -207,6 +215,7 @@ Now, we ready to compute Hansen’s accessibility by using *ac()* of [**SpatialA
 The code chunk below calculates Hansen’s accessibility using *ac()* of **SpatialAcc** and *data.frame()* is used to save the output in a data frame called `acc_Handsen`.
 
 ```{r}
+library(gt)
 acc_Hansen <- data.frame(ac(hexagons$demand,
                             eldercare$capacity,
                             distmat_km, 
@@ -216,7 +225,7 @@ acc_Hansen <- data.frame(ac(hexagons$demand,
 # rename the col name to accHansen
 colnames(acc_Hansen) <- "accHansen"
 
-kable(head(acc_Hansen,10))
+gt(head(acc_Hansen, 10))
 ```
 
 Next, we will convert the data table into **tibble format** by using the code chunk below.
@@ -230,7 +239,7 @@ Lastly, *bind_cols()* of dplyr will be used to join the acc_Hansen tibble data f
 ```{r}
 hexagon_Hansen <- bind_cols(hexagons, acc_Hansen) 
 
-kable(head(hexagon_Hansen,10))
+gt(head(hexagon_Hansen, 10))
 
 ```
 
@@ -264,11 +273,13 @@ tm_shape(eldercare) +
           col = "black") +
   tm_title("Accessibility to eldercare: Hansen method") +
   tm_layout(frame = TRUE) +
-  tm_compass(type="8star", size = 2) +
-  tm_scalebar() +
+  tm_compass(type="8star", size = 2) + 
+  tm_scalebar(position = c("left", "bottom")) + 
   tm_grid(alpha = 0.2)
 
 ```
+
+Eldercare accessibility in Singapore shows a **strong central-peripheral divide**. Central mature estates have accessibility scores 15-200 times higher than peripheral areas. This isn't just about facility locations; it's about cumulative proximity advantages that Hansen captures well.
 
 ### 6.3 Statistical graphic visualisation
 
@@ -298,8 +309,20 @@ ggplot(data=hexagon_Hansen,
   
 ```
 
+::::: markgoals
+::: markgoals-header
+**Analysis**
+:::
+
+::: markgoals-container
+-   Central and North-East Regions show accessibility advantages based on geographic proximity to facilities, while other peripheral regions have lower and more variable access.
+:::
+:::::
+
 ## 7 Modelling and Visualising Accessibility using KD2SFCA Method
+
 ### 7.1 Computing KD2SFCA’s accessibility
+
 In this section, we will repeat most of the steps from previous section to perform the analysis. However, some of the codes will be combined into one code chunk.\
 The code chunk below calculates Hansen’s accessibility using *ac()* of **SpatialAcc** and *data.frame()* is used to save the output in a data frame called `acc_KD2SFCA`. Notice that `KD2SFCA` is used for family argument.
 
@@ -315,7 +338,6 @@ colnames(acc_KD2SFCA) <- "accKD2SFCA"
 acc_KD2SFCA <- as_tibble(acc_KD2SFCA)
 hexagon_KD2SFCA <- bind_cols(hexagons, acc_KD2SFCA)
 ```
-
 
 ### 7.2 Visualising KD2SFCA’s accessibility
 
@@ -347,23 +369,150 @@ tm_shape(eldercare) +
 
 ```
 
+::::: markgoals
+::: markgoals-header
+**Observation**
+:::
 
+::: markgoals-container
+
+-   KD2SFCA shows discrete **dark blue clusters** directly around facility locations. Areas between facilities drop to lower accessibility much faster
+
+-   Central areas still have good access, but **not dramatically better** than some peripheral areas, because central areas have high **population density**, so even though they have many facilities, those facilities are **crowded.**
+
+:::
+:::::
 
 ### 7.3 Statistical graphic visualisation
+
+Now, we are going to compare the distribution of KD2CFA accessibility values by URA Planning Region.
+
+Firstly, we need to add the planning region field into *hexagon_KD2SFCA* simple feature data frame by using the code chunk below.
+
+```{r}
+hexagon_KD2SFCA <- st_join(hexagon_KD2SFCA, mpsz, 
+                          join = st_intersects)
+```
+
+Next, ggplot() will be used to plot the distribution by using boxplot graphical method.
+
+```{r}
+ggplot(data= hexagon_KD2SFCA, 
+       aes(y = accKD2SFCA, 
+           x= REGION_N)) +
+  geom_boxplot(col = "#708A58") +
+  geom_point(stat="summary", 
+             fun.y="mean", 
+             colour ="red", 
+             size=2) +
+  theme(plot.background = element_rect(fill = "#D0DDD0")) +
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE))
+```
+::::: markgoals
+::: markgoals-header
+**Analysis**
+:::
+
+::: markgoals-container
+-   When accounting for facility capacity and local demand within 5km, Central Region emerges as uniquely advantaged with better supply-demand ratios. North-East's proximity advantage (from Hansen) diminishes when demand pressure is considered. So this puts it among other peripheral regions with capacity constraints.
+:::
+:::::
 
 ## 8 Modelling and Visualising Accessibility using Spatial Accessibility Measure (SAM) Method
 
 ### 8.1 Computing SAM accessibility
 
+In this section, we will repeat most of the steps you had learned in previous section to perform the analysis. However, some of the codes will be combined into one code chunk.\
+The code chunk below calculates Hansen’s accessibility using *ac()* of **SpatialAcc** and *data.frame()* is used to save the output in a data frame called `acc_SAM`. Notice that `SAM` is used for family argument.
+
+```{r}
+acc_SAM <- data.frame(ac(hexagons$demand,
+                         eldercare$capacity,
+                         distmat_km, 
+                         d0 = 5,
+                         power = 2, 
+                         family = "SAM"))
+
+colnames(acc_SAM) <- "accSAM"
+acc_SAM <- as_tibble(acc_SAM)
+hexagon_SAM <- bind_cols(hexagons, acc_SAM)
+```
+
 ### 8.2 Visualising SAM’s accessibility
+
+The code chunk below uses a collection of mapping functions of tmap package to create a high cartographic quality accessibility to eldercare centre in Singapore. Notice that `mapex` is reused for *bbox* argument.
+
+```{r}
+#| fig-width: 12
+#| fig-height: 8
+#| align: center
+#| code-fold: true
+tm_shape(hexagon_SAM,
+         bbox = mapex) + 
+  tm_polygons(fill = "accSAM", 
+              fill.scale = tm_scale_intervals(
+                style = "quantile",
+                n = 10,
+                values = "brewer.blues")) +
+tm_shape(eldercare) +
+  tm_dots(size = 0.3,
+          fill = "red",
+          col = "black") +
+  tm_title("Accessibility to eldercare: SAM method") +
+  tm_compass(type = "rose", position = c("right", "top"), show.labels = 3) +
+  tm_layout(frame = TRUE) +
+  tm_compass(type="8star") 
+#  tm_scalebar()
+#  tm_grid(alpha = 0.2)
+```
 
 ### 8.3 Statistical graphic visualisation
 
+Now, we are going to compare the distribution of SAM accessibility values by URA Planning Region.
+
+Firstly, we need to add the planning region field into *hexagon_SAM* simple feature data frame by using the code chunk below.
+
+```{r}
+hexagon_SAM <- st_join(hexagon_SAM, mpsz, 
+                       join = st_intersects)
+```
+
+Next, ggplot() will be used to plot the distribution by using boxplot graphical method.
+
+```{r}
+ggplot(data=hexagon_SAM, 
+       aes(y = accSAM, 
+           x= REGION_N)) +
+  geom_boxplot(col = "#708A58") +
+  geom_point(stat="summary", 
+             fun.y="mean", 
+             colour ="red", 
+             size=2)
+```
+
 ::::: markgoals
 ::: markgoals-header
-**Note**
+**Analysis**
 :::
 
 ::: markgoals-container
+-   When spatial competition is considered, Central Region's advantage largely disappears. Median access across all regions converges near zero because residents living closer to facilities claim available capacity first, leaving limited access for those further away. 
+-   Only a few isolated neighborhoods achieve substantially better access as outliers. This pattern suggests Singapore faces a systemic capacity shortage affecting all regions, rather than a problem of unequal geographic distribution where some regions are well-served while others are underserved.
 :::
 :::::
+
+## 9 Notes
+
++-------------+---------------------------------------+----------------------------------------------------------------+
+| Method      | Best For                              | Example Use Case                                               |
++=============+=======================================+================================================================+
+| **Hansen**  | Abundant resources, general proximity | Retail shops, parks, general amenities for property prices     |
++-------------+---------------------------------------+----------------------------------------------------------------+
+| **KD2SFCA** | Capacity-constrained services         | Hospital beds, school enrollment, eldercare facilities         |
++-------------+---------------------------------------+----------------------------------------------------------------+
+| **SAM**     | Scarce resources with competition     | Primary care physicians, emergency services, childcare centers |
++-------------+---------------------------------------+----------------------------------------------------------------+
+
+## 10 Reference
+
+-   Kam, T. S. (2022, December 8). R for geospatial data science and analytics. https://r4gdsa.netlify.app/
