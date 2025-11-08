@@ -414,7 +414,8 @@ tmap_arrange(map_05, map_10, map_15, map_20, map_25,
 
 ::: markgoals-container改
 -   The distance decay parameter Power dramatically affects accessibility patterns. At Power = 0.5, accessibility is relatively well-distributed across Singapore, with most areas showing moderate-to-good access. 
--   As Power increases to 2.5, accessibility becomes hyper-localized around existing facilities (coloring becomes much lighter moving away from the services). This creates severe disparities. 
+-   As power increases from 0.5 to 2.5, accessibility scores progressively decline across all areas, with peripheral regions experiencing more severe reductions compared to central areas near facilities, which created increasingly stark spatial disparities where only immediate proximity to facilities maintains meaningful accessibility.
+-   With Power increases to 2.5, accessibility also becomes hyper-localized around existing facilities (coloring becomes much lighter moving away from the services). This creates severe disparities. 
 -   The peripheral regions in western and northeastern Singapore show particularly sharp declines and become accessibility deserts at higher decay rates. This suggests that if Singapore's elderly population has limited mobility (higher Power), the current central concentration of eldercare facilities creates substantial inequity, despite adequate overall supply.
 :::
 :::::
