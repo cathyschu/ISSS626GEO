@@ -47,9 +47,9 @@ Four data sets will be used in this hands-on exercise, they are:
 
     -   `exit_cost`: the perpendicular distance between the destination and the nearest road), and
 
-    -   `total_cost`: the summation of `entry_cost`, `network_cost` and `exit_cost`.
+    -   `total_cost`: the summation of `entry_cost`, `network_cost` and `exit_cost`. Not translated to dollars. it's a distance cost in meters.
 
-All the values of the cost related fields are in **metres**.
+All the values of the cost related fields are in **metres** - distance cost.
 
 **Reminder:** *Except `MP14_SUBZONE_NO_SEA_PL` data set, the other three data set are specially prepared by Prof. Kam for teaching and research purpose. Students taking ISSS626 Geospatial Analytics and Applications are allowed to use them for hands-on exercise purpose. Please obtain formal approval from Prof. Kam if you want to use them for other courses or usage.*
 
@@ -62,7 +62,7 @@ The R packages need for this exercise are as follows:
 +=============+=======================================================================================================+
 | sf          | Spatial data handling                                                                                 |
 +-------------+-------------------------------------------------------------------------------------------------------+
-| SpatialAcc  | Modelling geographical accessibility                                                                  |
+| SpatialAcc  | Modelling geographical accessibility. Has one function `ac`. Can calibrate SAM, Hansen, 2SFCA and KD2FCA, and default is SAM.                                                                  |
 +-------------+-------------------------------------------------------------------------------------------------------+
 | tidyverse   | Attribute data handling;                                                                              |
 |             |                                                                                                       |

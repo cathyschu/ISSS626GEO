@@ -1,0 +1,462 @@
+---
+title: "09 - Calibrating Geographical Accessibility Modeling"
+author: "Cathy C."
+date: "Nov 08, 2025"
+date-modified: "last-modified" #auto render date
+format: html
+execute: #how YML page work
+  echo: true #will show code
+  eval: true #will run code every time and show output
+  warning: false #dont show warning msg
+  freeze: true #controls rendering - no render if no changes
+---
+
+## 1 Overview
+
+In this exercise, we will calibrate Hansen Accessibility model using different pwoer values from 0.5 to 2.5. Then we will visualise the accessibility measures by using tmap and ggplot2 packages
+
+## 2 The data
+
+Four data sets will be used in this hands-on exercise, they are:
+
+-   `MP14_SUBZONE_NO_SEA_PL`: URA Master Plan 2014 subzone boundary GIS data. This data set is downloaded from data.gov.sg.
+
+-   `hexagons`: A 250m radius hexagons GIS data. This data set was created by using [*st_make_grid()*](https://r-spatial.github.io/sf/reference/st_make_grid.html) of sf package. It is in ESRI shapefile format.
+
+-   `ELDERCARE`: GIS data showing location of eldercare service. [This data](https://data.gov.sg/dataset/eldercare-services) is downloaded from data.gov.sg. There are two versions. One in ESRI shapefile format. The other one in Google kml file format. For the purpose of this hands-on exercise, ESRI shapefile format is provided.
+
+-   `OD_Matrix`: a distance matrix in csv format. There are six fields in the data file. They are:
+
+    -   `origin_id`: the unique id values of the origin (i.e. `fid` of hexagon data set.),
+
+    -   `destination_id`: the unique id values of the destination (i.e. `fid` of `ELDERCARE` data set.),
+
+    -   `entry_cost`: the perpendicular distance between the origins and the nearest road),
+
+    -   `network_cost`: the actual network distance from the origin and destination,
+
+    -   `exit_cost`: the perpendicular distance between the destination and the nearest road), and
+
+    -   `total_cost`: the summation of `entry_cost`, `network_cost` and `exit_cost`. Not translated to dollars. it's a distance cost in meters.
+
+All the values of the cost related fields are in **metres** - distance cost.
+
+**Reminder:** *Except `MP14_SUBZONE_NO_SEA_PL` data set, the other three data set are specially prepared by Prof. Kam for teaching and research purpose. Students taking ISSS626 Geospatial Analytics and Applications are allowed to use them for hands-on exercise purpose. Please obtain formal approval from Prof. Kam if you want to use them for other courses or usage.*
+
+## 3 Installing and Load R Packages
+
+The R packages need for this exercise are as follows:
+
++---------------+-------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------+
+| **R Package** | **Description**                                                                                       |                                                                                                                               |
++---------------+-------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------+
+| sf            | Spatial data handling                                                                                 |                                                                                                                               |
++---------------+-------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------+
+|               | SpatialAcc                                                                                            | Modelling geographical accessibility. Has one function `ac`. Can calibrate SAM, Hansen, 2SFCA and KD2FCA, and default is SAM. |
++---------------+-------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------+
+| tidyverse     | Attribute data handling;                                                                              |                                                                                                                               |
+|               |                                                                                                       |                                                                                                                               |
+|               | tidyverse also installs other R packages such as tidyr, stringr, forcats, tibble, purrr and magrittr. |                                                                                                                               |
++---------------+-------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------+
+| tmap          | thematic mapping                                                                                      |                                                                                                                               |
++---------------+-------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------+
+| ggplot2       | Staistical graphic                                                                                    |                                                                                                                               |
++---------------+-------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------+
+| ggstatsplot   | Statistical analysis                                                                                  |                                                                                                                               |
++---------------+-------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------+
+
+```{r}
+pacman::p_load(sf, SpatialAcc, tidyverse, tmap, ggplot2, ggstatsplot,
+               knitr, gt)
+```
+
+## 4 Geospatial Data Wrangling
+
+### 4.1 Importing geospatial data
+
+Three geospatial data will be imported from the *data/geospatial* sub-folder. They are MP14_SUBZONE_NO_SEA_PL, hexagons and ELDERCARE.
+
+The code chunk below is used to import these three data sets shapefile by using *st_read()* of **sf** packages.
+
+```{r}
+mpsz <- st_read(dsn = "data/geospatial", layer = "MP14_SUBZONE_NO_SEA_PL")
+
+hexagons <- st_read(dsn = "data/geospatial", layer = "hexagons") 
+
+eldercare <- st_read(dsn = "data/geospatial", layer = "ELDERCARE") 
+```
+
+::::: markgoals
+::: markgoals-header
+**Note**
+:::
+
+::: markgoals-container
+The report above shows that the R object used to contain the imported MP14_SUBZONE_WEB_PL shapefile is called *mpsz* and it is a simple feature object. The geometry type is *multipolygon*. it is also important to note that mpsz simple feature object does not have EPSG information.
+:::
+:::::
+
+### 4.2 Updating CRS information
+
+Below we will update the newly imported mpsz with the correct ESPG code (i.e. 3414)
+
+```{r}
+mpsz <- st_transform(mpsz, 3414)
+eldercare <- st_transform(eldercare, 3414)
+hexagons <- st_transform(hexagons, 3414)
+```
+
+After transforming the projection metadata, we can verify the projection of the newly transformed *mpsz_svy21* by using *st_crs()* of sf package.
+
+The code chunk below will be used to verify the newly transformed *mpsz_svy21*.
+
+```{r}
+st_crs(mpsz)
+```
+
+::::: markgoals
+::: markgoals-header
+**Note**
+:::
+
+::: markgoals-container
+the EPSG: is indicated as 3414 now.
+:::
+:::::
+
+### 4.3 Cleaning and updating attribute fields of the geospatial data
+
+There are many redundant fields in the data tables of both [eldercare]{style="color: #EA5B6F;"} and [hexagons]{style="color: #EA5B6F;"}. The code chunks below will be used to exclude those redundant fields. At the same time, a new field called [demand]{style="color: #EA5B6F;"} and a new field called [capacity]{style="color: #EA5B6F;"} will be added into the data table of [hexagons]{style="color: #EA5B6F;"} and [eldercare]{style="color: #EA5B6F;"} sf data frame respectively. Both fields are derive using mutate() of **dplyr** package.
+
+```{r}
+eldercare <- eldercare %>%
+  select(fid, ADDRESSPOS) %>%
+  mutate(capacity = 100)
+
+hexagons <- hexagons %>%
+  select(fid) %>%
+  mutate(demand = 100)
+```
+
+::::: markgoals
+::: markgoals-header
+**Note**
+:::
+
+::: markgoals-container
+For the purpose of this hands-on exercise, a constant value of 100 is used. In practice, actual demand of the hexagon and capacity of the eldercare centre should be used.
+:::
+:::::
+
+## 5 Apsaital Data Handling and Wrangling
+
+### 5.1 Importing Distance Matrix
+
+The code chunk below uses *read_cvs()* of **readr** package to import `OD_Matrix.csv` into RStudio. The imported object is a tibble data.frame called `ODMatrix`.
+
+```{r}
+ODMatrix <- read_csv("data/aspatial/OD_Matrix.csv", skip = 0)
+```
+
+### 5.2 Tidying distance matrix
+
+The imported ODMatrix organised the distance matrix columnwise.
+
+```{r}
+kable(head(ODMatrix, 10))
+```
+
+```{r}
+distmat <- ODMatrix %>%
+  select(origin_id, destination_id, total_cost) %>%
+  spread(destination_id, total_cost)%>%
+  select(c(-c('origin_id')))
+```
+
+The code chunk below uses *spread()* of **tidyr** package is used to transform the O-D matrix from a thin format into a fat format.
+
+Most of the modelling packages in R is expecting a matrix look similar to the figure below. The rows represent **origins** (i.e. also know as **from** field) and the columns represent **destination** (i.e. also known as **to** field.)
+
+```{r}
+distmat <- ODMatrix %>%
+  select(origin_id, destination_id, total_cost) %>%
+  pivot_wider(names_from = destination_id, values_from = total_cost)%>%
+  select(c(-c('origin_id')))
+
+kable(head(distmat, 10))
+```
+
+::: column-margin
+**Note**: Since tidyr version 1.0 a new function called [*pivot_wider()*](https://tidyr.tidyverse.org/reference/pivot_wider.html) is introduced. We should use [*pivot_wider()*]{style="color: #EA5B6F;"} instead of *spread()*
+:::
+
+Currently, the distance is measured in metre because SVY21 projected coordinate system is used. The code chunk below will be used to convert the unit f measurement from metre to kilometre.
+
+```{r}
+distmat_km <- as.matrix(distmat/1000)
+```
+
+## 6 Modelling and Visualising Accessibility using Hansen Method
+
+### 6.1 Computing Hansen’s accessibility
+
+Now, we ready to compute Hansen’s accessibility by using *ac()* of [**SpatialAcc**](https://cran.r-project.org/web/packages/SpatialAcc/index.html) package. Before getting started, we should read the [arguments](https://cran.r-project.org/web/packages/SpatialAcc/SpatialAcc.pdf) of the function at least once in order to ensure that the required inputs are available.
+
+Below we will calculates Hansen’s accessibility using *ac()* of **SpatialAcc** using the different pwoer values 0.5 - 2.5 with interval of 0.5. *data.frame()* is used to save the output in a data frame called `acc_Handsen`.
+
+::: panel-tabset
+## Power = 0.5
+
+```{r}
+acc_Hansen_05 <- data.frame(ac(hexagons$demand,
+                            eldercare$capacity,
+                            distmat_km, 
+                            #d0 = 50,
+                            power = 0.5, 
+                            family = "Hansen"))
+
+colnames(acc_Hansen_05) <- "accHansen_05"
+acc_Hansen_05 <- as_tibble(acc_Hansen_05)
+hexagon_Hansen_05 <- bind_cols(hexagons, acc_Hansen_05)
+
+gt(head(hexagon_Hansen_05, 10))
+```
+
+## Power = 1.0
+
+```{r}
+acc_Hansen_10 <- data.frame(ac(hexagons$demand,
+                            eldercare$capacity,
+                            distmat_km, 
+                            #d0 = 50,
+                            power = 1, 
+                            family = "Hansen"))
+
+colnames(acc_Hansen_10) <- "accHansen_10"
+acc_Hansen_10 <- as_tibble(acc_Hansen_10)
+hexagon_Hansen_10 <- bind_cols(hexagons, acc_Hansen_10)
+
+gt(head(hexagon_Hansen_10, 10))
+```
+
+## Power = 1.5
+
+```{r}
+acc_Hansen_15 <- data.frame(ac(hexagons$demand,
+                            eldercare$capacity,
+                            distmat_km, 
+                            #d0 = 50,
+                            power = 1.5, 
+                            family = "Hansen"))
+
+colnames(acc_Hansen_15) <- "accHansen_15"
+acc_Hansen_15 <- as_tibble(acc_Hansen_15)
+hexagon_Hansen_15 <- bind_cols(hexagons, acc_Hansen_15)
+
+gt(head(hexagon_Hansen_15, 10))
+```
+
+## Power = 2.0
+
+```{r}
+acc_Hansen_20 <- data.frame(ac(hexagons$demand,
+                            eldercare$capacity,
+                            distmat_km, 
+                            #d0 = 50,
+                            power = 2, 
+                            family = "Hansen"))
+
+colnames(acc_Hansen_20) <- "accHansen_20"
+acc_Hansen_20 <- as_tibble(acc_Hansen_20)
+hexagon_Hansen_20 <- bind_cols(hexagons, acc_Hansen_20)
+
+gt(head(hexagon_Hansen_20, 10))
+```
+
+## Power = 2.5
+
+```{r}
+acc_Hansen_25 <- data.frame(ac(hexagons$demand,
+                            eldercare$capacity,
+                            distmat_km, 
+                            #d0 = 50,
+                            power = 2.5, 
+                            family = "Hansen"))
+
+colnames(acc_Hansen_25) <- "accHansen_25"
+acc_Hansen_25 <- as_tibble(acc_Hansen_25)
+hexagon_Hansen_25 <- bind_cols(hexagons, acc_Hansen_25)
+
+gt(head(hexagon_Hansen_25, 10))
+```
+:::
+
+### 6.2 Visualising Hansen’s accessibility
+
+#### 6.2.1 Extracting map extend
+
+Firstly, we will extract the extend of `hexagons` simple feature data frame by by using *st_bbox()* of **sf** package.
+
+```{r}
+mapex <- st_bbox(hexagons)
+```
+
+Belowe we will plot a high cartographic quality accessibility to eldercare centre in Singapore while using the different power values.
+
+#### 6.2.1 Plot maps
+
+```{r}
+#| fig-width: 12
+#| fig-height: 40
+#| code-fold: true
+
+# 0.5
+map_05 <- tm_shape(hexagon_Hansen_05,
+         bbox = mapex) + 
+  tm_polygons(fill = "accHansen_05", 
+              fill.scale = tm_scale_intervals(
+                style = "quantile",
+                n = 10,
+                values = "brewer.blues")) +
+tm_shape(eldercare) +
+  tm_dots(size = 0.3,
+          fill = "red",
+          col = "black") +
+  tm_title("Accessibility to eldercare: Hansen method") +
+  tm_layout(frame = TRUE) +
+  tm_compass(type="8star", size = 2) + 
+  tm_scalebar(position = c("left", "bottom")) + 
+  tm_grid(alpha = 0.2)
+
+ # 1.0
+map_10 <- tm_shape(hexagon_Hansen_10,
+         bbox = mapex) + 
+  tm_polygons(fill = "accHansen_10", 
+              fill.scale = tm_scale_intervals(
+                style = "quantile",
+                n = 10,
+                values = "brewer.blues")) +
+tm_shape(eldercare) +
+  tm_dots(size = 0.3,
+          fill = "red",
+          col = "black") +
+  tm_title("Accessibility to eldercare: Hansen method") +
+  tm_layout(frame = TRUE) +
+  tm_compass(type="8star", size = 2) + 
+  tm_scalebar(position = c("left", "bottom")) + 
+  tm_grid(alpha = 0.2)
+
+  
+# 1.5
+map_15 <- tm_shape(hexagon_Hansen_15,
+         bbox = mapex) + 
+  tm_polygons(fill = "accHansen_15", 
+              fill.scale = tm_scale_intervals(
+                style = "quantile",
+                n = 10,
+                values = "brewer.blues")) +
+tm_shape(eldercare) +
+  tm_dots(size = 0.3,
+          fill = "red",
+          col = "black") +
+  tm_title("Accessibility to eldercare: Hansen method") +
+  tm_layout(frame = TRUE) +
+  tm_compass(type="8star", size = 2) + 
+  tm_scalebar(position = c("left", "bottom")) + 
+  tm_grid(alpha = 0.2)
+
+# 2.0      
+map_20 <- tm_shape(hexagon_Hansen_20,
+         bbox = mapex) + 
+  tm_polygons(fill = "accHansen_20", 
+              fill.scale = tm_scale_intervals(
+                style = "quantile",
+                n = 10,
+                values = "brewer.blues")) +
+tm_shape(eldercare) +
+  tm_dots(size = 0.3,
+          fill = "red",
+          col = "black") +
+  tm_title("Accessibility to eldercare: Hansen method") +
+  tm_layout(frame = TRUE) +
+  tm_compass(type="8star", size = 2) + 
+  tm_scalebar(position = c("left", "bottom")) + 
+  tm_grid(alpha = 0.2)
+    
+# 2.5    
+map_25 <- tm_shape(hexagon_Hansen_25,
+         bbox = mapex) + 
+  tm_polygons(fill = "accHansen_25", 
+              fill.scale = tm_scale_intervals(
+                style = "quantile",
+                n = 10,
+                values = "brewer.blues")) +
+tm_shape(eldercare) +
+  tm_dots(size = 0.3,
+          fill = "red",
+          col = "black") +
+  tm_title("Accessibility to eldercare: Hansen method") +
+  tm_layout(frame = TRUE) +
+  tm_compass(type="8star", size = 2) + 
+  tm_scalebar(position = c("left", "bottom")) + 
+  tm_grid(alpha = 0.2)
+ 
+tmap_arrange(map_05, map_10, map_15, map_20, map_25, 
+             ncol = 1, nrow = 5)
+```
+
+
+
+::::: markgoals
+::: markgoals-header
+**Observations**
+:::
+
+::: markgoals-container改
+-   The distance decay parameter Power dramatically affects accessibility patterns. At Power = 0.5, accessibility is relatively well-distributed across Singapore, with most areas showing moderate-to-good access. 
+-   As Power increases to 2.5, accessibility becomes hyper-localized around existing facilities (coloring becomes much lighter moving away from the services). This creates severe disparities. 
+-   The peripheral regions in western and northeastern Singapore show particularly sharp declines and become accessibility deserts at higher decay rates. This suggests that if Singapore's elderly population has limited mobility (higher Power), the current central concentration of eldercare facilities creates substantial inequity, despite adequate overall supply.
+:::
+:::::
+
+### 6.3 Statistical graphic visualisation
+
+In this section, we are going to compare the distribution of Hansen’s accessibility values by URA Planning Region.
+
+Firstly, we need to add the planning region field into haxegon_Hansen simple feature data frame by using the code chunk below.
+
+```{r}
+hexagon_Hansen_st05 <- st_join(hexagon_Hansen_05, mpsz, 
+                          join = st_intersects)
+```
+
+Next, ggplot() will be used to plot the distribution by using boxplot graphical method.
+
+```{r}
+#| align: center
+ggplot(data=hexagon_Hansen_st05, 
+       aes(y = log(accHansen_05), 
+           x= REGION_N)) +
+  geom_boxplot(col = "#708A58") +
+  geom_point(stat="summary", 
+             fun.y="mean", 
+             colour ="red", 
+             size=2) +
+  theme(plot.background = element_rect(fill = "#D0DDD0")) +
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE))
+  
+```
+
+::::: markgoals
+::: markgoals-header
+**Analysis**
+:::
+
+::: markgoals-container
+-   Central and North-East Regions show accessibility advantages based on geographic proximity to facilities, while other peripheral regions have lower and more variable access.
+:::
+:::::
+
+## 10 Reference
+
+-   Kam, T. S. (2022, December 8). R for geospatial data science and analytics. https://r4gdsa.netlify.app/
