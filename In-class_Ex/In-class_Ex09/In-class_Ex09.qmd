@@ -451,7 +451,7 @@ ggplot(data=hexagon_Hansen_st05,
 ::::: markgoals
 ::: markgoals-header
 **Analysis**
-:::
+::: 
 
 ::: markgoals-container
 -   Central and North-East Regions show accessibility advantages based on geographic proximity to facilities, while other peripheral regions have lower and more variable access.

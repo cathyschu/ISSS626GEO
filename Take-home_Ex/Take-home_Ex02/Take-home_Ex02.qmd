@@ -32,7 +32,7 @@ The primary objectives are to:
 The packages that we will use for this study are outlined below:
 
 | R Package | Description |
-|--------------------------|----------------------------------------------|
+|----|----|
 | **sf** | A package that provides [**simple features access**](https://en.wikipedia.org/wiki/Simple_Features) for R. |
 | **spdep** | Creates spatial weights matrices and to test for and model spatial autocorrelation in geographical data, like Moran's I and Geary's C and Local Moran's I and Getis-Ord G. |
 | **tidyverse** | Includes the core packages like ggplot2, dplyr, readr, purrr, tibble, lubridate, etc. |
@@ -3729,7 +3729,7 @@ We identified the following clusters through EHSA maps.
 
 ## **North**
 
--  [**Woodlands**]{style="color: #FF8282;"} forms one of the largest AM hotspot cluster (17 hexagons) spanning the checkpoint, Woodlands, and Admiralty residential areas with 50% persistent hotspots, indicating exceptionally strong and stable morning boarding demand. The cluster shrinks to 7 hexagons centered on Woodlands MRT during PM (mostly consecutive hotspots) but remains strong on weekends, confirming this is a **major residential hub with active local activities** and consistent cross-border commuting patterns throughout the week.
+-   [**Woodlands**]{style="color: #FF8282;"} forms one of the largest AM hotspot cluster (17 hexagons) spanning the checkpoint, Woodlands, and Admiralty residential areas with 50% persistent hotspots, indicating exceptionally strong and stable morning boarding demand. The cluster shrinks to 7 hexagons centered on Woodlands MRT during PM (mostly consecutive hotspots) but remains strong on weekends, confirming this is a **major residential hub with active local activities** and consistent cross-border commuting patterns throughout the week.
 
 -   [**Senoko**]{style="color: #5682B1;"} forms a medium coldspot cluster with consecutive and new patterns in AM that disappears during PM and returns as sporadic coldspots on weekends, except for one hexagon at Senoko Power Station showing an intensifying hotspot with only one visible bus stop. This anomaly warrants investigation as it suggests either data collection issues, shift worker patterns, or unreported service activity.
 
