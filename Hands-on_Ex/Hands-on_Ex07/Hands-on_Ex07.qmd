@@ -136,6 +136,7 @@ condo_resale.sf <- st_as_sf(condo_resale,
                             coords = c("LONGITUDE", "LATITUDE"),
                             crs=4326) %>%
   st_transform(crs=3414)
+
 ```
 
 ::::: markgoals
@@ -339,8 +340,15 @@ First, we will build a simple linear regression model by using *SELLING_PRICE* a
 `lm()` returns an object of class “lm” or for multiple responses of class c(“mlm”, “lm”).
 
 ```{r}
+#| eval: false
 condo.slr <- lm(formula=SELLING_PRICE ~ AREA_SQM, 
                 data = condo_resale.sf)
+write_rds(condo.slr, "data/rds/condo.slr.rds")
+```
+
+```{r}
+#| echo: false
+condo.slr <- read_rds("data/rds/condo.slr.rds")
 ```
 
 The functions `summary()` and `anova()` can be used to obtain and print a summary and analysis of variance table of the results. The generic accessor functions coefficients, effects, fitted.values and residuals extract various useful features of the value returned by `lm`.
@@ -437,6 +445,7 @@ The code chunk below using `lm()` to calibrate the **multiple linear regression*
 `lm()` of Base R is used to calibrate a multiple linear regression model. The model output is stored in an lm object called *condo.mlr*. - `summary()` is used to print the model output.
 
 ```{r}
+#| eval: false
 condo.mlr <- lm(
   formula = SELLING_PRICE ~ AREA_SQM + AGE  + 
     PROX_CBD + PROX_CHILDCARE + PROX_ELDERLYCARE +
@@ -448,6 +457,13 @@ condo.mlr <- lm(
     FAMILY_FRIENDLY + FREEHOLD, 
   data=condo_resale.sf)
 summary(condo.mlr)
+
+write_rds(condo.mlr, "data/rds/condo.mlr.rds")
+```
+
+```{r}
+#| echo: false
+condo.mlr <- read_rds("data/rds/condo.mlr.rds")
 ```
 
 ### 6.4 Revising the model
@@ -466,6 +482,13 @@ condo.mlr1 <- lm(
     NO_Of_UNITS + FAMILY_FRIENDLY + FREEHOLD,
   data=condo_resale.sf)
 summary(condo.mlr1)
+
+write_rds(condo.mlr1, "data/rds/condo.mlr1.rds")
+```
+
+```{r}
+#| echo: false
+condo.mlr1 <- read_rds("data/rds/condo.mlr1.rds")
 ```
 
 ::::: markgoals
@@ -759,6 +782,7 @@ In the code chunk below `bw.gwr()` of GWModel package is used to determine the *
 There are two possible approaches can be uused to determine the stopping rule, they are: **CV cross-validation approach** and **AIC corrected (AICc) approach**. We define the stopping rule using ***approach*** argeement.
 
 ```{r}
+#| eval: false
 bw.fixed <- bw.gwr(
   formula = SELLING_PRICE ~ AREA_SQM + AGE  + 
     PROX_CBD + PROX_CHILDCARE + PROX_ELDERLYCARE    +
@@ -771,6 +795,14 @@ bw.fixed <- bw.gwr(
   kernel="gaussian", 
   adaptive=FALSE, 
   longlat=FALSE)
+
+write_rds(bw.fixed, "data/rds/bw.fixed.rds")
+```
+
+```{r}
+#| echo: false
+
+bw.fixed <- read_rds("data/rds/bw.fixed.rds")
 ```
 
 ::::: markgoals
@@ -790,6 +822,7 @@ bw.fixed <- bw.gwr(
 Now we can use the code chunk below to calibrate the gwr model using fixed bandwidth and gaussian kernel.
 
 ```{r}
+#| eval: false
 gwr.fixed <- gwr.basic(
   formula = SELLING_PRICE ~ AREA_SQM + AGE  + 
     PROX_CBD + PROX_CHILDCARE + PROX_ELDERLYCARE    +
@@ -801,6 +834,13 @@ gwr.fixed <- gwr.basic(
   bw=bw.fixed, 
   kernel = 'gaussian', 
   longlat = FALSE)
+
+write_rds(gwr.fixed, "data/rds/gwr.fixed.rds")
+```
+
+```{r}
+#| echo: false
+gwr.fixed <- read_rds("data/rds/gwr.fixed.rds")
 ```
 
 The output is saved in a list of class “gwrm”. The code below can be used to display the model output.
@@ -830,6 +870,7 @@ Similar to the earlier section, we will first use `bw.gwr()` to determine the re
 The code chunk used look very similar to the one used to compute the fixed bandwidth except the `adaptive` argument has changed to **TRUE**.
 
 ```{r}
+#| eval: false
 bw.adaptive <- bw.gwr(
   formula = SELLING_PRICE ~ AREA_SQM + AGE  + 
     PROX_CBD + PROX_CHILDCARE + PROX_ELDERLYCARE    +
@@ -842,6 +883,13 @@ bw.adaptive <- bw.gwr(
   kernel="gaussian", 
   adaptive=TRUE, 
   longlat=FALSE)
+
+write_rds(bw.adaptive, "data/rds/bw.adaptive.rds")
+```
+
+```{r}
+#| echo: false
+bw.adaptive <- read_rds("data/rds/bw.adaptive.rds")
 ```
 
 ::::: markgoals
@@ -859,6 +907,7 @@ The result shows that the 30 is the recommended data points to be used.
 Now, we can go ahead to calibrate the gwr-based hedonic pricing model by using adaptive bandwidth and gaussian kernel as shown in the code chunk below.
 
 ```{r}
+#| eval: false
 gwr.adaptive <- gwr.basic(
   formula = SELLING_PRICE ~ AREA_SQM + AGE + 
     PROX_CBD + PROX_CHILDCARE + PROX_ELDERLYCARE +
@@ -870,6 +919,12 @@ gwr.adaptive <- gwr.basic(
   kernel = 'gaussian', 
   adaptive=TRUE, 
   longlat = FALSE)
+write_rds(gwr.adaptive, "data/rds/gwr.adaptive.rds")
+```
+
+```{r}
+#| echo: false
+gwr.adaptive <- read_rds("data/rds/gwr.adaptive.rds")
 ```
 
 Let's display the model output.
