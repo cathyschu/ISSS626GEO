@@ -1,5 +1,5 @@
 ---
-title: "09 - Modelling Geographical Accessibility"
+title: "03 - Predictive Modeling for Singapore HDB Resale Prices"
 author: "Cathy C."
 date: "Nov 09, 2025"
 date-modified: "last-modified" #auto render date
@@ -116,6 +116,7 @@ Below we will import *Master Plan 2019 Subzone Boundary (No Sea).*
 #| eval: false
 #| code-fold: true
 mpsz <- st_read("data/rawdata/MasterPlan2019SubzoneBoundaryNoSeaKML.kml") %>%
+  st_zm(drop = TRUE, what = "ZM") %>%
   st_transform(crs = 3414)
 
 # extract values from the HTML description
@@ -271,10 +272,18 @@ HDBresale_sf <- read_rds("data/rds/HDBresale_sf.rds")
 -   **Childcare centers**
 
 ```{r}
+#| eval: false
 #| code-fold: true
 preschool_data <- st_read("data/rawdata/PreschoolsLocation.kml") %>%
   st_transform(crs = 3414)
+write_rds(preschool_data, "data/rds/preschool_data.rds")
 ```
+
+```{r}
+#| echo: false
+preschool_data <- read_rds("data/rds/preschool_data.rds")
+```
+
 
 Make sure the childcare coordinate system is SVY21.
 ```{r}
@@ -284,9 +293,17 @@ st_crs(preschool_data)
 
 -   **Kindergartens**
 ```{r}
+#| eval: false
 #| code-fold: true
 kindergarten_data <- st_read("data/rawdata/Kindergartens.geojson") %>%
   st_transform(crs = 3414)
+
+write_rds(kindergarten_data, "data/rds/kindergarten_data.rds")
+```
+```{r}
+#| echo: false
+#| code-fold: true
+kindergarten_data <- read_rds("data/rds/kindergarten_data.rds")
 ```
 
 Make sure the kindergarten coordinate system is SVY21.
@@ -303,32 +320,38 @@ st_crs(kindergarten_data)
 #| eval: false
 primschool_data <- read_csv("data/rawdata/General Information of schools.csv") %>%
   select(school_name, postal_code, address)
+
+write_rds(primschool_data, "data/rds/primschool_data.rds") 
+```
+
+```{r}
+#| echo: false
+primschool_data <- read_rds("data/rds/primschool_data.rds")
 ```
 
 We will geocode for primary school data in later section.
 
 ## Business
 
-
-```{r}
-tm_shape(mpsz) +
-  tm_polygons(fill = "#FFF4EA", alpha = 0.3) +
-  tm_text("SUBZONE_N", size = 0.5)
-```
-
-
 -   **CBD**
-For CBD, we will compute this area into a centroid point, so later we can compute the proximity from the HDB to CBD.
+For CBD, we will extract the area for CBD from `mpsz`.
 ```{r}
 #| code-fold: true
 #| eval: false
-mp
+cbd_data <- mpsz %>%
+  filter(SUBZONE_N %in% c("RAFFLES PLACE", "MARINA CENTRE", "TANJONG PAGAR", "CITY HALL", "CENTRAL SUBZONE")) %>%
+  st_union()
 
+write_rds(cbd_data, "data/rds/cbd_data.rds")
+```
+
+```{r}
+#| echo: false
+cbd_data <- read_rds("data/rds/cbd_data.rds")
 ```
 
 -   **Business park data**
-
-Transform polygon data to centroid point data.
+Business parks are typically smaller than planning areas, and we have multiple business parks to consider. Therefore, we will calculate centroid for measuring proximity, and transform polygon data to centroid point data.
 
 ```{r}
 #| code-fold: true
@@ -351,19 +374,68 @@ bizpark_data <- st_read("data/rawdata/JTCBusinessParkLandGEOJSON.geojson") %>%
 ```
 
 -   sports halls
-```{r}
-#| code-fold: true
-#| eval: false
 
 
+```{.r}
+read_html(cc_data$Description[1]) %>% 
+  html_table() %>% 
+  .[[1]]
 ```
 
--   parks
+
 ```{r}
 #| code-fold: true
 #| eval: false
+sports_data <- st_read("data/rawdata/SportsFieldsSG.geojson") %>%
+  st_zm(drop = TRUE, what = "ZM") %>%
+  st_transform(crs = 3414)
+
+extract_kml_field <- function(html_text, field_name) {
+  if (is.na(html_text) || html_text == "") return(NA_character_)
+  
+  page <- read_html(html_text)
+  rows <- page %>% html_elements("tr")
+  
+  value <- rows %>%
+    keep(~ html_text2(html_element(.x, "th")) == field_name) %>%
+    html_element("td") %>%
+    html_text2()
+  
+  if (length(value) == 0) NA_character_ else value
+}
+
+# extract info
+sports_data <- sports_data %>%
+  mutate(
+    name = map_chr(Description, extract_kml_field, "NAME"),
+    description = map_chr(Description, extract_kml_field, "DESCRIPTION")
+  ) %>%
+  select(-Name, -Description) %>%
+  relocate(geometry, .after = last_col())
+
+write_rds(mpsz, "data/rds/sports_data.rds")
+```
 
 
+-   parks
+
+```{r}
+#| code-fold: true
+#| eval: false
+park_data <- st_read("data/rawdata/MasterPlan2019SDCPParkandOpenSpacelayer.kml") %>%
+  st_zm(drop = TRUE, what = "ZM") %>%
+  st_make_valid() %>%
+  st_transform(crs = 3414)
+
+# Calculate centroids 
+park_data <- park_data %>%
+  mutate(centroid = st_centroid(geometry))
+
+write_rds(park_data, "data/rds/park_data.rds")
+```
+```{r}
+#| echo: false
+park_data <- read_rds("data/rds/park_data.rds")
 ```
 
 -   supermarkets
@@ -375,7 +447,44 @@ bizpark_data <- st_read("data/rawdata/JTCBusinessParkLandGEOJSON.geojson") %>%
 
 ```
 
+-   community clubs
+```{r}
+#| code-fold: true
+#| eval: false
+cc_data <- st_read("data/rawdata/CommunityClubs.geojson") %>%
+  st_transform(crs = 3414) %>%
+  mutate(centroid = st_centroid(geometry))
 
+extract_kml_field <- function(html_text, field_name) {
+  if (is.na(html_text) || html_text == "") return(NA_character_)
+  
+  page <- read_html(html_text)
+  rows <- page %>% html_elements("tr")
+  
+  value <- rows %>%
+    keep(~ html_text2(html_element(.x, "th")) == field_name) %>%
+    html_element("td") %>%
+    html_text2()
+  
+  if (length(value) == 0) NA_character_ else value
+}
+
+# extract info
+cc_data <- cc_data %>%
+  mutate(
+    name = map_chr(Description, extract_kml_field, "NAME")
+  ) %>%
+  select(-Name, -Description) %>%
+  relocate(geometry, .after = last_col())
+
+
+write_rds(cc_data, "data/rds/cc_data.rds")
+```
+
+```{r}
+#| echo: false
+cc_data <- read_rds("data/rds/cc_data.rds")
+```
 ## Transportation
 -   MRT
 Below we will import **Master Plan 2019 Subzone Boundary (No Sea).**
@@ -428,6 +537,7 @@ write_rds(mrt_sf, "data/rds/mrt_sf.rds")
 ```
 
 ```{r}
+#| eval: false
 #| echo: false
 mrt_all <- read_rds("data/rds/mrt_all.rds")
 mrt_sf <- read_rds("data/rds/mrt_sf.rds")
@@ -436,6 +546,7 @@ mrt_sf <- read_rds("data/rds/mrt_sf.rds")
 Plot the MRT station exits in a tmap.
 
 ```{r}
+#| eval: false
 #| fig-width: 12
 #| fig-height: 8
 #| code-fold: true
@@ -471,6 +582,7 @@ write_rds(BusStop, "data/rds/BusStop.rds")
 Check again on BusStop:
 
 ```{r}
+#| eval: false
 BusStop <- read_rds("data/rds/BusStop.rds")
 st_crs(BusStop)
 ```
@@ -553,6 +665,19 @@ HDBresale_sf <- HDBresale_sf %>%
 ## Shopping mall
 
 ## CBD/town centre
+below code is a sample.
+```{r}
+#| eval: false
+resale <- HDBresale %>%
+  mutate(
+    dist_to_downtown_km = as.numeric(st_distance(geometry, downtown_core)) / 1000,
+    log_dist_downtown = log1p(dist_to_downtown_km)
+  )
+
+# Save
+saveRDS(resale, "data/resale_with_features.rds")
+
+```
 
 ## Business park
 
@@ -568,6 +693,7 @@ HDBresale_sf <- HDBresale_sf %>%
 Next we will derive a binary data to find out which schools are within 350 meters.
 
 ``` {r}
+#| eval: false
 within_350m <- st_is_within_distance(
   HDBresale_sf, preschool, dist = 350)
 
@@ -826,457 +952,7 @@ cat("Test size:", nrow(test), "
 
 ✅ Data preparation (MUST finish) ✅ Minimal EDA (quality checks only) ✅ All 4 models running with basic tuning ✅ Model comparison and evaluation
 
-#### 2.2.1 Import HDB resale transactions
 
-
-
-
-### 2.3 Proximity analysis
-
-We will learn how to count the number of geographic entities located within a defined distance from each HDB property.
-
-For the purpose of this exercise, we are interested to count the number of preschools located with 350m of each resale HDB unit.
-
-#### 2.3.1 Transform to sf data frame
-
-Before performing proximity analysis, it is important to ensure that:
-
--   both input data sets must be in sf objects, and
--   they must be in similar projected coordinates systems.
-
-``` {r}
-st_crs(HDBresale)
-HDBresale_sf <- HDBresale %>%
-  st_as_sf(
-    coords = c("LONGITUDE", "LATITUDE"),
-    crs = 4326) %>% #if decimal degree
-  st_transform(crs = 3414)
-```
-
-::::: markgoals
-::: markgoals-header
-**Note**
-:::
-
-::: markgoals-container
--   `st_as_sf()` is used to convert HDBresale tibble data.frame to sf object by using values from LONGITUDE and LATITUDE columns to form the geometry features.
--   `st_transform()` is then used to transform the sf object into svy21 projected coordinates system.
--   the output sf object is called\* HDBresale_sf\*. It is in sf [data.frame format]{style="color: #F08787;"}.
-:::
-:::::
-
-### 2.6 Load preschool data
-
-``` {r}
-preschool = st_read("data/rawdata/PreSchoolsLocation.kml") %>%
-  st_transform(crs = 3414)
-```
-
-From this we will have the geometry data for the preschools.
-
-### 2.7 Counting number of preschools
-
-Next we will derive a binary data to find out which schools are within 350 meters.
-
-``` {r}
-within_350m <- st_is_within_distance(
-  HDBresale_sf, preschool, dist = 350)
-
-HDBresale_sf <- HDBresale_sf %>%
-  mutate(prischool_350m = map_int(within_350m, length)
-)
-```
-
-::::: markgoals
-::: markgoals-header
-**Note**
-:::
-
-::: markgoals-container
--   `st_is_within_distance()` of [**sf**]{style="color: #F08787;"} package is used to determines whether two spatial objects (HDB property and preschool) are within 350m distance of each other. It returns a logical matrix (or a sparse list of indices if sparse = TRUE) indicating for each geometry in HDB property which geometries in preschool are within 350m distance.
--   `map_int()` of [**purr**]{style="color: #F08787;"} package is used to the number of preschools found in the newly created WITHIN_350M_PRISCHOOL field.
-:::
-:::::
-
-### 2.8 Computing shortest distance
-
-Instead of counting number of preschools located within 350m of each HDB resale property, code chunk below is used to compute the distance between the nearest preschool from each HDB resale property.
-
-``` r
-HDBresale_sf <- HDBresale_sf %>%
-  mutate(
-    PROX_PRESCHOOL = as.numeric(
-      st_distance(geometry,
-                  preschool[st_nearest_feature(
-                    geometry, preschool), ], 
-                  by_element = TRUE)
-      )
-    )
-```
-
-## 3 Independent Variables EDA
-
-### 3.1 Structural factors
-
-### 3.2 Location factors
-
-## 4 Resale Price EDA
-
-## 5 Multicollinearity Analysis
-
-# 6 Predictive Modeling
-
-## 6.1 Data set
-
-### 6.1.1 Data import
-
-``` r
-mdata <- read_rds("data/rawdata/mdata.rds")
-```
-
-### 6.1.2 Data sampling
-
-Calibrating predictive models are computational intensive, especially random forest method is used. For quick prototyping, a 10% sample will be selected at random from the data by using the code chunk below:
-
-``` r
-set.seed(1234)
-HDB_sample <- mdata %>%
-  sample_n(1500)
-```
-
-## 6.1.3 Checking of overlapping point
-
-\*\*\* When using GWmodel to calibrate explanaroty or predictive models, it is very important to ensure that there are no overlapping point features \*\*\*
-
-Below is to check if there are overlapping point feature - to do spatial jitter.
-
-``` r
-overlapping_points <- HDB_sample %>%
-  mutate(overlap = lengths(st_equals(.,.)) > 1)
-```
-
-Below we can have a look at overlapping_points, and see the new column overlap showing whether the location has overlapping points. We then calculate how many has overlapping points. In this sample data, we observed 453 overlapping points.
-
-``` r
-head(overlapping_points)
-sum(overlapping_points$overlap == "TRUE")
-```
-
-## 6.1.4 Spatial jitter
-
-st_jitter is used to move the point feature by 5m to avoid overlapping point features.
-
-``` r
-HDB_sample <- HDB_sample %>%
-  st_jitter(amount = 1)
-```
-
-``` r
-set.seed(1234)
-resale_split <- initial_split(HDB_sample,
-                              prop = 6.67/10,)
-train_data <- training(resale_split)
-test_data <- testing(resale_split)
-```
-
-### 6.2 GWR
-
-#### 6.2.1 Constructing the adaptive bandwidth gwr model
-
-``` r
-#| eval: false
-bw_adaptive <- bw.gwr(
-  formula = resale_price ~ floor_area_sqm +
-    storey_order + remaining_lease_mths +
-    PROX_CBD + PROX_ELDERLYCARE + PROX_HAWKER +
-    PROX_MRT + PROX_PARK + PROX_MALL + 
-    PROX_SUPERMARKET + WITHIN_350M_KINDERGARTEN +
-    WITHIN_350M_CHILDCARE + WITHIN_350M_BUS +
-    WITHIN_1KM_PRISCH,
-  data=train_data,
-  approach="CV",
-  kernel="gaussian",
-  adaptive=TRUE,
-  longlat=FALSE)
-
-write_rds(bw_adaptive, "data/model/bw_adaptive.rds")
-```
-
-``` r
-#| echo: false
-bw_adaptive <- read_rds("data/model/bw_adaptive.rds")
-```
-
-``` r
-#| eval: false
-gwr_adaptive <- gwr.basic(
-  formula = resale_price ~ floor_area_sqm +
-    storey_order + remaining_lease_mths + 
-    PROX_CBD + PROX_ELDERLYCARE + 
-    PROX_HAWKER + PROX_MRT + PROX_PARK + 
-    PROX_MALL + PROX_SUPERMARKET +
-    WITHIN_350M_KINDERGARTEN +
-    WITHIN_350M_CHILDCARE + 
-    WITHIN_350M_BUS + WITHIN_1KM_PRISCH,
-  data=train_data,
-  bw=bw_adaptive, 
-  kernel = 'gaussian', 
-  adaptive=TRUE,
-  longlat = FALSE)
-
-write_rds(gwr_adaptive, 
-          "data/model/gwr_adaptive.rds")
-```
-
-#### 6.2.2 GWR Output
-
-``` r
-#| echo: false
-gwr_adaptive <- read_rds("data/model/gwr_adaptive.rds")
-gwr_adaptive
-```
-
--   Based on the result of the modelling above, p-value is much smaller than 0.05. We see the adjusted R\^2 = 0.7387, meaning that this model can explain 73% of the data using the variables.
-
--   The AICc = 24901.56 for Global Regression model is much larger than Geographically Weighted Regression's AICc = 24103.97. The difference of approximately 797.6 points is quite significant. This suggests the **GWR model provides meaningfully better predictions and fit**.
-
-Explanatory variables:
-
-Plot out the significant variables to show distribution and explain which ones have higher/lower influence over the model.
-
-### 6.? Compute Collinearity Matrix
-
-``` r
-#| fig-width: 12
-#| fig-height: 10
-par(bg = "#D0DDD0") 
-
-mdata_nogeo <- mdata %>%
-  st_drop_geometry()
-corrplot::corrplot(cor(mdata_nogeo[, 2:17]), 
-                   diag = FALSE, 
-                   order = "AOE",
-                   tl.pos = "td", 
-                   tl.cex = 0.8, 
-                   method = "number", 
-                   type = "upper",
-                   number.cex = 0.8,
-                   bg = "white")
-```
-
-## 6.3 MLR
-
-### 6.3.1 Building a non-spatial multiple linear regression
-
-``` r
-#| eval: false
-price_mlr <- lm(resale_price ~ floor_area_sqm +
-                  storey_order + remaining_lease_mths +
-                  PROX_CBD + PROX_ELDERLYCARE + PROX_HAWKER +
-                  PROX_MRT + PROX_PARK + PROX_MALL + 
-                  PROX_SUPERMARKET + WITHIN_350M_KINDERGARTEN +
-                  WITHIN_350M_CHILDCARE + WITHIN_350M_BUS +
-                  WITHIN_1KM_PRISCH,
-                data=train_data)
-write_rds(price_mlr, "data/model/price_mlr.rds")
-```
-
-``` r
-#| echo: false
-price_mlr <- read_rds("data/model/price_mlr.rds")
-summary(price_mlr)
-```
-
-### 6.4 Random Forest Model
-
-#### 6.4.1 Prepare data
-
-``` r
-coords <- st_coordinates(mdata)
-coords_train <- st_coordinates(train_data)
-coords_test <- st_coordinates(test_data)
-```
-
-``` r
-coords_train <- write_rds(coords_train, 
-  "data/model/coords_train.rds" )
-coords_test <- write_rds(
-  coords_test, 
-  "data/model/coords_test.rds" )
-```
-
-#### 6.4.2 Dropping geometry field
-
-We will drop geometry column of the sf data.frame by using `st_drop_geometry()` of sf package.
-
-``` r
-train_data_nogeom <- train_data %>% 
-  st_drop_geometry()
-
-test_data_nogeom <- test_data %>% 
-  st_drop_geometry()
-```
-
-### 6.5 Calibrating a non-spatial random forest model
-
-``` r
-#| eval: false
-set.seed(1234)
-rf <- ranger(
-  formula = resale_price ~ floor_area_sqm +
-    storey_order + remaining_lease_mths + 
-    PROX_CBD + PROX_ELDERLYCARE + 
-    PROX_HAWKER + PROX_MRT + PROX_PARK + 
-    PROX_MALL + PROX_SUPERMARKET +
-    WITHIN_350M_KINDERGARTEN + 
-    WITHIN_350M_CHILDCARE + 
-    WITHIN_350M_BUS +  
-    WITHIN_1KM_PRISCH,
-  data=train_data_nogeom)
-
-write_rds(rf, "data/model/rf.rds")
-```
-
-``` r
-#| echo: false
-
-rf <- read_rds("data/model/rf.rds")
-rf
-```
-
-### 6.6 Geographical Weighted Random Forest Model (gwRF)
-
-#### 6.6.1 Calibrating with training data
-
-Below we calibrate a **geographic random forest model** by using `grf()` of **SpatialML** package.
-
-``` r
-#| eval: false
-set.seed(1234)
-gwRF_adaptive <- grf(
-  formula = resale_price ~ floor_area_sqm +
-    storey_order + remaining_lease_mths + 
-    PROX_CBD + PROX_ELDERLYCARE + 
-    PROX_HAWKER + PROX_MRT + PROX_PARK + 
-    PROX_MALL + PROX_SUPERMARKET +
-    WITHIN_350M_KINDERGARTEN +
-    WITHIN_350M_CHILDCARE + 
-    WITHIN_350M_BUS + WITHIN_1KM_PRISCH,
-  dframe=train_data_nogeom, 
-  bw=40,
-  kernel="adaptive",
-  coords=coords_train)
-
-write_rds(gwRF_adaptive, "data/model/gwRF_adaptive.rds")
-```
-
-``` r
-#| echo: false
-
-gwRF_adaptive <- read_rds("data/model/gwRF_adaptive.rds")
-```
-
-::::: markgoals
-::: markgoals-header
-Training results
-:::
-
-::: markgoals-container
--   **MLR vs GWR:** Use **AICc** → GWR wins (24,104 \< 24,902)
--   **RF vs GRF:** Use **OOB R²** → GRF slightly better (84.87% \> 84.11%)
--   Need to test predictions to determine which is the best.
-:::
-:::::
-
-## 7 Predicting with test data
-
-### 7.1 GW Radnom Forest
-
-#### 7.1.1 Prepare data
-
-``` r
-test_data_nogeom <- cbind(
-  test_data, coords_test) %>%
-  st_drop_geometry()
-```
-
-#### 7.1.2 Predicting with test data
-
-``` r
-#| eval: false
-gwRF_pred <- predict.grf(gwRF_adaptive, 
-                           test_data_nogeom, 
-                           x.var.name="X",
-                           y.var.name="Y", 
-                           local.w=1,
-                           global.w=0)
-
-write_rds(gwRF_pred, "data/model/GRF_pred.rds")
-```
-
-``` r
-#| echo: false
-GRF_pred <- read_rds("data/model/GRF_pred.rds")
-```
-
-#### 7.1.3 Converting the predicting output into a data frame
-
-``` r
-GRF_pred <- read_rds("data/model/GRF_pred.rds")
-GRF_pred_df <- as.data.frame(GRF_pred)
-```
-
-``` r
-test_data_p <- cbind(
-  test_data, GRF_pred_df) %>%
-  select(resale_price, GRF_pred)
-```
-
-### 7.1.4 Calculating Root Mean Square Error
-
-``` r
-rmse(test_data_p$resale_price, 
-     test_data_p$GRF_pred)
-```
-
-### 8.1.5 Visualising the predicted values
-
-``` r
-ggplot(data = test_data_p,
-       aes(x = GRF_pred,
-           y = resale_price)) +
-  geom_point()
-```
-
-### 7.2 GWR Predictive model
-
-#### 7.2.1 Computing predicted values of the test data
-
-``` r
-#| eval: false
-gwr_pred <- gwr.predict(
-  formula = resale_price ~ floor_area_sqm + 
-    storey_order + remaining_lease_mths + 
-    PROX_CBD + PROX_ELDERLYCARE + PROX_HAWKER + 
-    PROX_MRT + PROX_PARK + PROX_MALL + 
-    PROX_SUPERMARKET + WITHIN_350M_KINDERGARTEN +
-    WITHIN_350M_CHILDCARE + WITHIN_350M_BUS + 
-    WITHIN_1KM_PRISCH, 
-  data=train_data, 
-  predictdata = test_data, 
-  bw=40, 
-  kernel = 'gaussian', 
-  adaptive=TRUE, 
-  longlat = FALSE)
-
-write_rds(gwr_pred, "data/model/gwr_pred.rds")
-```
-
-## 8 Model Comparison
-
-## 9 Conclusion
-
-## 10 References
 
 ::::: markgoals
 ::: markgoals-header
