@@ -456,7 +456,6 @@ gwRF_adaptive <- read_rds("data/model/gwRF_adaptive.rds")
 
 ```
 
-
 ::::: markgoals
 ::: markgoals-header
 Training results
@@ -528,9 +527,11 @@ ggplot(data = test_data_p,
            y = resale_price)) +
   geom_point()
 ```
+
 ## 8.1 GWR Predictive model
 
 ### 8.1.1 Computing predicted values of the test data
+
 ```{r}
 gwr_pred <- gwr.predict(
   formula = resale_price ~ floor_area_sqm + 
@@ -549,4 +550,3 @@ gwr_pred <- gwr.predict(
 
 write_rds(gwr_pred, "data/model/gwr_pred.rds")
 ```
-
