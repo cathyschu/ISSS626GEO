@@ -156,7 +156,7 @@ st_crs(mpsz)
 ```
 
 
-#### 2.1.1 HDB resale data Preparation
+ #### 2.1.1 HDB resale data Preparation
 -   **Load HDB Resale Data**
 This data set comprises of HDB resale transactions from July 2017 onwards. Below we will extract a sub-set of transaction records on 4-Room flat transacted during July 2024 to June 2025.
 
@@ -334,6 +334,7 @@ We will geocode for primary school data in later section.
 ## Business
 
 -   **CBD**
+
 For CBD, we will extract the area for CBD from `mpsz`.
 ```{r}
 #| code-fold: true
@@ -350,7 +351,13 @@ write_rds(cbd_data, "data/rds/cbd_data.rds")
 cbd_data <- read_rds("data/rds/cbd_data.rds")
 ```
 
--   **Business park data**
+```{r}
+glimpse(cbd_data)
+```
+cbd_data is now a single merged polygon representing the entire CBD area. We will use this to calculate distance in later section.
+
+-   **Business park**
+
 Business parks are typically smaller than planning areas, and we have multiple business parks to consider. Therefore, we will calculate centroid for measuring proximity, and transform polygon data to centroid point data.
 
 ```{r}
@@ -365,15 +372,152 @@ bizpark_data <- st_read("data/rawdata/JTCBusinessParkLandGEOJSON.geojson") %>%
 
 ## Recreation
 
--   shopping malls
+-   **Shopping malls**
+
 ```{r}
 #| code-fold: true
 #| eval: false
 
+sgmalls_rawdata <- read_csv("data/rawdata/singapore_malls.csv") %>%
+  filter(!Mall_Name %in% c('JCube', 'JCube (closed)', 'Liang Court', 'Lot 1', 
+                           'Nex', 'Novena Square Shopping Mall'))
+
+sgmalls_coordinates <- read_csv("data/rawdata/shopping_mall_coordinates.csv") %>%
+  rename(Mall_Name = 'Mall Name')
+
+merged_malls <- full_join(sgmalls_rawdata, sgmalls_coordinates, by = "Mall_Name")
 
 ```
+After the merge, we examine if any shopping malls turn out without coordinates data. 
+```{r}
+#| code-fold: true
+#| eval: false
+malls_without_coords <- merged_malls %>%
+  filter(is.na(LONGITUDE) | is.na(LATITUDE)) %>%
+  pull(Mall_Name)
 
--   sports halls
+malls_without_coords
+```
+
+Amber Mansions - demolished in 1984
+Bedok Point
+Capitol Centre
+Ellenborough Market
+Funan DigitaLife Mall - duplicate
+Great World - duplicate
+GV Yishun - cinema
+Jurong Entertainment Centre - demolished 2010
+Shaw Tower - demolished
+Specialists' Shopping Centre - redeveloped as Orchard Gateway
+Tanglin Shopping Centre - CLOSED
+The Golden Mile - CLOSED
+The Verge - closed
+Woodland Mall - change to Woods square mall
+
+For this case, we manually check with Google maps
+```{r}
+#| code-fold: true
+#| eval: false
+
+coords_to_fill <- tibble(
+  Mall_Name = c("Alexandra Retail Centre", "Capitol Singapore", "Change Alley",
+                "Chinatown Point", "Clementi Mall", "Dawson Place", 
+                "Esplanade Mall", "Forum The Shopping Mall", "Fu Lu Shou Complex", 
+                "HarbourFront Centre", "Holland Road Shopping Centre", 
+                "Holland Village Shopping Mall", 
+                "Mandarin Gallery", "Mustafa Centre", "Novena Square", 
+                "Orchard Towers", "Paya Lebar Quarter", "Peninsula Plaza",
+                "Punggol Coast Mall", "Scotts Shopping Centre", "Seletar Mall",
+                "Shaw House and Centre", "Singpost Center",
+                "South Beach", "Suntec City Mall",
+                "Tang Plaza", "The Cathay", 
+                "The Majestic", "The Rail Mall", 
+                "VivoCity", "Woodland Mall"),
+  
+  LONGITUDE = c(103.8015, 103.8511, 103.8518, 
+                103.8446, 103.7642, 103.8107,
+                103.8561, 103.8284, 103.8543,
+                103.8201, 103.7952, 
+                103.7937, 
+                103.8363, 103.8554, 103.8439,
+                103.8292, 103.8930, 103.8508,
+                103.9104, 103.8329, 103.8758,
+                103.8318, 103.8940, 
+                103.8557, 103.8581, 
+                103.8329, 103.8477,
+                103.8432, 103.7678,
+                103.8231, 103.7859
+                ),
+  LATITUDE = c(1.2741176, 1.293231, 1.284643, 
+               1.285434, 1.315111, 1.293505, 
+               1.290017, 1.306391, 1.301906,
+               1.265355, 1.310419, 1.319192,
+               
+               1.311708, 
+               1.317859, 1.292544, 1.302237, 
+               1.310192, 1.320230, 1.307743, 
+               1.415818, 1.306093, 1.392464,
+               1.306507, 
+               1.294485, 1.295778, 
+               1.305221, 1.300409, 
+               1.284871, 1.358212, 
+               1.265357, 1.438082
+               )
+) 
+
+merged_malls <- merged_malls %>%
+  rows_update(coords_to_fill, by = "Mall_Name", unmatched = "ignore")
+
+merged_malls <-  merged_malls %>%
+  mutate(
+    Mall_Name = case_when(
+      Mall_Name == "Woods Square Mall" ~ "Woodland Mall",
+      TRUE ~ Mall_Name
+    )
+  )
+
+# add new mall data
+new_malls <- tibble(
+  Mall_Name = "Woodleigh Mall",
+  LONGITUDE = 103.8718,
+  LATITUDE = 1.339560
+)  
+
+merged_malls <- merged_malls %>%
+  bind_rows(new_malls)
+```
+
+Check the malls with missing coordinates, meaning that we did not find the coordinates for these mall as they're closed.
+```{r}
+#| code-fold: true
+#| eval: false
+malls_with_na <- merged_malls %>%
+  filter(is.na(LONGITUDE) | is.na(LATITUDE)) 
+
+malls_with_na
+```
+These malls are the ones duplicate or closed. We will go ahead to remove them. We will also remove 2 duplicate malls observed from *merged_malls*. 
+```{r}
+#| code-fold: true
+#| eval: false
+merged_malls <- merged_malls %>%
+  filter(!is.na(LONGITUDE) & !is.na(LATITUDE)) %>%
+  distinct(Mall_Name, .keep_all = TRUE) %>%
+  filter(!Mall_Name %in% c("Suntec City Mall", "Capitol Piazza"))
+
+# Check how many remain
+nrow(merged_malls)
+write_rds(merged_malls, "data/rds/malls_data.rds")
+```
+
+```{r}
+#| echo: false
+
+malls_data <- read_rds("data/rds/malls_data.rds")
+```
+
+
+-   **Sports halls**
 
 
 ```{.r}
@@ -415,9 +559,7 @@ sports_data <- sports_data %>%
 
 write_rds(mpsz, "data/rds/sports_data.rds")
 ```
-
-
--   parks
+-   **Parks**
 
 ```{r}
 #| code-fold: true
@@ -438,7 +580,7 @@ write_rds(park_data, "data/rds/park_data.rds")
 park_data <- read_rds("data/rds/park_data.rds")
 ```
 
--   supermarkets
+-   **Supermarkets**
 
 ```{r}
 #| code-fold: true
@@ -447,7 +589,7 @@ park_data <- read_rds("data/rds/park_data.rds")
 
 ```
 
--   community clubs
+-   **Community clubs**
 ```{r}
 #| code-fold: true
 #| eval: false
@@ -485,8 +627,11 @@ write_rds(cc_data, "data/rds/cc_data.rds")
 #| echo: false
 cc_data <- read_rds("data/rds/cc_data.rds")
 ```
+
 ## Transportation
--   MRT
+
+-   **MRT**
+
 Below we will import MRT station exits, and compute the centroid of these exit for these stations as the poin for proximity calculation to HDB units.
 
 ```{r}
@@ -563,7 +708,8 @@ tm_shape(mrt_sf) +
 #tmap_mode("plot")
 ```
 
--   bus stops
+-   **Bus stops**
+
 Below we will import *Bus Stop Location* shapfile from LTA DataMall.
 
 ```{r}
@@ -584,8 +730,9 @@ Check again on BusStop:
 BusStop <- read_rds("data/rds/BusStop.rds")
 st_crs(BusStop)
 ```
+
 ## Healthcare
--   clinics
+-   **Clinics**
 ```{r}
 #| code-fold: true
 #| eval: false
@@ -593,7 +740,7 @@ st_crs(BusStop)
 
 ```
 
--   eldercare
+-   **Eldercare**
 
 ```{r}
 #| code-fold: true
