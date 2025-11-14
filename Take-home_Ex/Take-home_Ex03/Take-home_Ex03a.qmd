@@ -30,7 +30,8 @@ One new package called [**jsonlite**]{style="color: #F08787;"} will be installed
 ```{r}
 pacman::p_load(httr, tidyverse, sf, tmap, jsonlite, progress,
                spdep, GWmodel, SpatialML, rsample, Metrics, knitr,
-               kableExtra, spatialRF, randomForestExplainer, rvest)
+               kableExtra, spatialRF, randomForestExplainer, rvest,
+               stringr, lubridate)
 ```
 
 <package intro> progress - to monitor and track the computation.
@@ -61,6 +62,7 @@ We will make use of the following factors ...
     -   Proximity to supermarket
     -   Proximity to healthcare facilities
     -   Proximity to sports halls
+    -   Proximity to community clubs   
     -   Numbers of kindergartens within 350m
     -   Numbers of childcare centres within 350m
     -   Numbers of bus stop within 350m
@@ -156,7 +158,7 @@ st_crs(mpsz)
 ```
 
 
- #### 2.1.1 HDB resale data Preparation
+#### 2.1.1 HDB resale data Preparation
 -   **Load HDB Resale Data**
 This data set comprises of HDB resale transactions from July 2017 onwards. Below we will extract a sub-set of transaction records on 4-Room flat transacted during July 2024 to June 2025.
 
@@ -263,7 +265,7 @@ HDBresale_sf <- read_rds("data/rds/HDBresale_sf.rds")
 ```
 
 
-#### 2.1.2 Load raw data
+#### 2.1.2 Load location factors data
 
 ::: panel-tabset
 
@@ -306,12 +308,6 @@ write_rds(kindergarten_data, "data/rds/kindergarten_data.rds")
 kindergarten_data <- read_rds("data/rds/kindergarten_data.rds")
 ```
 
-Make sure the kindergarten coordinate system is SVY21.
-
-```{r}
-#| code-fold: true
-st_crs(kindergarten_data)
-```
 
 -   **Primary schools data**
 
@@ -320,7 +316,80 @@ st_crs(kindergarten_data)
 #| eval: false
 primschool_data <- read_csv("data/rawdata/General Information of schools.csv") %>%
   select(school_name, postal_code, address)
+```
 
+Below we need to geocode the primary school location because currently we have their postal codes.
+```{r}
+#| code-fold: true
+#| eval: false
+geocode_postal <- function(postal_code) {
+  url <- paste0("https://www.onemap.gov.sg/api/common/elastic/search?",
+                "searchVal=", postal_code,
+                "&returnGeom=Y&getAddrDetails=Y")
+  
+  response <- GET(url)
+  
+  if (status_code(response) == 200) {
+    result <- content(response, "text") %>% fromJSON()
+    
+    if (result$found > 0) {
+      return(data.frame(
+        latitude = as.numeric(result$results$LATITUDE[1]),
+        longitude = as.numeric(result$results$LONGITUDE[1])
+      ))
+    }
+  }
+  
+  return(data.frame(latitude = NA, longitude = NA))
+}
+
+# Geocode all primary schools
+primschool_coords <- lapply(primschool_data$postal_code, function(pc) {
+  Sys.sleep(0.2)  
+  geocode_postal(pc)
+})
+
+primschool_coords_df <- bind_rows(primschool_coords)
+
+primschool_data <- primschool_data %>%
+  bind_cols(primschool_coords_df)
+
+# Convert to sf object
+primschool_data <- primschool_data %>%
+  filter(!is.na(latitude)) %>%  # Remove any that failed
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326) %>%
+  st_transform(3414)  # Transform to SVY21
+
+nrow(primschool_data)  # How many successfully geocoded
+```
+
+Check what schools we will filter out using keywords:
+```{r}
+#| code-fold: true
+#| eval: false
+primschool_data %>%
+  filter(
+    grepl("SECONDARY|HIGH|INSTITUTE|INSTITUTION|SCHOOL OF|JUNIOR|COLLEGE", 
+               school_name, 
+               ignore.case = TRUE)) %>%
+  select(school_name) %>%
+  print(n = 50)
+```
+
+
+
+```{r}
+#| code-fold: true
+#| eval: false
+# Remove non-primary schools 
+primschool_data <- primschool_data %>%
+  filter(school_name %in% c("MARIS STELLA HIGH SCHOOL", "CATHOLIC HIGH SCHOOL")  |
+    !grepl("SECONDARY|HIGH|INSTITUTE|INSTITUTION|SCHOOL OF|JUNIOR|COLLEGE", 
+                school_name, 
+                ignore.case = TRUE)) %>%
+  filter(!school_name %in% c("CHIJ KATONG CONVENT", "CHIJ ST. JOSEPH'S CONVENT"))
+
+nrow(primschool_data)
 write_rds(primschool_data, "data/rds/primschool_data.rds") 
 ```
 
@@ -329,7 +398,31 @@ write_rds(primschool_data, "data/rds/primschool_data.rds")
 primschool_data <- read_rds("data/rds/primschool_data.rds")
 ```
 
-We will geocode for primary school data in later section.
+
+-   **Top Primary schools**
+
+```{r}
+#| code-fold: true
+#| eval: false
+top_primschool_data <- primschool_data %>%
+  filter(school_name %in% c("RAFFLES GIRLS' PRIMARY SCHOOL", "NANYANG PRIMARY SCHOOL",
+                          "HENRY PARK PRIMARY SCHOOL", "ROSYTH SCHOOL",
+                          "AI TONG SCHOOL", "NAN HUA PRIMARY SCHOOL", "ST. HILDA'S PRIMARY SCHOOL",
+                          "TAO NAN SCHOOL", "CHIJ ST. NICHOLAS GIRLS' SCHOOL",
+                          "CATHOLIC HIGH SCHOOL", "PEI HWA PRESBYTERIAN PRIMARY SCHOOL",
+                          "METHODIST GIRLS' SCHOOL (PRIMARY)", "KONG HWA SCHOOL",
+                          "RED SWASTIKA SCHOOL", "SINGAPORE CHINESE GIRLS' SCHOOL", "MARIS STELLA HIGH SCHOOL",
+                          "ANGLO-CHINESE SCHOOL (PRIMARY)", "TEMASEK PRIMARY SCHOOL","RIVER VALLEY PRIMARY SCHOOL",
+                          "CEDAR PRIMARY SCHOOL"))
+
+write_rds(top_primschool_data, "data/rds/top_primschool_data.rds")
+```
+
+```{r}
+#| echo: false
+
+top_primschool_data <- read_rds("data/rds/top_primschool_data.rds")
+```
 
 ## Business
 
@@ -360,15 +453,24 @@ cbd_data is now a single merged polygon representing the entire CBD area. We wil
 
 Business parks are typically smaller than planning areas, and we have multiple business parks to consider. Therefore, we will calculate centroid for measuring proximity, and transform polygon data to centroid point data.
 
+
 ```{r}
 #| code-fold: true
 #| eval: false
 
 bizpark_data <- st_read("data/rawdata/JTCBusinessParkLandGEOJSON.geojson") %>% 
-# calculate centroids
-  mutate(centroid = st_centroid(geometry)) %>%
-  select(OBJECTID_1, centroid)
+  st_zm(drop = TRUE, what = "ZM") %>%
+  st_transform(crs = 3414) %>%
+  st_centroid()
+
+write_rds(bizpark_data, "data/rds/bizpark_data.rds")
 ```
+
+```{r}
+#| echo: false
+bizpark_data <- read_rds("data/rds/bizpark_data.rds")
+```
+
 
 ## Recreation
 
@@ -507,6 +609,12 @@ merged_malls <- merged_malls %>%
 
 # Check how many remain
 nrow(merged_malls)
+
+# merged_malls has long, lat coordinates. We want to convert it to sf object, then SVY21.
+merged_malls <- merged_malls %>%
+  st_as_sf(coords = c("LONGITUDE", "LATITUDE"), crs = 4326) %>%  # it's WGS84
+  st_transform(3414)  
+
 write_rds(merged_malls, "data/rds/malls_data.rds")
 ```
 
@@ -518,14 +626,6 @@ malls_data <- read_rds("data/rds/malls_data.rds")
 
 
 -   **Sports halls**
-
-
-```{.r}
-read_html(cc_data$Description[1]) %>% 
-  html_table() %>% 
-  .[[1]]
-```
-
 
 ```{r}
 #| code-fold: true
@@ -557,8 +657,15 @@ sports_data <- sports_data %>%
   select(-Name, -Description) %>%
   relocate(geometry, .after = last_col())
 
-write_rds(mpsz, "data/rds/sports_data.rds")
+write_rds(sports_data, "data/rds/sports_data.rds")
 ```
+
+```{r}
+#| echo: false
+sports_data <- read_rds("data/rds/sports_data.rds")
+
+```
+
 -   **Parks**
 
 ```{r}
@@ -582,20 +689,17 @@ park_data <- read_rds("data/rds/park_data.rds")
 
 -   **Supermarkets**
 
+
 ```{r}
 #| code-fold: true
 #| eval: false
 
-
-```
-
--   **Community clubs**
-```{r}
-#| code-fold: true
-#| eval: false
-cc_data <- st_read("data/rawdata/CommunityClubs.geojson") %>%
-  st_transform(crs = 3414) %>%
-  mutate(centroid = st_centroid(geometry))
+supermarkets_data <- st_read("data/rawdata/SupermarketsGEOJSON.geojson") %>%
+  st_zm(drop = TRUE, what = "ZM") %>%
+  st_transform(crs = 3414)
+# # calculate centroids
+#   mutate(centroid = st_centroid(geometry)) %>%
+#   select(OBJECTID_1, centroid)
 
 extract_kml_field <- function(html_text, field_name) {
   if (is.na(html_text) || html_text == "") return(NA_character_)
@@ -612,40 +716,29 @@ extract_kml_field <- function(html_text, field_name) {
 }
 
 # extract info
-cc_data <- cc_data %>%
+supermarkets_data <- supermarkets_data %>%
   mutate(
-    name = map_chr(Description, extract_kml_field, "NAME")
+    name = map_chr(Description, extract_kml_field, "LIC_NAME"),
+    postcode = map_chr(Description, extract_kml_field, "POSTCODE")
   ) %>%
   select(-Name, -Description) %>%
-  relocate(geometry, .after = last_col())
+  relocate(geometry, .after = last_col())  
 
-
-write_rds(cc_data, "data/rds/cc_data.rds")
+write_rds(supermarkets_data, "data/rds/supermarkets_data.rds")  
 ```
-
 ```{r}
 #| echo: false
-cc_data <- read_rds("data/rds/cc_data.rds")
+supermarkets_data <- read_rds("data/rds/supermarkets_data.rds")
 ```
 
-## Transportation
-
--   **MRT**
-
-Below we will import MRT station exits, and compute the centroid of these exit for these stations as the poin for proximity calculation to HDB units.
-
+-   **Community clubs**
 ```{r}
 #| code-fold: true
 #| eval: false
-mrt <- st_read("data/LTAMRTStationExitKML.kml") %>%
+cc_data <- st_read("data/rawdata/CommunityClubs.geojson") %>%
   st_zm(drop = TRUE, what = "ZM") %>%
   st_transform(crs = 3414)
-```
 
-Below code is to write MRT station data into a rsd file, so we can directly call it without processing the data set again.
-
-```{r}
-#| eval: false
 extract_kml_field <- function(html_text, field_name) {
   if (is.na(html_text) || html_text == "") return(NA_character_)
   
@@ -660,52 +753,51 @@ extract_kml_field <- function(html_text, field_name) {
   if (length(value) == 0) NA_character_ else value
 }
 
-mrt_all <- mrt %>%
+cc_data <- cc_data %>%
   mutate(
-    STATION = map_chr(Description, extract_kml_field, "STATION_NA"),
-    EXIT_CODE = map_chr(Description, extract_kml_field, "EXIT_CODE")
-  ) %>%         
+    name = map_chr(Description, extract_kml_field, "NAME")
+  ) %>%
   select(-Name, -Description) %>%
   relocate(geometry, .after = last_col())
 
-mrt_sf <- mrt_all %>%
-  # Get just one exit per station 
-  distinct(STATION, .keep_all = TRUE) 
-  
-#  select(-Name, -Description) %>%
-#  relocate(geometry, .after = last_col())
-
-write_rds(mrt_all, "data/rds/mrt_all.rds")
-write_rds(mrt_sf, "data/rds/mrt_sf.rds")
+write_rds(cc_data, "data/rds/cc_data.rds")
 ```
 
 ```{r}
-#| eval: false
 #| echo: false
-mrt_all <- read_rds("data/rds/mrt_all.rds")
-mrt_sf <- read_rds("data/rds/mrt_sf.rds")
+cc_data <- read_rds("data/rds/cc_data.rds")
 ```
 
-Plot the MRT station exits in a tmap.
+-   **Foodcourt/Hawker centers**
+```{r}
+#| code-fold: true
+#| eval: false
+hkcenter_data <- st_read("data/rawdata/HawkerCentresGEOJSON.geojson") %>%
+  st_zm(drop = TRUE, what = "ZM") %>%
+  st_transform(crs = 3414)
+
+write_rds(hkcenter_data, "data/rds/hkcenter_data.rds")
+
+```
 
 ```{r}
-#| eval: false
-#| fig-width: 12
-#| fig-height: 8
+#| echo: false
+hkcenter_data <- read_rds("data/rds/hkcenter_data.rds")
+
+```
+Data is also transformed to SVY21. 
+
+## Transportation
+
+-   **MRT**
+
+Below we will import MRT station exit shapefile. The MRT stations may have multiple exits, and these exits matter when people go through them to enter or exit the stations. We will use the data to compute for proximity to HDB units.
+
+```{r}
 #| code-fold: true
-#tmap_mode("view")
-tm_shape(mpsz) +
-  tm_polygons(fill = "#FAF3F3", fill_alpha = 0.2) +
-tm_shape(mrt_sf) +
-  tm_symbols(
-   fill = "#87A7B3", size = 0.5,
-   col = "#0C4271",
-#   popup = "STATION"
-  ) +
-  tm_layout(main.title = "MRT Stations",
-            bg.color = "#F6E6E4",
-            outer.margins = c(0.01, 0.01, 0.01, 0.01))
-#tmap_mode("plot")
+mrt_data <- st_read("data/rawdata/TrainStationExit_Feb2025/Train_Station_Exit_Layer.shp") %>%
+  st_transform(crs = 3414)
+
 ```
 
 -   **Bus stops**
@@ -715,30 +807,66 @@ Below we will import *Bus Stop Location* shapfile from LTA DataMall.
 ```{r}
 #| code-fold: true
 #| eval: false
-BusStop = st_read(dsn = "data/LTADataMall",
+bus_data = st_read(dsn = "data/rawdata/BusStopLocation_Aug2025",
                   layer = "BusStop")
-BusStop <- BusStop %>%
+bus_data <- bus_data %>%
   st_transform(crs = 3414)
 
-write_rds(BusStop, "data/rds/BusStop.rds")
+write_rds(bus_data, "data/rds/bus_data.rds")
 ```
 
-Check again on BusStop:
-
 ```{r}
-#| eval: false
-BusStop <- read_rds("data/rds/BusStop.rds")
-st_crs(BusStop)
+#| echo: false
+bus_data <- read_rds("data/rds/bus_data.rds")
+
 ```
 
 ## Healthcare
+
 -   **Clinics**
+
+
 ```{r}
 #| code-fold: true
 #| eval: false
 
+clinics_data <- st_read("data/rawdata/CHASClinics.geojson") %>%
+  st_zm(drop = TRUE, what = "ZM") %>%
+  st_transform(crs = 3414)
+
+extract_kml_field <- function(html_text, field_name) {
+  if (is.na(html_text) || html_text == "") return(NA_character_)
+  
+  page <- read_html(html_text)
+  rows <- page %>% html_elements("tr")
+  
+  value <- rows %>%
+    keep(~ html_text2(html_element(.x, "th")) == field_name) %>%
+    html_element("td") %>%
+    html_text2()
+  
+  if (length(value) == 0) NA_character_ else value
+}
+
+# extract info
+clinics_data <- clinics_data %>%
+  mutate(
+    name = map_chr(Description, extract_kml_field, "HCI_NAME")
+  ) %>%
+  select(-Name, -Description) %>%
+  relocate(geometry, .after = last_col())
+
+write_rds(clinics_data, "data/rds/clinics_data.rds")
 
 ```
+
+```{r}
+#| echo: false
+clinics_data <- read_rds("data/rds/clinics_data.rds")
+
+```
+
+Above data is verified to conform **SVY21**. 
 
 -   **Eldercare**
 
@@ -746,118 +874,359 @@ st_crs(BusStop)
 #| code-fold: true
 #| eval: false
 
+eldercare_data <- st_read("data/rawdata/EldercareServices.geojson") %>%
+  st_zm(drop = TRUE, what = "ZM") %>%
+  st_transform(crs = 3414)
+
+extract_kml_field <- function(html_text, field_name) {
+  if (is.na(html_text) || html_text == "") return(NA_character_)
+  
+  page <- read_html(html_text)
+  rows <- page %>% html_elements("tr")
+  
+  value <- rows %>%
+    keep(~ html_text2(html_element(.x, "th")) == field_name) %>%
+    html_element("td") %>%
+    html_text2()
+  
+  if (length(value) == 0) NA_character_ else value
+}
+
+# extract info
+eldercare_data <- eldercare_data %>%
+  mutate(
+    name = map_chr(Description, extract_kml_field, "NAME")
+  ) %>%
+  select(-Name, -Description) %>%
+  relocate(geometry, .after = last_col())
+
+write_rds(eldercare_data, "data/rds/eldercare_data.rds")
 
 ```
+
+
+```{r}
+#| echo: false
+eldercare_data <- read_rds("data/rds/eldercare_data.rds")
+```
+Above data is verified to conform **SVY21**. 
+
 :::
 
 #### 2.1.3 Initial data inspection
+We validate the coordinates of the location factor data below. It shows us that all now conform to SVY21, and ready for proximity computation.
+
+```{r}
+cat('bizpark_data: ')
+st_crs(bizpark_data)$epsg
+cat('bd_data: ')
+st_crs(cbd_data)$epsg
+cat('clinics_data: ')
+st_crs(clinics_data)$epsg
+cat('eldercare_data: ')
+st_crs(eldercare_data)$epsg
+cat('hkcenter_data: ')
+st_crs(hkcenter_data)$epsg
+cat('malls_data: ')
+st_crs(malls_data)$epsg
+cat('mrt_data: ')
+st_crs(mrt_data)$epsg
+cat('park_data: ')
+st_crs(park_data)$epsg
+cat('preschool_data: ')
+st_crs(preschool_data)$epsg
+cat('primschool_data: ')
+st_crs(primschool_data)$epsg
+cat('supermarkets_data: ')
+st_crs(supermarkets_data)$epsg
+cat('sports_data: ')
+st_crs(sports_data)$epsg
+cat('bus_data: ')
+st_crs(bus_data)$epsg
+cat('kindergarten_data: ')
+st_crs(kindergarten_data)$epsg
+cat('cc_data: ')
+st_crs(cc_data)$epsg
+
+
+```
 
 
 ### 2.2 Structural factors
+The tructural factors for this study include flat type, floor level, town, planning area, area of unit, age of unit, main upgrading program, and flat model. 
+Currently in our data, we have the factors shown below:
+```{r}
+names(HDBresale_sf)
+```
 
-flat type, floor level, town, planning area, missing values, area of unit, age of unit, main upgrading program, flat model
+We will rename some of the factors and keep the factors being used for the study:
+```{r}
+#| code-fold: true
+#| eval: false
+HDBresale_data <- HDBresale_sf %>%
+  select(flat_type, month, storey_range, town, floor_area_sqm, flat_model, 
+         remaining_lease, resale_price, geometry) %>%
+  rename(transact_date = month,
+         remaining_lease_mths = remaining_lease,
+         floor_level = storey_range,
+         plan_area = town) 
+write_rds(HDBresale_data, "data/rds/HDBresale_data.rds")  
+```
 
-### 2.3 Location factors Preparation
+```{r}
+#| echo: false
+HDBresale_data <- read_rds("data/rds/HDBresale_data.rds")
+glimpse(HDBresale_data)
+```
+For predictive modeling, we should change data type for the following variables: `transact_date` and `remaining_lease_mths` to date and numeric data type respectively.
 
-#### 2.3.1 Geocode amenity locations
+```{r}
+#| code-fold: true
+#| eval: false
 
-#### 2.3.2 Validate coordinates
+# convert transction date to date data type
+HDB_data <- HDBresale_data %>%
+  mutate(
+    transact_date = as.Date(paste0(transact_date, "-01")),
+    
+    # Extract years
+    years = as.numeric(str_extract(remaining_lease_mths, "\\d+(?= year)")),
+    # Extract months
+    months = as.numeric(str_extract(remaining_lease_mths, "\\d+(?= month)")),
+
+    years = ifelse(is.na(years), 0, years),
+    months = ifelse(is.na(months), 0, months),
+
+    remaining_lease_mths_num = years * 12 + months
+  ) %>%
+  select(-years, -months)  # Remove temporary columns
+write_rds(HDB_data, "data/rds/HDB_data.rds")
+```
+
+Below we confirm the transction date is now `Date` data type and the remaining lease is in `numeric` data type as months.
+```{r}
+#| echo: false
+HDB_data <- read_rds("data/rds/HDB_data.rds")
+
+head(HDB_data$transact_date, 10)
+class(HDB_data$transact_date)
+class(HDB_data$remaining_lease_mths_num)
+```
+
+
+### 2.3 Proximity Analysis
+
+
+In this section, we will prepare location factors of their proximity to the HDB units and the availability of these facilities within a fixed distance of the HDB housing. 
+
+#### 2.3.1 Computing shortest distance
+
+Instead of counting number of preschools located within 350m of each HDB resale property, code chunk below is used to compute the distance between the nearest preschool from each HDB resale property. 
+
+`st_is_within_distance()` of [**sf**]{style="color: #F08787;"} package is used to determine whether two spatial objects (HDB property and preschool) are within a set distance of each other. It returns a logical matrix (or a sparse list of indices if sparse = TRUE) indicating for each geometry in HDB property which geometries in the facility are within the set distance.
 
 check for outliers / errors Verify coordinates are in Singapore (plot tmaps)
 
-### 2.4 Proximity Analysis
-##-------
+::: panel-tabset
 
+## Education
+```{r}
+#| code-fold: true
+#| eval: false
 
-::::: markgoals
-::: markgoals-header
-**Note**
-:::
-
-::: markgoals-container
--   `st_is_within_distance()` of [**sf**]{style="color: #F08787;"} package is used to determines whether two spatial objects (HDB property and preschool) are within 350m distance of each other. It returns a logical matrix (or a sparse list of indices if sparse = TRUE) indicating for each geometry in HDB property which geometries in preschool are within 350m distance.
--   `map_int()` of [**purr**]{style="color: #F08787;"} package is used to the number of preschools found in the newly created WITHIN_350M_PRISCHOOL field.
-:::
-:::::
-
-### 2.8 Computing shortest distance
-
-Instead of counting number of preschools located within 350m of each HDB resale property, code chunk below is used to compute the distance between the nearest preschool from each HDB resale property.
-
-``` r
-HDBresale_sf <- HDBresale_sf %>%
+# Top Primary school
+HDB_combine_edu <- HDB_data %>%
   mutate(
-    PROX_PRESCHOOL = as.numeric(
+    PROX_TOPSCHOOL = as.numeric(
       st_distance(geometry,
-                  preschool[st_nearest_feature(
-                    geometry, preschool), ], 
+                  top_primschool_data[st_nearest_feature(
+                    geometry, top_primschool_data), ], 
                   by_element = TRUE)
       )
     )
 ```
 
-
-
-##--------
-
-#### 2.4.1 Calculate distance to nearby amenities
-
-::: panel-tabset
-## Future interchange
-
-## Shopping mall
-
-## CBD/town centre
-below code is a sample.
+## F&B
 ```{r}
+#| code-fold: true
 #| eval: false
-resale <- HDBresale %>%
-  mutate(
-    dist_to_downtown_km = as.numeric(st_distance(geometry, downtown_core)) / 1000,
-    log_dist_downtown = log1p(dist_to_downtown_km)
-  )
 
-# Save
-saveRDS(resale, "data/resale_with_features.rds")
+# Hawker centers
+HDB_combine_2fb <- HDB_combine_edu %>%
+  mutate(
+    PROX_HKCENTER = as.numeric(
+      st_distance(geometry,
+                  hkcenter_data[st_nearest_feature(
+                    geometry, hkcenter_data), ], 
+                  by_element = TRUE)),
+# Supermarkets
+    PROX_SUPERMKT =  as.numeric(
+      st_distance(geometry,
+                  supermarkets_data[st_nearest_feature(
+                    geometry, supermarkets_data), ], 
+                  by_element = TRUE))
+    )
 
 ```
 
-## Business park
+## Healthcare
+```{r}
+#| code-fold: true
+#| eval: false
+# Clinics
+HDB_combine_3hc <- HDB_combine_2fb %>%
+  mutate(
+    PROX_CLINIC = as.numeric(
+      st_distance(geometry,
+                  clinics_data[st_nearest_feature(
+                    geometry, clinics_data), ], 
+                  by_element = TRUE)),
+# Eldercare
+    PROX_ELDERCARE =  as.numeric(
+      st_distance(geometry,
+                  eldercare_data[st_nearest_feature(
+                    geometry, eldercare_data), ], 
+                  by_element = TRUE))
+    )
 
-## eldercare
+```
 
-## Park
+## Recreation
+```{r}
+#| code-fold: true
+#| eval: false
+# Shopping mall
+HDB_combine_4rc <- HDB_combine_3hc %>%
+  mutate(
+    PROX_MALLS = as.numeric(
+      st_distance(geometry,
+                  malls_data[st_nearest_feature(
+                    geometry, malls_data), ], 
+                  by_element = TRUE)),
+# Sports hall
+    PROX_SPORTS =  as.numeric(
+      st_distance(geometry,
+                  sports_data[st_nearest_feature(
+                    geometry, sports_data), ], 
+                  by_element = TRUE)),
+# Community Club
+    PROX_CC =  as.numeric(
+      st_distance(geometry,
+                  cc_data[st_nearest_feature(
+                    geometry, cc_data), ], 
+                  by_element = TRUE)),
+# Parks
+    PROX_PARK =  as.numeric(
+      st_distance(geometry,
+                  park_data[st_nearest_feature(
+                    geometry, park_data), ], 
+                  by_element = TRUE))
+    )
 
-## Supermarket
+```
+
+## Transportation
+
+``` {r}
+#| code-fold: true
+#| eval: false
+# Shopping mall
+HDB_combine_5transp <- HDB_combine_4rc %>%
+  mutate(
+    PROX_MRT = as.numeric(
+      st_distance(geometry,
+                  mrt_data[st_nearest_feature(
+                    geometry, mrt_data), ], 
+                  by_element = TRUE))
+    )
+
+```
+
+## Business
+```{r}
+#| code-fold: true
+#| eval: false
+# CBD
+HDB_combine_6biz <- HDB_combine_5transp %>%
+  mutate(
+    PROX_CBD = as.numeric(
+      st_distance(geometry,
+                  cbd_data)),
+    PROX_BIZPK = as.numeric(
+      st_distance(geometry,
+                  cbd_data)),
+# Business parks
+    PROX_BIZPK = as.numeric(
+      st_distance(geometry,
+                  bizpark_data[st_nearest_feature(
+                    geometry, bizpark_data), ], 
+                  by_element = TRUE))
+    )
+```
+
+
 :::
 
-#### 2.4.2 Create binary proximity indicators
+
+
+-   `map_int()` of [**purr**]{style="color: #F08787;"} package is used to the number of preschools found in the newly created WITHIN_350M_PRISCHOOL field.
+
+
+
+#### **2.3.2 Create binary proximity indicators**
 
 Next we will derive a binary data to find out which schools are within 350 meters.
 
-``` {r}
-#| eval: false
-within_350m <- st_is_within_distance(
-  HDBresale_sf, preschool, dist = 350)
+::: panel-tabset
 
-HDBresale_sf <- HDBresale_sf %>%
-  mutate(prischool_350m = map_int(within_350m, length)
+## Top primary school
+
+Within 1 km
+``` {r}
+#| code-fold: true
+#| eval: false
+within_1km <- st_is_within_distance(
+  HDB_data, top_primschool_data, dist = 1000)
+
+HDB_combine_7bi_primschool <- HDB_combine_6biz %>%
+  mutate(
+    WITHIN_1km_TOPPRISCH = map_int(within_1km, length),
+    WITHIN_1km_TOPPRISCH_BINARY = ifelse(WITHIN_1km_TOPPRISCH > 0, 1, 0)
+)
+```
+
+## MRT 
+Within 500 meters
+```{r}
+#| code-fold: true
+#| eval: false
+within_500m_mrt <- st_is_within_distance(
+  HDB_data, mrt_data, dist = 500)
+
+HDB_combine_7bi_mrt <- HDB_combine_7bi_primschool %>%
+  mutate(
+    WITHIN_500m_MRT_BINARY = as.numeric(lengths(within_500m_mrt) > 0)
 )
 ```
 
 
-::: panel-tabset
-## Top primary school
+## Hawker centre 
+Within 500 meters
 
-Within 1 km
+```{r}
+#| code-fold: true
+#| eval: false
+within_500m_hkcenter <- st_is_within_distance(
+  HDB_data, hkcenter_data, dist = 500)
 
-## MRT Within 500 m
-
-## Hawker centre Within 500m
-
+HDB_combine_7bi_hkcenter <- HDB_combine_7bi_mrt %>%
+  mutate(
+    WITHIN_500m_HKC_BINARY = as.numeric(lengths(within_500m_hkcenter) > 0)
+)
+```
 :::
 
-### 2.5 Amenity Density Analysis
+### 2.4 Amenity Density Analysis
 
 Computing number of location factors
 
@@ -876,16 +1245,16 @@ within 350m
 
 ## primary school
 
-within 350m
+within 1km
 :::
 
-### 2.6 Final Dataset Assembly
+### 2.5 Final Dataset Assembly
 
-#### 2.6.1 Merge all features into master dataset
+#### 2.5.1 Merge all features into master dataset
 
-#### 2.6.2 Handle remaining missing values
+#### 2.5.2 Handle remaining missing values
 
-#### 2.6.3 Save processed dataset
+#### 2.5.3 Save processed dataset
 
 ## 3 Data Quality & Spatial Overview
 
@@ -1110,7 +1479,7 @@ cat("Test size:", nrow(test), "
 mdata <- read_rds("data/rawdata/mdata.rds")
 ```
 
-```{r}
+
 ```{r}
 tm_shape(mpsz) +
   tm_polygons(
@@ -1127,5 +1496,35 @@ tm_shape(mpsz) +
     legend.outside = TRUE
   )
 ```
+
+
+Plot the MRT station exits in a tmap.
+
+```{r}
+#| eval: false
+#| fig-width: 12
+#| fig-height: 8
+#| code-fold: true
+#tmap_mode("view")
+tm_shape(mpsz) +
+  tm_polygons(fill = "#FAF3F3", fill_alpha = 0.2) +
+tm_shape(mrt_sf) +
+  tm_symbols(
+   fill = "#87A7B3", size = 0.5,
+   col = "#0C4271",
+#   popup = "STATION"
+  ) +
+  tm_layout(main.title = "MRT Stations",
+            bg.color = "#F6E6E4",
+            outer.margins = c(0.01, 0.01, 0.01, 0.01))
+#tmap_mode("plot")
 ```
+
+```{.r}
+test <- st_read("data/rawdata/JTCBusinessParkLandGEOJSON.geojson") 
+read_html(test$Description[1]) %>% 
+  html_table() %>% 
+  .[[1]]
+```
+
 
