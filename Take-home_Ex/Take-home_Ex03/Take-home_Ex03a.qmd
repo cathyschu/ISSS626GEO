@@ -31,7 +31,7 @@ One new package called [**jsonlite**]{style="color: #F08787;"} will be installed
 pacman::p_load(httr, tidyverse, sf, tmap, jsonlite, progress,
                spdep, GWmodel, SpatialML, rsample, Metrics, knitr,
                kableExtra, spatialRF, randomForestExplainer, rvest,
-               stringr, lubridate)
+               stringr, lubridate, corrplot)
 ```
 
 <package intro> progress - to monitor and track the computation.
@@ -1232,45 +1232,138 @@ Computing number of location factors
 
 ::: panel-tabset
 ## kindergarten
-
 within 350m
+```{r}
+#| code-fold: true
+#| eval: false
+within_350m_kindg <- st_is_within_distance(
+  HDB_data, kindergarten_data, dist = 350)
+
+HDB_combine_8dense_kindg <- HDB_combine_7bi_hkcenter %>%
+  mutate(
+    WITHIN_350m_KINDG = map_int(within_350m_kindg, length)
+)
+```
+
 
 ## childcare
-
 within 350m
+```{r}
+#| code-fold: true
+#| eval: false
+within_350m_childc <- st_is_within_distance(
+  HDB_data, preschool_data, dist = 350)
+
+HDB_combine_8dense_childc <- HDB_combine_8dense_kindg %>%
+  mutate(
+    WITHIN_350m_CHILDC = map_int(within_350m_childc, length)
+)
+```
 
 ## bus stop
-
 within 350m
+```{r}
+#| code-fold: true
+#| eval: false
+within_350m_bus <- st_is_within_distance(
+  HDB_data, bus_data, dist = 350)
+
+HDB_combine_8dense_bus <- HDB_combine_8dense_childc %>%
+  mutate(
+    WITHIN_350m_BUS = map_int(within_350m_bus, length)
+)
+```
 
 ## primary school
-
 within 1km
+```{r}
+#| code-fold: true
+#| eval: false
+within_1km_primsch <- st_is_within_distance(
+  HDB_data, primschool_data, dist = 1000)
+
+HDB_combine_8dense_primsch <- HDB_combine_8dense_bus %>%
+  mutate(
+    WITHIN_1km_PRISCH = map_int(within_1km_primsch, length)
+)
+
+```
+
 :::
 
 ### 2.5 Final Dataset Assembly
 
-#### 2.5.1 Merge all features into master dataset
+#### **2.5.1 Save the master dataset**
+With each data processing step in section 2.3 and 2.4, we have assembled all structural and location factors into the dataset *HDB_combine_8dense_primsch*.
 
-#### 2.5.2 Handle remaining missing values
+Since the focus of flat type is 4-room HDB and this has been filtered from the beginning, we can remove the flat_type column. 
+```{r}
+#| code-fold: true
+#| eval: false
 
-#### 2.5.3 Save processed dataset
+HDB_master <- HDB_combine_8dense_primsch %>%
+  select(-flat_type, -remaining_lease_mths)
+
+write_rds(HDB_master, "data/rds/HDB_master.rds")
+
+```
+
+```{r}
+#| echo: false
+HDB_master <- read_rds("data/rds/HDB_master.rds")
+glimpse(HDB_master)
+```
+
+#### 2.5.2 **Handle remaining missing values**
+After data assembly, let's check if there is any missing values from the master dataset. The result **FALSE** indicates that there is no missing value.
+```{r}
+anyNA(HDB_master)
+```
+
 
 ## 3 Data Quality & Spatial Overview
 
 ### 3.1 Data Quality Check
-
 -   Summary statistics
--   Check for outliers for price
+```{r}
+summary(HDB_master)
+```
+
+
+### 3.2 Target Variable Analysis
+-   Statistical Point Map (dot)
+-   Distribution of the selling price (histogram price x count)
+-   Check for outliers for price (boxplot)
+HDB resale price distribution (structural factors & location factors plots)
+
+```{r}
+names(HDB_master)
+```
+### 3.3 Multiple Histogram Plots distribution of variables
+
+### 3.4 Spatial Visualization of Amenities
 -   Coordinate validation
+```{r}
+map_cbd <- tm_shape(mpsz) + 
+  tm_polygons(
+    fill = "REGION_N", col = "white", lwd = 0.8,
+    fill.scale = tm_scale_categorical(
+      values = c("#FFC4C4", "#87BAC3", "#8FABD4", "#FDE7B3", "#FDCFFA")
+    ),
+  fill_alpha = 0.7) +
+  tm_shape(cbd_data) +
+  tm_polygons(col = "red", col_alpha = 0.3) +  # Show CBD area
+  
+  tm_shape(HDB_master) +
+  tm_dots(col = "PROX_CBD", 
+          size = 0.02,              # Smaller dots
+          palette = "-RdYlBu",      # Red = far, Blue = close
+          alpha = 0.5)
+map_cbd
 
-### 3.2 Spatial Visualization of Amenities
-
-#### 3.2.1 Target Variable Analysis
-
-HDB resale price distribution
-
-#### 3.2.2 Interactive map of all amenities
+# Arrange in 3 columns
+#tmap_arrange(map1, map2, map3, map4, map5, map6, ncol = 3)
+```
 
 ::: panel-tabset
 ## HDB Units
@@ -1309,6 +1402,31 @@ HDB resale price distribution
 ## 4 Pre-modeling Preparation
 
 ### 4.1 Multicollinearity Check
+```{r}
+sapply(HDB_master[, c(4, 6, 8:28)], class)
+```
+
+
+We will do a multicollinearity analysis with the correlatiom matrix. 
+```{r}
+#| fig-width: 12
+#| fig-height: 10
+#| code-fold: true
+par(bg = "#B8C4A9") 
+corrplot(cor(st_drop_geometry(HDB_master)[, c(4, 6, 8:27)]),
+         diag = FALSE, 
+         order = "AOE",
+         tl.pos = "td", 
+         tl.cex = 0.7, 
+         tl.srt = 40, 
+         tl.col = "#3A6F43",
+         number.cex = 0.7,
+         method = "number", 
+         type = "upper",
+         bg = "#C5C7BC",
+         addgrid.col = "#96A78D")         
+```
+
 
 -   Correlation matrix of predictors
 -   VIF scores

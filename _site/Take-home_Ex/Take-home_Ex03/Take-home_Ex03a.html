@@ -285,7 +285,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#data-quality-spatial-overview" id="toc-data-quality-spatial-overview" class="nav-link" data-scroll-target="#data-quality-spatial-overview">3 Data Quality &amp; Spatial Overview</a>
   <ul class="collapse">
   <li><a href="#data-quality-check" id="toc-data-quality-check" class="nav-link" data-scroll-target="#data-quality-check">3.1 Data Quality Check</a></li>
-  <li><a href="#spatial-visualization-of-amenities" id="toc-spatial-visualization-of-amenities" class="nav-link" data-scroll-target="#spatial-visualization-of-amenities">3.2 Spatial Visualization of Amenities</a></li>
+  <li><a href="#target-variable-analysis" id="toc-target-variable-analysis" class="nav-link" data-scroll-target="#target-variable-analysis">3.2 Target Variable Analysis</a></li>
+  <li><a href="#multiple-histogram-plots-distribution-of-variables" id="toc-multiple-histogram-plots-distribution-of-variables" class="nav-link" data-scroll-target="#multiple-histogram-plots-distribution-of-variables">3.3 Multiple Histogram Plots distribution of variables</a></li>
+  <li><a href="#spatial-visualization-of-amenities" id="toc-spatial-visualization-of-amenities" class="nav-link" data-scroll-target="#spatial-visualization-of-amenities">3.4 Spatial Visualization of Amenities</a></li>
   </ul></li>
   <li><a href="#pre-modeling-preparation" id="toc-pre-modeling-preparation" class="nav-link" data-scroll-target="#pre-modeling-preparation">4 Pre-modeling Preparation</a>
   <ul class="collapse">
@@ -401,7 +403,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(httr, tidyverse, sf, tmap, jsonlite, progress,</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>               spdep, GWmodel, SpatialML, rsample, Metrics, knitr,</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>               kableExtra, spatialRF, randomForestExplainer, rvest,</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>               stringr, lubridate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>               stringr, lubridate, corrplot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><package intro=""> progress - to monitor and track the computation.</package></p>
 </section>
@@ -1764,29 +1766,126 @@ $ geometry             &lt;POINT [m]&gt; POINT (29933.3 38362.35), POINT (30045.
 <div class="tab-content">
 <div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
 <p>within 350m</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb115"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" aria-hidden="true" tabindex="-1"></a>within_350m_kindg <span class="ot">&lt;-</span> <span class="fu">st_is_within_distance</span>(</span>
+<span id="cb115-2"><a href="#cb115-2" aria-hidden="true" tabindex="-1"></a>  HDB_data, kindergarten_data, <span class="at">dist =</span> <span class="dv">350</span>)</span>
+<span id="cb115-3"><a href="#cb115-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb115-4"><a href="#cb115-4" aria-hidden="true" tabindex="-1"></a>HDB_combine_8dense_kindg <span class="ot">&lt;-</span> HDB_combine_7bi_hkcenter <span class="sc">%&gt;%</span></span>
+<span id="cb115-5"><a href="#cb115-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb115-6"><a href="#cb115-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">WITHIN_350m_KINDG =</span> <span class="fu">map_int</span>(within_350m_kindg, length)</span>
+<span id="cb115-7"><a href="#cb115-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 </div>
 <div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
 <p>within 350m</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a>within_350m_childc <span class="ot">&lt;-</span> <span class="fu">st_is_within_distance</span>(</span>
+<span id="cb116-2"><a href="#cb116-2" aria-hidden="true" tabindex="-1"></a>  HDB_data, preschool_data, <span class="at">dist =</span> <span class="dv">350</span>)</span>
+<span id="cb116-3"><a href="#cb116-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-4"><a href="#cb116-4" aria-hidden="true" tabindex="-1"></a>HDB_combine_8dense_childc <span class="ot">&lt;-</span> HDB_combine_8dense_kindg <span class="sc">%&gt;%</span></span>
+<span id="cb116-5"><a href="#cb116-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb116-6"><a href="#cb116-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">WITHIN_350m_CHILDC =</span> <span class="fu">map_int</span>(within_350m_childc, length)</span>
+<span id="cb116-7"><a href="#cb116-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 </div>
 <div id="tabset-4-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-3-tab">
 <p>within 350m</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb117"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a>within_350m_bus <span class="ot">&lt;-</span> <span class="fu">st_is_within_distance</span>(</span>
+<span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a>  HDB_data, bus_data, <span class="at">dist =</span> <span class="dv">350</span>)</span>
+<span id="cb117-3"><a href="#cb117-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb117-4"><a href="#cb117-4" aria-hidden="true" tabindex="-1"></a>HDB_combine_8dense_bus <span class="ot">&lt;-</span> HDB_combine_8dense_childc <span class="sc">%&gt;%</span></span>
+<span id="cb117-5"><a href="#cb117-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb117-6"><a href="#cb117-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">WITHIN_350m_BUS =</span> <span class="fu">map_int</span>(within_350m_bus, length)</span>
+<span id="cb117-7"><a href="#cb117-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 </div>
 <div id="tabset-4-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-4-tab">
 <p>within 1km</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb118"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a>within_1km_primsch <span class="ot">&lt;-</span> <span class="fu">st_is_within_distance</span>(</span>
+<span id="cb118-2"><a href="#cb118-2" aria-hidden="true" tabindex="-1"></a>  HDB_data, primschool_data, <span class="at">dist =</span> <span class="dv">1000</span>)</span>
+<span id="cb118-3"><a href="#cb118-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb118-4"><a href="#cb118-4" aria-hidden="true" tabindex="-1"></a>HDB_combine_8dense_primsch <span class="ot">&lt;-</span> HDB_combine_8dense_bus <span class="sc">%&gt;%</span></span>
+<span id="cb118-5"><a href="#cb118-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb118-6"><a href="#cb118-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">WITHIN_1km_PRISCH =</span> <span class="fu">map_int</span>(within_1km_primsch, length)</span>
+<span id="cb118-7"><a href="#cb118-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 </div>
 </div>
 </div>
 </section>
 <section id="final-dataset-assembly" class="level3">
 <h3 class="anchored" data-anchor-id="final-dataset-assembly">2.5 Final Dataset Assembly</h3>
-<section id="merge-all-features-into-master-dataset" class="level4">
-<h4 class="anchored" data-anchor-id="merge-all-features-into-master-dataset">2.5.1 Merge all features into master dataset</h4>
+<section id="save-the-master-dataset" class="level4">
+<h4 class="anchored" data-anchor-id="save-the-master-dataset"><strong>2.5.1 Save the master dataset</strong></h4>
+<p>With each data processing step in section 2.3 and 2.4, we have assembled all structural and location factors into the dataset <em>HDB_combine_8dense_primsch</em>.</p>
+<p>Since the focus of flat type is 4-room HDB and this has been filtered from the beginning, we can remove the flat_type column.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb119"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a>HDB_master <span class="ot">&lt;-</span> HDB_combine_8dense_primsch <span class="sc">%&gt;%</span></span>
+<span id="cb119-2"><a href="#cb119-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>flat_type, <span class="sc">-</span>remaining_lease_mths)</span>
+<span id="cb119-3"><a href="#cb119-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb119-4"><a href="#cb119-4" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(HDB_master, <span class="st">"data/rds/HDB_master.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 10,745
+Columns: 28
+$ transact_date               &lt;date&gt; 2024-07-01, 2024-07-01, 2024-07-01, 2024-…
+$ floor_level                 &lt;chr&gt; "01 TO 03", "01 TO 03", "07 TO 09", "01 TO…
+$ plan_area                   &lt;chr&gt; "ANG MO KIO", "ANG MO KIO", "ANG MO KIO", …
+$ floor_area_sqm              &lt;dbl&gt; 91, 93, 91, 91, 97, 92, 91, 97, 94, 88, 10…
+$ flat_model                  &lt;chr&gt; "New Generation", "New Generation", "New G…
+$ resale_price                &lt;dbl&gt; 528888, 500000, 540000, 500000, 620000, 57…
+$ geometry                    &lt;POINT [m]&gt; POINT (29933.3 38362.35), POINT (300…
+$ remaining_lease_mths_num    &lt;dbl&gt; 680, 668, 631, 680, 621, 631, 680, 620, 10…
+$ PROX_TOPSCHOOL              &lt;dbl&gt; 1139.9957, 1054.7401, 785.8500, 1246.3765,…
+$ PROX_HKCENTER               &lt;dbl&gt; 289.98144, 424.99822, 132.00515, 398.27582…
+$ PROX_SUPERMKT               &lt;dbl&gt; 349.25330, 468.66713, 186.27015, 237.72203…
+$ PROX_CLINIC                 &lt;dbl&gt; 9.399557e+01, 1.415401e+02, 1.011686e+02, …
+$ PROX_ELDERCARE              &lt;dbl&gt; 334.27019, 433.83460, 397.61080, 214.39384…
+$ PROX_MALLS                  &lt;dbl&gt; 712.8886, 946.0851, 959.9848, 726.9160, 45…
+$ PROX_SPORTS                 &lt;dbl&gt; 347.0061, 507.8975, 336.9090, 260.9641, 30…
+$ PROX_CC                     &lt;dbl&gt; 316.95217, 281.23633, 270.59187, 202.78502…
+$ PROX_PARK                   &lt;dbl&gt; 154.24478, 63.25377, 242.55526, 115.96385,…
+$ PROX_MRT                    &lt;dbl&gt; 696.6567, 919.2072, 383.6496, 680.8811, 54…
+$ PROX_CBD                    &lt;dbl&gt; 7080.609, 6861.176, 7868.887, 7107.071, 75…
+$ PROX_BIZPK                  &lt;dbl&gt; 8453.334, 8495.518, 8490.800, 8331.434, 87…
+$ WITHIN_1km_TOPPRISCH        &lt;int&gt; 0, 0, 2, 0, 0, 2, 0, 0, 0, 0, 2, 0, 0, 0, …
+$ WITHIN_1km_TOPPRISCH_BINARY &lt;dbl&gt; 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, …
+$ WITHIN_500m_MRT_BINARY      &lt;dbl&gt; 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, …
+$ WITHIN_500m_HKC_BINARY      &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
+$ WITHIN_350m_KINDG           &lt;int&gt; 1, 0, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 0, 1, …
+$ WITHIN_350m_CHILDC          &lt;int&gt; 2, 1, 7, 3, 8, 7, 3, 8, 7, 7, 5, 3, 2, 6, …
+$ WITHIN_350m_BUS             &lt;int&gt; 8, 7, 7, 6, 7, 7, 7, 7, 4, 4, 4, 7, 5, 6, …
+$ WITHIN_1km_PRISCH           &lt;int&gt; 3, 2, 3, 3, 3, 3, 3, 3, 2, 2, 3, 3, 2, 3, …</code></pre>
+</div>
+</div>
 </section>
 <section id="handle-remaining-missing-values" class="level4">
-<h4 class="anchored" data-anchor-id="handle-remaining-missing-values">2.5.2 Handle remaining missing values</h4>
-</section>
-<section id="save-processed-dataset" class="level4">
-<h4 class="anchored" data-anchor-id="save-processed-dataset">2.5.3 Save processed dataset</h4>
+<h4 class="anchored" data-anchor-id="handle-remaining-missing-values">2.5.2 <strong>Handle remaining missing values</strong></h4>
+<p>After data assembly, let’s check if there is any missing values from the master dataset. The result <strong>FALSE</strong> indicates that there is no missing value.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb121"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anyNA</span>(HDB_master)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE</code></pre>
+</div>
+</div>
 </section>
 </section>
 </section>
@@ -1796,18 +1895,131 @@ $ geometry             &lt;POINT [m]&gt; POINT (29933.3 38362.35), POINT (30045.
 <h3 class="anchored" data-anchor-id="data-quality-check">3.1 Data Quality Check</h3>
 <ul>
 <li>Summary statistics</li>
-<li>Check for outliers for price</li>
-<li>Coordinate validation</li>
 </ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb123"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb123-1"><a href="#cb123-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(HDB_master)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> transact_date        floor_level         plan_area         floor_area_sqm  
+ Min.   :2024-07-01   Length:10745       Length:10745       Min.   : 74.00  
+ 1st Qu.:2024-09-01   Class :character   Class :character   1st Qu.: 92.00  
+ Median :2024-12-01   Mode  :character   Mode  :character   Median : 93.00  
+ Mean   :2024-11-23                                         Mean   : 94.76  
+ 3rd Qu.:2025-03-01                                         3rd Qu.:100.00  
+ Max.   :2025-05-01                                         Max.   :135.00  
+  flat_model         resale_price              geometry    
+ Length:10745       Min.   : 300000   POINT        :10745  
+ Class :character   1st Qu.: 550000   epsg:3414    :    0  
+ Mode  :character   Median : 615888   +proj=tmer...:    0  
+                    Mean   : 655149                        
+                    3rd Qu.: 705088                        
+                    Max.   :1518000                        
+ remaining_lease_mths_num PROX_TOPSCHOOL  PROX_HKCENTER     PROX_SUPERMKT      
+ Min.   : 494.0           Min.   :  121   Min.   :  25.35   Min.   :2.600e-04  
+ 1st Qu.: 756.0           1st Qu.: 1817   1st Qu.: 380.64   1st Qu.:1.782e+02  
+ Median : 919.0           Median : 3429   Median : 641.90   Median :2.754e+02  
+ Mean   : 921.1           Mean   : 3970   Mean   : 733.01   Mean   :3.036e+02  
+ 3rd Qu.:1088.0           3rd Qu.: 5684   3rd Qu.: 952.74   3rd Qu.:3.907e+02  
+ Max.   :1144.0           Max.   :10429   Max.   :2500.14   Max.   :1.364e+03  
+  PROX_CLINIC        PROX_ELDERCARE        PROX_MALLS       PROX_SPORTS    
+ Min.   :  0.00001   Min.   :   0.0004   Min.   :  44.54   Min.   :  43.6  
+ 1st Qu.:111.96170   1st Qu.: 334.8146   1st Qu.: 371.84   1st Qu.: 260.0  
+ Median :171.95188   Median : 664.5775   Median : 588.42   Median : 411.1  
+ Mean   :188.13408   Mean   : 823.6382   Mean   : 648.67   Mean   : 499.4  
+ 3rd Qu.:242.87369   3rd Qu.:1144.6430   3rd Qu.: 865.65   3rd Qu.: 633.8  
+ Max.   :808.33274   Max.   :3301.6373   Max.   :2274.71   Max.   :2044.9  
+    PROX_CC           PROX_PARK          PROX_MRT          PROX_CBD       
+ Min.   :   2.012   Min.   :  3.387   Min.   :  21.79   Min.   :   28.89  
+ 1st Qu.: 321.531   1st Qu.: 75.353   1st Qu.: 286.13   1st Qu.: 8741.19  
+ Median : 494.023   Median :134.913   Median : 517.38   Median :12062.13  
+ Mean   : 524.282   Mean   :155.534   Mean   : 587.82   Mean   :11341.91  
+ 3rd Qu.: 688.791   3rd Qu.:221.471   3rd Qu.: 799.32   3rd Qu.:14551.29  
+ Max.   :1935.530   Max.   :557.582   Max.   :2120.10   Max.   :18883.62  
+   PROX_BIZPK     WITHIN_1km_TOPPRISCH WITHIN_1km_TOPPRISCH_BINARY
+ Min.   : 107.1   Min.   :0.0000       Min.   :0.0000             
+ 1st Qu.:2004.0   1st Qu.:0.0000       1st Qu.:0.0000             
+ Median :3576.5   Median :0.0000       Median :0.0000             
+ Mean   :4025.6   Mean   :0.1121       Mean   :0.1054             
+ 3rd Qu.:5965.6   3rd Qu.:0.0000       3rd Qu.:0.0000             
+ Max.   :9560.1   Max.   :2.0000       Max.   :1.0000             
+ WITHIN_500m_MRT_BINARY WITHIN_500m_HKC_BINARY WITHIN_350m_KINDG
+ Min.   :0.0000         Min.   :0.0000         Min.   :0.0000   
+ 1st Qu.:0.0000         1st Qu.:0.0000         1st Qu.:0.0000   
+ Median :0.0000         Median :0.0000         Median :1.0000   
+ Mean   :0.4826         Mean   :0.3815         Mean   :0.9305   
+ 3rd Qu.:1.0000         3rd Qu.:1.0000         3rd Qu.:1.0000   
+ Max.   :1.0000         Max.   :1.0000         Max.   :8.0000   
+ WITHIN_350m_CHILDC WITHIN_350m_BUS WITHIN_1km_PRISCH
+ Min.   : 0.000     Min.   : 0      Min.   :0.000    
+ 1st Qu.: 3.000     1st Qu.: 6      1st Qu.:2.000    
+ Median : 5.000     Median : 8      Median :3.000    
+ Mean   : 5.485     Mean   : 8      Mean   :3.085    
+ 3rd Qu.: 7.000     3rd Qu.:10      3rd Qu.:4.000    
+ Max.   :25.000     Max.   :18      Max.   :9.000    </code></pre>
+</div>
+</div>
+</section>
+<section id="target-variable-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="target-variable-analysis">3.2 Target Variable Analysis</h3>
+<ul>
+<li>Statistical Point Map (dot)</li>
+<li>Distribution of the selling price (histogram price x count)</li>
+<li>Check for outliers for price (boxplot) HDB resale price distribution (structural factors &amp; location factors plots)</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb125"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb125-1"><a href="#cb125-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(HDB_master)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "transact_date"               "floor_level"                
+ [3] "plan_area"                   "floor_area_sqm"             
+ [5] "flat_model"                  "resale_price"               
+ [7] "geometry"                    "remaining_lease_mths_num"   
+ [9] "PROX_TOPSCHOOL"              "PROX_HKCENTER"              
+[11] "PROX_SUPERMKT"               "PROX_CLINIC"                
+[13] "PROX_ELDERCARE"              "PROX_MALLS"                 
+[15] "PROX_SPORTS"                 "PROX_CC"                    
+[17] "PROX_PARK"                   "PROX_MRT"                   
+[19] "PROX_CBD"                    "PROX_BIZPK"                 
+[21] "WITHIN_1km_TOPPRISCH"        "WITHIN_1km_TOPPRISCH_BINARY"
+[23] "WITHIN_500m_MRT_BINARY"      "WITHIN_500m_HKC_BINARY"     
+[25] "WITHIN_350m_KINDG"           "WITHIN_350m_CHILDC"         
+[27] "WITHIN_350m_BUS"             "WITHIN_1km_PRISCH"          </code></pre>
+</div>
+</div>
+</section>
+<section id="multiple-histogram-plots-distribution-of-variables" class="level3">
+<h3 class="anchored" data-anchor-id="multiple-histogram-plots-distribution-of-variables">3.3 Multiple Histogram Plots distribution of variables</h3>
 </section>
 <section id="spatial-visualization-of-amenities" class="level3">
-<h3 class="anchored" data-anchor-id="spatial-visualization-of-amenities">3.2 Spatial Visualization of Amenities</h3>
-<section id="target-variable-analysis" class="level4">
-<h4 class="anchored" data-anchor-id="target-variable-analysis">3.2.1 Target Variable Analysis</h4>
-<p>HDB resale price distribution</p>
-</section>
-<section id="interactive-map-of-all-amenities" class="level4">
-<h4 class="anchored" data-anchor-id="interactive-map-of-all-amenities">3.2.2 Interactive map of all amenities</h4>
+<h3 class="anchored" data-anchor-id="spatial-visualization-of-amenities">3.4 Spatial Visualization of Amenities</h3>
+<ul>
+<li>Coordinate validation</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb127"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb127-1"><a href="#cb127-1" aria-hidden="true" tabindex="-1"></a>map_cbd <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(mpsz) <span class="sc">+</span> </span>
+<span id="cb127-2"><a href="#cb127-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
+<span id="cb127-3"><a href="#cb127-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"REGION_N"</span>, <span class="at">col =</span> <span class="st">"white"</span>, <span class="at">lwd =</span> <span class="fl">0.8</span>,</span>
+<span id="cb127-4"><a href="#cb127-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.scale =</span> <span class="fu">tm_scale_categorical</span>(</span>
+<span id="cb127-5"><a href="#cb127-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#FFC4C4"</span>, <span class="st">"#87BAC3"</span>, <span class="st">"#8FABD4"</span>, <span class="st">"#FDE7B3"</span>, <span class="st">"#FDCFFA"</span>)</span>
+<span id="cb127-6"><a href="#cb127-6" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb127-7"><a href="#cb127-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">fill_alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb127-8"><a href="#cb127-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(cbd_data) <span class="sc">+</span></span>
+<span id="cb127-9"><a href="#cb127-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="at">col =</span> <span class="st">"red"</span>, <span class="at">col_alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span>  <span class="co"># Show CBD area</span></span>
+<span id="cb127-10"><a href="#cb127-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb127-11"><a href="#cb127-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(HDB_master) <span class="sc">+</span></span>
+<span id="cb127-12"><a href="#cb127-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_dots</span>(<span class="at">col =</span> <span class="st">"PROX_CBD"</span>, </span>
+<span id="cb127-13"><a href="#cb127-13" aria-hidden="true" tabindex="-1"></a>          <span class="at">size =</span> <span class="fl">0.02</span>,              <span class="co"># Smaller dots</span></span>
+<span id="cb127-14"><a href="#cb127-14" aria-hidden="true" tabindex="-1"></a>          <span class="at">palette =</span> <span class="st">"-RdYlBu"</span>,      <span class="co"># Red = far, Blue = close</span></span>
+<span id="cb127-15"><a href="#cb127-15" aria-hidden="true" tabindex="-1"></a>          <span class="at">alpha =</span> <span class="fl">0.5</span>)</span>
+<span id="cb127-16"><a href="#cb127-16" aria-hidden="true" tabindex="-1"></a>map_cbd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex03a_files/figure-html/unnamed-chunk-75-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb128"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb128-1"><a href="#cb128-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Arrange in 3 columns</span></span>
+<span id="cb128-2"><a href="#cb128-2" aria-hidden="true" tabindex="-1"></a><span class="co">#tmap_arrange(map1, map2, map3, map4, map5, map6, ncol = 3)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true">HDB Units</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false">Education</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-3" role="tab" aria-controls="tabset-5-3" aria-selected="false">Transport</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-4" role="tab" aria-controls="tabset-5-4" aria-selected="false">Commercial</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-5" role="tab" aria-controls="tabset-5-5" aria-selected="false">Business</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-6" role="tab" aria-controls="tabset-5-6" aria-selected="false">Recreation &amp; Others</a></li></ul>
 <div class="tab-content">
@@ -1853,11 +2065,112 @@ $ geometry             &lt;POINT [m]&gt; POINT (29933.3 38362.35), POINT (30045.
 </div>
 </section>
 </section>
-</section>
 <section id="pre-modeling-preparation" class="level2">
 <h2 class="anchored" data-anchor-id="pre-modeling-preparation">4 Pre-modeling Preparation</h2>
 <section id="multicollinearity-check" class="level3">
 <h3 class="anchored" data-anchor-id="multicollinearity-check">4.1 Multicollinearity Check</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb129"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb129-1"><a href="#cb129-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(HDB_master[, <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span><span class="sc">:</span><span class="dv">28</span>)], class)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$floor_area_sqm
+[1] "numeric"
+
+$resale_price
+[1] "numeric"
+
+$remaining_lease_mths_num
+[1] "numeric"
+
+$PROX_TOPSCHOOL
+[1] "numeric"
+
+$PROX_HKCENTER
+[1] "numeric"
+
+$PROX_SUPERMKT
+[1] "numeric"
+
+$PROX_CLINIC
+[1] "numeric"
+
+$PROX_ELDERCARE
+[1] "numeric"
+
+$PROX_MALLS
+[1] "numeric"
+
+$PROX_SPORTS
+[1] "numeric"
+
+$PROX_CC
+[1] "numeric"
+
+$PROX_PARK
+[1] "numeric"
+
+$PROX_MRT
+[1] "numeric"
+
+$PROX_CBD
+[1] "numeric"
+
+$PROX_BIZPK
+[1] "numeric"
+
+$WITHIN_1km_TOPPRISCH
+[1] "integer"
+
+$WITHIN_1km_TOPPRISCH_BINARY
+[1] "numeric"
+
+$WITHIN_500m_MRT_BINARY
+[1] "numeric"
+
+$WITHIN_500m_HKC_BINARY
+[1] "numeric"
+
+$WITHIN_350m_KINDG
+[1] "integer"
+
+$WITHIN_350m_CHILDC
+[1] "integer"
+
+$WITHIN_350m_BUS
+[1] "integer"
+
+$WITHIN_1km_PRISCH
+[1] "integer"
+
+$geometry
+[1] "sfc_POINT" "sfc"      </code></pre>
+</div>
+</div>
+<p>We will do a multicollinearity analysis with the correlatiom matrix.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb131"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb131-1"><a href="#cb131-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#B8C4A9"</span>) </span>
+<span id="cb131-2"><a href="#cb131-2" aria-hidden="true" tabindex="-1"></a><span class="fu">corrplot</span>(<span class="fu">cor</span>(<span class="fu">st_drop_geometry</span>(HDB_master)[, <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span><span class="sc">:</span><span class="dv">27</span>)]),</span>
+<span id="cb131-3"><a href="#cb131-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">diag =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb131-4"><a href="#cb131-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">order =</span> <span class="st">"AOE"</span>,</span>
+<span id="cb131-5"><a href="#cb131-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">tl.pos =</span> <span class="st">"td"</span>, </span>
+<span id="cb131-6"><a href="#cb131-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">tl.cex =</span> <span class="fl">0.7</span>, </span>
+<span id="cb131-7"><a href="#cb131-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">tl.srt =</span> <span class="dv">40</span>, </span>
+<span id="cb131-8"><a href="#cb131-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">tl.col =</span> <span class="st">"#3A6F43"</span>,</span>
+<span id="cb131-9"><a href="#cb131-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">number.cex =</span> <span class="fl">0.7</span>,</span>
+<span id="cb131-10"><a href="#cb131-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">method =</span> <span class="st">"number"</span>, </span>
+<span id="cb131-11"><a href="#cb131-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">type =</span> <span class="st">"upper"</span>,</span>
+<span id="cb131-12"><a href="#cb131-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">bg =</span> <span class="st">"#C5C7BC"</span>,</span>
+<span id="cb131-13"><a href="#cb131-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">addgrid.col =</span> <span class="st">"#96A78D"</span>)         </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex03a_files/figure-html/unnamed-chunk-77-1.png" class="img-fluid figure-img" width="1152"></p>
+</figure>
+</div>
+</div>
+</div>
 <ul>
 <li>Correlation matrix of predictors</li>
 <li>VIF scores</li>
@@ -1874,72 +2187,72 @@ $ geometry             &lt;POINT [m]&gt; POINT (29933.3 38362.35), POINT (30045.
 <h3 class="anchored" data-anchor-id="traintest-split">4.3 Train/Test Split</h3>
 <section id="stratified-spatial-sampling" class="level4">
 <h4 class="anchored" data-anchor-id="stratified-spatial-sampling">4.3.1 Stratified Spatial Sampling</h4>
-<div class="sourceCode" id="cb115"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb115-2"><a href="#cb115-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
-<span id="cb115-3"><a href="#cb115-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb115-4"><a href="#cb115-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb115-5"><a href="#cb115-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb115-6"><a href="#cb115-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Stratify by town AND year (if multi-year)</span></span>
-<span id="cb115-7"><a href="#cb115-7" aria-hidden="true" tabindex="-1"></a>hdb_sample <span class="ot">&lt;-</span> hdb_data <span class="sc">%&gt;%</span></span>
-<span id="cb115-8"><a href="#cb115-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Ensure temporal coverage</span></span>
-<span id="cb115-9"><a href="#cb115-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year, town) <span class="sc">%&gt;%</span></span>
-<span id="cb115-10"><a href="#cb115-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Sample proportionally</span></span>
-<span id="cb115-11"><a href="#cb115-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">prop =</span> <span class="dv">5000</span><span class="sc">/</span><span class="fu">nrow</span>(hdb_data)) <span class="sc">%&gt;%</span></span>
-<span id="cb115-12"><a href="#cb115-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
-<span id="cb115-13"><a href="#cb115-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb115-14"><a href="#cb115-14" aria-hidden="true" tabindex="-1"></a><span class="co"># If you get slightly more/less than 5000, adjust:</span></span>
-<span id="cb115-15"><a href="#cb115-15" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">nrow</span>(hdb_sample) <span class="sc">&gt;</span> <span class="dv">5000</span>) {</span>
-<span id="cb115-16"><a href="#cb115-16" aria-hidden="true" tabindex="-1"></a>  hdb_sample <span class="ot">&lt;-</span> hdb_sample <span class="sc">%&gt;%</span> <span class="fu">sample_n</span>(<span class="dv">5000</span>)</span>
-<span id="cb115-17"><a href="#cb115-17" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> <span class="cf">if</span>(<span class="fu">nrow</span>(hdb_sample) <span class="sc">&lt;</span> <span class="dv">5000</span>) {</span>
-<span id="cb115-18"><a href="#cb115-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add more randomly to reach 5000</span></span>
-<span id="cb115-19"><a href="#cb115-19" aria-hidden="true" tabindex="-1"></a>  additional <span class="ot">&lt;-</span> hdb_data <span class="sc">%&gt;%</span></span>
-<span id="cb115-20"><a href="#cb115-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">anti_join</span>(hdb_sample) <span class="sc">%&gt;%</span></span>
-<span id="cb115-21"><a href="#cb115-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample_n</span>(<span class="dv">5000</span> <span class="sc">-</span> <span class="fu">nrow</span>(hdb_sample))</span>
-<span id="cb115-22"><a href="#cb115-22" aria-hidden="true" tabindex="-1"></a>  hdb_sample <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(hdb_sample, additional)</span>
-<span id="cb115-23"><a href="#cb115-23" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb115-24"><a href="#cb115-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb115-25"><a href="#cb115-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Verify distribution</span></span>
-<span id="cb115-26"><a href="#cb115-26" aria-hidden="true" tabindex="-1"></a>hdb_sample <span class="sc">%&gt;%</span> <span class="fu">count</span>(town)</span>
-<span id="cb115-27"><a href="#cb115-27" aria-hidden="true" tabindex="-1"></a>hdb_sample <span class="sc">%&gt;%</span> <span class="fu">count</span>(flat_type)</span>
-<span id="cb115-28"><a href="#cb115-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb115-29"><a href="#cb115-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Save</span></span>
-<span id="cb115-30"><a href="#cb115-30" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(hdb_sample, <span class="st">"data/processed/hdb_sample_5000.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Original dataset:"</span>, <span class="fu">nrow</span>(hdb_data), <span class="st">"transactions</span></span>
-<span id="cb116-2"><a href="#cb116-2" aria-hidden="true" tabindex="-1"></a><span class="st">"</span>)</span>
-<span id="cb116-3"><a href="#cb116-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Sample size:"</span>, <span class="fu">nrow</span>(hdb_sample), <span class="st">"transactions</span></span>
-<span id="cb116-4"><a href="#cb116-4" aria-hidden="true" tabindex="-1"></a><span class="st">"</span>)</span>
-<span id="cb116-5"><a href="#cb116-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Sampling rate:"</span>, <span class="fu">round</span>(<span class="dv">5000</span><span class="sc">/</span><span class="fu">nrow</span>(hdb_data)<span class="sc">*</span><span class="dv">100</span>, <span class="dv">2</span>), <span class="st">"%</span></span>
-<span id="cb116-6"><a href="#cb116-6" aria-hidden="true" tabindex="-1"></a><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb132"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb132-1"><a href="#cb132-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb132-2"><a href="#cb132-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb132-3"><a href="#cb132-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-4"><a href="#cb132-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb132-5"><a href="#cb132-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-6"><a href="#cb132-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Stratify by town AND year (if multi-year)</span></span>
+<span id="cb132-7"><a href="#cb132-7" aria-hidden="true" tabindex="-1"></a>hdb_sample <span class="ot">&lt;-</span> hdb_data <span class="sc">%&gt;%</span></span>
+<span id="cb132-8"><a href="#cb132-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Ensure temporal coverage</span></span>
+<span id="cb132-9"><a href="#cb132-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year, town) <span class="sc">%&gt;%</span></span>
+<span id="cb132-10"><a href="#cb132-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Sample proportionally</span></span>
+<span id="cb132-11"><a href="#cb132-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">prop =</span> <span class="dv">5000</span><span class="sc">/</span><span class="fu">nrow</span>(hdb_data)) <span class="sc">%&gt;%</span></span>
+<span id="cb132-12"><a href="#cb132-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb132-13"><a href="#cb132-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-14"><a href="#cb132-14" aria-hidden="true" tabindex="-1"></a><span class="co"># If you get slightly more/less than 5000, adjust:</span></span>
+<span id="cb132-15"><a href="#cb132-15" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">nrow</span>(hdb_sample) <span class="sc">&gt;</span> <span class="dv">5000</span>) {</span>
+<span id="cb132-16"><a href="#cb132-16" aria-hidden="true" tabindex="-1"></a>  hdb_sample <span class="ot">&lt;-</span> hdb_sample <span class="sc">%&gt;%</span> <span class="fu">sample_n</span>(<span class="dv">5000</span>)</span>
+<span id="cb132-17"><a href="#cb132-17" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> <span class="cf">if</span>(<span class="fu">nrow</span>(hdb_sample) <span class="sc">&lt;</span> <span class="dv">5000</span>) {</span>
+<span id="cb132-18"><a href="#cb132-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add more randomly to reach 5000</span></span>
+<span id="cb132-19"><a href="#cb132-19" aria-hidden="true" tabindex="-1"></a>  additional <span class="ot">&lt;-</span> hdb_data <span class="sc">%&gt;%</span></span>
+<span id="cb132-20"><a href="#cb132-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">anti_join</span>(hdb_sample) <span class="sc">%&gt;%</span></span>
+<span id="cb132-21"><a href="#cb132-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample_n</span>(<span class="dv">5000</span> <span class="sc">-</span> <span class="fu">nrow</span>(hdb_sample))</span>
+<span id="cb132-22"><a href="#cb132-22" aria-hidden="true" tabindex="-1"></a>  hdb_sample <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(hdb_sample, additional)</span>
+<span id="cb132-23"><a href="#cb132-23" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb132-24"><a href="#cb132-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-25"><a href="#cb132-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Verify distribution</span></span>
+<span id="cb132-26"><a href="#cb132-26" aria-hidden="true" tabindex="-1"></a>hdb_sample <span class="sc">%&gt;%</span> <span class="fu">count</span>(town)</span>
+<span id="cb132-27"><a href="#cb132-27" aria-hidden="true" tabindex="-1"></a>hdb_sample <span class="sc">%&gt;%</span> <span class="fu">count</span>(flat_type)</span>
+<span id="cb132-28"><a href="#cb132-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-29"><a href="#cb132-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Save</span></span>
+<span id="cb132-30"><a href="#cb132-30" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(hdb_sample, <span class="st">"data/processed/hdb_sample_5000.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb133"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb133-1"><a href="#cb133-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Original dataset:"</span>, <span class="fu">nrow</span>(hdb_data), <span class="st">"transactions</span></span>
+<span id="cb133-2"><a href="#cb133-2" aria-hidden="true" tabindex="-1"></a><span class="st">"</span>)</span>
+<span id="cb133-3"><a href="#cb133-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Sample size:"</span>, <span class="fu">nrow</span>(hdb_sample), <span class="st">"transactions</span></span>
+<span id="cb133-4"><a href="#cb133-4" aria-hidden="true" tabindex="-1"></a><span class="st">"</span>)</span>
+<span id="cb133-5"><a href="#cb133-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Sampling rate:"</span>, <span class="fu">round</span>(<span class="dv">5000</span><span class="sc">/</span><span class="fu">nrow</span>(hdb_data)<span class="sc">*</span><span class="dv">100</span>, <span class="dv">2</span>), <span class="st">"%</span></span>
+<span id="cb133-6"><a href="#cb133-6" aria-hidden="true" tabindex="-1"></a><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <ul>
 <li>Total original dataset size</li>
 <li>Sampling method used</li>
 <li>Why 5000 was chosen</li>
 <li>How representativeness was ensured</li>
 </ul>
-<div class="sourceCode" id="cb117"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare distributions</span></span>
-<span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
-<span id="cb117-3"><a href="#cb117-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb117-4"><a href="#cb117-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Price distribution</span></span>
-<span id="cb117-5"><a href="#cb117-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">density</span>(hdb_data<span class="sc">$</span>resale_price), <span class="at">main =</span> <span class="st">"Full Dataset"</span>, <span class="at">col =</span> <span class="st">"blue"</span>)</span>
-<span id="cb117-6"><a href="#cb117-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">density</span>(hdb_sample<span class="sc">$</span>resale_price), <span class="at">main =</span> <span class="st">"Sample"</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span>
-<span id="cb117-7"><a href="#cb117-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb117-8"><a href="#cb117-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Town distribution</span></span>
-<span id="cb117-9"><a href="#cb117-9" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(<span class="fu">table</span>(hdb_data<span class="sc">$</span>town), <span class="at">main =</span> <span class="st">"Full Dataset - Towns"</span>)</span>
-<span id="cb117-10"><a href="#cb117-10" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(<span class="fu">table</span>(hdb_sample<span class="sc">$</span>town), <span class="at">main =</span> <span class="st">"Sample - Towns"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb134"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb134-1"><a href="#cb134-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare distributions</span></span>
+<span id="cb134-2"><a href="#cb134-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb134-3"><a href="#cb134-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb134-4"><a href="#cb134-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Price distribution</span></span>
+<span id="cb134-5"><a href="#cb134-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">density</span>(hdb_data<span class="sc">$</span>resale_price), <span class="at">main =</span> <span class="st">"Full Dataset"</span>, <span class="at">col =</span> <span class="st">"blue"</span>)</span>
+<span id="cb134-6"><a href="#cb134-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">density</span>(hdb_sample<span class="sc">$</span>resale_price), <span class="at">main =</span> <span class="st">"Sample"</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span>
+<span id="cb134-7"><a href="#cb134-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb134-8"><a href="#cb134-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Town distribution</span></span>
+<span id="cb134-9"><a href="#cb134-9" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(<span class="fu">table</span>(hdb_data<span class="sc">$</span>town), <span class="at">main =</span> <span class="st">"Full Dataset - Towns"</span>)</span>
+<span id="cb134-10"><a href="#cb134-10" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(<span class="fu">table</span>(hdb_sample<span class="sc">$</span>town), <span class="at">main =</span> <span class="st">"Sample - Towns"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="trantest-split" class="level4">
 <h4 class="anchored" data-anchor-id="trantest-split">4.3.2 Tran/Test split</h4>
-<div class="sourceCode" id="cb118"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 80/20 split</span></span>
-<span id="cb118-2"><a href="#cb118-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">456</span>)</span>
-<span id="cb118-3"><a href="#cb118-3" aria-hidden="true" tabindex="-1"></a>train_idx <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(hdb_sample), <span class="fl">0.8</span> <span class="sc">*</span> <span class="fu">nrow</span>(hdb_sample))</span>
-<span id="cb118-4"><a href="#cb118-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb118-5"><a href="#cb118-5" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> hdb_sample[train_idx, ]   <span class="co"># 4000 records</span></span>
-<span id="cb118-6"><a href="#cb118-6" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> hdb_sample[<span class="sc">-</span>train_idx, ]   <span class="co"># 1000 records</span></span>
-<span id="cb118-7"><a href="#cb118-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb118-8"><a href="#cb118-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Train size:"</span>, <span class="fu">nrow</span>(train), <span class="st">"</span></span>
-<span id="cb118-9"><a href="#cb118-9" aria-hidden="true" tabindex="-1"></a><span class="st">"</span>)</span>
-<span id="cb118-10"><a href="#cb118-10" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Test size:"</span>, <span class="fu">nrow</span>(test), <span class="st">"</span></span>
-<span id="cb118-11"><a href="#cb118-11" aria-hidden="true" tabindex="-1"></a><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb135"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb135-1"><a href="#cb135-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 80/20 split</span></span>
+<span id="cb135-2"><a href="#cb135-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">456</span>)</span>
+<span id="cb135-3"><a href="#cb135-3" aria-hidden="true" tabindex="-1"></a>train_idx <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(hdb_sample), <span class="fl">0.8</span> <span class="sc">*</span> <span class="fu">nrow</span>(hdb_sample))</span>
+<span id="cb135-4"><a href="#cb135-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb135-5"><a href="#cb135-5" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> hdb_sample[train_idx, ]   <span class="co"># 4000 records</span></span>
+<span id="cb135-6"><a href="#cb135-6" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> hdb_sample[<span class="sc">-</span>train_idx, ]   <span class="co"># 1000 records</span></span>
+<span id="cb135-7"><a href="#cb135-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb135-8"><a href="#cb135-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Train size:"</span>, <span class="fu">nrow</span>(train), <span class="st">"</span></span>
+<span id="cb135-9"><a href="#cb135-9" aria-hidden="true" tabindex="-1"></a><span class="st">"</span>)</span>
+<span id="cb135-10"><a href="#cb135-10" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Test size:"</span>, <span class="fu">nrow</span>(test), <span class="st">"</span></span>
+<span id="cb135-11"><a href="#cb135-11" aria-hidden="true" tabindex="-1"></a><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 </section>
 </section>
@@ -2047,27 +2360,27 @@ $ geometry             &lt;POINT [m]&gt; POINT (29933.3 38362.35), POINT (30045.
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb119"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a>mdata <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rawdata/mdata.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb136"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb136-1"><a href="#cb136-1" aria-hidden="true" tabindex="-1"></a>mdata <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rawdata/mdata.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb120"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz) <span class="sc">+</span></span>
-<span id="cb120-2"><a href="#cb120-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
-<span id="cb120-3"><a href="#cb120-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"REGION_N"</span>,</span>
-<span id="cb120-4"><a href="#cb120-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.scale =</span> <span class="fu">tm_scale_categorical</span>(</span>
-<span id="cb120-5"><a href="#cb120-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#FFC4C4"</span>, <span class="st">"#87BAC3"</span>, <span class="st">"#8FABD4"</span>, <span class="st">"#FDE7B3"</span>, <span class="st">"#FDCFFA"</span>)</span>
-<span id="cb120-6"><a href="#cb120-6" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb120-7"><a href="#cb120-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.legend =</span> <span class="fu">tm_legend</span>(<span class="at">title =</span> <span class="st">"Region"</span>),</span>
-<span id="cb120-8"><a href="#cb120-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"white"</span>,</span>
-<span id="cb120-9"><a href="#cb120-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">lwd =</span> <span class="fl">0.8</span></span>
-<span id="cb120-10"><a href="#cb120-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb120-11"><a href="#cb120-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(</span>
-<span id="cb120-12"><a href="#cb120-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">main.title =</span> <span class="st">"Singapore Planning Regions"</span>,</span>
-<span id="cb120-13"><a href="#cb120-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.outside =</span> <span class="cn">TRUE</span></span>
-<span id="cb120-14"><a href="#cb120-14" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb137"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb137-1"><a href="#cb137-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz) <span class="sc">+</span></span>
+<span id="cb137-2"><a href="#cb137-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
+<span id="cb137-3"><a href="#cb137-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"REGION_N"</span>,</span>
+<span id="cb137-4"><a href="#cb137-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.scale =</span> <span class="fu">tm_scale_categorical</span>(</span>
+<span id="cb137-5"><a href="#cb137-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#FFC4C4"</span>, <span class="st">"#87BAC3"</span>, <span class="st">"#8FABD4"</span>, <span class="st">"#FDE7B3"</span>, <span class="st">"#FDCFFA"</span>)</span>
+<span id="cb137-6"><a href="#cb137-6" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb137-7"><a href="#cb137-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.legend =</span> <span class="fu">tm_legend</span>(<span class="at">title =</span> <span class="st">"Region"</span>),</span>
+<span id="cb137-8"><a href="#cb137-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"white"</span>,</span>
+<span id="cb137-9"><a href="#cb137-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">lwd =</span> <span class="fl">0.8</span></span>
+<span id="cb137-10"><a href="#cb137-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb137-11"><a href="#cb137-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(</span>
+<span id="cb137-12"><a href="#cb137-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">main.title =</span> <span class="st">"Singapore Planning Regions"</span>,</span>
+<span id="cb137-13"><a href="#cb137-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.outside =</span> <span class="cn">TRUE</span></span>
+<span id="cb137-14"><a href="#cb137-14" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Take-home_Ex03a_files/figure-html/unnamed-chunk-67-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Take-home_Ex03a_files/figure-html/unnamed-chunk-79-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -2076,25 +2389,25 @@ $ geometry             &lt;POINT [m]&gt; POINT (29933.3 38362.35), POINT (30045.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb121"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a><span class="co">#tmap_mode("view")</span></span>
-<span id="cb121-2"><a href="#cb121-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz) <span class="sc">+</span></span>
-<span id="cb121-3"><a href="#cb121-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="at">fill =</span> <span class="st">"#FAF3F3"</span>, <span class="at">fill_alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb121-4"><a href="#cb121-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mrt_sf) <span class="sc">+</span></span>
-<span id="cb121-5"><a href="#cb121-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_symbols</span>(</span>
-<span id="cb121-6"><a href="#cb121-6" aria-hidden="true" tabindex="-1"></a>   <span class="at">fill =</span> <span class="st">"#87A7B3"</span>, <span class="at">size =</span> <span class="fl">0.5</span>,</span>
-<span id="cb121-7"><a href="#cb121-7" aria-hidden="true" tabindex="-1"></a>   <span class="at">col =</span> <span class="st">"#0C4271"</span>,</span>
-<span id="cb121-8"><a href="#cb121-8" aria-hidden="true" tabindex="-1"></a><span class="co">#   popup = "STATION"</span></span>
-<span id="cb121-9"><a href="#cb121-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb121-10"><a href="#cb121-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">main.title =</span> <span class="st">"MRT Stations"</span>,</span>
-<span id="cb121-11"><a href="#cb121-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">bg.color =</span> <span class="st">"#F6E6E4"</span>,</span>
-<span id="cb121-12"><a href="#cb121-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">outer.margins =</span> <span class="fu">c</span>(<span class="fl">0.01</span>, <span class="fl">0.01</span>, <span class="fl">0.01</span>, <span class="fl">0.01</span>))</span>
-<span id="cb121-13"><a href="#cb121-13" aria-hidden="true" tabindex="-1"></a><span class="co">#tmap_mode("plot")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb138"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb138-1"><a href="#cb138-1" aria-hidden="true" tabindex="-1"></a><span class="co">#tmap_mode("view")</span></span>
+<span id="cb138-2"><a href="#cb138-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz) <span class="sc">+</span></span>
+<span id="cb138-3"><a href="#cb138-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="at">fill =</span> <span class="st">"#FAF3F3"</span>, <span class="at">fill_alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb138-4"><a href="#cb138-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mrt_sf) <span class="sc">+</span></span>
+<span id="cb138-5"><a href="#cb138-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_symbols</span>(</span>
+<span id="cb138-6"><a href="#cb138-6" aria-hidden="true" tabindex="-1"></a>   <span class="at">fill =</span> <span class="st">"#87A7B3"</span>, <span class="at">size =</span> <span class="fl">0.5</span>,</span>
+<span id="cb138-7"><a href="#cb138-7" aria-hidden="true" tabindex="-1"></a>   <span class="at">col =</span> <span class="st">"#0C4271"</span>,</span>
+<span id="cb138-8"><a href="#cb138-8" aria-hidden="true" tabindex="-1"></a><span class="co">#   popup = "STATION"</span></span>
+<span id="cb138-9"><a href="#cb138-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb138-10"><a href="#cb138-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">main.title =</span> <span class="st">"MRT Stations"</span>,</span>
+<span id="cb138-11"><a href="#cb138-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">bg.color =</span> <span class="st">"#F6E6E4"</span>,</span>
+<span id="cb138-12"><a href="#cb138-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">outer.margins =</span> <span class="fu">c</span>(<span class="fl">0.01</span>, <span class="fl">0.01</span>, <span class="fl">0.01</span>, <span class="fl">0.01</span>))</span>
+<span id="cb138-13"><a href="#cb138-13" aria-hidden="true" tabindex="-1"></a><span class="co">#tmap_mode("plot")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div class="sourceCode" id="cb122"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"data/rawdata/JTCBusinessParkLandGEOJSON.geojson"</span>) </span>
-<span id="cb122-2"><a href="#cb122-2" aria-hidden="true" tabindex="-1"></a><span class="fu">read_html</span>(test<span class="sc">$</span>Description[<span class="dv">1</span>]) <span class="sc">%&gt;%</span> </span>
-<span id="cb122-3"><a href="#cb122-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_table</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb122-4"><a href="#cb122-4" aria-hidden="true" tabindex="-1"></a>  .[[<span class="dv">1</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb139"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb139-1"><a href="#cb139-1" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"data/rawdata/JTCBusinessParkLandGEOJSON.geojson"</span>) </span>
+<span id="cb139-2"><a href="#cb139-2" aria-hidden="true" tabindex="-1"></a><span class="fu">read_html</span>(test<span class="sc">$</span>Description[<span class="dv">1</span>]) <span class="sc">%&gt;%</span> </span>
+<span id="cb139-3"><a href="#cb139-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_table</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb139-4"><a href="#cb139-4" aria-hidden="true" tabindex="-1"></a>  .[[<span class="dv">1</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
 </section>
