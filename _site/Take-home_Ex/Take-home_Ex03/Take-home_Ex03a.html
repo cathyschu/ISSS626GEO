@@ -291,53 +291,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#pre-modeling-preparation" id="toc-pre-modeling-preparation" class="nav-link" data-scroll-target="#pre-modeling-preparation">4 Pre-modeling Preparation</a>
   <ul class="collapse">
-  <li><a href="#multicollinearity-check" id="toc-multicollinearity-check" class="nav-link" data-scroll-target="#multicollinearity-check">4.1 Multicollinearity Check</a></li>
-  <li><a href="#feature-selection" id="toc-feature-selection" class="nav-link" data-scroll-target="#feature-selection">4.2 Feature Selection</a></li>
-  <li><a href="#traintest-split" id="toc-traintest-split" class="nav-link" data-scroll-target="#traintest-split">4.3 Train/Test Split</a></li>
+  <li><a href="#preparing-data" id="toc-preparing-data" class="nav-link" data-scroll-target="#preparing-data">4.1 Preparing Data</a></li>
+  <li><a href="#multicollinearity-check" id="toc-multicollinearity-check" class="nav-link" data-scroll-target="#multicollinearity-check">4.2 Multicollinearity Check</a></li>
+  <li><a href="#feature-selection" id="toc-feature-selection" class="nav-link" data-scroll-target="#feature-selection">4.3 Feature Selection</a></li>
   </ul></li>
-  <li><a href="#multiple-linear-regression-mlr" id="toc-multiple-linear-regression-mlr" class="nav-link" data-scroll-target="#multiple-linear-regression-mlr">5 Multiple Linear Regression (MLR)</a>
+  <li><a href="#predictive-modeling" id="toc-predictive-modeling" class="nav-link" data-scroll-target="#predictive-modeling"><span style="color: #E45A92;">PREDICTIVE MODELING</span></a></li>
+  <li><a href="#model-calibration" id="toc-model-calibration" class="nav-link" data-scroll-target="#model-calibration">5 Model Calibration</a>
   <ul class="collapse">
-  <li><a href="#model-specification" id="toc-model-specification" class="nav-link" data-scroll-target="#model-specification">5.1 Model specification</a></li>
-  <li><a href="#model-fitting" id="toc-model-fitting" class="nav-link" data-scroll-target="#model-fitting">5.2 Model fitting</a></li>
-  <li><a href="#results-interpretation" id="toc-results-interpretation" class="nav-link" data-scroll-target="#results-interpretation">5.3 Results &amp; interpretation</a></li>
-  <li><a href="#residual-diagnostics" id="toc-residual-diagnostics" class="nav-link" data-scroll-target="#residual-diagnostics">5.4 Residual diagnostics</a></li>
+  <li><a href="#model-calibration-results" id="toc-model-calibration-results" class="nav-link" data-scroll-target="#model-calibration-results">5.5 Model Calibration Results</a></li>
   </ul></li>
-  <li><a href="#geographically-weighted-regression-gwr" id="toc-geographically-weighted-regression-gwr" class="nav-link" data-scroll-target="#geographically-weighted-regression-gwr">6 Geographically Weighted Regression (GWR)</a>
+  <li><a href="#predictions-with-test-data" id="toc-predictions-with-test-data" class="nav-link" data-scroll-target="#predictions-with-test-data">6 Predictions with Test Data</a></li>
+  <li><a href="#model-evaluation" id="toc-model-evaluation" class="nav-link" data-scroll-target="#model-evaluation">7 Model Evaluation</a>
   <ul class="collapse">
-  <li><a href="#bandwidth-selection" id="toc-bandwidth-selection" class="nav-link" data-scroll-target="#bandwidth-selection">6.1 Bandwidth selection</a></li>
-  <li><a href="#model-fitting-1" id="toc-model-fitting-1" class="nav-link" data-scroll-target="#model-fitting-1">6.2 Model fitting</a></li>
-  <li><a href="#local-coefficient-maps" id="toc-local-coefficient-maps" class="nav-link" data-scroll-target="#local-coefficient-maps">6.3 Local coefficient maps</a></li>
-  <li><a href="#results-interpretation-1" id="toc-results-interpretation-1" class="nav-link" data-scroll-target="#results-interpretation-1">6.4 Results &amp; interpretation</a></li>
+  <li><a href="#performance-metrics-rmse-mae-r²" id="toc-performance-metrics-rmse-mae-r²" class="nav-link" data-scroll-target="#performance-metrics-rmse-mae-r²">7.1 Performance metrics (RMSE, MAE, R²)</a></li>
+  <li><a href="#cross-validation-results" id="toc-cross-validation-results" class="nav-link" data-scroll-target="#cross-validation-results">7.2 Cross-validation results</a></li>
+  <li><a href="#model-comparison" id="toc-model-comparison" class="nav-link" data-scroll-target="#model-comparison">7.3 Model comparison</a></li>
+  <li><a href="#best-model-selection" id="toc-best-model-selection" class="nav-link" data-scroll-target="#best-model-selection">7.4 Best model selection</a></li>
   </ul></li>
-  <li><a href="#non-sptial-random-forest-model" id="toc-non-sptial-random-forest-model" class="nav-link" data-scroll-target="#non-sptial-random-forest-model">7 Non-sptial Random Forest Model</a>
+  <li><a href="#discussion-conclusion" id="toc-discussion-conclusion" class="nav-link" data-scroll-target="#discussion-conclusion">8 Discussion &amp; Conclusion</a>
   <ul class="collapse">
-  <li><a href="#feature-selection-1" id="toc-feature-selection-1" class="nav-link" data-scroll-target="#feature-selection-1">7.1 Feature selection</a></li>
-  <li><a href="#hyperparameter-tuning" id="toc-hyperparameter-tuning" class="nav-link" data-scroll-target="#hyperparameter-tuning">7.2 Hyperparameter tuning</a></li>
-  <li><a href="#model-fitting-2" id="toc-model-fitting-2" class="nav-link" data-scroll-target="#model-fitting-2">7.3 Model fitting</a></li>
-  <li><a href="#feature-importance" id="toc-feature-importance" class="nav-link" data-scroll-target="#feature-importance">7.4 Feature importance</a></li>
-  <li><a href="#results-interpretation-2" id="toc-results-interpretation-2" class="nav-link" data-scroll-target="#results-interpretation-2">7.5 Results &amp; interpretation</a></li>
-  </ul></li>
-  <li><a href="#geographical-weighted-random-forest-model-gwrf" id="toc-geographical-weighted-random-forest-model-gwrf" class="nav-link" data-scroll-target="#geographical-weighted-random-forest-model-gwrf">8 Geographical Weighted Random Forest Model (gwRF)</a>
-  <ul class="collapse">
-  <li><a href="#model-specification-1" id="toc-model-specification-1" class="nav-link" data-scroll-target="#model-specification-1">8.1 Model specification</a></li>
-  <li><a href="#bandwidth-selection-1" id="toc-bandwidth-selection-1" class="nav-link" data-scroll-target="#bandwidth-selection-1">8.2 Bandwidth selection</a></li>
-  <li><a href="#model-fitting-3" id="toc-model-fitting-3" class="nav-link" data-scroll-target="#model-fitting-3">8.3 Model fitting</a></li>
-  <li><a href="#local-predictions-interpretation" id="toc-local-predictions-interpretation" class="nav-link" data-scroll-target="#local-predictions-interpretation">8.4 Local predictions &amp; interpretation</a></li>
-  </ul></li>
-  <li><a href="#model-evaluation" id="toc-model-evaluation" class="nav-link" data-scroll-target="#model-evaluation">9 Model Evaluation</a>
-  <ul class="collapse">
-  <li><a href="#performance-metrics-rmse-mae-r²" id="toc-performance-metrics-rmse-mae-r²" class="nav-link" data-scroll-target="#performance-metrics-rmse-mae-r²">9.1 Performance metrics (RMSE, MAE, R²)</a></li>
-  <li><a href="#cross-validation-results" id="toc-cross-validation-results" class="nav-link" data-scroll-target="#cross-validation-results">9.2 Cross-validation results</a></li>
-  <li><a href="#model-comparison" id="toc-model-comparison" class="nav-link" data-scroll-target="#model-comparison">9.3 Model comparison</a></li>
-  <li><a href="#best-model-selection" id="toc-best-model-selection" class="nav-link" data-scroll-target="#best-model-selection">9.4 Best model selection</a></li>
-  <li><a href="#spatial-patterns-in-predictions-key-findings-from-best-model" id="toc-spatial-patterns-in-predictions-key-findings-from-best-model" class="nav-link" data-scroll-target="#spatial-patterns-in-predictions-key-findings-from-best-model">9.5 Spatial patterns in predictions / Key findings from best model</a></li>
-  </ul></li>
-  <li><a href="#discussion-conclusion" id="toc-discussion-conclusion" class="nav-link" data-scroll-target="#discussion-conclusion">10 Discussion &amp; Conclusion</a>
-  <ul class="collapse">
-  <li><a href="#key-findings" id="toc-key-findings" class="nav-link" data-scroll-target="#key-findings">10.1 Key findings</a></li>
-  <li><a href="#policy-implications" id="toc-policy-implications" class="nav-link" data-scroll-target="#policy-implications">10.2 Policy implications</a></li>
-  <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations">10.3 Limitations</a></li>
-  <li><a href="#future-work" id="toc-future-work" class="nav-link" data-scroll-target="#future-work">10.4 Future work</a></li>
+  <li><a href="#limitations-future-work" id="toc-limitations-future-work" class="nav-link" data-scroll-target="#limitations-future-work">8.3 Limitations &amp; Future work</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -371,7 +344,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">November 14, 2025</p>
+      <p class="date-modified">November 15, 2025</p>
     </div>
   </div>
     
@@ -403,7 +376,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(httr, tidyverse, sf, tmap, jsonlite, progress,</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>               spdep, GWmodel, SpatialML, rsample, Metrics, knitr,</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>               kableExtra, spatialRF, randomForestExplainer, rvest,</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>               stringr, lubridate, corrplot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>               stringr, lubridate, corrplot, performance, see,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>               gtsummary, ModelMetrics)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><package intro=""> progress - to monitor and track the computation.</package></p>
 </section>
@@ -2067,289 +2041,2561 @@ $ WITHIN_1km_PRISCH           &lt;int&gt; 3, 2, 3, 3, 3, 3, 3, 3, 2, 2, 3, 3, 2,
 </section>
 <section id="pre-modeling-preparation" class="level2">
 <h2 class="anchored" data-anchor-id="pre-modeling-preparation">4 Pre-modeling Preparation</h2>
-<section id="multicollinearity-check" class="level3">
-<h3 class="anchored" data-anchor-id="multicollinearity-check">4.1 Multicollinearity Check</h3>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb129"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb129-1"><a href="#cb129-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(HDB_master[, <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span><span class="sc">:</span><span class="dv">28</span>)], class)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>$floor_area_sqm
-[1] "numeric"
-
-$resale_price
-[1] "numeric"
-
-$remaining_lease_mths_num
-[1] "numeric"
-
-$PROX_TOPSCHOOL
-[1] "numeric"
-
-$PROX_HKCENTER
-[1] "numeric"
-
-$PROX_SUPERMKT
-[1] "numeric"
-
-$PROX_CLINIC
-[1] "numeric"
-
-$PROX_ELDERCARE
-[1] "numeric"
-
-$PROX_MALLS
-[1] "numeric"
-
-$PROX_SPORTS
-[1] "numeric"
-
-$PROX_CC
-[1] "numeric"
-
-$PROX_PARK
-[1] "numeric"
-
-$PROX_MRT
-[1] "numeric"
-
-$PROX_CBD
-[1] "numeric"
-
-$PROX_BIZPK
-[1] "numeric"
-
-$WITHIN_1km_TOPPRISCH
-[1] "integer"
-
-$WITHIN_1km_TOPPRISCH_BINARY
-[1] "numeric"
-
-$WITHIN_500m_MRT_BINARY
-[1] "numeric"
-
-$WITHIN_500m_HKC_BINARY
-[1] "numeric"
-
-$WITHIN_350m_KINDG
-[1] "integer"
-
-$WITHIN_350m_CHILDC
-[1] "integer"
-
-$WITHIN_350m_BUS
-[1] "integer"
-
-$WITHIN_1km_PRISCH
-[1] "integer"
-
-$geometry
-[1] "sfc_POINT" "sfc"      </code></pre>
-</div>
-</div>
-<p>We will do a multicollinearity analysis with the correlatiom matrix.</p>
+<section id="preparing-data" class="level3">
+<h3 class="anchored" data-anchor-id="preparing-data">4.1 Preparing Data</h3>
+<p>For this study, we will not use the entire dataset of <code>hdb_master</code>. Instead, we will calibrate predictive models using sampled data. In this step we will randomly sample 5,000 samples from the data.</p>
+<section id="sample-data-for-prototyping" class="level4">
+<h4 class="anchored" data-anchor-id="sample-data-for-prototyping"><strong>4.1.1 Sample Data for Prototyping</strong></h4>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb131"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb131-1"><a href="#cb131-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#B8C4A9"</span>) </span>
-<span id="cb131-2"><a href="#cb131-2" aria-hidden="true" tabindex="-1"></a><span class="fu">corrplot</span>(<span class="fu">cor</span>(<span class="fu">st_drop_geometry</span>(HDB_master)[, <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span><span class="sc">:</span><span class="dv">27</span>)]),</span>
-<span id="cb131-3"><a href="#cb131-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">diag =</span> <span class="cn">FALSE</span>, </span>
-<span id="cb131-4"><a href="#cb131-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">order =</span> <span class="st">"AOE"</span>,</span>
-<span id="cb131-5"><a href="#cb131-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">tl.pos =</span> <span class="st">"td"</span>, </span>
-<span id="cb131-6"><a href="#cb131-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">tl.cex =</span> <span class="fl">0.7</span>, </span>
-<span id="cb131-7"><a href="#cb131-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">tl.srt =</span> <span class="dv">40</span>, </span>
-<span id="cb131-8"><a href="#cb131-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">tl.col =</span> <span class="st">"#3A6F43"</span>,</span>
-<span id="cb131-9"><a href="#cb131-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">number.cex =</span> <span class="fl">0.7</span>,</span>
-<span id="cb131-10"><a href="#cb131-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">method =</span> <span class="st">"number"</span>, </span>
-<span id="cb131-11"><a href="#cb131-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">type =</span> <span class="st">"upper"</span>,</span>
-<span id="cb131-12"><a href="#cb131-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">bg =</span> <span class="st">"#C5C7BC"</span>,</span>
-<span id="cb131-13"><a href="#cb131-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">addgrid.col =</span> <span class="st">"#96A78D"</span>)         </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb129"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb129-1"><a href="#cb129-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb129-2"><a href="#cb129-2" aria-hidden="true" tabindex="-1"></a>HDB_sample <span class="ot">&lt;-</span> HDB_master <span class="sc">%&gt;%</span></span>
+<span id="cb129-3"><a href="#cb129-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sample_n</span>(<span class="dv">5000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>We also use <code>st_jutter()</code> to move the point features by 1m to avoid overlapping point features.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb130"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb130-1"><a href="#cb130-1" aria-hidden="true" tabindex="-1"></a>HDB_sample <span class="ot">&lt;-</span> HDB_sample <span class="sc">%&gt;%</span></span>
+<span id="cb130-2"><a href="#cb130-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_jitter</span>(<span class="at">amoun =</span> <span class="dv">1</span>)</span>
+<span id="cb130-3"><a href="#cb130-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb130-4"><a href="#cb130-4" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(HDB_sample, <span class="st">"data/rds/HDB_sample.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="traintest-data-split" class="level4">
+<h4 class="anchored" data-anchor-id="traintest-data-split"><strong>4.1.2 Train/Test Data Split</strong></h4>
+<p>We will split the <em>HDB_sample</em> data into training and test data sets with 60/40.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb131"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb131-1"><a href="#cb131-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb131-2"><a href="#cb131-2" aria-hidden="true" tabindex="-1"></a>hdb_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(HDB_sample,</span>
+<span id="cb131-3"><a href="#cb131-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">prop =</span> <span class="dv">6</span><span class="sc">/</span><span class="dv">10</span>,)</span>
+<span id="cb131-4"><a href="#cb131-4" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> <span class="fu">training</span>(hdb_split)</span>
+<span id="cb131-5"><a href="#cb131-5" aria-hidden="true" tabindex="-1"></a>test_data <span class="ot">&lt;-</span> <span class="fu">testing</span>(hdb_split)</span>
+<span id="cb131-6"><a href="#cb131-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb131-7"><a href="#cb131-7" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(train_data, <span class="st">"data/rds/train_data.rds"</span>)</span>
+<span id="cb131-8"><a href="#cb131-8" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(test_data, <span class="st">"data/rds/test_data.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="sourceCode" id="cb132"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb132-1"><a href="#cb132-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare distributions</span></span>
+<span id="cb132-2"><a href="#cb132-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb132-3"><a href="#cb132-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-4"><a href="#cb132-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Price distribution</span></span>
+<span id="cb132-5"><a href="#cb132-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">density</span>(hdb_data<span class="sc">$</span>resale_price), <span class="at">main =</span> <span class="st">"Full Dataset"</span>, <span class="at">col =</span> <span class="st">"blue"</span>)</span>
+<span id="cb132-6"><a href="#cb132-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">density</span>(hdb_sample<span class="sc">$</span>resale_price), <span class="at">main =</span> <span class="st">"Sample"</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span>
+<span id="cb132-7"><a href="#cb132-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-8"><a href="#cb132-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Town distribution</span></span>
+<span id="cb132-9"><a href="#cb132-9" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(<span class="fu">table</span>(hdb_data<span class="sc">$</span>town), <span class="at">main =</span> <span class="st">"Full Dataset - Towns"</span>)</span>
+<span id="cb132-10"><a href="#cb132-10" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(<span class="fu">table</span>(hdb_sample<span class="sc">$</span>town), <span class="at">main =</span> <span class="st">"Sample - Towns"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="multicollinearity-check" class="level3">
+<h3 class="anchored" data-anchor-id="multicollinearity-check">4.2 Multicollinearity Check</h3>
+<section id="correlation-matrix" class="level4">
+<h4 class="anchored" data-anchor-id="correlation-matrix"><strong>4.2.1 Correlation Matrix</strong></h4>
+<p>We will do a multicollinearity analysis on the predictors with the correlatiom matrix. In this step, we are using this as EDA to explore</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb133"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb133-1"><a href="#cb133-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#B8C4A9"</span>) </span>
+<span id="cb133-2"><a href="#cb133-2" aria-hidden="true" tabindex="-1"></a><span class="fu">corrplot</span>(<span class="fu">cor</span>(<span class="fu">st_drop_geometry</span>(train_data)[, <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span><span class="sc">:</span><span class="dv">27</span>)]),</span>
+<span id="cb133-3"><a href="#cb133-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">diag =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb133-4"><a href="#cb133-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">order =</span> <span class="st">"AOE"</span>,</span>
+<span id="cb133-5"><a href="#cb133-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">tl.pos =</span> <span class="st">"td"</span>, </span>
+<span id="cb133-6"><a href="#cb133-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">tl.cex =</span> <span class="fl">0.7</span>, </span>
+<span id="cb133-7"><a href="#cb133-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">tl.srt =</span> <span class="dv">40</span>, </span>
+<span id="cb133-8"><a href="#cb133-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">tl.col =</span> <span class="st">"#3A6F43"</span>,</span>
+<span id="cb133-9"><a href="#cb133-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">number.cex =</span> <span class="fl">0.7</span>,</span>
+<span id="cb133-10"><a href="#cb133-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">method =</span> <span class="st">"number"</span>, </span>
+<span id="cb133-11"><a href="#cb133-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">type =</span> <span class="st">"upper"</span>,</span>
+<span id="cb133-12"><a href="#cb133-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">bg =</span> <span class="st">"#C5C7BC"</span>,</span>
+<span id="cb133-13"><a href="#cb133-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">addgrid.col =</span> <span class="st">"#96A78D"</span>)         </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Take-home_Ex03a_files/figure-html/unnamed-chunk-77-1.png" class="img-fluid figure-img" width="1152"></p>
+<p><img src="Take-home_Ex03a_files/figure-html/unnamed-chunk-81-1.png" class="img-fluid figure-img" width="1152"></p>
 </figure>
 </div>
 </div>
 </div>
+<div class="markgoals">
+<div class="markgoals-header">
+<p><strong>Note</strong></p>
+</div>
+<div class="markgoals-container">
 <ul>
-<li>Correlation matrix of predictors</li>
-<li>VIF scores</li>
-<li>Identify multicollinearity issues Remove highly correlated features</li>
+<li>From the scatterplot matrix, it is clear that <em>WITHIN_1km_TOPSCH</em> is highly correlated to <em>WITHIN_1km_TOPSCH_BINARY</em>. In addition, another pair of variables <em>PROX_TOPSCHOOL</em> and <em>PROX_CBD</em> are also highly correlated (0.8). We also noticed that <em>PROX_MRT</em> and <em>WITHIN_500m_MRT_BINARY</em> show a correlation coefficient of 0.78, almost 0.8.</li>
+<li>In view of this, it is wiser to only include either one of them in the subsequent model building. As a result, <strong><em>WITHIN_1km_TOPPRISCH</em></strong>, <strong><em>WITHIN_500m_MRT_BINARY</em></strong>, and <strong><em>WITHIN_500m_HKC_BINARY</em></strong> are excluded in the subsequent model building.</li>
 </ul>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb134"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb134-1"><a href="#cb134-1" aria-hidden="true" tabindex="-1"></a>train_data_corr <span class="ot">&lt;-</span> train_data <span class="sc">%&gt;%</span></span>
+<span id="cb134-2"><a href="#cb134-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>WITHIN_1km_TOPPRISCH,</span>
+<span id="cb134-3"><a href="#cb134-3" aria-hidden="true" tabindex="-1"></a>         <span class="sc">-</span>WITHIN_500m_MRT_BINARY,</span>
+<span id="cb134-4"><a href="#cb134-4" aria-hidden="true" tabindex="-1"></a>         <span class="sc">-</span>WITHIN_500m_HKC_BINARY)</span>
+<span id="cb134-5"><a href="#cb134-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb134-6"><a href="#cb134-6" aria-hidden="true" tabindex="-1"></a>test_data_corr <span class="ot">&lt;-</span> test_data <span class="sc">%&gt;%</span></span>
+<span id="cb134-7"><a href="#cb134-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>WITHIN_1km_TOPPRISCH,</span>
+<span id="cb134-8"><a href="#cb134-8" aria-hidden="true" tabindex="-1"></a>         <span class="sc">-</span>WITHIN_500m_MRT_BINARY,</span>
+<span id="cb134-9"><a href="#cb134-9" aria-hidden="true" tabindex="-1"></a>         <span class="sc">-</span>WITHIN_500m_HKC_BINARY) <span class="sc">%&gt;%</span></span>
+<span id="cb134-10"><a href="#cb134-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(floor_level <span class="sc">!=</span> <span class="st">"43 TO 45"</span>) <span class="co"># because there is no such level in train data.</span></span>
+<span id="cb134-11"><a href="#cb134-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb134-12"><a href="#cb134-12" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(train_data_corr, <span class="st">"data/rds/train_data_corr.rds"</span>)</span>
+<span id="cb134-13"><a href="#cb134-13" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(test_data_corr, <span class="st">"data/rds/test_data_corr.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</div>
+</div>
+</section>
+<section id="initial-models" class="level4">
+<h4 class="anchored" data-anchor-id="initial-models"><strong>4.2.2 Initial Models</strong></h4>
+<p>Check VIF before building MLR/GWR</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true">VIF1</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false">VIF2</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-3" role="tab" aria-controls="tabset-6-3" aria-selected="false">VIF3</a></li></ul>
+<div class="tab-content">
+<div id="tabset-6-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-6-1-tab">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb135"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb135-1"><a href="#cb135-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build initial model with all variables</span></span>
+<span id="cb135-2"><a href="#cb135-2" aria-hidden="true" tabindex="-1"></a>initial_mlr1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb135-3"><a href="#cb135-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> resale_price <span class="sc">~</span> </span>
+<span id="cb135-4"><a href="#cb135-4" aria-hidden="true" tabindex="-1"></a>    floor_level <span class="sc">+</span> plan_area <span class="sc">+</span> floor_area_sqm <span class="sc">+</span> flat_model <span class="sc">+</span></span>
+<span id="cb135-5"><a href="#cb135-5" aria-hidden="true" tabindex="-1"></a>    remaining_lease_mths_num <span class="sc">+</span> PROX_TOPSCHOOL <span class="sc">+</span> PROX_HKCENTER <span class="sc">+</span></span>
+<span id="cb135-6"><a href="#cb135-6" aria-hidden="true" tabindex="-1"></a>    PROX_SUPERMKT <span class="sc">+</span> PROX_CLINIC <span class="sc">+</span> PROX_ELDERCARE <span class="sc">+</span> PROX_MALLS <span class="sc">+</span></span>
+<span id="cb135-7"><a href="#cb135-7" aria-hidden="true" tabindex="-1"></a>    PROX_SPORTS <span class="sc">+</span> PROX_CC <span class="sc">+</span> PROX_PARK <span class="sc">+</span> PROX_MRT <span class="sc">+</span> PROX_CBD <span class="sc">+</span></span>
+<span id="cb135-8"><a href="#cb135-8" aria-hidden="true" tabindex="-1"></a>    PROX_BIZPK <span class="sc">+</span> WITHIN_1km_TOPPRISCH_BINARY <span class="sc">+</span> WITHIN_350m_KINDG <span class="sc">+</span></span>
+<span id="cb135-9"><a href="#cb135-9" aria-hidden="true" tabindex="-1"></a>    WITHIN_350m_CHILDC <span class="sc">+</span> WITHIN_350m_BUS <span class="sc">+</span> WITHIN_1km_PRISCH,</span>
+<span id="cb135-10"><a href="#cb135-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> train_data_corr)</span>
+<span id="cb135-11"><a href="#cb135-11" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(initial_mlr1, <span class="st">"data/rds/initial_mlr1.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = resale_price ~ floor_level + plan_area + floor_area_sqm + 
+    flat_model + remaining_lease_mths_num + PROX_TOPSCHOOL + 
+    PROX_HKCENTER + PROX_SUPERMKT + PROX_CLINIC + PROX_ELDERCARE + 
+    PROX_MALLS + PROX_SPORTS + PROX_CC + PROX_PARK + PROX_MRT + 
+    PROX_CBD + PROX_BIZPK + WITHIN_1km_TOPPRISCH_BINARY + WITHIN_350m_KINDG + 
+    WITHIN_350m_CHILDC + WITHIN_350m_BUS + WITHIN_1km_PRISCH, 
+    data = train_data_corr)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-169631  -32856   -2223   29309  200626 
+
+Coefficients:
+                                   Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)                       1.301e+05  3.960e+04   3.285 0.001034 ** 
+floor_level04 TO 06               1.915e+04  2.985e+03   6.415 1.64e-10 ***
+floor_level07 TO 09               3.445e+04  3.016e+03  11.421  &lt; 2e-16 ***
+floor_level10 TO 12               4.967e+04  3.084e+03  16.105  &lt; 2e-16 ***
+floor_level13 TO 15               5.987e+04  3.702e+03  16.174  &lt; 2e-16 ***
+floor_level16 TO 18               7.039e+04  4.602e+03  15.293  &lt; 2e-16 ***
+floor_level19 TO 21               7.723e+04  6.735e+03  11.468  &lt; 2e-16 ***
+floor_level22 TO 24               1.021e+05  8.603e+03  11.870  &lt; 2e-16 ***
+floor_level25 TO 27               1.090e+05  9.126e+03  11.947  &lt; 2e-16 ***
+floor_level28 TO 30               1.391e+05  1.074e+04  12.953  &lt; 2e-16 ***
+floor_level31 TO 33               1.729e+05  1.307e+04  13.231  &lt; 2e-16 ***
+floor_level34 TO 36               1.673e+05  1.408e+04  11.884  &lt; 2e-16 ***
+floor_level37 TO 39               1.348e+05  1.563e+04   8.621  &lt; 2e-16 ***
+floor_level40 TO 42               1.697e+05  2.157e+04   7.866 5.10e-15 ***
+floor_level49 TO 51               2.461e+05  3.904e+04   6.305 3.32e-10 ***
+plan_areaBEDOK                   -2.294e+04  1.248e+04  -1.839 0.066089 .  
+plan_areaBISHAN                   3.277e+04  1.059e+04   3.094 0.001991 ** 
+plan_areaBUKIT BATOK             -2.984e+04  1.170e+04  -2.551 0.010778 *  
+plan_areaBUKIT MERAH              6.247e+03  1.527e+04   0.409 0.682558    
+plan_areaBUKIT PANJANG           -1.009e+05  1.148e+04  -8.787  &lt; 2e-16 ***
+plan_areaBUKIT TIMAH              1.796e+05  2.058e+04   8.727  &lt; 2e-16 ***
+plan_areaCENTRAL AREA            -1.223e+04  2.384e+04  -0.513 0.608111    
+plan_areaCHOA CHU KANG           -8.230e+04  1.342e+04  -6.131 9.90e-10 ***
+plan_areaCLEMENTI                 8.676e+04  1.345e+04   6.448 1.32e-10 ***
+plan_areaGEYLANG                 -1.194e+04  1.359e+04  -0.879 0.379432    
+plan_areaHOUGANG                 -7.830e+04  9.485e+03  -8.256 2.25e-16 ***
+plan_areaJURONG EAST              6.973e+03  1.493e+04   0.467 0.640588    
+plan_areaJURONG WEST             -1.336e+04  1.438e+04  -0.929 0.353029    
+plan_areaKALLANG/WHAMPOA         -3.497e+04  1.343e+04  -2.603 0.009285 ** 
+plan_areaMARINE PARADE            8.391e+04  2.475e+04   3.390 0.000709 ***
+plan_areaPASIR RIS                4.559e+04  1.271e+04   3.588 0.000339 ***
+plan_areaPUNGGOL                 -1.142e+05  1.213e+04  -9.415  &lt; 2e-16 ***
+plan_areaQUEENSTOWN               7.959e+04  1.539e+04   5.172 2.48e-07 ***
+plan_areaSEMBAWANG               -3.583e+04  1.597e+04  -2.244 0.024895 *  
+plan_areaSENGKANG                -1.344e+05  9.902e+03 -13.575  &lt; 2e-16 ***
+plan_areaSERANGOON                2.415e+04  1.095e+04   2.206 0.027475 *  
+plan_areaTAMPINES                 1.476e+04  1.126e+04   1.311 0.190087    
+plan_areaTOA PAYOH                1.424e+04  1.162e+04   1.226 0.220458    
+plan_areaWOODLANDS               -5.455e+04  1.466e+04  -3.721 0.000202 ***
+plan_areaYISHUN                  -3.953e+04  1.191e+04  -3.320 0.000912 ***
+floor_area_sqm                    3.974e+03  2.660e+02  14.940  &lt; 2e-16 ***
+flat_modelImproved               -1.710e+05  1.257e+04 -13.604  &lt; 2e-16 ***
+flat_modelModel A                -7.712e+04  8.335e+03  -9.253  &lt; 2e-16 ***
+flat_modelModel A2               -6.831e+04  1.035e+04  -6.602 4.80e-11 ***
+flat_modelNew Generation         -9.056e+04  9.639e+03  -9.395  &lt; 2e-16 ***
+flat_modelPremium Apartment      -4.595e+04  8.876e+03  -5.177 2.41e-07 ***
+flat_modelPremium Apartment Loft  1.127e+05  3.294e+04   3.423 0.000628 ***
+flat_modelSimplified             -5.267e+04  1.011e+04  -5.208 2.04e-07 ***
+flat_modelStandard               -2.282e+05  2.567e+04  -8.888  &lt; 2e-16 ***
+flat_modelType S1                 1.945e+05  2.577e+04   7.546 5.94e-14 ***
+remaining_lease_mths_num          5.076e+02  1.254e+01  40.480  &lt; 2e-16 ***
+PROX_TOPSCHOOL                    7.931e+00  2.049e+00   3.870 0.000111 ***
+PROX_HKCENTER                    -1.195e+01  2.538e+00  -4.711 2.58e-06 ***
+PROX_SUPERMKT                     2.405e+01  6.328e+00   3.800 0.000147 ***
+PROX_CLINIC                       8.788e+00  9.868e+00   0.891 0.373264    
+PROX_ELDERCARE                   -1.531e+01  2.345e+00  -6.527 7.85e-11 ***
+PROX_MALLS                       -5.561e+00  3.666e+00  -1.517 0.129374    
+PROX_SPORTS                       1.178e+01  3.707e+00   3.177 0.001501 ** 
+PROX_CC                          -3.118e+01  4.366e+00  -7.142 1.16e-12 ***
+PROX_PARK                        -2.792e+01  9.912e+00  -2.817 0.004879 ** 
+PROX_MRT                         -8.171e+01  3.816e+00 -21.411  &lt; 2e-16 ***
+PROX_CBD                         -1.951e+01  1.732e+00 -11.261  &lt; 2e-16 ***
+PROX_BIZPK                        2.374e+00  1.445e+00   1.643 0.100463    
+WITHIN_1km_TOPPRISCH_BINARY       2.331e+04  4.604e+03   5.064 4.36e-07 ***
+WITHIN_350m_KINDG                -2.555e+03  1.278e+03  -1.999 0.045722 *  
+WITHIN_350m_CHILDC                2.549e+02  5.057e+02   0.504 0.614286    
+WITHIN_350m_BUS                   8.701e+02  3.682e+02   2.363 0.018183 *  
+WITHIN_1km_PRISCH                 1.443e+03  8.939e+02   1.614 0.106568    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 49600 on 2932 degrees of freedom
+Multiple R-squared:  0.9014,    Adjusted R-squared:  0.8991 
+F-statistic: 399.9 on 67 and 2932 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-6-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-2-tab">
+<p>In the 2nd iteration, we will remove the highest VIF <em>plan_area</em>.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb137"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb137-1"><a href="#cb137-1" aria-hidden="true" tabindex="-1"></a>initial_mlr2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb137-2"><a href="#cb137-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> resale_price <span class="sc">~</span> </span>
+<span id="cb137-3"><a href="#cb137-3" aria-hidden="true" tabindex="-1"></a>    floor_level <span class="sc">+</span> floor_area_sqm <span class="sc">+</span> flat_model <span class="sc">+</span></span>
+<span id="cb137-4"><a href="#cb137-4" aria-hidden="true" tabindex="-1"></a>    remaining_lease_mths_num <span class="sc">+</span> PROX_TOPSCHOOL <span class="sc">+</span> PROX_HKCENTER <span class="sc">+</span></span>
+<span id="cb137-5"><a href="#cb137-5" aria-hidden="true" tabindex="-1"></a>    PROX_SUPERMKT <span class="sc">+</span> PROX_CLINIC <span class="sc">+</span> PROX_ELDERCARE <span class="sc">+</span> PROX_MALLS <span class="sc">+</span></span>
+<span id="cb137-6"><a href="#cb137-6" aria-hidden="true" tabindex="-1"></a>    PROX_SPORTS <span class="sc">+</span> PROX_CC <span class="sc">+</span> PROX_PARK <span class="sc">+</span> PROX_MRT <span class="sc">+</span> PROX_CBD <span class="sc">+</span></span>
+<span id="cb137-7"><a href="#cb137-7" aria-hidden="true" tabindex="-1"></a>    PROX_BIZPK <span class="sc">+</span> WITHIN_1km_TOPPRISCH_BINARY <span class="sc">+</span> WITHIN_350m_KINDG <span class="sc">+</span></span>
+<span id="cb137-8"><a href="#cb137-8" aria-hidden="true" tabindex="-1"></a>    WITHIN_350m_CHILDC <span class="sc">+</span> WITHIN_350m_BUS <span class="sc">+</span> WITHIN_1km_PRISCH,</span>
+<span id="cb137-9"><a href="#cb137-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> train_data_corr)</span>
+<span id="cb137-10"><a href="#cb137-10" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(initial_mlr2, <span class="st">"data/rds/initial_mlr2.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = resale_price ~ floor_level + floor_area_sqm + flat_model + 
+    remaining_lease_mths_num + PROX_TOPSCHOOL + PROX_HKCENTER + 
+    PROX_SUPERMKT + PROX_CLINIC + PROX_ELDERCARE + PROX_MALLS + 
+    PROX_SPORTS + PROX_CC + PROX_PARK + PROX_MRT + PROX_CBD + 
+    PROX_BIZPK + WITHIN_1km_TOPPRISCH_BINARY + WITHIN_350m_KINDG + 
+    WITHIN_350m_CHILDC + WITHIN_350m_BUS + WITHIN_1km_PRISCH, 
+    data = train_data_corr)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-204848  -41237   -1227   39780  280039 
+
+Coefficients:
+                                   Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)                       1.725e+05  4.395e+04   3.925 8.87e-05 ***
+floor_level04 TO 06               2.086e+04  3.781e+03   5.516 3.76e-08 ***
+floor_level07 TO 09               3.516e+04  3.818e+03   9.208  &lt; 2e-16 ***
+floor_level10 TO 12               4.995e+04  3.900e+03  12.807  &lt; 2e-16 ***
+floor_level13 TO 15               5.246e+04  4.673e+03  11.227  &lt; 2e-16 ***
+floor_level16 TO 18               6.733e+04  5.798e+03  11.612  &lt; 2e-16 ***
+floor_level19 TO 21               8.189e+04  8.431e+03   9.712  &lt; 2e-16 ***
+floor_level22 TO 24               1.030e+05  1.082e+04   9.517  &lt; 2e-16 ***
+floor_level25 TO 27               1.252e+05  1.146e+04  10.930  &lt; 2e-16 ***
+floor_level28 TO 30               1.729e+05  1.350e+04  12.805  &lt; 2e-16 ***
+floor_level31 TO 33               2.226e+05  1.634e+04  13.627  &lt; 2e-16 ***
+floor_level34 TO 36               2.122e+05  1.767e+04  12.004  &lt; 2e-16 ***
+floor_level37 TO 39               1.949e+05  1.952e+04   9.989  &lt; 2e-16 ***
+floor_level40 TO 42               2.036e+05  2.712e+04   7.508 7.88e-14 ***
+floor_level49 TO 51               2.567e+05  4.956e+04   5.180 2.37e-07 ***
+floor_area_sqm                    4.577e+03  3.278e+02  13.963  &lt; 2e-16 ***
+flat_modelImproved               -1.940e+05  1.519e+04 -12.772  &lt; 2e-16 ***
+flat_modelModel A                -1.049e+05  1.041e+04 -10.076  &lt; 2e-16 ***
+flat_modelModel A2               -1.053e+05  1.292e+04  -8.153 5.20e-16 ***
+flat_modelNew Generation         -1.196e+05  1.189e+04 -10.066  &lt; 2e-16 ***
+flat_modelPremium Apartment      -9.718e+04  1.098e+04  -8.852  &lt; 2e-16 ***
+flat_modelPremium Apartment Loft  1.512e+05  4.083e+04   3.704 0.000216 ***
+flat_modelSimplified             -7.333e+04  1.262e+04  -5.811 6.85e-09 ***
+flat_modelStandard               -2.389e+05  3.205e+04  -7.456 1.17e-13 ***
+flat_modelType S1                 1.416e+05  2.492e+04   5.683 1.45e-08 ***
+remaining_lease_mths_num          4.301e+02  1.531e+01  28.100  &lt; 2e-16 ***
+PROX_TOPSCHOOL                    7.890e+00  9.975e-01   7.910 3.62e-15 ***
+PROX_HKCENTER                    -2.574e+01  2.792e+00  -9.220  &lt; 2e-16 ***
+PROX_SUPERMKT                     2.953e+01  7.575e+00   3.898 9.91e-05 ***
+PROX_CLINIC                       1.469e+00  1.209e+01   0.122 0.903279    
+PROX_ELDERCARE                   -1.316e+01  2.098e+00  -6.272 4.07e-10 ***
+PROX_MALLS                       -2.022e+01  4.014e+00  -5.038 4.98e-07 ***
+PROX_SPORTS                       1.989e+01  4.098e+00   4.854 1.28e-06 ***
+PROX_CC                          -4.829e+00  5.061e+00  -0.954 0.340096    
+PROX_PARK                         1.287e+01  1.195e+01   1.077 0.281565    
+PROX_MRT                         -5.174e+01  3.981e+00 -12.999  &lt; 2e-16 ***
+PROX_CBD                         -2.200e+01  5.986e-01 -36.756  &lt; 2e-16 ***
+PROX_BIZPK                        1.297e+00  5.559e-01   2.333 0.019716 *  
+WITHIN_1km_TOPPRISCH_BINARY       5.388e+04  4.625e+03  11.649  &lt; 2e-16 ***
+WITHIN_350m_KINDG                 6.786e+03  1.546e+03   4.388 1.18e-05 ***
+WITHIN_350m_CHILDC               -2.245e+03  6.238e+02  -3.599 0.000324 ***
+WITHIN_350m_BUS                   1.067e+03  4.462e+02   2.391 0.016847 *  
+WITHIN_1km_PRISCH                -7.800e+03  9.722e+02  -8.024 1.46e-15 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 62990 on 2957 degrees of freedom
+Multiple R-squared:  0.8396,    Adjusted R-squared:  0.8373 
+F-statistic: 368.5 on 42 and 2957 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-6-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-3-tab">
+<p>In the 3rd iteration, we will remove the highest VIF <em>flat_model</em> (18.49).</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb139"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb139-1"><a href="#cb139-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build initial model with all variables</span></span>
+<span id="cb139-2"><a href="#cb139-2" aria-hidden="true" tabindex="-1"></a>initial_mlr3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb139-3"><a href="#cb139-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> resale_price <span class="sc">~</span> </span>
+<span id="cb139-4"><a href="#cb139-4" aria-hidden="true" tabindex="-1"></a>    floor_level <span class="sc">+</span> floor_area_sqm <span class="sc">+</span> </span>
+<span id="cb139-5"><a href="#cb139-5" aria-hidden="true" tabindex="-1"></a>    remaining_lease_mths_num <span class="sc">+</span> PROX_TOPSCHOOL <span class="sc">+</span> PROX_HKCENTER <span class="sc">+</span></span>
+<span id="cb139-6"><a href="#cb139-6" aria-hidden="true" tabindex="-1"></a>    PROX_SUPERMKT <span class="sc">+</span> PROX_CLINIC <span class="sc">+</span> PROX_ELDERCARE <span class="sc">+</span> PROX_MALLS <span class="sc">+</span></span>
+<span id="cb139-7"><a href="#cb139-7" aria-hidden="true" tabindex="-1"></a>    PROX_SPORTS <span class="sc">+</span> PROX_CC <span class="sc">+</span> PROX_PARK <span class="sc">+</span> PROX_MRT <span class="sc">+</span> PROX_CBD <span class="sc">+</span></span>
+<span id="cb139-8"><a href="#cb139-8" aria-hidden="true" tabindex="-1"></a>    PROX_BIZPK <span class="sc">+</span> WITHIN_1km_TOPPRISCH_BINARY <span class="sc">+</span> WITHIN_350m_KINDG <span class="sc">+</span></span>
+<span id="cb139-9"><a href="#cb139-9" aria-hidden="true" tabindex="-1"></a>    WITHIN_350m_CHILDC <span class="sc">+</span> WITHIN_350m_BUS <span class="sc">+</span> WITHIN_1km_PRISCH,</span>
+<span id="cb139-10"><a href="#cb139-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> train_data_corr)</span>
+<span id="cb139-11"><a href="#cb139-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb139-12"><a href="#cb139-12" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(initial_mlr3, <span class="st">"data/rds/initial_mlr3.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = resale_price ~ floor_level + floor_area_sqm + remaining_lease_mths_num + 
+    PROX_TOPSCHOOL + PROX_HKCENTER + PROX_SUPERMKT + PROX_CLINIC + 
+    PROX_ELDERCARE + PROX_MALLS + PROX_SPORTS + PROX_CC + PROX_PARK + 
+    PROX_MRT + PROX_CBD + PROX_BIZPK + WITHIN_1km_TOPPRISCH_BINARY + 
+    WITHIN_350m_KINDG + WITHIN_350m_CHILDC + WITHIN_350m_BUS + 
+    WITHIN_1km_PRISCH, data = train_data_corr)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-215957  -44919   -1472   42798  309734 
+
+Coefficients:
+                              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)                  2.365e+04  2.303e+04   1.027 0.304574    
+floor_level04 TO 06          2.238e+04  4.048e+03   5.529 3.50e-08 ***
+floor_level07 TO 09          3.551e+04  4.091e+03   8.681  &lt; 2e-16 ***
+floor_level10 TO 12          4.918e+04  4.180e+03  11.767  &lt; 2e-16 ***
+floor_level13 TO 15          4.879e+04  4.987e+03   9.783  &lt; 2e-16 ***
+floor_level16 TO 18          6.480e+04  6.208e+03  10.438  &lt; 2e-16 ***
+floor_level19 TO 21          8.571e+04  9.033e+03   9.489  &lt; 2e-16 ***
+floor_level22 TO 24          1.123e+05  1.155e+04   9.720  &lt; 2e-16 ***
+floor_level25 TO 27          1.215e+05  1.227e+04   9.900  &lt; 2e-16 ***
+floor_level28 TO 30          1.753e+05  1.447e+04  12.117  &lt; 2e-16 ***
+floor_level31 TO 33          2.262e+05  1.750e+04  12.925  &lt; 2e-16 ***
+floor_level34 TO 36          2.749e+05  1.800e+04  15.275  &lt; 2e-16 ***
+floor_level37 TO 39          2.103e+05  2.084e+04  10.090  &lt; 2e-16 ***
+floor_level40 TO 42          2.831e+05  2.798e+04  10.116  &lt; 2e-16 ***
+floor_level49 TO 51          4.967e+05  4.852e+04  10.237  &lt; 2e-16 ***
+floor_area_sqm               4.572e+03  1.981e+02  23.081  &lt; 2e-16 ***
+remaining_lease_mths_num     4.697e+02  8.670e+00  54.178  &lt; 2e-16 ***
+PROX_TOPSCHOOL               7.167e+00  1.056e+00   6.787 1.37e-11 ***
+PROX_HKCENTER               -2.093e+01  2.957e+00  -7.077 1.83e-12 ***
+PROX_SUPERMKT                3.405e+01  8.036e+00   4.237 2.34e-05 ***
+PROX_CLINIC                  2.060e+00  1.282e+01   0.161 0.872350    
+PROX_ELDERCARE              -1.177e+01  2.242e+00  -5.252 1.61e-07 ***
+PROX_MALLS                  -2.250e+01  4.268e+00  -5.273 1.44e-07 ***
+PROX_SPORTS                  1.837e+01  4.199e+00   4.376 1.25e-05 ***
+PROX_CC                     -1.799e+01  5.360e+00  -3.356 0.000800 ***
+PROX_PARK                    4.503e+00  1.275e+01   0.353 0.724028    
+PROX_MRT                    -5.111e+01  4.174e+00 -12.243  &lt; 2e-16 ***
+PROX_CBD                    -2.146e+01  6.254e-01 -34.312  &lt; 2e-16 ***
+PROX_BIZPK                   1.979e+00  5.842e-01   3.388 0.000714 ***
+WITHIN_1km_TOPPRISCH_BINARY  5.313e+04  4.949e+03  10.735  &lt; 2e-16 ***
+WITHIN_350m_KINDG            6.652e+03  1.650e+03   4.032 5.67e-05 ***
+WITHIN_350m_CHILDC          -1.498e+03  6.619e+02  -2.262 0.023739 *  
+WITHIN_350m_BUS              1.612e+03  4.760e+02   3.386 0.000719 ***
+WITHIN_1km_PRISCH           -8.129e+03  1.010e+03  -8.052 1.17e-15 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 67590 on 2966 degrees of freedom
+Multiple R-squared:  0.8147,    Adjusted R-squared:  0.8127 
+F-statistic: 395.3 on 33 and 2966 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p><strong>Check for multicollinearity and plot VIF scores</strong></p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-7-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-1" role="tab" aria-controls="tabset-7-1" aria-selected="true">VIF1</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-2" role="tab" aria-controls="tabset-7-2" aria-selected="false">VIF2</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-3" role="tab" aria-controls="tabset-7-3" aria-selected="false">VIF3</a></li></ul>
+<div class="tab-content">
+<div id="tabset-7-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-7-1-tab">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb141"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb141-1"><a href="#cb141-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_collinearity</span>(initial_mlr1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># Check for Multicollinearity
+
+Low Correlation
+
+                        Term  VIF           VIF 95% CI adj. VIF Tolerance
+                 floor_level 2.88 [    2.72,     3.05]     1.70      0.35
+              floor_area_sqm 3.87 [    3.64,     4.11]     1.97      0.26
+               PROX_HKCENTER 1.76 [    1.68,     1.86]     1.33      0.57
+               PROX_SUPERMKT 1.47 [    1.40,     1.54]     1.21      0.68
+                 PROX_CLINIC 1.42 [    1.36,     1.49]     1.19      0.71
+              PROX_ELDERCARE 2.72 [    2.57,     2.88]     1.65      0.37
+                  PROX_MALLS 2.11 [    2.01,     2.23]     1.45      0.47
+                 PROX_SPORTS 1.81 [    1.72,     1.91]     1.35      0.55
+                     PROX_CC 1.63 [    1.56,     1.72]     1.28      0.61
+                   PROX_PARK 1.24 [    1.19,     1.30]     1.11      0.81
+                    PROX_MRT 2.43 [    2.30,     2.58]     1.56      0.41
+ WITHIN_1km_TOPPRISCH_BINARY 2.39 [    2.26,     2.53]     1.55      0.42
+           WITHIN_350m_KINDG 2.16 [    2.05,     2.28]     1.47      0.46
+          WITHIN_350m_CHILDC 2.28 [    2.16,     2.41]     1.51      0.44
+             WITHIN_350m_BUS 1.37 [    1.31,     1.44]     1.17      0.73
+           WITHIN_1km_PRISCH 2.33 [    2.21,     2.46]     1.53      0.43
+ Tolerance 95% CI
+     [0.33, 0.37]
+     [0.24, 0.27]
+     [0.54, 0.60]
+     [0.65, 0.71]
+     [0.67, 0.74]
+     [0.35, 0.39]
+     [0.45, 0.50]
+     [0.52, 0.58]
+     [0.58, 0.64]
+     [0.77, 0.84]
+     [0.39, 0.43]
+     [0.40, 0.44]
+     [0.44, 0.49]
+     [0.42, 0.46]
+     [0.70, 0.76]
+     [0.41, 0.45]
+
+Moderate Correlation
+
+                     Term  VIF           VIF 95% CI adj. VIF Tolerance
+ remaining_lease_mths_num 5.45 [    5.12,     5.81]     2.33      0.18
+ Tolerance 95% CI
+     [0.17, 0.20]
+
+High Correlation
+
+           Term      VIF           VIF 95% CI adj. VIF Tolerance
+      plan_area 1.05e+06 [9.77e+05, 1.12e+06]  1023.57  9.54e-07
+     flat_model    70.58 [   65.85,    75.65]     8.40      0.01
+ PROX_TOPSCHOOL    33.30 [   31.09,    35.68]     5.77      0.03
+       PROX_CBD    72.01 [   67.18,    77.18]     8.49      0.01
+     PROX_BIZPK    15.47 [   14.46,    16.56]     3.93      0.06
+ Tolerance 95% CI
+     [0.00, 0.00]
+     [0.01, 0.02]
+     [0.03, 0.03]
+     [0.01, 0.01]
+     [0.06, 0.07]</code></pre>
+</div>
+</div>
+<div class="cell" data-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb143"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb143-1"><a href="#cb143-1" aria-hidden="true" tabindex="-1"></a>mlr1.vif <span class="ot">&lt;-</span> <span class="fu">check_collinearity</span>(initial_mlr1)</span>
+<span id="cb143-2"><a href="#cb143-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mlr1.vif) <span class="sc">+</span></span>
+<span id="cb143-3"><a href="#cb143-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb143-4"><a href="#cb143-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb143-5"><a href="#cb143-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"#B8C4A9"</span>, <span class="at">color =</span> <span class="cn">NA</span>),</span>
+<span id="cb143-6"><a href="#cb143-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"gray95"</span>, <span class="at">color =</span> <span class="cn">NA</span>),</span>
+<span id="cb143-7"><a href="#cb143-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">35</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">5</span>)</span>
+<span id="cb143-8"><a href="#cb143-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex03a_files/figure-html/unnamed-chunk-91-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-7-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-2-tab">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb144"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb144-1"><a href="#cb144-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_collinearity</span>(initial_mlr2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># Check for Multicollinearity
+
+Low Correlation
+
+                        Term  VIF     VIF 95% CI adj. VIF Tolerance
+                 floor_level 2.26 [ 2.14,  2.39]     1.50      0.44
+              floor_area_sqm 3.64 [ 3.43,  3.87]     1.91      0.27
+              PROX_TOPSCHOOL 4.89 [ 4.60,  5.21]     2.21      0.20
+               PROX_HKCENTER 1.32 [ 1.27,  1.39]     1.15      0.76
+               PROX_SUPERMKT 1.30 [ 1.25,  1.37]     1.14      0.77
+                 PROX_CLINIC 1.32 [ 1.27,  1.38]     1.15      0.76
+              PROX_ELDERCARE 1.35 [ 1.29,  1.41]     1.16      0.74
+                  PROX_MALLS 1.57 [ 1.50,  1.65]     1.25      0.64
+                 PROX_SPORTS 1.37 [ 1.32,  1.44]     1.17      0.73
+                     PROX_CC 1.36 [ 1.30,  1.43]     1.17      0.74
+                   PROX_PARK 1.12 [ 1.08,  1.17]     1.06      0.89
+                    PROX_MRT 1.64 [ 1.57,  1.73]     1.28      0.61
+                  PROX_BIZPK 1.42 [ 1.36,  1.49]     1.19      0.70
+ WITHIN_1km_TOPPRISCH_BINARY 1.49 [ 1.43,  1.57]     1.22      0.67
+           WITHIN_350m_KINDG 1.96 [ 1.86,  2.06]     1.40      0.51
+          WITHIN_350m_CHILDC 2.15 [ 2.04,  2.27]     1.47      0.47
+             WITHIN_350m_BUS 1.25 [ 1.20,  1.31]     1.12      0.80
+           WITHIN_1km_PRISCH 1.71 [ 1.63,  1.80]     1.31      0.59
+ Tolerance 95% CI
+     [0.42, 0.47]
+     [0.26, 0.29]
+     [0.19, 0.22]
+     [0.72, 0.79]
+     [0.73, 0.80]
+     [0.72, 0.79]
+     [0.71, 0.77]
+     [0.61, 0.67]
+     [0.69, 0.76]
+     [0.70, 0.77]
+     [0.85, 0.92]
+     [0.58, 0.64]
+     [0.67, 0.74]
+     [0.64, 0.70]
+     [0.48, 0.54]
+     [0.44, 0.49]
+     [0.77, 0.83]
+     [0.56, 0.61]
+
+Moderate Correlation
+
+                     Term  VIF     VIF 95% CI adj. VIF Tolerance
+ remaining_lease_mths_num 5.03 [ 4.73,  5.37]     2.24      0.20
+                 PROX_CBD 5.33 [ 5.01,  5.69]     2.31      0.19
+ Tolerance 95% CI
+     [0.19, 0.21]
+     [0.18, 0.20]
+
+High Correlation
+
+       Term   VIF     VIF 95% CI adj. VIF Tolerance Tolerance 95% CI
+ flat_model 18.49 [17.27, 19.81]     4.30      0.05     [0.05, 0.06]</code></pre>
+</div>
+</div>
+<div class="cell" data-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb146"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb146-1"><a href="#cb146-1" aria-hidden="true" tabindex="-1"></a>mlr2.vif <span class="ot">&lt;-</span> <span class="fu">check_collinearity</span>(initial_mlr2)</span>
+<span id="cb146-2"><a href="#cb146-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mlr2.vif) <span class="sc">+</span></span>
+<span id="cb146-3"><a href="#cb146-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb146-4"><a href="#cb146-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb146-5"><a href="#cb146-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"#B8C4A9"</span>, <span class="at">color =</span> <span class="cn">NA</span>),</span>
+<span id="cb146-6"><a href="#cb146-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"gray95"</span>, <span class="at">color =</span> <span class="cn">NA</span>),</span>
+<span id="cb146-7"><a href="#cb146-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">35</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">5</span>)</span>
+<span id="cb146-8"><a href="#cb146-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex03a_files/figure-html/unnamed-chunk-93-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-7-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-3-tab">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb147"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb147-1"><a href="#cb147-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_collinearity</span>(initial_mlr3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># Check for Multicollinearity
+
+Low Correlation
+
+                        Term  VIF   VIF 95% CI adj. VIF Tolerance
+                 floor_level 1.49 [1.43, 1.57]     1.22      0.67
+              floor_area_sqm 1.15 [1.11, 1.21]     1.07      0.87
+    remaining_lease_mths_num 1.40 [1.34, 1.47]     1.18      0.71
+              PROX_TOPSCHOOL 4.76 [4.47, 5.07]     2.18      0.21
+               PROX_HKCENTER 1.29 [1.24, 1.35]     1.14      0.78
+               PROX_SUPERMKT 1.27 [1.22, 1.33]     1.13      0.79
+                 PROX_CLINIC 1.29 [1.24, 1.35]     1.14      0.78
+              PROX_ELDERCARE 1.34 [1.28, 1.40]     1.16      0.75
+                  PROX_MALLS 1.54 [1.47, 1.62]     1.24      0.65
+                 PROX_SPORTS 1.25 [1.20, 1.31]     1.12      0.80
+                     PROX_CC 1.32 [1.27, 1.39]     1.15      0.75
+                   PROX_PARK 1.10 [1.07, 1.16]     1.05      0.90
+                    PROX_MRT 1.57 [1.50, 1.65]     1.25      0.64
+                  PROX_BIZPK 1.36 [1.31, 1.43]     1.17      0.73
+ WITHIN_1km_TOPPRISCH_BINARY 1.49 [1.42, 1.56]     1.22      0.67
+           WITHIN_350m_KINDG 1.93 [1.84, 2.04]     1.39      0.52
+          WITHIN_350m_CHILDC 2.10 [1.99, 2.22]     1.45      0.48
+             WITHIN_350m_BUS 1.23 [1.19, 1.29]     1.11      0.81
+           WITHIN_1km_PRISCH 1.60 [1.53, 1.68]     1.26      0.63
+ Tolerance 95% CI
+     [0.64, 0.70]
+     [0.83, 0.90]
+     [0.68, 0.74]
+     [0.20, 0.22]
+     [0.74, 0.81]
+     [0.75, 0.82]
+     [0.74, 0.81]
+     [0.71, 0.78]
+     [0.62, 0.68]
+     [0.76, 0.83]
+     [0.72, 0.79]
+     [0.86, 0.93]
+     [0.61, 0.67]
+     [0.70, 0.77]
+     [0.64, 0.70]
+     [0.49, 0.54]
+     [0.45, 0.50]
+     [0.77, 0.84]
+     [0.59, 0.65]
+
+Moderate Correlation
+
+     Term  VIF   VIF 95% CI adj. VIF Tolerance Tolerance 95% CI
+ PROX_CBD 5.06 [4.75, 5.39]     2.25      0.20     [0.19, 0.21]</code></pre>
+</div>
+</div>
+<div class="cell" data-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb149"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb149-1"><a href="#cb149-1" aria-hidden="true" tabindex="-1"></a>mlr3.vif <span class="ot">&lt;-</span> <span class="fu">check_collinearity</span>(initial_mlr3)</span>
+<span id="cb149-2"><a href="#cb149-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mlr3.vif) <span class="sc">+</span></span>
+<span id="cb149-3"><a href="#cb149-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb149-4"><a href="#cb149-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb149-5"><a href="#cb149-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"#B8C4A9"</span>, <span class="at">color =</span> <span class="cn">NA</span>),</span>
+<span id="cb149-6"><a href="#cb149-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"gray95"</span>, <span class="at">color =</span> <span class="cn">NA</span>),</span>
+<span id="cb149-7"><a href="#cb149-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">35</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">5</span>)</span>
+<span id="cb149-8"><a href="#cb149-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex03a_files/figure-html/unnamed-chunk-95-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
 </section>
 <section id="feature-selection" class="level3">
-<h3 class="anchored" data-anchor-id="feature-selection">4.2 Feature Selection</h3>
-<ul>
-<li>Final feature list for modeling</li>
-</ul>
-</section>
-<section id="traintest-split" class="level3">
-<h3 class="anchored" data-anchor-id="traintest-split">4.3 Train/Test Split</h3>
-<section id="stratified-spatial-sampling" class="level4">
-<h4 class="anchored" data-anchor-id="stratified-spatial-sampling">4.3.1 Stratified Spatial Sampling</h4>
-<div class="sourceCode" id="cb132"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb132-1"><a href="#cb132-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb132-2"><a href="#cb132-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
-<span id="cb132-3"><a href="#cb132-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-4"><a href="#cb132-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb132-5"><a href="#cb132-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-6"><a href="#cb132-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Stratify by town AND year (if multi-year)</span></span>
-<span id="cb132-7"><a href="#cb132-7" aria-hidden="true" tabindex="-1"></a>hdb_sample <span class="ot">&lt;-</span> hdb_data <span class="sc">%&gt;%</span></span>
-<span id="cb132-8"><a href="#cb132-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Ensure temporal coverage</span></span>
-<span id="cb132-9"><a href="#cb132-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year, town) <span class="sc">%&gt;%</span></span>
-<span id="cb132-10"><a href="#cb132-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Sample proportionally</span></span>
-<span id="cb132-11"><a href="#cb132-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">prop =</span> <span class="dv">5000</span><span class="sc">/</span><span class="fu">nrow</span>(hdb_data)) <span class="sc">%&gt;%</span></span>
-<span id="cb132-12"><a href="#cb132-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
-<span id="cb132-13"><a href="#cb132-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-14"><a href="#cb132-14" aria-hidden="true" tabindex="-1"></a><span class="co"># If you get slightly more/less than 5000, adjust:</span></span>
-<span id="cb132-15"><a href="#cb132-15" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">nrow</span>(hdb_sample) <span class="sc">&gt;</span> <span class="dv">5000</span>) {</span>
-<span id="cb132-16"><a href="#cb132-16" aria-hidden="true" tabindex="-1"></a>  hdb_sample <span class="ot">&lt;-</span> hdb_sample <span class="sc">%&gt;%</span> <span class="fu">sample_n</span>(<span class="dv">5000</span>)</span>
-<span id="cb132-17"><a href="#cb132-17" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> <span class="cf">if</span>(<span class="fu">nrow</span>(hdb_sample) <span class="sc">&lt;</span> <span class="dv">5000</span>) {</span>
-<span id="cb132-18"><a href="#cb132-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add more randomly to reach 5000</span></span>
-<span id="cb132-19"><a href="#cb132-19" aria-hidden="true" tabindex="-1"></a>  additional <span class="ot">&lt;-</span> hdb_data <span class="sc">%&gt;%</span></span>
-<span id="cb132-20"><a href="#cb132-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">anti_join</span>(hdb_sample) <span class="sc">%&gt;%</span></span>
-<span id="cb132-21"><a href="#cb132-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample_n</span>(<span class="dv">5000</span> <span class="sc">-</span> <span class="fu">nrow</span>(hdb_sample))</span>
-<span id="cb132-22"><a href="#cb132-22" aria-hidden="true" tabindex="-1"></a>  hdb_sample <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(hdb_sample, additional)</span>
-<span id="cb132-23"><a href="#cb132-23" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb132-24"><a href="#cb132-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-25"><a href="#cb132-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Verify distribution</span></span>
-<span id="cb132-26"><a href="#cb132-26" aria-hidden="true" tabindex="-1"></a>hdb_sample <span class="sc">%&gt;%</span> <span class="fu">count</span>(town)</span>
-<span id="cb132-27"><a href="#cb132-27" aria-hidden="true" tabindex="-1"></a>hdb_sample <span class="sc">%&gt;%</span> <span class="fu">count</span>(flat_type)</span>
-<span id="cb132-28"><a href="#cb132-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-29"><a href="#cb132-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Save</span></span>
-<span id="cb132-30"><a href="#cb132-30" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(hdb_sample, <span class="st">"data/processed/hdb_sample_5000.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb133"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb133-1"><a href="#cb133-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Original dataset:"</span>, <span class="fu">nrow</span>(hdb_data), <span class="st">"transactions</span></span>
-<span id="cb133-2"><a href="#cb133-2" aria-hidden="true" tabindex="-1"></a><span class="st">"</span>)</span>
-<span id="cb133-3"><a href="#cb133-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Sample size:"</span>, <span class="fu">nrow</span>(hdb_sample), <span class="st">"transactions</span></span>
-<span id="cb133-4"><a href="#cb133-4" aria-hidden="true" tabindex="-1"></a><span class="st">"</span>)</span>
-<span id="cb133-5"><a href="#cb133-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Sampling rate:"</span>, <span class="fu">round</span>(<span class="dv">5000</span><span class="sc">/</span><span class="fu">nrow</span>(hdb_data)<span class="sc">*</span><span class="dv">100</span>, <span class="dv">2</span>), <span class="st">"%</span></span>
-<span id="cb133-6"><a href="#cb133-6" aria-hidden="true" tabindex="-1"></a><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<ul>
-<li>Total original dataset size</li>
-<li>Sampling method used</li>
-<li>Why 5000 was chosen</li>
-<li>How representativeness was ensured</li>
-</ul>
-<div class="sourceCode" id="cb134"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb134-1"><a href="#cb134-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare distributions</span></span>
-<span id="cb134-2"><a href="#cb134-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
-<span id="cb134-3"><a href="#cb134-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb134-4"><a href="#cb134-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Price distribution</span></span>
-<span id="cb134-5"><a href="#cb134-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">density</span>(hdb_data<span class="sc">$</span>resale_price), <span class="at">main =</span> <span class="st">"Full Dataset"</span>, <span class="at">col =</span> <span class="st">"blue"</span>)</span>
-<span id="cb134-6"><a href="#cb134-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">density</span>(hdb_sample<span class="sc">$</span>resale_price), <span class="at">main =</span> <span class="st">"Sample"</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span>
-<span id="cb134-7"><a href="#cb134-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb134-8"><a href="#cb134-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Town distribution</span></span>
-<span id="cb134-9"><a href="#cb134-9" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(<span class="fu">table</span>(hdb_data<span class="sc">$</span>town), <span class="at">main =</span> <span class="st">"Full Dataset - Towns"</span>)</span>
-<span id="cb134-10"><a href="#cb134-10" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(<span class="fu">table</span>(hdb_sample<span class="sc">$</span>town), <span class="at">main =</span> <span class="st">"Sample - Towns"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="trantest-split" class="level4">
-<h4 class="anchored" data-anchor-id="trantest-split">4.3.2 Tran/Test split</h4>
-<div class="sourceCode" id="cb135"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb135-1"><a href="#cb135-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 80/20 split</span></span>
-<span id="cb135-2"><a href="#cb135-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">456</span>)</span>
-<span id="cb135-3"><a href="#cb135-3" aria-hidden="true" tabindex="-1"></a>train_idx <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(hdb_sample), <span class="fl">0.8</span> <span class="sc">*</span> <span class="fu">nrow</span>(hdb_sample))</span>
-<span id="cb135-4"><a href="#cb135-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb135-5"><a href="#cb135-5" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> hdb_sample[train_idx, ]   <span class="co"># 4000 records</span></span>
-<span id="cb135-6"><a href="#cb135-6" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> hdb_sample[<span class="sc">-</span>train_idx, ]   <span class="co"># 1000 records</span></span>
-<span id="cb135-7"><a href="#cb135-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb135-8"><a href="#cb135-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Train size:"</span>, <span class="fu">nrow</span>(train), <span class="st">"</span></span>
-<span id="cb135-9"><a href="#cb135-9" aria-hidden="true" tabindex="-1"></a><span class="st">"</span>)</span>
-<span id="cb135-10"><a href="#cb135-10" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Test size:"</span>, <span class="fu">nrow</span>(test), <span class="st">"</span></span>
-<span id="cb135-11"><a href="#cb135-11" aria-hidden="true" tabindex="-1"></a><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<h3 class="anchored" data-anchor-id="feature-selection">4.3 Feature Selection</h3>
+<p><strong>Final feature list for modeling</strong></p>
+<p>After 3 iterations of removing high VIF variables, all VIF are not below 10. So we can conclude that there are no sign of multicollinearity among the independent variables.</p>
+<p>Based on the Coefficient result from VIF3, we find that some variables are not statistically significant, including <em>PROX_CLINIC</em> and <em>PROX_PARK</em>. We will revise the initial model by removing these 2 variables.</p>
+<p><strong>Total original dataset size</strong></p>
+<p>Total original dataset size was 10,745 observations, and we sampled 5,000 to do modeling. Among the 5,000, we split 3,000 as training dataset and 2,000 as the testing dataset randomly. 5,000 is a smaller dataset for modeling to save computation and give us a decent result.</p>
 </section>
 </section>
+<section id="predictive-modeling" class="level2">
+<h2 class="anchored" data-anchor-id="predictive-modeling"><span style="color: #E45A92;">PREDICTIVE MODELING</span></h2>
+<p>From section 5 to 8, we will calibrate 4 predictive modeling for HDB resale price using the same set of variables for a comparison. The models include Multi Linear Regression model, Geographycally Weighed Regression (GWR) model, Non-spatial Random Forest model, as well as Geographical Weighted Random Forest (gwRF) model.</p>
 </section>
-<section id="multiple-linear-regression-mlr" class="level2">
-<h2 class="anchored" data-anchor-id="multiple-linear-regression-mlr">5 Multiple Linear Regression (MLR)</h2>
-<section id="model-specification" class="level3">
-<h3 class="anchored" data-anchor-id="model-specification">5.1 Model specification</h3>
+<section id="model-calibration" class="level2">
+<h2 class="anchored" data-anchor-id="model-calibration">5 Model Calibration</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-8-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-1" role="tab" aria-controls="tabset-8-1" aria-selected="true">5.1 MLR</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-8-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-2" role="tab" aria-controls="tabset-8-2" aria-selected="false">5.2 GWR</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-8-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-3" role="tab" aria-controls="tabset-8-3" aria-selected="false">5.3 RF</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-8-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-4" role="tab" aria-controls="tabset-8-4" aria-selected="false">5.4 GWRF</a></li></ul>
+<div class="tab-content">
+<div id="tabset-8-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-8-1-tab">
+<p>Multiple Linear Regression Building upon the initial MLR model from section 4.2.2, we calibrate the revised MLR model as below.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb150"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb150-1"><a href="#cb150-1" aria-hidden="true" tabindex="-1"></a>hdb.mlr <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb150-2"><a href="#cb150-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> resale_price <span class="sc">~</span> </span>
+<span id="cb150-3"><a href="#cb150-3" aria-hidden="true" tabindex="-1"></a>    floor_level <span class="sc">+</span> floor_area_sqm <span class="sc">+</span> </span>
+<span id="cb150-4"><a href="#cb150-4" aria-hidden="true" tabindex="-1"></a>    remaining_lease_mths_num <span class="sc">+</span> PROX_TOPSCHOOL <span class="sc">+</span> PROX_HKCENTER <span class="sc">+</span></span>
+<span id="cb150-5"><a href="#cb150-5" aria-hidden="true" tabindex="-1"></a>    PROX_SUPERMKT <span class="sc">+</span> PROX_ELDERCARE <span class="sc">+</span> PROX_MALLS <span class="sc">+</span></span>
+<span id="cb150-6"><a href="#cb150-6" aria-hidden="true" tabindex="-1"></a>    PROX_SPORTS <span class="sc">+</span> PROX_CC <span class="sc">+</span> PROX_MRT <span class="sc">+</span> PROX_CBD <span class="sc">+</span></span>
+<span id="cb150-7"><a href="#cb150-7" aria-hidden="true" tabindex="-1"></a>    PROX_BIZPK <span class="sc">+</span> WITHIN_1km_TOPPRISCH_BINARY <span class="sc">+</span> WITHIN_350m_KINDG <span class="sc">+</span></span>
+<span id="cb150-8"><a href="#cb150-8" aria-hidden="true" tabindex="-1"></a>    WITHIN_350m_CHILDC <span class="sc">+</span> WITHIN_350m_BUS <span class="sc">+</span> WITHIN_1km_PRISCH,</span>
+<span id="cb150-9"><a href="#cb150-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> train_data_corr)</span>
+<span id="cb150-10"><a href="#cb150-10" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(hdb.mlr, <span class="st">"data/rds/hdb.mlr"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = resale_price ~ floor_level + floor_area_sqm + remaining_lease_mths_num + 
+    PROX_TOPSCHOOL + PROX_HKCENTER + PROX_SUPERMKT + PROX_ELDERCARE + 
+    PROX_MALLS + PROX_SPORTS + PROX_CC + PROX_MRT + PROX_CBD + 
+    PROX_BIZPK + WITHIN_1km_TOPPRISCH_BINARY + WITHIN_350m_KINDG + 
+    WITHIN_350m_CHILDC + WITHIN_350m_BUS + WITHIN_1km_PRISCH, 
+    data = train_data_corr)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-216309  -44900   -1664   42881  309075 
+
+Coefficients:
+                              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)                  2.452e+04  2.289e+04   1.071 0.284222    
+floor_level04 TO 06          2.237e+04  4.047e+03   5.528 3.52e-08 ***
+floor_level07 TO 09          3.551e+04  4.089e+03   8.684  &lt; 2e-16 ***
+floor_level10 TO 12          4.912e+04  4.175e+03  11.765  &lt; 2e-16 ***
+floor_level13 TO 15          4.875e+04  4.983e+03   9.783  &lt; 2e-16 ***
+floor_level16 TO 18          6.478e+04  6.205e+03  10.440  &lt; 2e-16 ***
+floor_level19 TO 21          8.565e+04  9.029e+03   9.486  &lt; 2e-16 ***
+floor_level22 TO 24          1.123e+05  1.155e+04   9.724  &lt; 2e-16 ***
+floor_level25 TO 27          1.217e+05  1.225e+04   9.931  &lt; 2e-16 ***
+floor_level28 TO 30          1.755e+05  1.445e+04  12.143  &lt; 2e-16 ***
+floor_level31 TO 33          2.263e+05  1.750e+04  12.933  &lt; 2e-16 ***
+floor_level34 TO 36          2.750e+05  1.799e+04  15.292  &lt; 2e-16 ***
+floor_level37 TO 39          2.105e+05  2.083e+04  10.104  &lt; 2e-16 ***
+floor_level40 TO 42          2.830e+05  2.797e+04  10.116  &lt; 2e-16 ***
+floor_level49 TO 51          4.960e+05  4.847e+04  10.233  &lt; 2e-16 ***
+floor_area_sqm               4.578e+03  1.971e+02  23.224  &lt; 2e-16 ***
+remaining_lease_mths_num     4.692e+02  8.511e+00  55.120  &lt; 2e-16 ***
+PROX_TOPSCHOOL               7.227e+00  1.033e+00   6.999 3.18e-12 ***
+PROX_HKCENTER               -2.090e+01  2.952e+00  -7.081 1.79e-12 ***
+PROX_SUPERMKT                3.449e+01  7.677e+00   4.493 7.30e-06 ***
+PROX_ELDERCARE              -1.178e+01  2.231e+00  -5.280 1.39e-07 ***
+PROX_MALLS                  -2.255e+01  4.249e+00  -5.307 1.20e-07 ***
+PROX_SPORTS                  1.828e+01  4.190e+00   4.364 1.32e-05 ***
+PROX_CC                     -1.805e+01  5.354e+00  -3.371 0.000758 ***
+PROX_MRT                    -5.098e+01  4.149e+00 -12.286  &lt; 2e-16 ***
+PROX_CBD                    -2.147e+01  6.212e-01 -34.566  &lt; 2e-16 ***
+PROX_BIZPK                   1.962e+00  5.770e-01   3.400 0.000684 ***
+WITHIN_1km_TOPPRISCH_BINARY  5.328e+04  4.926e+03  10.816  &lt; 2e-16 ***
+WITHIN_350m_KINDG            6.700e+03  1.644e+03   4.075 4.73e-05 ***
+WITHIN_350m_CHILDC          -1.502e+03  6.596e+02  -2.277 0.022828 *  
+WITHIN_350m_BUS              1.626e+03  4.702e+02   3.458 0.000551 ***
+WITHIN_1km_PRISCH           -8.161e+03  1.006e+03  -8.116 6.98e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 67570 on 2968 degrees of freedom
+Multiple R-squared:  0.8147,    Adjusted R-squared:  0.8128 
+F-statistic:   421 on 31 and 2968 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>The output above reveals that all explanatory variables are statistically significant at 95% confident level.</p>
+</div>
+<div id="tabset-8-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-8-2-tab">
+<p>We will use Geographically Weighted Regression to build a Hedonic Pricing Model in this section.</p>
+<section id="bandwidth-selection" class="level3">
+<h3 class="anchored" data-anchor-id="bandwidth-selection">5.2.1 Bandwidth selection</h3>
+<p>Adaptive bandwidth is the chosen approach for the GWR modeling as Singapore has varying spatial density of the housing.</p>
+<p>Below we will use Cross Validation (CV) approach to compuete the Bandwidth:</p>
+<p>The result below shows that the <strong>87 is the recommended data points</strong> to be used.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb152"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb152-1"><a href="#cb152-1" aria-hidden="true" tabindex="-1"></a>bw.adaptive <span class="ot">&lt;-</span> <span class="fu">bw.gwr</span>(</span>
+<span id="cb152-2"><a href="#cb152-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> resale_price <span class="sc">~</span> </span>
+<span id="cb152-3"><a href="#cb152-3" aria-hidden="true" tabindex="-1"></a>    floor_level <span class="sc">+</span> floor_area_sqm <span class="sc">+</span> </span>
+<span id="cb152-4"><a href="#cb152-4" aria-hidden="true" tabindex="-1"></a>    remaining_lease_mths_num <span class="sc">+</span> PROX_TOPSCHOOL <span class="sc">+</span> PROX_HKCENTER <span class="sc">+</span></span>
+<span id="cb152-5"><a href="#cb152-5" aria-hidden="true" tabindex="-1"></a>    PROX_SUPERMKT <span class="sc">+</span> PROX_ELDERCARE <span class="sc">+</span> PROX_MALLS <span class="sc">+</span></span>
+<span id="cb152-6"><a href="#cb152-6" aria-hidden="true" tabindex="-1"></a>    PROX_SPORTS <span class="sc">+</span> PROX_CC <span class="sc">+</span> PROX_MRT <span class="sc">+</span> PROX_CBD <span class="sc">+</span></span>
+<span id="cb152-7"><a href="#cb152-7" aria-hidden="true" tabindex="-1"></a>    PROX_BIZPK <span class="sc">+</span> WITHIN_1km_TOPPRISCH_BINARY <span class="sc">+</span> WITHIN_350m_KINDG <span class="sc">+</span></span>
+<span id="cb152-8"><a href="#cb152-8" aria-hidden="true" tabindex="-1"></a>    WITHIN_350m_CHILDC <span class="sc">+</span> WITHIN_350m_BUS <span class="sc">+</span> WITHIN_1km_PRISCH,</span>
+<span id="cb152-9"><a href="#cb152-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data=</span>train_data_corr, </span>
+<span id="cb152-10"><a href="#cb152-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">approach=</span><span class="st">"CV"</span>, </span>
+<span id="cb152-11"><a href="#cb152-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">kernel=</span><span class="st">"gaussian"</span>, </span>
+<span id="cb152-12"><a href="#cb152-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">adaptive=</span><span class="cn">TRUE</span>, </span>
+<span id="cb152-13"><a href="#cb152-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">longlat=</span><span class="cn">FALSE</span>)</span>
+<span id="cb152-14"><a href="#cb152-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb152-15"><a href="#cb152-15" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(bw.adaptive, <span class="st">"data/rds/bw.adaptive.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 </section>
 <section id="model-fitting" class="level3">
-<h3 class="anchored" data-anchor-id="model-fitting">5.2 Model fitting</h3>
+<h3 class="anchored" data-anchor-id="model-fitting">5.2.2 Model fitting</h3>
+<p>Now we will calibrate the GWR-based hedonic pricing model using the adaptive bandwidth from section 5.2.1 and gaussian kernel.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb153"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb153-1"><a href="#cb153-1" aria-hidden="true" tabindex="-1"></a>gwr.adaptive <span class="ot">&lt;-</span> <span class="fu">gwr.basic</span>(</span>
+<span id="cb153-2"><a href="#cb153-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> resale_price <span class="sc">~</span> </span>
+<span id="cb153-3"><a href="#cb153-3" aria-hidden="true" tabindex="-1"></a>    floor_level <span class="sc">+</span> floor_area_sqm <span class="sc">+</span> </span>
+<span id="cb153-4"><a href="#cb153-4" aria-hidden="true" tabindex="-1"></a>    remaining_lease_mths_num <span class="sc">+</span> PROX_TOPSCHOOL <span class="sc">+</span> PROX_HKCENTER <span class="sc">+</span></span>
+<span id="cb153-5"><a href="#cb153-5" aria-hidden="true" tabindex="-1"></a>    PROX_SUPERMKT <span class="sc">+</span> PROX_ELDERCARE <span class="sc">+</span> PROX_MALLS <span class="sc">+</span></span>
+<span id="cb153-6"><a href="#cb153-6" aria-hidden="true" tabindex="-1"></a>    PROX_SPORTS <span class="sc">+</span> PROX_CC <span class="sc">+</span> PROX_MRT <span class="sc">+</span> PROX_CBD <span class="sc">+</span></span>
+<span id="cb153-7"><a href="#cb153-7" aria-hidden="true" tabindex="-1"></a>    PROX_BIZPK <span class="sc">+</span> WITHIN_1km_TOPPRISCH_BINARY <span class="sc">+</span> WITHIN_350m_KINDG <span class="sc">+</span></span>
+<span id="cb153-8"><a href="#cb153-8" aria-hidden="true" tabindex="-1"></a>    WITHIN_350m_CHILDC <span class="sc">+</span> WITHIN_350m_BUS <span class="sc">+</span> WITHIN_1km_PRISCH,</span>
+<span id="cb153-9"><a href="#cb153-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> train_data_corr, </span>
+<span id="cb153-10"><a href="#cb153-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">bw =</span> bw.adaptive, </span>
+<span id="cb153-11"><a href="#cb153-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">kernel =</span> <span class="st">'gaussian'</span>, </span>
+<span id="cb153-12"><a href="#cb153-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">adaptive=</span><span class="cn">TRUE</span>, </span>
+<span id="cb153-13"><a href="#cb153-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">longlat =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb153-14"><a href="#cb153-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb153-15"><a href="#cb153-15" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(gwr.adaptive, <span class="st">"data/rds/gwr.adaptive.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>   ***********************************************************************
+   *                       Package   GWmodel                             *
+   ***********************************************************************
+   Program starts at: 2025-11-15 00:07:37.847056 
+   Call:
+   gwr.basic(formula = resale_price ~ floor_level + floor_area_sqm + 
+    remaining_lease_mths_num + PROX_TOPSCHOOL + PROX_HKCENTER + 
+    PROX_SUPERMKT + PROX_ELDERCARE + PROX_MALLS + PROX_SPORTS + 
+    PROX_CC + PROX_MRT + PROX_CBD + PROX_BIZPK + WITHIN_1km_TOPPRISCH_BINARY + 
+    WITHIN_350m_KINDG + WITHIN_350m_CHILDC + WITHIN_350m_BUS + 
+    WITHIN_1km_PRISCH, data = train_data_corr, bw = bw.adaptive, 
+    kernel = "gaussian", adaptive = TRUE, longlat = FALSE)
+
+   Dependent (y) variable:  resale_price
+   Independent variables:  floor_level floor_area_sqm remaining_lease_mths_num PROX_TOPSCHOOL PROX_HKCENTER PROX_SUPERMKT PROX_ELDERCARE PROX_MALLS PROX_SPORTS PROX_CC PROX_MRT PROX_CBD PROX_BIZPK WITHIN_1km_TOPPRISCH_BINARY WITHIN_350m_KINDG WITHIN_350m_CHILDC WITHIN_350m_BUS WITHIN_1km_PRISCH
+   Number of data points: 3000
+   ***********************************************************************
+   *                    Results of Global Regression                     *
+   ***********************************************************************
+
+   Call:
+    lm(formula = formula, data = data)
+
+   Residuals:
+    Min      1Q  Median      3Q     Max 
+-216309  -44900   -1664   42881  309075 
+
+   Coefficients:
+                                 Estimate Std. Error t value Pr(&gt;|t|)    
+   (Intercept)                  2.452e+04  2.289e+04   1.071 0.284222    
+   floor_level04 TO 06          2.237e+04  4.047e+03   5.528 3.52e-08 ***
+   floor_level07 TO 09          3.551e+04  4.089e+03   8.684  &lt; 2e-16 ***
+   floor_level10 TO 12          4.912e+04  4.175e+03  11.765  &lt; 2e-16 ***
+   floor_level13 TO 15          4.875e+04  4.983e+03   9.783  &lt; 2e-16 ***
+   floor_level16 TO 18          6.478e+04  6.205e+03  10.440  &lt; 2e-16 ***
+   floor_level19 TO 21          8.565e+04  9.029e+03   9.486  &lt; 2e-16 ***
+   floor_level22 TO 24          1.123e+05  1.155e+04   9.724  &lt; 2e-16 ***
+   floor_level25 TO 27          1.217e+05  1.225e+04   9.931  &lt; 2e-16 ***
+   floor_level28 TO 30          1.755e+05  1.445e+04  12.143  &lt; 2e-16 ***
+   floor_level31 TO 33          2.263e+05  1.750e+04  12.933  &lt; 2e-16 ***
+   floor_level34 TO 36          2.750e+05  1.799e+04  15.292  &lt; 2e-16 ***
+   floor_level37 TO 39          2.105e+05  2.083e+04  10.104  &lt; 2e-16 ***
+   floor_level40 TO 42          2.830e+05  2.797e+04  10.116  &lt; 2e-16 ***
+   floor_level49 TO 51          4.960e+05  4.847e+04  10.233  &lt; 2e-16 ***
+   floor_area_sqm               4.578e+03  1.971e+02  23.224  &lt; 2e-16 ***
+   remaining_lease_mths_num     4.692e+02  8.511e+00  55.120  &lt; 2e-16 ***
+   PROX_TOPSCHOOL               7.227e+00  1.033e+00   6.999 3.18e-12 ***
+   PROX_HKCENTER               -2.090e+01  2.952e+00  -7.081 1.79e-12 ***
+   PROX_SUPERMKT                3.449e+01  7.677e+00   4.493 7.30e-06 ***
+   PROX_ELDERCARE              -1.178e+01  2.231e+00  -5.280 1.39e-07 ***
+   PROX_MALLS                  -2.255e+01  4.249e+00  -5.307 1.20e-07 ***
+   PROX_SPORTS                  1.828e+01  4.190e+00   4.364 1.32e-05 ***
+   PROX_CC                     -1.805e+01  5.354e+00  -3.371 0.000758 ***
+   PROX_MRT                    -5.098e+01  4.149e+00 -12.286  &lt; 2e-16 ***
+   PROX_CBD                    -2.147e+01  6.212e-01 -34.566  &lt; 2e-16 ***
+   PROX_BIZPK                   1.962e+00  5.770e-01   3.400 0.000684 ***
+   WITHIN_1km_TOPPRISCH_BINARY  5.328e+04  4.926e+03  10.816  &lt; 2e-16 ***
+   WITHIN_350m_KINDG            6.700e+03  1.644e+03   4.075 4.73e-05 ***
+   WITHIN_350m_CHILDC          -1.502e+03  6.596e+02  -2.277 0.022828 *  
+   WITHIN_350m_BUS              1.626e+03  4.702e+02   3.458 0.000551 ***
+   WITHIN_1km_PRISCH           -8.161e+03  1.006e+03  -8.116 6.98e-16 ***
+
+   ---Significance stars
+   Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+   Residual standard error: 67570 on 2968 degrees of freedom
+   Multiple R-squared: 0.8147
+   Adjusted R-squared: 0.8128 
+   F-statistic:   421 on 31 and 2968 DF,  p-value: &lt; 2.2e-16 
+   ***Extra Diagnostic information
+   Residual sum of squares: 1.355197e+13
+   Sigma(hat): 67233.46
+   AIC:  75273.19
+   AICc:  75273.94
+   BIC:  72735.61
+   ***********************************************************************
+   *          Results of Geographically Weighted Regression              *
+   ***********************************************************************
+
+   *********************Model calibration information*********************
+   Kernel function: gaussian 
+   Adaptive bandwidth: 87 (number of nearest neighbours)
+   Regression points: the same locations as observations are used.
+   Distance metric: Euclidean distance metric is used.
+
+   ****************Summary of GWR coefficient estimates:******************
+                                       Min.      1st Qu.       Median
+   Intercept                    -2.1009e+06  -3.6564e+05   4.5822e+04
+   floor_level04 TO 06           1.6449e+03   1.5504e+04   2.2038e+04
+   floor_level07 TO 09           1.4201e+04   3.2618e+04   4.0171e+04
+   floor_level10 TO 12           2.9427e+04   4.5725e+04   5.6890e+04
+   floor_level13 TO 15           3.1331e+04   5.7100e+04   6.4846e+04
+   floor_level16 TO 18          -1.3100e+05   5.3847e+04   6.9082e+04
+   floor_level19 TO 21          -3.0912e+41   4.8749e+04   7.4035e+04
+   floor_level22 TO 24          -7.6933e+39   1.0479e+04   9.5165e+04
+   floor_level25 TO 27          -3.2793e+20   6.1284e+04   1.1266e+05
+   floor_level28 TO 30          -1.8011e+30   1.2227e+05   1.4836e+05
+   floor_level31 TO 33         -4.5640e+122   7.6055e+04   1.8577e+05
+   floor_level34 TO 36         -1.1169e+106   4.5553e+04   1.8758e+05
+   floor_level37 TO 39         -1.5880e+123   2.3694e+04   1.3194e+05
+   floor_level40 TO 42         -2.5495e+164   6.5564e+04   2.1269e+05
+   floor_level49 TO 51         -4.6959e+266  -9.3097e+19   4.9646e+05
+   floor_area_sqm                1.8978e+03   2.5502e+03   3.0843e+03
+   remaining_lease_mths_num      1.6101e+02   3.6538e+02   4.5468e+02
+   PROX_TOPSCHOOL               -3.4564e+02  -2.1531e+01  -1.7089e+00
+   PROX_HKCENTER                -1.4233e+02  -2.9332e+01  -1.2118e+01
+   PROX_SUPERMKT                -1.1422e+02  -2.7871e+01   5.8566e+00
+   PROX_ELDERCARE               -9.8363e+01  -1.5220e+01  -1.1021e+00
+   PROX_MALLS                   -1.2578e+02  -4.6353e+01  -1.4507e+01
+   PROX_SPORTS                  -7.2834e+01  -8.5499e+00   1.0409e+01
+   PROX_CC                      -1.0970e+02  -3.3959e+01  -1.4550e+01
+   PROX_MRT                     -2.2865e+02  -1.0914e+02  -6.1284e+01
+   PROX_CBD                     -1.2319e+03  -6.8919e+01  -1.6054e+01
+   PROX_BIZPK                   -1.5513e+02  -7.8751e+00   1.2223e+00
+   WITHIN_1km_TOPPRISCH_BINARY  -8.8844e+42  -1.0777e+04   3.0490e+04
+   WITHIN_350m_KINDG            -3.3297e+04  -7.1510e+03  -4.0615e+02
+   WITHIN_350m_CHILDC           -7.7886e+03  -2.9441e+03  -2.2381e+02
+   WITHIN_350m_BUS              -4.4214e+03  -1.3524e+03   9.8274e+02
+   WITHIN_1km_PRISCH            -2.8670e+04  -3.9042e+03   6.0928e+02
+                                    3rd Qu.        Max.
+   Intercept                     6.0608e+05  1.0601e+07
+   floor_level04 TO 06           2.8451e+04  5.4817e+04
+   floor_level07 TO 09           4.8504e+04  7.2857e+04
+   floor_level10 TO 12           6.4125e+04  8.5075e+04
+   floor_level13 TO 15           7.1562e+04  1.0700e+05
+   floor_level16 TO 18           8.2888e+04  1.3463e+05
+   floor_level19 TO 21           9.5456e+04  5.5541e+42
+   floor_level22 TO 24           1.2074e+05  1.9581e+39
+   floor_level25 TO 27           1.3957e+05  2.6091e+13
+   floor_level28 TO 30           2.4043e+05  1.9897e+34
+   floor_level31 TO 33           2.7638e+05  2.4900e+86
+   floor_level34 TO 36           2.5626e+05 1.2546e+117
+   floor_level37 TO 39           2.0387e+05 1.5245e+124
+   floor_level40 TO 42           5.2735e+05 1.7822e+212
+   floor_level49 TO 51           4.0069e+19 2.9553e+294
+   floor_area_sqm                4.8941e+03  7.3047e+03
+   remaining_lease_mths_num      6.2259e+02  8.7018e+02
+   PROX_TOPSCHOOL                4.0234e+01  1.0138e+03
+   PROX_HKCENTER                 2.0094e+00  8.5739e+01
+   PROX_SUPERMKT                 3.9192e+01  1.1942e+02
+   PROX_ELDERCARE                1.7221e+01  2.7530e+02
+   PROX_MALLS                    4.8792e+00  9.8993e+01
+   PROX_SPORTS                   3.8035e+01  1.3314e+02
+   PROX_CC                       2.4234e+01  1.5607e+02
+   PROX_MRT                     -3.7162e+01  5.8504e+01
+   PROX_CBD                      1.0811e+00  3.7055e+02
+   PROX_BIZPK                    1.4020e+01  1.0078e+02
+   WITHIN_1km_TOPPRISCH_BINARY   1.0792e+05  1.6086e+43
+   WITHIN_350m_KINDG             4.1433e+03  2.3230e+04
+   WITHIN_350m_CHILDC            2.5577e+03  7.3712e+03
+   WITHIN_350m_BUS               2.4780e+03  6.9638e+03
+   WITHIN_1km_PRISCH             6.1374e+03  1.6024e+04
+   ************************Diagnostic information*************************
+   Number of data points: 3000 
+   Effective number of parameters (2trace(S) - trace(S'S)): 530.1979 
+   Effective degrees of freedom (n-2trace(S) + trace(S'S)): 2469.802 
+   AICc (GWR book, Fotheringham, et al. 2002, p. 61, eq 2.33): 72155.02 
+   AIC (GWR book, Fotheringham, et al. 2002,GWR p. 96, eq. 4.22): 71595.36 
+   BIC (GWR book, Fotheringham, et al. 2002,GWR p. 61, eq. 2.34): 71537.34 
+   Residual sum of squares: 3.534674e+12 
+   R-square value:  0.9516754 
+   Adjusted R-square value:  0.9412972 
+
+   ***********************************************************************
+   Program stops at: 2025-11-15 00:07:44.453879 </code></pre>
+</div>
+</div>
 </section>
-<section id="results-interpretation" class="level3">
-<h3 class="anchored" data-anchor-id="results-interpretation">5.3 Results &amp; interpretation</h3>
+</div>
+<div id="tabset-8-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-8-3-tab">
+<p>In this section, we want to calibrate a model to predict HDB resale price using the Random Forest method.</p>
+<section id="data-preparation" class="level3">
+<h3 class="anchored" data-anchor-id="data-preparation">5.3.1 Data preparation</h3>
+<p>First is to <strong>extract the x, y coordinates</strong> of the training and test data sets.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb155"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb155-1"><a href="#cb155-1" aria-hidden="true" tabindex="-1"></a>coords <span class="ot">&lt;-</span> <span class="fu">st_coordinates</span>(HDB_master)</span>
+<span id="cb155-2"><a href="#cb155-2" aria-hidden="true" tabindex="-1"></a>coords_train <span class="ot">&lt;-</span> <span class="fu">st_coordinates</span>(train_data_corr)</span>
+<span id="cb155-3"><a href="#cb155-3" aria-hidden="true" tabindex="-1"></a>coords_test <span class="ot">&lt;-</span> <span class="fu">st_coordinates</span>(test_data_corr)</span>
+<span id="cb155-4"><a href="#cb155-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb155-5"><a href="#cb155-5" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(coords_train, <span class="st">"data/rds/coords_train.rds"</span>)</span>
+<span id="cb155-6"><a href="#cb155-6" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(coords_test, <span class="st">"data/rds/coords_test.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p><strong>Drop geometry field</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb156"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb156-1"><a href="#cb156-1" aria-hidden="true" tabindex="-1"></a>train_data_nogeom <span class="ot">&lt;-</span> train_data_corr <span class="sc">%&gt;%</span></span>
+<span id="cb156-2"><a href="#cb156-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>()</span>
+<span id="cb156-3"><a href="#cb156-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb156-4"><a href="#cb156-4" aria-hidden="true" tabindex="-1"></a>test_data_nogeom <span class="ot">&lt;-</span> test_data_corr <span class="sc">%&gt;%</span></span>
+<span id="cb156-5"><a href="#cb156-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
-<section id="residual-diagnostics" class="level3">
-<h3 class="anchored" data-anchor-id="residual-diagnostics">5.4 Residual diagnostics</h3>
+<section id="calibrate-non-spatial-rf-model-with-ranger" class="level3">
+<h3 class="anchored" data-anchor-id="calibrate-non-spatial-rf-model-with-ranger">5.3.3 Calibrate non-spatial RF model with <code>ranger()</code></h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb157"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb157-1"><a href="#cb157-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb157-2"><a href="#cb157-2" aria-hidden="true" tabindex="-1"></a>rf <span class="ot">&lt;-</span> <span class="fu">ranger</span>(</span>
+<span id="cb157-3"><a href="#cb157-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> resale_price <span class="sc">~</span> </span>
+<span id="cb157-4"><a href="#cb157-4" aria-hidden="true" tabindex="-1"></a>    floor_level <span class="sc">+</span> floor_area_sqm <span class="sc">+</span> </span>
+<span id="cb157-5"><a href="#cb157-5" aria-hidden="true" tabindex="-1"></a>    remaining_lease_mths_num <span class="sc">+</span> PROX_TOPSCHOOL <span class="sc">+</span> PROX_HKCENTER <span class="sc">+</span></span>
+<span id="cb157-6"><a href="#cb157-6" aria-hidden="true" tabindex="-1"></a>    PROX_SUPERMKT <span class="sc">+</span> PROX_ELDERCARE <span class="sc">+</span> PROX_MALLS <span class="sc">+</span></span>
+<span id="cb157-7"><a href="#cb157-7" aria-hidden="true" tabindex="-1"></a>    PROX_SPORTS <span class="sc">+</span> PROX_CC <span class="sc">+</span> PROX_MRT <span class="sc">+</span> PROX_CBD <span class="sc">+</span></span>
+<span id="cb157-8"><a href="#cb157-8" aria-hidden="true" tabindex="-1"></a>    PROX_BIZPK <span class="sc">+</span> WITHIN_1km_TOPPRISCH_BINARY <span class="sc">+</span> WITHIN_350m_KINDG <span class="sc">+</span></span>
+<span id="cb157-9"><a href="#cb157-9" aria-hidden="true" tabindex="-1"></a>    WITHIN_350m_CHILDC <span class="sc">+</span> WITHIN_350m_BUS <span class="sc">+</span> WITHIN_1km_PRISCH,</span>
+<span id="cb157-10"><a href="#cb157-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> train_data_nogeom</span>
+<span id="cb157-11"><a href="#cb157-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb157-12"><a href="#cb157-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb157-13"><a href="#cb157-13" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(rf, <span class="st">"data/rds/rf.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Ranger result
+
+Call:
+ ranger(formula = resale_price ~ floor_level + floor_area_sqm +      remaining_lease_mths_num + PROX_TOPSCHOOL + PROX_HKCENTER +      PROX_SUPERMKT + PROX_ELDERCARE + PROX_MALLS + PROX_SPORTS +      PROX_CC + PROX_MRT + PROX_CBD + PROX_BIZPK + WITHIN_1km_TOPPRISCH_BINARY +      WITHIN_350m_KINDG + WITHIN_350m_CHILDC + WITHIN_350m_BUS +      WITHIN_1km_PRISCH, data = train_data_nogeom) 
+
+Type:                             Regression 
+Number of trees:                  500 
+Sample size:                      3000 
+Number of independent variables:  18 
+Mtry:                             4 
+Target node size:                 5 
+Variable importance mode:         none 
+Splitrule:                        variance 
+OOB prediction error (MSE):       1635656754 
+R squared (OOB):                  0.9329362 </code></pre>
+</div>
+</div>
 </section>
-</section>
-<section id="geographically-weighted-regression-gwr" class="level2">
-<h2 class="anchored" data-anchor-id="geographically-weighted-regression-gwr">6 Geographically Weighted Regression (GWR)</h2>
-<section id="bandwidth-selection" class="level3">
-<h3 class="anchored" data-anchor-id="bandwidth-selection">6.1 Bandwidth selection</h3>
-</section>
+</div>
+<div id="tabset-8-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-8-4-tab">
+<p>In this section, we will calibrate Geographical Weighted Random Forest Model with the training data. ### 5.4.1 Bandwidth selection We will use GWR Bandwidth for GWRF: <code>bw.adaptive</code></p>
 <section id="model-fitting-1" class="level3">
-<h3 class="anchored" data-anchor-id="model-fitting-1">6.2 Model fitting</h3>
+<h3 class="anchored" data-anchor-id="model-fitting-1">5.4.2 Model fitting</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb159"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb159-1"><a href="#cb159-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb159-2"><a href="#cb159-2" aria-hidden="true" tabindex="-1"></a>gwRF_adaptive <span class="ot">&lt;-</span> <span class="fu">grf</span>(</span>
+<span id="cb159-3"><a href="#cb159-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> resale_price <span class="sc">~</span> </span>
+<span id="cb159-4"><a href="#cb159-4" aria-hidden="true" tabindex="-1"></a>    floor_level <span class="sc">+</span> floor_area_sqm <span class="sc">+</span> </span>
+<span id="cb159-5"><a href="#cb159-5" aria-hidden="true" tabindex="-1"></a>    remaining_lease_mths_num <span class="sc">+</span> PROX_TOPSCHOOL <span class="sc">+</span> PROX_HKCENTER <span class="sc">+</span></span>
+<span id="cb159-6"><a href="#cb159-6" aria-hidden="true" tabindex="-1"></a>    PROX_SUPERMKT <span class="sc">+</span> PROX_ELDERCARE <span class="sc">+</span> PROX_MALLS <span class="sc">+</span></span>
+<span id="cb159-7"><a href="#cb159-7" aria-hidden="true" tabindex="-1"></a>    PROX_SPORTS <span class="sc">+</span> PROX_CC <span class="sc">+</span> PROX_MRT <span class="sc">+</span> PROX_CBD <span class="sc">+</span></span>
+<span id="cb159-8"><a href="#cb159-8" aria-hidden="true" tabindex="-1"></a>    PROX_BIZPK <span class="sc">+</span> WITHIN_1km_TOPPRISCH_BINARY <span class="sc">+</span> WITHIN_350m_KINDG <span class="sc">+</span></span>
+<span id="cb159-9"><a href="#cb159-9" aria-hidden="true" tabindex="-1"></a>    WITHIN_350m_CHILDC <span class="sc">+</span> WITHIN_350m_BUS <span class="sc">+</span> WITHIN_1km_PRISCH,</span>
+<span id="cb159-10"><a href="#cb159-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">dframe =</span> train_data_nogeom, </span>
+<span id="cb159-11"><a href="#cb159-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">bw =</span> bw.adaptive,</span>
+<span id="cb159-12"><a href="#cb159-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">kernel =</span> <span class="st">"adaptive"</span>,</span>
+<span id="cb159-13"><a href="#cb159-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">coords =</span> coords_train,</span>
+<span id="cb159-14"><a href="#cb159-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">ntree =</span> <span class="dv">500</span>,</span>
+<span id="cb159-15"><a href="#cb159-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">mtry =</span> <span class="dv">3</span>)</span>
+<span id="cb159-16"><a href="#cb159-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb159-17"><a href="#cb159-17" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(gwRF_adaptive, <span class="st">"data/rds/gwRF_adaptive.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb160"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb160-1"><a href="#cb160-1" aria-hidden="true" tabindex="-1"></a>gwRF_adaptive <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/gwRF_adaptive.rds"</span>)</span>
+<span id="cb160-2"><a href="#cb160-2" aria-hidden="true" tabindex="-1"></a>gwRF_adaptive<span class="sc">$</span>LocalModelSummary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>$l.VariableImportance
+                                   Min          Max         Mean          StD
+floor_level                 1802242983 5.707271e+11  64370501015  95519171639
+floor_area_sqm               191810365 8.456907e+11  75608025343 105683792740
+remaining_lease_mths_num    4167879037 1.116591e+12 177886328514 250649825055
+PROX_TOPSCHOOL              3141292677 4.491897e+11  50475369179  68190881810
+PROX_HKCENTER               1999847758 4.393045e+11  46761596174  64937481435
+PROX_SUPERMKT               1797208016 7.772224e+11  37974447589  64624643875
+PROX_ELDERCARE              3031722291 4.248943e+11  42556167772  54845209136
+PROX_MALLS                  2124221590 5.546800e+11  57893204148  84462087579
+PROX_SPORTS                 2458119099 4.812078e+11  40196432668  52747413485
+PROX_CC                     2694106692 4.991304e+11  46869751092  69556159665
+PROX_MRT                    2622189311 6.610877e+11  52608791064  83008747217
+PROX_CBD                    3085588720 4.966919e+11  49731491516  69372657366
+PROX_BIZPK                  2241741891 4.020362e+11  45958752851  59421657325
+WITHIN_1km_TOPPRISCH_BINARY          0 2.235432e+11   2931827156  13409379072
+WITHIN_350m_KINDG                    0 2.301352e+11  10313811320  15780964852
+WITHIN_350m_CHILDC           918308947 4.004142e+11  29018952242  51387960843
+WITHIN_350m_BUS             1124072086 3.114025e+11  21896867004  34296206358
+WITHIN_1km_PRISCH            219410255 1.494036e+11  15330676781  24530405581
+
+$l.MSE.OOB
+[1] 2246045968
+
+$l.r.OOB
+[1] 0.9078789
+
+$l.MSE.Pred
+[1] 134253426
+
+$l.r.Pred
+[1] 0.9944936</code></pre>
+</div>
+</div>
 </section>
-<section id="local-coefficient-maps" class="level3">
-<h3 class="anchored" data-anchor-id="local-coefficient-maps">6.3 Local coefficient maps</h3>
+</div>
+</div>
+</div>
+<section id="model-calibration-results" class="level3">
+<h3 class="anchored" data-anchor-id="model-calibration-results">5.5 Model Calibration Results</h3>
+<p>We use <code>tbl_regression()</code> to create a regression report.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb162"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb162-1"><a href="#cb162-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tbl_regression</span>(hdb.mlr, </span>
+<span id="cb162-2"><a href="#cb162-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">intercept =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb162-3"><a href="#cb162-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_glance_source_note</span>(</span>
+<span id="cb162-4"><a href="#cb162-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="fu">list</span>(sigma <span class="sc">~</span> <span class="st">"\U03C3"</span>),</span>
+<span id="cb162-5"><a href="#cb162-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">include =</span> <span class="fu">c</span>(r.squared, adj.r.squared, </span>
+<span id="cb162-6"><a href="#cb162-6" aria-hidden="true" tabindex="-1"></a>                AIC, statistic,</span>
+<span id="cb162-7"><a href="#cb162-7" aria-hidden="true" tabindex="-1"></a>                p.value, sigma)) <span class="sc">%&gt;%</span></span>
+<span id="cb162-8"><a href="#cb162-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">modify_table_styling</span>(</span>
+<span id="cb162-9"><a href="#cb162-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> label,</span>
+<span id="cb162-10"><a href="#cb162-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">rows =</span> variable <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"flat_type"</span>, <span class="st">"floor_range"</span>),</span>
+<span id="cb162-11"><a href="#cb162-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">footnote =</span> <span class="st">"Categorical variable"</span></span>
+<span id="cb162-12"><a href="#cb162-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb162-13"><a href="#cb162-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bold_labels</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="qlvbxmwith" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#qlvbxmwith table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#qlvbxmwith thead, #qlvbxmwith tbody, #qlvbxmwith tfoot, #qlvbxmwith tr, #qlvbxmwith td, #qlvbxmwith th {
+  border-style: none;
+}
+
+#qlvbxmwith p {
+  margin: 0;
+  padding: 0;
+}
+
+#qlvbxmwith .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#qlvbxmwith .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#qlvbxmwith .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#qlvbxmwith .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#qlvbxmwith .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#qlvbxmwith .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qlvbxmwith .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#qlvbxmwith .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#qlvbxmwith .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#qlvbxmwith .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#qlvbxmwith .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#qlvbxmwith .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#qlvbxmwith .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#qlvbxmwith .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#qlvbxmwith .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#qlvbxmwith .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#qlvbxmwith .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#qlvbxmwith .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#qlvbxmwith .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qlvbxmwith .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#qlvbxmwith .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#qlvbxmwith .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#qlvbxmwith .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qlvbxmwith .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#qlvbxmwith .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#qlvbxmwith .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qlvbxmwith .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qlvbxmwith .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#qlvbxmwith .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qlvbxmwith .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#qlvbxmwith .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qlvbxmwith .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#qlvbxmwith .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qlvbxmwith .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#qlvbxmwith .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qlvbxmwith .gt_left {
+  text-align: left;
+}
+
+#qlvbxmwith .gt_center {
+  text-align: center;
+}
+
+#qlvbxmwith .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#qlvbxmwith .gt_font_normal {
+  font-weight: normal;
+}
+
+#qlvbxmwith .gt_font_bold {
+  font-weight: bold;
+}
+
+#qlvbxmwith .gt_font_italic {
+  font-style: italic;
+}
+
+#qlvbxmwith .gt_super {
+  font-size: 65%;
+}
+
+#qlvbxmwith .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#qlvbxmwith .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#qlvbxmwith .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#qlvbxmwith .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#qlvbxmwith .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#qlvbxmwith .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#qlvbxmwith .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#qlvbxmwith .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#qlvbxmwith div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="gt_col_headings header">
+<th id="label" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
+<th id="estimate" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Beta</strong></th>
+<th id="conf.low" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>95% CI</strong></th>
+<th id="p.value" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>p-value</strong></th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="label" style="font-weight: bold">(Intercept)</td>
+<td class="gt_row gt_center" headers="estimate">24,517</td>
+<td class="gt_row gt_center" headers="conf.low">-20,365, 69,399</td>
+<td class="gt_row gt_center" headers="p.value">0.3</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label" style="font-weight: bold">floor_level</td>
+<td class="gt_row gt_center" headers="estimate"><br>
+</td>
+<td class="gt_row gt_center" headers="conf.low"><br>
+</td>
+<td class="gt_row gt_center" headers="p.value"><br>
+</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;01 TO 03</td>
+<td class="gt_row gt_center" headers="estimate">—</td>
+<td class="gt_row gt_center" headers="conf.low">—</td>
+<td class="gt_row gt_center" headers="p.value"><br>
+</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;04 TO 06</td>
+<td class="gt_row gt_center" headers="estimate">22,370</td>
+<td class="gt_row gt_center" headers="conf.low">14,436, 30,305</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;07 TO 09</td>
+<td class="gt_row gt_center" headers="estimate">35,510</td>
+<td class="gt_row gt_center" headers="conf.low">27,492, 43,528</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;10 TO 12</td>
+<td class="gt_row gt_center" headers="estimate">49,122</td>
+<td class="gt_row gt_center" headers="conf.low">40,935, 57,309</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;13 TO 15</td>
+<td class="gt_row gt_center" headers="estimate">48,752</td>
+<td class="gt_row gt_center" headers="conf.low">38,981, 58,523</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;16 TO 18</td>
+<td class="gt_row gt_center" headers="estimate">64,779</td>
+<td class="gt_row gt_center" headers="conf.low">52,612, 76,946</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;19 TO 21</td>
+<td class="gt_row gt_center" headers="estimate">85,649</td>
+<td class="gt_row gt_center" headers="conf.low">67,946, 103,352</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;22 TO 24</td>
+<td class="gt_row gt_center" headers="estimate">112,299</td>
+<td class="gt_row gt_center" headers="conf.low">89,654, 134,944</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;25 TO 27</td>
+<td class="gt_row gt_center" headers="estimate">121,666</td>
+<td class="gt_row gt_center" headers="conf.low">97,644, 145,689</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;28 TO 30</td>
+<td class="gt_row gt_center" headers="estimate">175,474</td>
+<td class="gt_row gt_center" headers="conf.low">147,139, 203,809</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;31 TO 33</td>
+<td class="gt_row gt_center" headers="estimate">226,303</td>
+<td class="gt_row gt_center" headers="conf.low">191,993, 260,614</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;34 TO 36</td>
+<td class="gt_row gt_center" headers="estimate">275,031</td>
+<td class="gt_row gt_center" headers="conf.low">239,765, 310,296</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;37 TO 39</td>
+<td class="gt_row gt_center" headers="estimate">210,461</td>
+<td class="gt_row gt_center" headers="conf.low">169,619, 251,303</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;40 TO 42</td>
+<td class="gt_row gt_center" headers="estimate">282,988</td>
+<td class="gt_row gt_center" headers="conf.low">228,135, 337,840</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;49 TO 51</td>
+<td class="gt_row gt_center" headers="estimate">496,023</td>
+<td class="gt_row gt_center" headers="conf.low">400,977, 591,069</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label" style="font-weight: bold">floor_area_sqm</td>
+<td class="gt_row gt_center" headers="estimate">4,578</td>
+<td class="gt_row gt_center" headers="conf.low">4,191, 4,964</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label" style="font-weight: bold">remaining_lease_mths_num</td>
+<td class="gt_row gt_center" headers="estimate">469</td>
+<td class="gt_row gt_center" headers="conf.low">452, 486</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label" style="font-weight: bold">PROX_TOPSCHOOL</td>
+<td class="gt_row gt_center" headers="estimate">7.2</td>
+<td class="gt_row gt_center" headers="conf.low">5.2, 9.3</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label" style="font-weight: bold">PROX_HKCENTER</td>
+<td class="gt_row gt_center" headers="estimate">-21</td>
+<td class="gt_row gt_center" headers="conf.low">-27, -15</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label" style="font-weight: bold">PROX_SUPERMKT</td>
+<td class="gt_row gt_center" headers="estimate">34</td>
+<td class="gt_row gt_center" headers="conf.low">19, 50</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label" style="font-weight: bold">PROX_ELDERCARE</td>
+<td class="gt_row gt_center" headers="estimate">-12</td>
+<td class="gt_row gt_center" headers="conf.low">-16, -7.4</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label" style="font-weight: bold">PROX_MALLS</td>
+<td class="gt_row gt_center" headers="estimate">-23</td>
+<td class="gt_row gt_center" headers="conf.low">-31, -14</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label" style="font-weight: bold">PROX_SPORTS</td>
+<td class="gt_row gt_center" headers="estimate">18</td>
+<td class="gt_row gt_center" headers="conf.low">10, 26</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label" style="font-weight: bold">PROX_CC</td>
+<td class="gt_row gt_center" headers="estimate">-18</td>
+<td class="gt_row gt_center" headers="conf.low">-29, -7.6</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label" style="font-weight: bold">PROX_MRT</td>
+<td class="gt_row gt_center" headers="estimate">-51</td>
+<td class="gt_row gt_center" headers="conf.low">-59, -43</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label" style="font-weight: bold">PROX_CBD</td>
+<td class="gt_row gt_center" headers="estimate">-21</td>
+<td class="gt_row gt_center" headers="conf.low">-23, -20</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label" style="font-weight: bold">PROX_BIZPK</td>
+<td class="gt_row gt_center" headers="estimate">2.0</td>
+<td class="gt_row gt_center" headers="conf.low">0.83, 3.1</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label" style="font-weight: bold">WITHIN_1km_TOPPRISCH_BINARY</td>
+<td class="gt_row gt_center" headers="estimate">53,279</td>
+<td class="gt_row gt_center" headers="conf.low">43,621, 62,938</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label" style="font-weight: bold">WITHIN_350m_KINDG</td>
+<td class="gt_row gt_center" headers="estimate">6,700</td>
+<td class="gt_row gt_center" headers="conf.low">3,476, 9,923</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label" style="font-weight: bold">WITHIN_350m_CHILDC</td>
+<td class="gt_row gt_center" headers="estimate">-1,502</td>
+<td class="gt_row gt_center" headers="conf.low">-2,796, -209</td>
+<td class="gt_row gt_center" headers="p.value">0.023</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label" style="font-weight: bold">WITHIN_350m_BUS</td>
+<td class="gt_row gt_center" headers="estimate">1,626</td>
+<td class="gt_row gt_center" headers="conf.low">704, 2,548</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label" style="font-weight: bold">WITHIN_1km_PRISCH</td>
+<td class="gt_row gt_center" headers="estimate">-8,161</td>
+<td class="gt_row gt_center" headers="conf.low">-10,133, -6,189</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+</tbody><tfoot>
+<tr class="gt_sourcenotes odd">
+<td colspan="4" class="gt_sourcenote">Abbreviation: CI = Confidence Interval</td>
+</tr>
+<tr class="gt_sourcenotes even">
+<td colspan="4" class="gt_sourcenote">R² = 0.815; Adjusted R² = 0.813; AIC = 75,273; Statistic = 421; p-value = &lt;0.001; σ = 67,572</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
+</div>
 </section>
-<section id="results-interpretation-1" class="level3">
-<h3 class="anchored" data-anchor-id="results-interpretation-1">6.4 Results &amp; interpretation</h3>
 </section>
+<section id="predictions-with-test-data" class="level2">
+<h2 class="anchored" data-anchor-id="predictions-with-test-data">6 Predictions with Test Data</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-9-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-1" role="tab" aria-controls="tabset-9-1" aria-selected="true">6.1 MLR</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-9-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-2" role="tab" aria-controls="tabset-9-2" aria-selected="false">6.2 GWR</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-9-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-3" role="tab" aria-controls="tabset-9-3" aria-selected="false">6.3 RF</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-9-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-4" role="tab" aria-controls="tabset-9-4" aria-selected="false">6.4 GWRF</a></li></ul>
+<div class="tab-content">
+<div id="tabset-9-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-9-1-tab">
+<section id="predict-with-test-data" class="level3">
+<h3 class="anchored" data-anchor-id="predict-with-test-data"><strong>6.1.1 Predict with test data</strong></h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb163"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb163-1"><a href="#cb163-1" aria-hidden="true" tabindex="-1"></a>mlr_pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(hdb.mlr, <span class="at">newdata =</span> test_data_corr)</span>
+<span id="cb163-2"><a href="#cb163-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(mlr_pred, <span class="st">"data/model/mlr_pred.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 </section>
-<section id="non-sptial-random-forest-model" class="level2">
-<h2 class="anchored" data-anchor-id="non-sptial-random-forest-model">7 Non-sptial Random Forest Model</h2>
-<section id="feature-selection-1" class="level3">
-<h3 class="anchored" data-anchor-id="feature-selection-1">7.1 Feature selection</h3>
+<section id="append-predicted-values-to-the-test-dataset" class="level3">
+<h3 class="anchored" data-anchor-id="append-predicted-values-to-the-test-dataset"><strong>6.1.2 Append predicted values to the test dataset</strong></h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb164"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb164-1"><a href="#cb164-1" aria-hidden="true" tabindex="-1"></a>mlr_pred <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/model/mlr_pred.rds"</span>)</span>
+<span id="cb164-2"><a href="#cb164-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb164-3"><a href="#cb164-3" aria-hidden="true" tabindex="-1"></a>test_data_p_mlr <span class="ot">&lt;-</span> test_data_corr <span class="sc">%&gt;%</span></span>
+<span id="cb164-4"><a href="#cb164-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mlr_pred =</span> mlr_pred)</span>
+<span id="cb164-5"><a href="#cb164-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb164-6"><a href="#cb164-6" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(test_data_p_mlr))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 3%">
+<col style="width: 3%">
+<col style="width: 3%">
+<col style="width: 3%">
+<col style="width: 2%">
+<col style="width: 3%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 3%">
+<col style="width: 3%">
+<col style="width: 3%">
+<col style="width: 3%">
+<col style="width: 3%">
+<col style="width: 2%">
+<col style="width: 3%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 7%">
+<col style="width: 4%">
+<col style="width: 5%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 2%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">transact_date</th>
+<th style="text-align: left;">floor_level</th>
+<th style="text-align: left;">plan_area</th>
+<th style="text-align: right;">floor_area_sqm</th>
+<th style="text-align: left;">flat_model</th>
+<th style="text-align: right;">resale_price</th>
+<th style="text-align: left;">geometry</th>
+<th style="text-align: right;">remaining_lease_mths_num</th>
+<th style="text-align: right;">PROX_TOPSCHOOL</th>
+<th style="text-align: right;">PROX_HKCENTER</th>
+<th style="text-align: right;">PROX_SUPERMKT</th>
+<th style="text-align: right;">PROX_CLINIC</th>
+<th style="text-align: right;">PROX_ELDERCARE</th>
+<th style="text-align: right;">PROX_MALLS</th>
+<th style="text-align: right;">PROX_SPORTS</th>
+<th style="text-align: right;">PROX_CC</th>
+<th style="text-align: right;">PROX_PARK</th>
+<th style="text-align: right;">PROX_MRT</th>
+<th style="text-align: right;">PROX_CBD</th>
+<th style="text-align: right;">PROX_BIZPK</th>
+<th style="text-align: right;">WITHIN_1km_TOPPRISCH_BINARY</th>
+<th style="text-align: right;">WITHIN_350m_KINDG</th>
+<th style="text-align: right;">WITHIN_350m_CHILDC</th>
+<th style="text-align: right;">WITHIN_350m_BUS</th>
+<th style="text-align: right;">WITHIN_1km_PRISCH</th>
+<th style="text-align: right;">mlr_pred</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">2025-05-01</td>
+<td style="text-align: left;">01 TO 03</td>
+<td style="text-align: left;">GEYLANG</td>
+<td style="text-align: right;">89</td>
+<td style="text-align: left;">Simplified</td>
+<td style="text-align: right;">600000</td>
+<td style="text-align: left;">POINT (35644.43 34298.2)</td>
+<td style="text-align: right;">717</td>
+<td style="text-align: right;">2287.6222</td>
+<td style="text-align: right;">722.51135</td>
+<td style="text-align: right;">377.3316</td>
+<td style="text-align: right;">329.17328</td>
+<td style="text-align: right;">711.9555</td>
+<td style="text-align: right;">1143.5264</td>
+<td style="text-align: right;">334.6101</td>
+<td style="text-align: right;">962.7311</td>
+<td style="text-align: right;">155.86098</td>
+<td style="text-align: right;">452.9348</td>
+<td style="text-align: right;">5508.317</td>
+<td style="text-align: right;">2009.983</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">598932.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2025-02-01</td>
+<td style="text-align: left;">25 TO 27</td>
+<td style="text-align: left;">SENGKANG</td>
+<td style="text-align: right;">92</td>
+<td style="text-align: left;">Model A</td>
+<td style="text-align: right;">660000</td>
+<td style="text-align: left;">POINT (33048.64 41677.57)</td>
+<td style="text-align: right;">1075</td>
+<td style="text-align: right;">2289.9526</td>
+<td style="text-align: right;">251.51529</td>
+<td style="text-align: right;">220.4933</td>
+<td style="text-align: right;">220.70603</td>
+<td style="text-align: right;">588.8454</td>
+<td style="text-align: right;">343.0501</td>
+<td style="text-align: right;">299.5836</td>
+<td style="text-align: right;">248.2113</td>
+<td style="text-align: right;">85.85746</td>
+<td style="text-align: right;">198.4770</td>
+<td style="text-align: right;">10548.733</td>
+<td style="text-align: right;">4015.372</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">821685.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2024-07-01</td>
+<td style="text-align: left;">19 TO 21</td>
+<td style="text-align: left;">BUKIT MERAH</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: left;">Model A</td>
+<td style="text-align: right;">1050000</td>
+<td style="text-align: left;">POINT (27510.11 30194.14)</td>
+<td style="text-align: right;">1055</td>
+<td style="text-align: right;">954.6456</td>
+<td style="text-align: right;">170.12236</td>
+<td style="text-align: right;">241.6532</td>
+<td style="text-align: right;">66.17827</td>
+<td style="text-align: right;">153.6429</td>
+<td style="text-align: right;">382.3699</td>
+<td style="text-align: right;">577.9788</td>
+<td style="text-align: right;">202.4263</td>
+<td style="text-align: right;">290.73183</td>
+<td style="text-align: right;">365.1125</td>
+<td style="text-align: right;">2130.208</td>
+<td style="text-align: right;">3825.024</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1008419.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2024-07-01</td>
+<td style="text-align: left;">07 TO 09</td>
+<td style="text-align: left;">YISHUN</td>
+<td style="text-align: right;">93</td>
+<td style="text-align: left;">Model A</td>
+<td style="text-align: right;">570000</td>
+<td style="text-align: left;">POINT (29962.49 45530.07)</td>
+<td style="text-align: right;">1130</td>
+<td style="text-align: right;">6313.1517</td>
+<td style="text-align: right;">769.22818</td>
+<td style="text-align: right;">539.3974</td>
+<td style="text-align: right;">117.40594</td>
+<td style="text-align: right;">745.5438</td>
+<td style="text-align: right;">1177.6272</td>
+<td style="text-align: right;">287.8709</td>
+<td style="text-align: right;">606.4849</td>
+<td style="text-align: right;">34.10555</td>
+<td style="text-align: right;">1713.8919</td>
+<td style="text-align: right;">14213.289</td>
+<td style="text-align: right;">6575.651</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">637488.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2024-07-01</td>
+<td style="text-align: left;">10 TO 12</td>
+<td style="text-align: left;">BUKIT MERAH</td>
+<td style="text-align: right;">82</td>
+<td style="text-align: left;">Improved</td>
+<td style="text-align: right;">510000</td>
+<td style="text-align: left;">POINT (26792.87 28443.7)</td>
+<td style="text-align: right;">610</td>
+<td style="text-align: right;">2737.1027</td>
+<td style="text-align: right;">84.66649</td>
+<td style="text-align: right;">318.2042</td>
+<td style="text-align: right;">318.20316</td>
+<td style="text-align: right;">233.2610</td>
+<td style="text-align: right;">905.0050</td>
+<td style="text-align: right;">247.4677</td>
+<td style="text-align: right;">404.1912</td>
+<td style="text-align: right;">98.25126</td>
+<td style="text-align: right;">842.2283</td>
+<td style="text-align: right;">2380.039</td>
+<td style="text-align: right;">3729.805</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">667907.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2024-09-01</td>
+<td style="text-align: left;">16 TO 18</td>
+<td style="text-align: left;">JURONG WEST</td>
+<td style="text-align: right;">93</td>
+<td style="text-align: left;">Model A</td>
+<td style="text-align: right;">660000</td>
+<td style="text-align: left;">POINT (15606.63 34831.97)</td>
+<td style="text-align: right;">1118</td>
+<td style="text-align: right;">4555.8542</td>
+<td style="text-align: right;">381.89407</td>
+<td style="text-align: right;">101.4416</td>
+<td style="text-align: right;">131.91184</td>
+<td style="text-align: right;">340.4743</td>
+<td style="text-align: right;">427.1364</td>
+<td style="text-align: right;">260.5720</td>
+<td style="text-align: right;">445.9100</td>
+<td style="text-align: right;">285.83320</td>
+<td style="text-align: right;">1413.8106</td>
+<td style="text-align: right;">14763.437</td>
+<td style="text-align: right;">2557.138</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">679030.1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </section>
-<section id="hyperparameter-tuning" class="level3">
-<h3 class="anchored" data-anchor-id="hyperparameter-tuning">7.2 Hyperparameter tuning</h3>
+<section id="calculate-performance-metrics" class="level3">
+<h3 class="anchored" data-anchor-id="calculate-performance-metrics"><strong>6.1.3 Calculate performance metrics</strong></h3>
+<p>Calculate RMSE, MAE and R^2 metrics</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb165"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb165-1"><a href="#cb165-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RMSE</span></span>
+<span id="cb165-2"><a href="#cb165-2" aria-hidden="true" tabindex="-1"></a>rmse_mlr <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>((test_data_p_mlr<span class="sc">$</span>resale_price <span class="sc">-</span> test_data_p_mlr<span class="sc">$</span>mlr_pred)<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb165-3"><a href="#cb165-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb165-4"><a href="#cb165-4" aria-hidden="true" tabindex="-1"></a><span class="co"># MAE</span></span>
+<span id="cb165-5"><a href="#cb165-5" aria-hidden="true" tabindex="-1"></a>mae_mlr <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(test_data_p_mlr<span class="sc">$</span>resale_price <span class="sc">-</span> test_data_p_mlr<span class="sc">$</span>mlr_pred))</span>
+<span id="cb165-6"><a href="#cb165-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb165-7"><a href="#cb165-7" aria-hidden="true" tabindex="-1"></a><span class="co"># R^2</span></span>
+<span id="cb165-8"><a href="#cb165-8" aria-hidden="true" tabindex="-1"></a>ss_res <span class="ot">&lt;-</span> <span class="fu">sum</span>((test_data_p_mlr<span class="sc">$</span>resale_price <span class="sc">-</span> test_data_p_mlr<span class="sc">$</span>mlr_pred)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb165-9"><a href="#cb165-9" aria-hidden="true" tabindex="-1"></a>ss_tot <span class="ot">&lt;-</span> <span class="fu">sum</span>((test_data_p_mlr<span class="sc">$</span>resale_price <span class="sc">-</span> <span class="fu">mean</span>(test_data_p_mlr<span class="sc">$</span>resale_price))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb165-10"><a href="#cb165-10" aria-hidden="true" tabindex="-1"></a>r2_mlr <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> (ss_res <span class="sc">/</span> ss_tot)</span>
+<span id="cb165-11"><a href="#cb165-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb165-12"><a href="#cb165-12" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"RMSE:"</span>, <span class="fu">format</span>(rmse_mlr), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>RMSE: 68760.42 </code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb167"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb167-1"><a href="#cb167-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"MAE:"</span>, <span class="fu">format</span>(mae_mlr), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>MAE: 53802.81 </code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb169"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb169-1"><a href="#cb169-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"R-squared:"</span>, <span class="fu">round</span>(r2_mlr, <span class="dv">4</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>R-squared: 0.8013 </code></pre>
+</div>
+</div>
 </section>
-<section id="model-fitting-2" class="level3">
-<h3 class="anchored" data-anchor-id="model-fitting-2">7.3 Model fitting</h3>
+<section id="visualising-the-predicted-values" class="level3">
+<h3 class="anchored" data-anchor-id="visualising-the-predicted-values"><strong>6.1.4 Visualising the predicted values</strong></h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb171"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb171-1"><a href="#cb171-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> test_data_p_mlr,</span>
+<span id="cb171-2"><a href="#cb171-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> mlr_pred,</span>
+<span id="cb171-3"><a href="#cb171-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> resale_price)) <span class="sc">+</span></span>
+<span id="cb171-4"><a href="#cb171-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">col =</span> <span class="st">"#EF7722"</span>, <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb171-5"><a href="#cb171-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"MLR: Predicted vs Actual Resale Prices"</span>,</span>
+<span id="cb171-6"><a href="#cb171-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Predicted Resale Price (S$)"</span>,</span>
+<span id="cb171-7"><a href="#cb171-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Actual Resale Price (S$)"</span>) <span class="sc">+</span></span>
+<span id="cb171-8"><a href="#cb171-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span>  </span>
+<span id="cb171-9"><a href="#cb171-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb171-10"><a href="#cb171-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"#D0DDD0"</span>),      </span>
+<span id="cb171-11"><a href="#cb171-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"#F5F5F5"</span>),   </span>
+<span id="cb171-12"><a href="#cb171-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">14</span>, <span class="at">face =</span> <span class="st">"bold"</span>) </span>
+<span id="cb171-13"><a href="#cb171-13" aria-hidden="true" tabindex="-1"></a>  )  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex03a_files/figure-html/unnamed-chunk-113-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
-<section id="feature-importance" class="level3">
-<h3 class="anchored" data-anchor-id="feature-importance">7.4 Feature importance</h3>
+</div>
+<div id="tabset-9-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-9-2-tab">
+
+</div>
+<div id="tabset-9-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-9-3-tab">
+
+</div>
+<div id="tabset-9-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-9-4-tab">
+<section id="prepare-test-data" class="level3">
+<h3 class="anchored" data-anchor-id="prepare-test-data"><strong>6.4.1 Prepare test data</strong></h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb172"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb172-1"><a href="#cb172-1" aria-hidden="true" tabindex="-1"></a>test_data_nogeom <span class="ot">&lt;-</span> <span class="fu">cbind</span>(</span>
+<span id="cb172-2"><a href="#cb172-2" aria-hidden="true" tabindex="-1"></a>  test_data_corr, coords_test) <span class="sc">%&gt;%</span></span>
+<span id="cb172-3"><a href="#cb172-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>()</span>
+<span id="cb172-4"><a href="#cb172-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb172-5"><a href="#cb172-5" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(test_data_nogeom))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 3%">
+<col style="width: 3%">
+<col style="width: 3%">
+<col style="width: 4%">
+<col style="width: 3%">
+<col style="width: 3%">
+<col style="width: 6%">
+<col style="width: 4%">
+<col style="width: 3%">
+<col style="width: 3%">
+<col style="width: 3%">
+<col style="width: 4%">
+<col style="width: 3%">
+<col style="width: 3%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 3%">
+<col style="width: 7%">
+<col style="width: 4%">
+<col style="width: 5%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 2%">
+<col style="width: 2%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">transact_date</th>
+<th style="text-align: left;">floor_level</th>
+<th style="text-align: left;">plan_area</th>
+<th style="text-align: right;">floor_area_sqm</th>
+<th style="text-align: left;">flat_model</th>
+<th style="text-align: right;">resale_price</th>
+<th style="text-align: right;">remaining_lease_mths_num</th>
+<th style="text-align: right;">PROX_TOPSCHOOL</th>
+<th style="text-align: right;">PROX_HKCENTER</th>
+<th style="text-align: right;">PROX_SUPERMKT</th>
+<th style="text-align: right;">PROX_CLINIC</th>
+<th style="text-align: right;">PROX_ELDERCARE</th>
+<th style="text-align: right;">PROX_MALLS</th>
+<th style="text-align: right;">PROX_SPORTS</th>
+<th style="text-align: right;">PROX_CC</th>
+<th style="text-align: right;">PROX_PARK</th>
+<th style="text-align: right;">PROX_MRT</th>
+<th style="text-align: right;">PROX_CBD</th>
+<th style="text-align: right;">PROX_BIZPK</th>
+<th style="text-align: right;">WITHIN_1km_TOPPRISCH_BINARY</th>
+<th style="text-align: right;">WITHIN_350m_KINDG</th>
+<th style="text-align: right;">WITHIN_350m_CHILDC</th>
+<th style="text-align: right;">WITHIN_350m_BUS</th>
+<th style="text-align: right;">WITHIN_1km_PRISCH</th>
+<th style="text-align: right;">X</th>
+<th style="text-align: right;">Y</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">2025-05-01</td>
+<td style="text-align: left;">01 TO 03</td>
+<td style="text-align: left;">GEYLANG</td>
+<td style="text-align: right;">89</td>
+<td style="text-align: left;">Simplified</td>
+<td style="text-align: right;">600000</td>
+<td style="text-align: right;">717</td>
+<td style="text-align: right;">2287.6222</td>
+<td style="text-align: right;">722.51135</td>
+<td style="text-align: right;">377.3316</td>
+<td style="text-align: right;">329.17328</td>
+<td style="text-align: right;">711.9555</td>
+<td style="text-align: right;">1143.5264</td>
+<td style="text-align: right;">334.6101</td>
+<td style="text-align: right;">962.7311</td>
+<td style="text-align: right;">155.86098</td>
+<td style="text-align: right;">452.9348</td>
+<td style="text-align: right;">5508.317</td>
+<td style="text-align: right;">2009.983</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">35644.43</td>
+<td style="text-align: right;">34298.20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2025-02-01</td>
+<td style="text-align: left;">25 TO 27</td>
+<td style="text-align: left;">SENGKANG</td>
+<td style="text-align: right;">92</td>
+<td style="text-align: left;">Model A</td>
+<td style="text-align: right;">660000</td>
+<td style="text-align: right;">1075</td>
+<td style="text-align: right;">2289.9526</td>
+<td style="text-align: right;">251.51529</td>
+<td style="text-align: right;">220.4933</td>
+<td style="text-align: right;">220.70603</td>
+<td style="text-align: right;">588.8454</td>
+<td style="text-align: right;">343.0501</td>
+<td style="text-align: right;">299.5836</td>
+<td style="text-align: right;">248.2113</td>
+<td style="text-align: right;">85.85746</td>
+<td style="text-align: right;">198.4770</td>
+<td style="text-align: right;">10548.733</td>
+<td style="text-align: right;">4015.372</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">33048.64</td>
+<td style="text-align: right;">41677.57</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2024-07-01</td>
+<td style="text-align: left;">19 TO 21</td>
+<td style="text-align: left;">BUKIT MERAH</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: left;">Model A</td>
+<td style="text-align: right;">1050000</td>
+<td style="text-align: right;">1055</td>
+<td style="text-align: right;">954.6456</td>
+<td style="text-align: right;">170.12236</td>
+<td style="text-align: right;">241.6532</td>
+<td style="text-align: right;">66.17827</td>
+<td style="text-align: right;">153.6429</td>
+<td style="text-align: right;">382.3699</td>
+<td style="text-align: right;">577.9788</td>
+<td style="text-align: right;">202.4263</td>
+<td style="text-align: right;">290.73183</td>
+<td style="text-align: right;">365.1125</td>
+<td style="text-align: right;">2130.208</td>
+<td style="text-align: right;">3825.024</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">27510.11</td>
+<td style="text-align: right;">30194.14</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2024-07-01</td>
+<td style="text-align: left;">07 TO 09</td>
+<td style="text-align: left;">YISHUN</td>
+<td style="text-align: right;">93</td>
+<td style="text-align: left;">Model A</td>
+<td style="text-align: right;">570000</td>
+<td style="text-align: right;">1130</td>
+<td style="text-align: right;">6313.1517</td>
+<td style="text-align: right;">769.22818</td>
+<td style="text-align: right;">539.3974</td>
+<td style="text-align: right;">117.40594</td>
+<td style="text-align: right;">745.5438</td>
+<td style="text-align: right;">1177.6272</td>
+<td style="text-align: right;">287.8709</td>
+<td style="text-align: right;">606.4849</td>
+<td style="text-align: right;">34.10555</td>
+<td style="text-align: right;">1713.8919</td>
+<td style="text-align: right;">14213.289</td>
+<td style="text-align: right;">6575.651</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">29962.49</td>
+<td style="text-align: right;">45530.07</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2024-07-01</td>
+<td style="text-align: left;">10 TO 12</td>
+<td style="text-align: left;">BUKIT MERAH</td>
+<td style="text-align: right;">82</td>
+<td style="text-align: left;">Improved</td>
+<td style="text-align: right;">510000</td>
+<td style="text-align: right;">610</td>
+<td style="text-align: right;">2737.1027</td>
+<td style="text-align: right;">84.66649</td>
+<td style="text-align: right;">318.2042</td>
+<td style="text-align: right;">318.20316</td>
+<td style="text-align: right;">233.2610</td>
+<td style="text-align: right;">905.0050</td>
+<td style="text-align: right;">247.4677</td>
+<td style="text-align: right;">404.1912</td>
+<td style="text-align: right;">98.25126</td>
+<td style="text-align: right;">842.2283</td>
+<td style="text-align: right;">2380.039</td>
+<td style="text-align: right;">3729.805</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">26792.87</td>
+<td style="text-align: right;">28443.70</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2024-09-01</td>
+<td style="text-align: left;">16 TO 18</td>
+<td style="text-align: left;">JURONG WEST</td>
+<td style="text-align: right;">93</td>
+<td style="text-align: left;">Model A</td>
+<td style="text-align: right;">660000</td>
+<td style="text-align: right;">1118</td>
+<td style="text-align: right;">4555.8542</td>
+<td style="text-align: right;">381.89407</td>
+<td style="text-align: right;">101.4416</td>
+<td style="text-align: right;">131.91184</td>
+<td style="text-align: right;">340.4743</td>
+<td style="text-align: right;">427.1364</td>
+<td style="text-align: right;">260.5720</td>
+<td style="text-align: right;">445.9100</td>
+<td style="text-align: right;">285.83320</td>
+<td style="text-align: right;">1413.8106</td>
+<td style="text-align: right;">14763.437</td>
+<td style="text-align: right;">2557.138</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">15606.63</td>
+<td style="text-align: right;">34831.97</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </section>
-<section id="results-interpretation-2" class="level3">
-<h3 class="anchored" data-anchor-id="results-interpretation-2">7.5 Results &amp; interpretation</h3>
+<section id="predict-with-test-data-1" class="level3">
+<h3 class="anchored" data-anchor-id="predict-with-test-data-1"><strong>6.4.2 Predict with test data</strong></h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb173"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb173-1"><a href="#cb173-1" aria-hidden="true" tabindex="-1"></a>gwRF_pred <span class="ot">&lt;-</span> <span class="fu">predict.grf</span>(gwRF_adaptive,</span>
+<span id="cb173-2"><a href="#cb173-2" aria-hidden="true" tabindex="-1"></a>                         test_data_nogeom,</span>
+<span id="cb173-3"><a href="#cb173-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">x.var.name =</span> <span class="st">"X"</span>,</span>
+<span id="cb173-4"><a href="#cb173-4" aria-hidden="true" tabindex="-1"></a>                         <span class="at">y.var.name =</span> <span class="st">"Y"</span>,</span>
+<span id="cb173-5"><a href="#cb173-5" aria-hidden="true" tabindex="-1"></a>                         <span class="at">local.w =</span> <span class="dv">1</span>,</span>
+<span id="cb173-6"><a href="#cb173-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">global.w =</span> <span class="dv">0</span>)</span>
+<span id="cb173-7"><a href="#cb173-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb173-8"><a href="#cb173-8" aria-hidden="true" tabindex="-1"></a>gwRF_pred <span class="ot">&lt;-</span> <span class="fu">write_rds</span>(gwRF_pred, <span class="st">"data/model/gwRF_pred.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 </section>
+<section id="converting-the-predicting-output-into-a-data-frame" class="level3">
+<h3 class="anchored" data-anchor-id="converting-the-predicting-output-into-a-data-frame"><strong>6.4.3 Converting the predicting output into a data frame</strong></h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb174"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb174-1"><a href="#cb174-1" aria-hidden="true" tabindex="-1"></a>GRF_pred_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(gwRF_pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
-<section id="geographical-weighted-random-forest-model-gwrf" class="level2">
-<h2 class="anchored" data-anchor-id="geographical-weighted-random-forest-model-gwrf">8 Geographical Weighted Random Forest Model (gwRF)</h2>
-<section id="model-specification-1" class="level3">
-<h3 class="anchored" data-anchor-id="model-specification-1">8.1 Model specification</h3>
+<section id="append-predicted-values-to-the-test-dataset-1" class="level3">
+<h3 class="anchored" data-anchor-id="append-predicted-values-to-the-test-dataset-1"><strong>6.4.4 Append predicted values to the test dataset</strong></h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb175"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb175-1"><a href="#cb175-1" aria-hidden="true" tabindex="-1"></a>test_data_p <span class="ot">&lt;-</span> <span class="fu">cbind</span>(</span>
+<span id="cb175-2"><a href="#cb175-2" aria-hidden="true" tabindex="-1"></a>  test_data_corr, GRF_pred_df) <span class="sc">%&gt;%</span></span>
+<span id="cb175-3"><a href="#cb175-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(resale_price, gwRF_pred)</span>
+<span id="cb175-4"><a href="#cb175-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-5"><a href="#cb175-5" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(test_data_p, <span class="st">"data/rds/test_data_p.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: right;">resale_price</th>
+<th style="text-align: right;">gwRF_pred</th>
+<th style="text-align: left;">geometry</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">600000</td>
+<td style="text-align: right;">558242.9</td>
+<td style="text-align: left;">POINT (35644.43 34298.2)</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">660000</td>
+<td style="text-align: right;">662451.2</td>
+<td style="text-align: left;">POINT (33048.64 41677.57)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1050000</td>
+<td style="text-align: right;">1165661.5</td>
+<td style="text-align: left;">POINT (27510.11 30194.14)</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">570000</td>
+<td style="text-align: right;">612209.0</td>
+<td style="text-align: left;">POINT (29962.49 45530.07)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">510000</td>
+<td style="text-align: right;">730857.4</td>
+<td style="text-align: left;">POINT (26792.87 28443.7)</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">660000</td>
+<td style="text-align: right;">603268.8</td>
+<td style="text-align: left;">POINT (15606.63 34831.97)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </section>
-<section id="bandwidth-selection-1" class="level3">
-<h3 class="anchored" data-anchor-id="bandwidth-selection-1">8.2 Bandwidth selection</h3>
+<section id="calculating-root-mean-square-error" class="level3">
+<h3 class="anchored" data-anchor-id="calculating-root-mean-square-error"><strong>6.4.5 Calculating Root Mean Square Error</strong></h3>
+<p>We calculate the root mean square error (RMSE) to measure how far predicted values are from observed values in a regression analysis.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb176"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb176-1"><a href="#cb176-1" aria-hidden="true" tabindex="-1"></a>rmse_gwrf <span class="ot">&lt;-</span> <span class="fu">rmse</span>(test_data_p<span class="sc">$</span>resale_price, test_data_p<span class="sc">$</span>gwRF_pred)</span>
+<span id="cb176-2"><a href="#cb176-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(rmse_gwrf, <span class="st">"data/rds/rmse_gwrf.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 45858.66</code></pre>
+</div>
+</div>
 </section>
-<section id="model-fitting-3" class="level3">
-<h3 class="anchored" data-anchor-id="model-fitting-3">8.3 Model fitting</h3>
+<section id="visualising-the-predicted-values-1" class="level3">
+<h3 class="anchored" data-anchor-id="visualising-the-predicted-values-1"><strong>6.4.6 Visualising the predicted values</strong></h3>
+<p>Let’s visualise the actual resale price and the predicted resale price in the scatter plot.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb178"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb178-1"><a href="#cb178-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> test_data_p,</span>
+<span id="cb178-2"><a href="#cb178-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> gwRF_pred,</span>
+<span id="cb178-3"><a href="#cb178-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> resale_price)) <span class="sc">+</span></span>
+<span id="cb178-4"><a href="#cb178-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">col =</span> <span class="st">"#E45A92"</span>, <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb178-5"><a href="#cb178-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"GWRF: Predicted vs Actual Resale Prices"</span>,</span>
+<span id="cb178-6"><a href="#cb178-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Predicted Resale Price (S$)"</span>,</span>
+<span id="cb178-7"><a href="#cb178-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Actual Resale Price (S$)"</span>) <span class="sc">+</span></span>
+<span id="cb178-8"><a href="#cb178-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span>  </span>
+<span id="cb178-9"><a href="#cb178-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb178-10"><a href="#cb178-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"#D0DDD0"</span>),      </span>
+<span id="cb178-11"><a href="#cb178-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"#F5F5F5"</span>),   </span>
+<span id="cb178-12"><a href="#cb178-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">14</span>, <span class="at">face =</span> <span class="st">"bold"</span>) </span>
+<span id="cb178-13"><a href="#cb178-13" aria-hidden="true" tabindex="-1"></a>  )  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex03a_files/figure-html/unnamed-chunk-124-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
-<section id="local-predictions-interpretation" class="level3">
-<h3 class="anchored" data-anchor-id="local-predictions-interpretation">8.4 Local predictions &amp; interpretation</h3>
-</section>
+</div>
+</div>
+</div>
 </section>
 <section id="model-evaluation" class="level2">
-<h2 class="anchored" data-anchor-id="model-evaluation">9 Model Evaluation</h2>
+<h2 class="anchored" data-anchor-id="model-evaluation">7 Model Evaluation</h2>
 <section id="performance-metrics-rmse-mae-r²" class="level3">
-<h3 class="anchored" data-anchor-id="performance-metrics-rmse-mae-r²">9.1 Performance metrics (RMSE, MAE, R²)</h3>
+<h3 class="anchored" data-anchor-id="performance-metrics-rmse-mae-r²">7.1 Performance metrics (RMSE, MAE, R²)</h3>
+<p>Prediction Performance Metrics</p>
+<p>RMSE (Root Mean Squared Error) MAE (Mean Absolute Error) R² on test set Compare across all 4 models</p>
 </section>
 <section id="cross-validation-results" class="level3">
-<h3 class="anchored" data-anchor-id="cross-validation-results">9.2 Cross-validation results</h3>
+<h3 class="anchored" data-anchor-id="cross-validation-results">7.2 Cross-validation results</h3>
 </section>
 <section id="model-comparison" class="level3">
-<h3 class="anchored" data-anchor-id="model-comparison">9.3 Model comparison</h3>
+<h3 class="anchored" data-anchor-id="model-comparison">7.3 Model comparison</h3>
+<p>Which model predicts best? Performance on unseen data</p>
 </section>
 <section id="best-model-selection" class="level3">
-<h3 class="anchored" data-anchor-id="best-model-selection">9.4 Best model selection</h3>
-</section>
-<section id="spatial-patterns-in-predictions-key-findings-from-best-model" class="level3">
-<h3 class="anchored" data-anchor-id="spatial-patterns-in-predictions-key-findings-from-best-model">9.5 Spatial patterns in predictions / Key findings from best model</h3>
+<h3 class="anchored" data-anchor-id="best-model-selection">7.4 Best model selection</h3>
+<p>Check residuals to see if spatial models (GWR, geRF) improve over non-spatial ones Helps explain WHY spatial models perform better</p>
 </section>
 </section>
 <section id="discussion-conclusion" class="level2">
-<h2 class="anchored" data-anchor-id="discussion-conclusion">10 Discussion &amp; Conclusion</h2>
-<section id="key-findings" class="level3">
-<h3 class="anchored" data-anchor-id="key-findings">10.1 Key findings</h3>
-</section>
-<section id="policy-implications" class="level3">
-<h3 class="anchored" data-anchor-id="policy-implications">10.2 Policy implications</h3>
-</section>
-<section id="limitations" class="level3">
-<h3 class="anchored" data-anchor-id="limitations">10.3 Limitations</h3>
-</section>
-<section id="future-work" class="level3">
-<h3 class="anchored" data-anchor-id="future-work">10.4 Future work</h3>
+<h2 class="anchored" data-anchor-id="discussion-conclusion">8 Discussion &amp; Conclusion</h2>
+<p>Best performing model Spatial vs non-spatial comparison Variable importance insights Limitations ### 8.1 Key findings</p>
+<section id="limitations-future-work" class="level3">
+<h3 class="anchored" data-anchor-id="limitations-future-work">8.3 Limitations &amp; Future work</h3>
 <p>✅ Data preparation (MUST finish) ✅ Minimal EDA (quality checks only) ✅ All 4 models running with basic tuning ✅ Model comparison and evaluation</p>
 <div class="markgoals">
 <div class="markgoals-header">
@@ -2360,27 +4606,27 @@ $geometry
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb136"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb136-1"><a href="#cb136-1" aria-hidden="true" tabindex="-1"></a>mdata <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rawdata/mdata.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb179"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb179-1"><a href="#cb179-1" aria-hidden="true" tabindex="-1"></a>mdata <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rawdata/mdata.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb137"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb137-1"><a href="#cb137-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz) <span class="sc">+</span></span>
-<span id="cb137-2"><a href="#cb137-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
-<span id="cb137-3"><a href="#cb137-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"REGION_N"</span>,</span>
-<span id="cb137-4"><a href="#cb137-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.scale =</span> <span class="fu">tm_scale_categorical</span>(</span>
-<span id="cb137-5"><a href="#cb137-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#FFC4C4"</span>, <span class="st">"#87BAC3"</span>, <span class="st">"#8FABD4"</span>, <span class="st">"#FDE7B3"</span>, <span class="st">"#FDCFFA"</span>)</span>
-<span id="cb137-6"><a href="#cb137-6" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb137-7"><a href="#cb137-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.legend =</span> <span class="fu">tm_legend</span>(<span class="at">title =</span> <span class="st">"Region"</span>),</span>
-<span id="cb137-8"><a href="#cb137-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"white"</span>,</span>
-<span id="cb137-9"><a href="#cb137-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">lwd =</span> <span class="fl">0.8</span></span>
-<span id="cb137-10"><a href="#cb137-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb137-11"><a href="#cb137-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(</span>
-<span id="cb137-12"><a href="#cb137-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">main.title =</span> <span class="st">"Singapore Planning Regions"</span>,</span>
-<span id="cb137-13"><a href="#cb137-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.outside =</span> <span class="cn">TRUE</span></span>
-<span id="cb137-14"><a href="#cb137-14" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb180"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb180-1"><a href="#cb180-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz) <span class="sc">+</span></span>
+<span id="cb180-2"><a href="#cb180-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
+<span id="cb180-3"><a href="#cb180-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"REGION_N"</span>,</span>
+<span id="cb180-4"><a href="#cb180-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.scale =</span> <span class="fu">tm_scale_categorical</span>(</span>
+<span id="cb180-5"><a href="#cb180-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#FFC4C4"</span>, <span class="st">"#87BAC3"</span>, <span class="st">"#8FABD4"</span>, <span class="st">"#FDE7B3"</span>, <span class="st">"#FDCFFA"</span>)</span>
+<span id="cb180-6"><a href="#cb180-6" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb180-7"><a href="#cb180-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.legend =</span> <span class="fu">tm_legend</span>(<span class="at">title =</span> <span class="st">"Region"</span>),</span>
+<span id="cb180-8"><a href="#cb180-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"white"</span>,</span>
+<span id="cb180-9"><a href="#cb180-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">lwd =</span> <span class="fl">0.8</span></span>
+<span id="cb180-10"><a href="#cb180-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb180-11"><a href="#cb180-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(</span>
+<span id="cb180-12"><a href="#cb180-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">main.title =</span> <span class="st">"Singapore Planning Regions"</span>,</span>
+<span id="cb180-13"><a href="#cb180-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.outside =</span> <span class="cn">TRUE</span></span>
+<span id="cb180-14"><a href="#cb180-14" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Take-home_Ex03a_files/figure-html/unnamed-chunk-79-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Take-home_Ex03a_files/figure-html/unnamed-chunk-126-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -2389,25 +4635,25 @@ $geometry
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb138"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb138-1"><a href="#cb138-1" aria-hidden="true" tabindex="-1"></a><span class="co">#tmap_mode("view")</span></span>
-<span id="cb138-2"><a href="#cb138-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz) <span class="sc">+</span></span>
-<span id="cb138-3"><a href="#cb138-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="at">fill =</span> <span class="st">"#FAF3F3"</span>, <span class="at">fill_alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb138-4"><a href="#cb138-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mrt_sf) <span class="sc">+</span></span>
-<span id="cb138-5"><a href="#cb138-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_symbols</span>(</span>
-<span id="cb138-6"><a href="#cb138-6" aria-hidden="true" tabindex="-1"></a>   <span class="at">fill =</span> <span class="st">"#87A7B3"</span>, <span class="at">size =</span> <span class="fl">0.5</span>,</span>
-<span id="cb138-7"><a href="#cb138-7" aria-hidden="true" tabindex="-1"></a>   <span class="at">col =</span> <span class="st">"#0C4271"</span>,</span>
-<span id="cb138-8"><a href="#cb138-8" aria-hidden="true" tabindex="-1"></a><span class="co">#   popup = "STATION"</span></span>
-<span id="cb138-9"><a href="#cb138-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb138-10"><a href="#cb138-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">main.title =</span> <span class="st">"MRT Stations"</span>,</span>
-<span id="cb138-11"><a href="#cb138-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">bg.color =</span> <span class="st">"#F6E6E4"</span>,</span>
-<span id="cb138-12"><a href="#cb138-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">outer.margins =</span> <span class="fu">c</span>(<span class="fl">0.01</span>, <span class="fl">0.01</span>, <span class="fl">0.01</span>, <span class="fl">0.01</span>))</span>
-<span id="cb138-13"><a href="#cb138-13" aria-hidden="true" tabindex="-1"></a><span class="co">#tmap_mode("plot")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb181"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb181-1"><a href="#cb181-1" aria-hidden="true" tabindex="-1"></a><span class="co">#tmap_mode("view")</span></span>
+<span id="cb181-2"><a href="#cb181-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz) <span class="sc">+</span></span>
+<span id="cb181-3"><a href="#cb181-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="at">fill =</span> <span class="st">"#FAF3F3"</span>, <span class="at">fill_alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb181-4"><a href="#cb181-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mrt_sf) <span class="sc">+</span></span>
+<span id="cb181-5"><a href="#cb181-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_symbols</span>(</span>
+<span id="cb181-6"><a href="#cb181-6" aria-hidden="true" tabindex="-1"></a>   <span class="at">fill =</span> <span class="st">"#87A7B3"</span>, <span class="at">size =</span> <span class="fl">0.5</span>,</span>
+<span id="cb181-7"><a href="#cb181-7" aria-hidden="true" tabindex="-1"></a>   <span class="at">col =</span> <span class="st">"#0C4271"</span>,</span>
+<span id="cb181-8"><a href="#cb181-8" aria-hidden="true" tabindex="-1"></a><span class="co">#   popup = "STATION"</span></span>
+<span id="cb181-9"><a href="#cb181-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb181-10"><a href="#cb181-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">main.title =</span> <span class="st">"MRT Stations"</span>,</span>
+<span id="cb181-11"><a href="#cb181-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">bg.color =</span> <span class="st">"#F6E6E4"</span>,</span>
+<span id="cb181-12"><a href="#cb181-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">outer.margins =</span> <span class="fu">c</span>(<span class="fl">0.01</span>, <span class="fl">0.01</span>, <span class="fl">0.01</span>, <span class="fl">0.01</span>))</span>
+<span id="cb181-13"><a href="#cb181-13" aria-hidden="true" tabindex="-1"></a><span class="co">#tmap_mode("plot")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div class="sourceCode" id="cb139"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb139-1"><a href="#cb139-1" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"data/rawdata/JTCBusinessParkLandGEOJSON.geojson"</span>) </span>
-<span id="cb139-2"><a href="#cb139-2" aria-hidden="true" tabindex="-1"></a><span class="fu">read_html</span>(test<span class="sc">$</span>Description[<span class="dv">1</span>]) <span class="sc">%&gt;%</span> </span>
-<span id="cb139-3"><a href="#cb139-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_table</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb139-4"><a href="#cb139-4" aria-hidden="true" tabindex="-1"></a>  .[[<span class="dv">1</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb182"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb182-1"><a href="#cb182-1" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"data/rawdata/JTCBusinessParkLandGEOJSON.geojson"</span>) </span>
+<span id="cb182-2"><a href="#cb182-2" aria-hidden="true" tabindex="-1"></a><span class="fu">read_html</span>(test<span class="sc">$</span>Description[<span class="dv">1</span>]) <span class="sc">%&gt;%</span> </span>
+<span id="cb182-3"><a href="#cb182-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_table</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb182-4"><a href="#cb182-4" aria-hidden="true" tabindex="-1"></a>  .[[<span class="dv">1</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
 </section>

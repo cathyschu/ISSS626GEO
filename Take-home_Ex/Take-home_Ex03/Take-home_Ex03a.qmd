@@ -6,7 +6,7 @@ date-modified: "last-modified" #auto render date
 format: html
 execute: #how YML page work
   echo: true #will show code
-  eval: true #will run code every time and show output
+  eval: false #will run code every time and show output
   warning: false #dont show warning msg
   freeze: true #controls rendering - no render if no changes
 ---
@@ -31,7 +31,8 @@ One new package called [**jsonlite**]{style="color: #F08787;"} will be installed
 pacman::p_load(httr, tidyverse, sf, tmap, jsonlite, progress,
                spdep, GWmodel, SpatialML, rsample, Metrics, knitr,
                kableExtra, spatialRF, randomForestExplainer, rvest,
-               stringr, lubridate, corrplot)
+               stringr, lubridate, corrplot, performance, see,
+               gtsummary, ModelMetrics)
 ```
 
 <package intro> progress - to monitor and track the computation.
@@ -162,6 +163,7 @@ st_crs(mpsz)
 -   **Load HDB Resale Data**
 This data set comprises of HDB resale transactions from July 2017 onwards. Below we will extract a sub-set of transaction records on 4-Room flat transacted during July 2024 to June 2025.
 
+
 ```{r}
 #| eval: false
 #| code-fold: true
@@ -169,7 +171,8 @@ This data set comprises of HDB resale transactions from July 2017 onwards. Below
 HDBresale <- read_csv(
   "data/rawdata/ResaleflatpricesJan2017.csv") %>%
   filter(flat_type == "4 ROOM") %>%
-  filter(month >= "2024-07" & month < "2025-06") # filter the sample data for the exercise.
+  filter(month >= "2024-07" & month < "2025-09") # filter the sample data for the exercise till 09/2025.
+
 
 write_rds(HDBresale, "data/rds/HDBresale.rds")
 ```
@@ -1401,91 +1404,55 @@ map_cbd
 
 ## 4 Pre-modeling Preparation
 
-### 4.1 Multicollinearity Check
-```{r}
-sapply(HDB_master[, c(4, 6, 8:28)], class)
-```
+### 4.1 Preparing Data
+For this study, we will not use the entire dataset of `hdb_master`. Instead, we will calibrate predictive models using sampled data. In this step we will randomly sample 5,000 samples from the data. 
 
+#### **4.1.1 Sample Data for Prototyping**
 
-We will do a multicollinearity analysis with the correlatiom matrix. 
 ```{r}
-#| fig-width: 12
-#| fig-height: 10
+#| eval: false
 #| code-fold: true
-par(bg = "#B8C4A9") 
-corrplot(cor(st_drop_geometry(HDB_master)[, c(4, 6, 8:27)]),
-         diag = FALSE, 
-         order = "AOE",
-         tl.pos = "td", 
-         tl.cex = 0.7, 
-         tl.srt = 40, 
-         tl.col = "#3A6F43",
-         number.cex = 0.7,
-         method = "number", 
-         type = "upper",
-         bg = "#C5C7BC",
-         addgrid.col = "#96A78D")         
+set.seed(1234)
+HDB_sample <- HDB_master %>%
+  sample_n(5000)
 ```
 
+We also use `st_jutter()` to move the point features by 1m to avoid overlapping point features. 
 
--   Correlation matrix of predictors
--   VIF scores
--   Identify multicollinearity issues Remove highly correlated features
+```{r}
+#| eval: false
+#| code-fold: true
+HDB_sample <- HDB_sample %>%
+  st_jitter(amoun = 1)
 
-### 4.2 Feature Selection
-
--   Final feature list for modeling
-
-### 4.3 Train/Test Split
-
-#### 4.3.1 Stratified Spatial Sampling
-
-``` r
-library(dplyr)
-library(sf)
-
-set.seed(123)
-
-# Stratify by town AND year (if multi-year)
-hdb_sample <- hdb_data %>%
-  # Ensure temporal coverage
-  group_by(year, town) %>%
-  # Sample proportionally
-  slice_sample(prop = 5000/nrow(hdb_data)) %>%
-  ungroup()
-
-# If you get slightly more/less than 5000, adjust:
-if(nrow(hdb_sample) > 5000) {
-  hdb_sample <- hdb_sample %>% sample_n(5000)
-} else if(nrow(hdb_sample) < 5000) {
-  # Add more randomly to reach 5000
-  additional <- hdb_data %>%
-    anti_join(hdb_sample) %>%
-    sample_n(5000 - nrow(hdb_sample))
-  hdb_sample <- bind_rows(hdb_sample, additional)
-}
-
-# Verify distribution
-hdb_sample %>% count(town)
-hdb_sample %>% count(flat_type)
-
-# Save
-write_csv(hdb_sample, "data/processed/hdb_sample_5000.csv")
+write_rds(HDB_sample, "data/rds/HDB_sample.rds")
 ```
 
-``` r
-cat("Original dataset:", nrow(hdb_data), "transactions
-")
-cat("Sample size:", nrow(hdb_sample), "transactions
-")
-cat("Sampling rate:", round(5000/nrow(hdb_data)*100, 2), "%
-")
+```{r}
+#| echo: false
+HDB_sample <- read_rds("data/rds/HDB_sample.rds")
 ```
 
--   Total original dataset size
--   Sampling method used
--   Why 5000 was chosen
--   How representativeness was ensured
+#### **4.1.2 Train/Test Data Split**
+We will split the *HDB_sample* data into training and test data sets with 60/40.
+```{r}
+#| eval: false
+#| code-fold: true
+set.seed(1234)
+hdb_split <- initial_split(HDB_sample,
+                           prop = 6/10,)
+train_data <- training(hdb_split)
+test_data <- testing(hdb_split)
+
+write_rds(train_data, "data/rds/train_data.rds")
+write_rds(test_data, "data/rds/test_data.rds")
+```
+
+```{r}
+#| echo: false
+train_data <- read_rds("data/rds/train_data.rds")
+test_data <- read_rds("data/rds/test_data.rds")
+```
 
 ``` r
 # Compare distributions
@@ -1499,88 +1466,676 @@ plot(density(hdb_sample$resale_price), main = "Sample", col = "red")
 barplot(table(hdb_data$town), main = "Full Dataset - Towns")
 barplot(table(hdb_sample$town), main = "Sample - Towns")
 ```
+### 4.2 Multicollinearity Check
+#### **4.2.1 Correlation Matrix**
+We will do a multicollinearity analysis on the predictors with the correlatiom matrix. In this step, we are using this as EDA to explore 
+```{r}
+#| fig-width: 12
+#| fig-height: 9
+#| code-fold: true
+par(bg = "#B8C4A9") 
+corrplot(cor(st_drop_geometry(train_data)[, c(4, 6, 8:27)]),
+         diag = FALSE, 
+         order = "AOE",
+         tl.pos = "td", 
+         tl.cex = 0.7, 
+         tl.srt = 40, 
+         tl.col = "#3A6F43",
+         number.cex = 0.7,
+         method = "number", 
+         type = "upper",
+         bg = "#C5C7BC",
+         addgrid.col = "#96A78D")         
+```
+::::: markgoals
+::: markgoals-header
+**Note**
+:::
 
-#### 4.3.2 Tran/Test split
+::: markgoals-container
+-   From the scatterplot matrix, it is clear that *WITHIN_1km_TOPSCH* is highly correlated to *WITHIN_1km_TOPSCH_BINARY*. In addition, another pair of variables *PROX_TOPSCHOOL* and *PROX_CBD* are also highly correlated (0.8). We also noticed that *PROX_MRT* and *WITHIN_500m_MRT_BINARY* show a correlation coefficient of 0.78, almost 0.8. 
+-   In view of this, it is wiser to only include either one of them in the subsequent model building. As a result, ***WITHIN_1km_TOPPRISCH***, ***WITHIN_500m_MRT_BINARY***, and ***PROX_CBD*** are excluded in the subsequent model building.
 
-``` r
-# 80/20 split
-set.seed(456)
-train_idx <- sample(1:nrow(hdb_sample), 0.8 * nrow(hdb_sample))
 
-train <- hdb_sample[train_idx, ]   # 4000 records
-test <- hdb_sample[-train_idx, ]   # 1000 records
+```{r}
+#| eval: false
+#| code-fold: true
 
-cat("Train size:", nrow(train), "
-")
-cat("Test size:", nrow(test), "
-")
+train_data_corr <- train_data %>%
+  select(-WITHIN_1km_TOPPRISCH,
+         -WITHIN_500m_MRT_BINARY,
+         -PROX_CBD)
+
+test_data_corr <- test_data %>%
+  select(-WITHIN_1km_TOPPRISCH,
+         -WITHIN_500m_MRT_BINARY,
+         -PROX_CBD) %>%
+  filter(floor_level != "43 TO 45") # because there is no such level in train data.
+
+write_rds(train_data_corr, "data/rds/train_data_corr.rds")
+write_rds(test_data_corr, "data/rds/test_data_corr.rds")
 ```
 
-## 5 Multiple Linear Regression (MLR)
+```{r}
+#| echo: false
+train_data_corr <- read_rds("data/rds/train_data_corr.rds")
+test_data_corr <- read_rds("data/rds/test_data_corr.rds")
+```
+:::
+:::::
 
-### 5.1 Model specification
+#### **4.2.2 Initial Models**
+Check VIF before building MLR/GWR
 
-### 5.2 Model fitting
 
-### 5.3 Results & interpretation
+:::panel-tabset
+## VIF1
+```{r}
+#| code-fold: true
+#| eval: false
+# Build initial model with all variables
+initial_mlr1 <- lm(
+  formula = resale_price ~ 
+    floor_level + plan_area + floor_area_sqm + flat_model +
+    remaining_lease_mths_num + PROX_TOPSCHOOL + PROX_HKCENTER +
+    PROX_SUPERMKT + PROX_CLINIC + PROX_ELDERCARE + PROX_MALLS +
+    PROX_SPORTS + PROX_CC + PROX_PARK + PROX_MRT + WITHIN_500m_HKC_BINARY +
+    PROX_BIZPK + WITHIN_1km_TOPPRISCH_BINARY + WITHIN_350m_KINDG +
+    WITHIN_350m_CHILDC + WITHIN_350m_BUS + WITHIN_1km_PRISCH,
+  data = train_data_corr)
+write_rds(initial_mlr1, "data/rds/initial_mlr1.rds")
+```
 
-### 5.4 Residual diagnostics
+```{r}
+#| echo: false
+initial_mlr1 <- read_rds("data/rds/initial_mlr1.rds")
+summary(initial_mlr1)
+```
 
-## 6 Geographically Weighted Regression (GWR)
+## VIF2
+In the 2nd iteration, we will remove the highest VIF *plan_area*. 
+```{r}
+#| code-fold: true
+#| eval: false
+initial_mlr2 <- lm(
+  formula = resale_price ~ 
+    floor_level + floor_area_sqm + flat_model +
+    remaining_lease_mths_num + PROX_TOPSCHOOL + PROX_HKCENTER +
+    PROX_SUPERMKT + PROX_CLINIC + PROX_ELDERCARE + PROX_MALLS +
+    PROX_SPORTS + PROX_CC + PROX_PARK + PROX_MRT + WITHIN_500m_HKC_BINARY +
+    PROX_BIZPK + WITHIN_1km_TOPPRISCH_BINARY + WITHIN_350m_KINDG +
+    WITHIN_350m_CHILDC + WITHIN_350m_BUS + WITHIN_1km_PRISCH,
+  data = train_data_corr)
+write_rds(initial_mlr2, "data/rds/initial_mlr2.rds")
 
-### 6.1 Bandwidth selection
+```
 
-### 6.2 Model fitting
+```{r}
+#| echo: false
+initial_mlr2 <- read_rds("data/rds/initial_mlr2.rds")
+summary(initial_mlr2)
+```
 
-### 6.3 Local coefficient maps
+## VIF3
+In the 3rd iteration, we will remove the highest VIF *flat_model* (17.90). 
+```{r}
+#| code-fold: true
+#| eval: false
+# Build initial model with all variables
+initial_mlr3 <- lm(
+  formula = resale_price ~ 
+    floor_level + floor_area_sqm + 
+    remaining_lease_mths_num + PROX_TOPSCHOOL + PROX_HKCENTER +
+    PROX_SUPERMKT + PROX_CLINIC + PROX_ELDERCARE + PROX_MALLS +
+    PROX_SPORTS + PROX_CC + PROX_PARK + PROX_MRT + WITHIN_500m_HKC_BINARY +
+    PROX_BIZPK + WITHIN_1km_TOPPRISCH_BINARY + WITHIN_350m_KINDG +
+    WITHIN_350m_CHILDC + WITHIN_350m_BUS + WITHIN_1km_PRISCH,
+  data = train_data_corr)
 
-### 6.4 Results & interpretation
+write_rds(initial_mlr3, "data/rds/initial_mlr3.rds")
 
-## 7 Non-sptial Random Forest Model
+```
 
-### 7.1 Feature selection
+```{r}
+#| echo: false
+initial_mlr3 <- read_rds("data/rds/initial_mlr3.rds")
+summary(initial_mlr3)
+```
 
-### 7.2 Hyperparameter tuning
+:::
 
-### 7.3 Model fitting
+**Check for multicollinearity and plot VIF scores**
 
-### 7.4 Feature importance
+:::panel-tabset
+## VIF1
+```{r}
+#| code-fold: true
+check_collinearity(initial_mlr1)
+```
 
-### 7.5 Results & interpretation
+```{r}
+#| code-fold: true
+#| align: center
+mlr1.vif <- check_collinearity(initial_mlr1)
+plot(mlr1.vif) +
+  theme_minimal() +
+  theme(
+    plot.background = element_rect(fill = "#B8C4A9", color = NA),
+    panel.background = element_rect(fill = "gray95", color = NA),
+    axis.text.x = element_text(angle = 35, hjust = 1, vjust = 1, size = 5)
+  )
+```
 
-## 8 Geographical Weighted Random Forest Model (gwRF)
 
-### 8.1 Model specification
 
-### 8.2 Bandwidth selection
+## VIF2
+```{r}
+#| code-fold: true
+check_collinearity(initial_mlr2)
+```
 
-### 8.3 Model fitting
+```{r}
+#| code-fold: true
+#| align: center
+mlr2.vif <- check_collinearity(initial_mlr2)
+plot(mlr2.vif) +
+    theme_minimal() +
+  theme(
+    plot.background = element_rect(fill = "#B8C4A9", color = NA),
+    panel.background = element_rect(fill = "gray95", color = NA),
+    axis.text.x = element_text(angle = 35, hjust = 1, vjust = 1, size = 5)
+  )
+```
 
-### 8.4 Local predictions & interpretation
 
-## 9 Model Evaluation
+## VIF3
 
-### 9.1 Performance metrics (RMSE, MAE, R²)
+```{r}
+#| code-fold: true
+check_collinearity(initial_mlr3)
+```
 
-### 9.2 Cross-validation results
+```{r}
+#| code-fold: true
+#| align: center
+mlr3.vif <- check_collinearity(initial_mlr3)
+plot(mlr3.vif) +
+  theme_minimal() +
+  theme(
+    plot.background = element_rect(fill = "#B8C4A9", color = NA),
+    panel.background = element_rect(fill = "gray95", color = NA),
+    axis.text.x = element_text(angle = 35, hjust = 1, vjust = 1, size = 5)
+  )
+```
 
-### 9.3 Model comparison
+:::
 
-### 9.4 Best model selection
+### 4.3 Feature Selection
 
-### 9.5 Spatial patterns in predictions / Key findings from best model
+**Final feature list for modeling**
 
-## 10 Discussion & Conclusion
+After 3 iterations of removing high VIF variables, all VIF are not below 10. So we can conclude that there are no sign of multicollinearity among the independent variables.
 
-### 10.1 Key findings
+Based on the Coefficient result from VIF3, we find that some variables are not statistically significant, including *PROX_SUPERMKT* and *PROX_PARK*. We will revise the initial model by removing these 2 variables.
 
-### 10.2 Policy implications
+**Total original dataset size**
 
-### 10.3 Limitations
+Total original dataset size was 10,745 observations, and we sampled 5,000 to do modeling. Among the 5,000, we split 3,000 as training dataset and 2,000 as the testing dataset randomly. 5,000 is a smaller dataset for modeling to save computation and give us a decent result. 
 
-### 10.4 Future work
+## [PREDICTIVE MODELING]{style="color: #E45A92;"}
 
-✅ Data preparation (MUST finish) ✅ Minimal EDA (quality checks only) ✅ All 4 models running with basic tuning ✅ Model comparison and evaluation
+From section 5 to 8, we will calibrate 4 predictive modeling for HDB resale price using the same set of variables for a comparison. The models include Multi Linear Regression model, Geographycally Weighed Regression (GWR) model, Non-spatial Random Forest model, as well as Geographical Weighted Random Forest (gwRF) model. 
+
+## 5 Model Calibration
+
+::: panel-tabset
+## 5.1 MLR
+Multiple Linear Regression
+Building upon the initial MLR model from section 4.2.2, we calibrate the revised MLR model as below.
+```{r}
+#| eval: false
+#| code-fold: true
+hdb.mlr <- lm(
+  formula = resale_price ~ 
+    floor_level + floor_area_sqm + 
+    remaining_lease_mths_num + PROX_TOPSCHOOL + PROX_HKCENTER +
+    PROX_CLINIC + PROX_ELDERCARE + PROX_MALLS +
+    PROX_SPORTS + PROX_CC + PROX_MRT +WITHIN_500m_HKC_BINARY +
+    PROX_BIZPK + WITHIN_1km_TOPPRISCH_BINARY + WITHIN_350m_KINDG +
+    WITHIN_350m_CHILDC + WITHIN_350m_BUS + WITHIN_1km_PRISCH,
+  data = train_data_corr)
+write_rds(hdb.mlr, "data/rds/hdb.mlr")
+
+```
+
+```{r}
+#| echo: false
+hdb.mlr <- read_rds("data/rds/hdb.mlr")
+summary(hdb.mlr)
+```
+
+The output above reveals that all explanatory variables are statistically significant at 95% confident level.
+
+
+## 5.2 GWR
+We will use Geographically Weighted Regression to build a Hedonic Pricing Model in this section. 
+
+### 5.2.1 Bandwidth selection
+Adaptive bandwidth is the chosen approach for the GWR modeling as Singapore has varying spatial density of the housing. 
+
+Below we will use Cross Validation (CV) approach to compuete the Bandwidth:
+
+The result below shows that the **87 is the recommended data points** to be used.
+
+```{r}
+#| eval: false
+#| code-fold: true
+bw.adaptive <- bw.gwr(
+  formula = resale_price ~ 
+    floor_level + floor_area_sqm + 
+    remaining_lease_mths_num + PROX_TOPSCHOOL + PROX_HKCENTER +
+    PROX_CLINIC + PROX_ELDERCARE + PROX_MALLS +
+    PROX_SPORTS + PROX_CC + PROX_MRT +WITHIN_500m_HKC_BINARY +
+    PROX_BIZPK + WITHIN_1km_TOPPRISCH_BINARY + WITHIN_350m_KINDG +
+    WITHIN_350m_CHILDC + WITHIN_350m_BUS + WITHIN_1km_PRISCH,
+  data=train_data_corr, 
+  approach="CV", 
+  kernel="gaussian", 
+  adaptive=TRUE, 
+  longlat=FALSE)
+
+write_rds(bw.adaptive, "data/rds/bw.adaptive.rds")
+```
+
+```{r}
+#| echo: false
+bw.adaptive <- read_rds("data/rds/bw.adaptive.rds")
+```
+
+### 5.2.2 Model fitting
+Now we will calibrate the GWR-based hedonic pricing model using the adaptive bandwidth from section 5.2.1 and gaussian kernel.
+
+```{r}
+#| eval: false
+#| code-fold: true
+gwr.adaptive <- gwr.basic(
+  formula = resale_price ~ 
+    floor_level + floor_area_sqm + 
+    remaining_lease_mths_num + PROX_TOPSCHOOL + PROX_HKCENTER +
+    PROX_CLINIC + PROX_ELDERCARE + PROX_MALLS +
+    PROX_SPORTS + PROX_CC + PROX_MRT +WITHIN_500m_HKC_BINARY +
+    PROX_BIZPK + WITHIN_1km_TOPPRISCH_BINARY + WITHIN_350m_KINDG +
+    WITHIN_350m_CHILDC + WITHIN_350m_BUS + WITHIN_1km_PRISCH,
+  data = train_data_corr, 
+  bw = bw.adaptive, 
+  kernel = 'gaussian', 
+  adaptive=TRUE, 
+  longlat = FALSE)
+
+write_rds(gwr.adaptive, "data/model/gwr.adaptive.rds")
+```
+
+```{r}
+#| echo: false
+gwr.adaptive <- read_rds("data/model/gwr.adaptive.rds")
+gwr.adaptive
+```
+
+## 5.3 RF
+In this section, we want to calibrate a model to predict HDB resale price using the Random Forest method.
+
+### 5.3.1 Data preparation
+First is to **extract the x, y coordinates** of the training and test data sets.
+```{r}
+#| eval: false
+#| code-fold: true
+coords <- st_coordinates(HDB_master)
+coords_train <- st_coordinates(train_data_corr)
+coords_test <- st_coordinates(test_data_corr)
+
+write_rds(coords_train, "data/rds/coords_train.rds")
+write_rds(coords_test, "data/rds/coords_test.rds")
+```
+
+
+```{r}
+#| echo: false
+coords_train <- read_rds("data/rds/coords_train.rds")
+coords_test <- read_rds("data/rds/coords_test.rds")
+```
+
+**Drop geometry field**
+```{r}
+train_data_nogeom <- train_data_corr %>%
+  st_drop_geometry()
+
+test_data_nogeom <- test_data_corr %>%
+  st_drop_geometry()
+
+```
+
+### 5.3.3 Calibrate non-spatial RF model with `ranger()`
+```{r}
+#| eval: false
+#| code-fold: true
+
+set.seed(1234)
+rf <- ranger(
+  formula = resale_price ~ 
+    floor_level + floor_area_sqm + 
+    remaining_lease_mths_num + PROX_TOPSCHOOL + PROX_HKCENTER +
+    PROX_CLINIC + PROX_ELDERCARE + PROX_MALLS +
+    PROX_SPORTS + PROX_CC + PROX_MRT +WITHIN_500m_HKC_BINARY +
+    PROX_BIZPK + WITHIN_1km_TOPPRISCH_BINARY + WITHIN_350m_KINDG +
+    WITHIN_350m_CHILDC + WITHIN_350m_BUS + WITHIN_1km_PRISCH,
+  data = train_data_nogeom
+)
+
+write_rds(rf, "data/model/rf.rds")
+```
+
+```{r}
+#| echo: false
+rf <- read_rds("data/model/rf.rds")
+rf
+```
+
+
+## 5.4 GWRF
+
+In this section, we will calibrate Geographical Weighted Random Forest Model with the training data.
+### 5.4.1 Bandwidth selection
+We will use GWR Bandwidth for GWRF: `bw.adaptive`
+
+### 5.4.2 Model fitting
+```{r}
+#| eval: false
+#| code-fold: true
+
+set.seed(1234)
+gwRF_adaptive <- grf(
+  formula = resale_price ~ 
+    floor_level + floor_area_sqm + 
+    remaining_lease_mths_num + PROX_TOPSCHOOL + PROX_HKCENTER +
+    PROX_CLINIC + PROX_ELDERCARE + PROX_MALLS +
+    PROX_SPORTS + PROX_CC + PROX_MRT +WITHIN_500m_HKC_BINARY +
+    PROX_BIZPK + WITHIN_1km_TOPPRISCH_BINARY + WITHIN_350m_KINDG +
+    WITHIN_350m_CHILDC + WITHIN_350m_BUS + WITHIN_1km_PRISCH,
+  dframe = train_data_nogeom, 
+  bw = bw.adaptive,
+  kernel = "adaptive",
+  coords = coords_train,
+  ntree = 500,
+  mtry = 3)
+
+write_rds(gwRF_adaptive, "data/model/gwRF_adaptive.rds")
+
+```
+
+```{r}
+#| code-fold: true
+gwRF_adaptive <- read_rds("data/model/gwRF_adaptive.rds")
+gwRF_adaptive$LocalModelSummary
+```
+
+:::
+
+### 5.5 Model Calibration Results 
+
+We use `tbl_regression()` to create a regression report.
+```{r}
+#| code-fold: true
+tbl_regression(hdb.mlr, 
+               intercept = TRUE) %>% 
+  add_glance_source_note(
+    label = list(sigma ~ "\U03C3"),
+    include = c(r.squared, adj.r.squared, 
+                AIC, statistic,
+                p.value, sigma)) %>%
+  modify_table_styling(
+    columns = label,
+    rows = variable %in% c("flat_type", "floor_range"),
+    footnote = "Categorical variable"
+  ) %>%
+  bold_labels()
+```
+
+
+## 6 Predictions with Test Data
+
+::: panel-tabset
+## 6.1 MLR
+### **6.1.1 Predict with test data**
+
+```{r}
+#| eval: false
+#| code-fold: true
+mlr_pred <- predict(hdb.mlr, newdata = test_data_corr)
+write_rds(mlr_pred, "data/model/mlr_pred.rds")
+```
+
+### **6.1.2 Append predicted values to the test dataset**
+```{r}
+#| code-fold: true
+mlr_pred <- read_rds("data/model/mlr_pred.rds")
+
+test_data_p_mlr <- test_data_corr %>%
+  mutate(mlr_pred = mlr_pred)
+
+kable(head(test_data_p_mlr))
+```
+
+### **6.1.3 Calculate performance metrics**
+Calculate RMSE, MAE and R^2 metrics
+```{r}
+#| code-fold: true
+# RMSE
+rmse_mlr <- sqrt(mean((test_data_p_mlr$resale_price - test_data_p_mlr$mlr_pred)^2))
+
+# MAE
+mae_mlr <- mean(abs(test_data_p_mlr$resale_price - test_data_p_mlr$mlr_pred))
+
+# R^2
+ss_res <- sum((test_data_p_mlr$resale_price - test_data_p_mlr$mlr_pred)^2)
+ss_tot <- sum((test_data_p_mlr$resale_price - mean(test_data_p_mlr$resale_price))^2)
+r2_mlr <- 1 - (ss_res / ss_tot)
+
+cat("RMSE:", format(rmse_mlr), "\n")
+cat("MAE:", format(mae_mlr), "\n")
+cat("R-squared:", round(r2_mlr, 4), "\n")
+```
+
+### **6.1.4 Visualising the predicted values**
+```{r}
+#| code-fold: true
+ggplot(data = test_data_p_mlr,
+       aes(x = mlr_pred,
+           y = resale_price)) +
+  geom_point(col = "#EF7722", size = 0.5) +
+  labs(title = "MLR: Predicted vs Actual Resale Prices",
+       x = "Predicted Resale Price (S$)",
+       y = "Actual Resale Price (S$)") +
+    theme_minimal() +  
+  theme(
+    plot.background = element_rect(fill = "#D0DDD0"),      
+    panel.background = element_rect(fill = "#F5F5F5"),   
+    plot.title = element_text(hjust = 0.5, size = 14, face = "bold") 
+  )  
+```
+
+
+## 6.2 GWR
+### **6.4.1 Prepare test data**
+Compute adaptive bandwidth for the test data.
+```{r}
+#| eval: false
+#| code-fold: true
+
+# no need?
+```
+
+### **6.4.2 Calibrate GWR Model**
+
+```{r}
+#| eval: false
+#| code-fold: true
+
+gwr_pred <- gwr.predict(
+  formula = resale_price ~
+    floor_level + floor_area_sqm + 
+    remaining_lease_mths_num + PROX_TOPSCHOOL + PROX_HKCENTER +
+    PROX_CLINIC + PROX_ELDERCARE + PROX_MALLS +
+    PROX_SPORTS + PROX_CC + PROX_MRT + WITHIN_500m_HKC_BINARY +
+    PROX_BIZPK + WITHIN_1km_TOPPRISCH_BINARY + WITHIN_350m_KINDG +
+    WITHIN_350m_CHILDC + WITHIN_350m_BUS + WITHIN_1km_PRISCH, 
+  data=train_data_corr, 
+  predictdata = test_data_corr, 
+  bw=bw.adaptive, 
+  kernel = 'gaussian', 
+  adaptive=TRUE, 
+  longlat = FALSE)
+
+write_rds(gwr_pred, "data/model/gwr_pred.rds")
+```
+
+
+## 6.3 RF
+```{r}
+
+```
+
+
+## 6.4 GWRF
+### **6.4.1 Prepare test data**
+```{r}
+#| code-fold: true
+test_data_nogeom <- cbind(
+  test_data_corr, coords_test) %>%
+  st_drop_geometry()
+
+kable(head(test_data_nogeom))
+```
+
+### **6.4.2 Predict with test data**
+```{r}
+#| eval: false
+#| code-fold: true
+gwRF_pred <- predict.grf(gwRF_adaptive,
+                         test_data_nogeom,
+                         x.var.name = "X",
+                         y.var.name = "Y",
+                         local.w = 1,
+                         global.w = 0)
+
+gwRF_pred <- write_rds(gwRF_pred, "data/model/gwRF_pred.rds")
+```
+
+```{r}
+#| echo: false
+gwRF_pred <- read_rds("data/model/gwRF_pred.rds")
+
+```
+
+### **6.4.3 Converting the predicting output into a data frame**
+```{r}
+
+GRF_pred_df <- as.data.frame(gwRF_pred)
+```
+
+### **6.4.4 Append predicted values to the test dataset**
+```{r}
+#| eval: false
+#| code-fold: true
+test_data_p <- cbind(
+  test_data_corr, GRF_pred_df) %>%
+  select(resale_price, gwRF_pred)
+
+write_rds(test_data_p, "data/rds/test_data_p.rds")
+
+```
+
+```{r}
+#| echo: false
+test_data_p <- read_rds("data/rds/test_data_p.rds")
+kable(head(test_data_p))
+
+```
+
+### **6.4.5 Calculating Root Mean Square Error**
+
+We calculate the root mean square error (RMSE) to measure how far predicted values are from observed values in a regression analysis.
+
+
+```{r}
+#| code-fold: true
+#| eval: false
+
+rmse_gwrf <- rmse(test_data_p$resale_price, test_data_p$gwRF_pred)
+write_rds(rmse_gwrf, "data/rds/rmse_gwrf.rds")
+```
+
+```{r}
+#| echo: false
+rmse_gwrf <- read_rds("data/rds/rmse_gwrf.rds")
+print(rmse_gwrf)
+```
+
+
+### **6.4.6 Visualising the predicted values**
+Let's visualise the actual resale price and the predicted resale price in the scatter plot.
+```{r}
+
+ggplot(data = test_data_p,
+       aes(x = gwRF_pred,
+           y = resale_price)) +
+  geom_point(col = "#E45A92", size = 0.5) +
+  labs(title = "GWRF: Predicted vs Actual Resale Prices",
+       x = "Predicted Resale Price (S$)",
+       y = "Actual Resale Price (S$)") +
+    theme_minimal() +  
+  theme(
+    plot.background = element_rect(fill = "#D0DDD0"),      
+    panel.background = element_rect(fill = "#F5F5F5"),   
+    plot.title = element_text(hjust = 0.5, size = 14, face = "bold") 
+  )  
+  
+```
+
+
+:::
+
+## 7 Model Evaluation
+
+### 7.1 Performance metrics (RMSE, MAE, R²)
+Prediction Performance Metrics
+
+RMSE (Root Mean Squared Error)
+MAE (Mean Absolute Error)
+R² on test set
+Compare across all 4 models
+
+### 7.2 Cross-validation results
+
+### 7.3 Model comparison
+Which model predicts best?
+Performance on unseen data
+
+### 7.4 Best model selection
+
+Check residuals to see if spatial models (GWR, geRF) improve over non-spatial ones
+Helps explain WHY spatial models perform better
+
+## 8 Discussion & Conclusion
+
+Best performing model
+Spatial vs non-spatial comparison
+Variable importance insights
+Limitations
+### 8.1 Key findings
+
+
+### 8.3 Limitations & Future work
+
 
 
 
