@@ -1,0 +1,399 @@
+---
+title: "10 - Modelling Geographical Accessibility"
+author: "Cathy C."
+date: "Nov 05, 2025"
+date-modified: "last-modified" #auto render date
+format: html
+execute: #how YML page work
+  echo: true #will show code
+  eval: true #will run code every time and show output
+  warning: false #dont show warning msg
+  freeze: true #controls rendering - no render if no changes
+---
+
+## 1 Overview
+Market area analysis (also known as Trade Area Analysis) is the process of defining and studying the geographical area from which a business draws its customers. It involves analyzing data on consumer demographics, spending habits, and competitors to understand market viability, identify opportunities, and inform decisions about location, marketing, and expansion. It often combines empirical observation, like customer spotting, with mathematical models to identify market segments and understand customer behavior.
+
+**Huff model** is a geospatial analysis method commonly used in market area analysis to predict the probability that a consumer from a specific area will patronize a particular store, based on the store’s attractiveness and distance relative to competitors. It calculates a store’s market share by considering factors like size or sales for attractiveness and distance or travel time, with the probability decreasing as distance or competition increases. This tool helps businesses assess potential revenue, define trade areas, and make informed decisions about site selection
+
+## 2 Load packages
+
+The R packages need for this exercise are as follows:
+
+-   sf for handling geospatial data and performing geoprocessing function such as computing distance matrix,
+
+-   MCI for performing Huff and MCI modelling,
+
+-   tidyverse for performing data science tasks including visualisation,
+
+-   ggstatsplot, an R package that extends the ggplot2 visualization package to combine data visualization with statistical analysis, creating plots that include statistical test results directly
+
+-   tmap for plotting cartographic quality thematic maps. The code chunk below installs and launches these R packages into RStudio environment.
+
+    ```{r}
+    pacman::p_load(sf, tidyverse, MCI, tmap, ggstatsplot, knitr)
+    ```
+
+## 3 Data
+
+### 3.1 Data source
+
+[內政部社會經濟資料服務平台](https://segis.moi.gov.tw/STATCloud/Index)
+
+Four data sets will be used in this hands-on exercise, they are:
+
+-   Geospatial data (admin boundary data)
+
+    -   STORES_TN, store locations data in ESRI shapefile format.
+
+    -   VILLAGE_TN, village boundary data in ESRI shapefile format.
+
+-   Aspatial data
+
+    -   pop2019.csv, population data of Taichung City in 2019. H_CNT, P_CNT, M_CNT, and F_CNT indicate Number of household, Total population, Male population and Female population respectively.
+
+    -   Store_sales_data.csv provides store sales data
+
+### 3.2 Import geospatial data
+
+Below to read and examin datasets. All are in projected CRS.
+
+The output print shown that the 3 data sets are in **TWD97 / TM2 zone 121 (epsg: 3826)**
+
+```{r}
+#| eval: false
+stores <- st_read( dsn = "data/geospatial", layer = "STORES_TC")
+
+town <- st_read(dsn = "data/geospatial", layer = "TOWN_TC")
+
+village <- st_read(dsn = "data/geospatial", layer = "VILLAGE_TC")
+
+write_rds(stores, "data/rds/stores.rds")
+write_rds(town, "data/rds/town.rds")
+write_rds(village, "data/rds/village.rds")
+```
+
+```{r}
+#| echo: false
+stores <- read_rds("data/rds/stores.rds")
+town <- read_rds("data/rds/town.rds")
+village <- read_rds("data/rds/village.rds")
+```
+
+```{r}
+tmap_mode("view")
+tm_shape(town) +
+  tm_polygons(col = "#84994F", fill_alpha = 0.3) +
+tm_shape(village) +
+  tm_polygons(col = "white", fill_alpha = 0.3) + 
+tm_shape(stores) +
+  tm_dots(fill = "#E45A92", size = 0.5) +
+  tm_view(set.zoom.limits = c(10, 14))
+tmap_mode("plot")
+```
+
+### 3.3 Import Aspatial data
+
+Stores data cover all stores and pods.
+
+V_ID from pop2019 and VILLCODE from village data sets aren't entirely the same. Store Code and Store_ID filed names are also different.
+
+```{r}
+pop2019 <- read_csv(
+  "data/aspatial/pop2019.csv")
+
+store_sales <- read_csv(
+  "data/aspatial/Store_sales_data.csv")
+
+summary(store_sales)
+```
+
+## 4 Data Preparation
+
+### **4.1 Aggregating store sales**
+
+In total, there are 234 chain stores from below print.
+
+```{r}
+store_sales_aggre <- store_sales %>%
+  group_by(`Store Code`) %>%
+  summarise(
+    "Total_Bill" = sum(Bills, na.rm = TRUE), 
+    "Total_Sales" = sum(Amount, na.rm = TRUE))
+```
+
+### 4.2 **Relational join**
+
+```{r}
+# add in 3 vars - bills and store size
+stores <- stores %>%
+  left_join(store_sales_aggre, 
+            by = join_by(
+              Store_CD == `Store Code`)) %>%
+  mutate(Store_size = 100) #all stores have the same size.
+summary(stores)
+```
+
+### 4.3 **Tidying pop2019 data.frame**
+
+Check if the values in the join field are the same.
+
+```{r}
+glimpse(pop2019)
+```
+
+```{r}
+glimpse(village)
+```
+
+Now remove the "-" from V_ID values.
+
+```{r}
+pop2019 <- pop2019 %>%
+  mutate(V_ID = str_remove_all(
+    V_ID, "-"))
+```
+
+Now, we are ready to append data in `pop2019` data.frame onto village sf data.frame by using `left_join()` of **dplyr** package.
+
+```{r}
+village <- village %>%
+  left_join(pop2019,
+            by = join_by(
+              VILLCODE == V_ID))
+```
+
+### 4.4 **Check for missing or zero values**
+
+```{r}
+summary(village)
+```
+
+From above we see 5 missing values in *H_CNT, P_CNT, M_CNT* and *F_CNT* fields.
+
+Now we will remove these NA values:
+
+```{r}
+village <- village %>%
+  filter(!is.na(P_CNT)) 
+```
+
+Check again on missing values. The result shows there is no more missing values.
+
+```{r}
+any(is.na(village$H_CNT))
+any(is.na(village$P_CNT))
+any(is.na(village$M_CNT))
+any(is.na(village$F_CNT))
+```
+
+## 5 Computing Distance Matrix
+
+Instead of calculate the distance between the villages and stores, we will calculate the centroid of each village using `st_point_on_surface()` (because the shape is very irregular, and the centroid using st_centroid() can pin the point outside the shape.
+
+Then, compute the distance between the centroids of the villages and the stores. We find the center of each polygon for computation.
+
+```{r}
+village_center <- st_point_on_surface(village)
+distmat <- st_distance(village_center, stores) 
+```
+
+Next we convert the distance matrix into long data.frame format. Also need to remove the unit "m" using as.numeric() without meter indication.
+
+```{r}
+rownames(distmat) <- village$`VILLCODE`
+colnames(distmat) <- stores$`Store_CD`
+
+distmat_long <- distmat %>%
+  as.data.frame() %>%
+  rownames_to_column(var = "VILLCODE") %>%
+  pivot_longer(
+    cols = -VILLCODE,
+    names_to = "Store_CD",
+    values_to = "distance"
+  )
+
+kable(head(distmat_long))
+```
+
+We can see \[m\] at the end of distance. We will remove it now.
+
+```{r}
+distmat_long <- distmat_long  %>%
+  mutate(distance = as.numeric(distance)) 
+```
+
+## 6 Preparing Interaction Matrix
+
+No we can build the interaction matrix required by MCI package.
+
+```{r}
+#| eval: false
+interaction_matrix <- distmat_long %>%
+  left_join(
+    stores %>% 
+      st_drop_geometry() %>% 
+      select(Store_CD, Store_size),
+    by = "Store_CD") %>%
+  relocate(
+    distance, .after = last_col())
+write_rds(interaction_matrix, "data/rds/interaction_matrix.rds")
+```
+
+```{r}
+#| echo: false
+interaction_matrix <- read_rds("data/rds/interaction_matrix.rds")
+summary(interaction_matrix)
+```
+
+## 7 Computing Huff model
+
+```{r}
+huff_share <- huff.shares(
+  interaction_matrix, "VILLCODE", "Store_CD", 
+  "Store_size", "distance")
+```
+
+### 7.1 Trade area analysis for a single store
+
+::: panel-tabset
+## TG
+
+Select market share data of a store by usign Store_CD field (i.e. TG).
+
+```{r}
+market_share <- huff_share %>%
+  filter(Store_CD == "TG")
+```
+
+Next, trade areas of the selected will be derived by using the code chun below.
+
+```{r}
+Trade_area <- village %>%
+  left_join(market_share)
+```
+
+Plot the trade areas of the selected store. We will extract the selected store **(TG)** first.
+
+```{r}
+selected_store <- stores %>%
+  filter(Store_CD == "TG")
+```
+
+```{r}
+#| code-fold: true
+#| fig-width: 12
+#| fig-height: 8
+tm_shape(Trade_area) +
+  tm_polygons(fill = "p_ij",
+              fill.scale = tm_scale_intervals(
+                style = "quantile", 
+                n = 10,
+                values = "brewer.blues"),
+              fill.legend = tm_legend(
+                title = "Patronage Probability")) +
+  tm_shape(selected_store) +
+    tm_dots(size = 0.3,
+            fill = "red",
+            col = "black") +
+  tm_title("Distribution of Patronage Probability of Store TG by village") +
+  tm_layout(frame = TRUE) +
+  tm_borders(fill_alpha = 0.5) +
+  tm_compass(type="8star", size = 2) +
+  tm_scalebar() +
+  tm_grid(alpha =0.2) 
+```
+
+## BT
+
+Select market share data of a store by usign Store_CD field (i.e. TG).
+
+```{r}
+market_share <- huff_share %>%
+  filter(Store_CD == "BT")
+```
+
+Next, trade areas of the selected will be derived by using the code chun below.
+
+```{r}
+Trade_area <- village %>%
+  left_join(market_share)
+```
+
+Plot the trade areas of the selected store. We will extract the selected store **(BT)** first.
+
+```{r}
+selected_store <- stores %>%
+  filter(Store_CD == "BT")
+```
+
+```{r}
+#| code-fold: true
+#| fig-width: 12
+#| fig-height: 8
+tm_shape(Trade_area) +
+  tm_polygons(fill = "p_ij",
+              fill.scale = tm_scale_intervals(
+                style = "fixed", 
+                breaks = seq(0, 1, by = 0.1),
+                values = "brewer.blues"),
+              fill.legend = tm_legend(
+                title = "Patronage Probability")) +
+  tm_shape(selected_store) +
+    tm_dots(size = 0.3,
+            fill = "red",
+            col = "black") +
+  tm_title("Distribution of Patronage Probability of Store BT by village") +
+  tm_layout(frame = TRUE) +
+  tm_borders(fill_alpha = 0.5) +
+  tm_compass(type="8star", size = 2) +
+  tm_scalebar() +
+  tm_grid(alpha =0.2) 
+```
+:::
+
+## 7.2 Store sales analysis
+
+One of the usage of Huff model is to estimate the store sales by using village population.
+
+Firstly, let us append P_CNT field from village sf.data.frame to huff_share data.frame by using the code chunk below.
+
+```{r}
+huff_share_pp <- huff_share %>%
+  left_join(village %>% 
+      st_drop_geometry() %>% 
+      select(VILLCODE, P_CNT),
+    by = "VILLCODE") %>%
+  relocate(
+    distance, .after = last_col())
+```
+
+Next, `shares.total()` of **MCI** package will be used to calculate the total sales by using the code chunk below.
+
+```{r}
+huff_total <- shares.total(
+  huff_share_pp, "VILLCODE", "Store_CD",
+  "p_ij", "P_CNT")
+```
+
+Code chunk below is used to append the estimate store sales (Ej) onto stores sf data.frame.
+```{r}
+store_sales_est <- stores %>%
+  left_join(huff_total,
+            by = join_by(
+              "Store_CD" == "suppliers_single"))
+```
+
+Let's visualise how well the estimate sales as compare to the actual sales
+```{r}
+# drop geometry value first
+store_sales_nongeom <- store_sales_est %>% st_drop_geometry()
+
+# then plot ggplot.
+ggscatterstats(
+  store_sales_nongeom,
+  x = sum_E_j,
+  y = Total_Sales)
+```
+
+ 
