@@ -262,7 +262,9 @@ st_crs(mpsz)
 ::: panel-tabset
 ## Load data
 
--   **Load HDB Resale Data** This data set comprises of HDB resale transactions from July 2017 onwards. Below we will extract a sub-set of transaction records on 4-Room flat transacted during July 2024 to June 2025.
+-   **Load HDB Resale Data** 
+
+This data set comprises of HDB resale transactions from July 2017 onwards. Below we will extract a sub-set of transaction records on 4-Room flat transacted during July 2024 to June 2025.
 
 ```{r}
 #| eval: false
@@ -3333,7 +3335,7 @@ p3 <- ggplot(data = test_data_p,
     plot.title = element_text(hjust = 0.5, size = 14, face = "bold") 
   )  
   
-ggplotly(p2, tooltip = "text")
+ggplotly(p3, tooltip = "text")
 ```
 
 RF predictions are generally decent as they are all quite close to the slope of 1. The model also tends to predict lower than the actual resale prices, but there are few outliers.
@@ -3550,7 +3552,9 @@ GWR demonstrates the strongest performance, with predictions clustering tightly 
 
 Random Forest shows generally good performance with most predictions close to the diagonal, though the model exhibits a slight tendency to underpredict for higher-priced units. Outliers are minimal and predictions maintain consistency across the price range.
 
--   **Multiple Linear Regression** MLR shows the weakest performance, with predictions substantially deviating from actual prices, especially for premium units exceeding \$900,000. The scatter indicates systematic bias and inability to capture non-linear relationships in the data.
+-   **Multiple Linear Regression** 
+
+MLR shows the weakest performance, with predictions substantially deviating from actual prices, especially for premium units exceeding \$900,000. The scatter indicates systematic bias and inability to capture non-linear relationships in the data.
 
 -   **Geographical Weighted Random Forest**
 
@@ -3643,7 +3647,9 @@ ggplotly(p, tooltip = "text")
 
 ### 7.3 Best model selection
 
--   **The best overall model** These visual patterns confirm the quantitative metrics: **Geographically Weighted Regression (GWR)** achieves the most reliable predictions, followed by RF, while gwRF's outlier problem and MLR's systematic bias limit their practical utility.
+-   **The best overall model** 
+
+These visual patterns confirm the quantitative metrics: **Geographically Weighted Regression (GWR)** achieves the most reliable predictions, followed by RF, while gwRF's outlier problem and MLR's systematic bias limit their practical utility.
 
 It has the best performance across all metrics (Lowest RMSE = 38,028; Lowest MAE = 28,750; Highest R² = 0.9587). This demonstrates superior predictive accuracy for HDB resale prices.
 
@@ -3683,9 +3689,6 @@ For computational efficiency: Use RF as a faster alternative with acceptable acc
 
 Avoid fully local gwRF: due to overfitting and poor performance despite higher computational cost (than RF). We tested a hybrid gwRF approach to address potential over-localisation. While the hybrid model outperformed the fully local gwRF, it remained inferior to both GWR and standalone RF. This confirms that:
 
-```         
--   Pure local modeling with bandwidth=48 is suboptimal for ensemble methods Even with global information, gwRF cannot match the performance of GWR or global ensemble models RF.
-```
 
 ### 8.2 Future work
 
@@ -3837,7 +3840,7 @@ ggplot(data = test_data_p,
   geom_point(col = "#BB6653", size = 0.5) +
   geom_abline(intercept = 0, slope = 1, 
                color = "#DC143C", linetype = "dashed", linewidth = 1) +  
-  labs(title = "GWRF: Predicted vs Actual Resale Prices",
+  labs(title = "GWRF Hybrid: Predicted vs Actual Resale Prices",
        x = "Predicted Resale Price (S$)",
        y = "Actual Resale Price (S$)") +
     theme_minimal() +  
@@ -3919,8 +3922,13 @@ kable(gwrf_results)
 
 ```{r}
 #| code-fold: true
-ggplot(gwrf_results, aes(x = Bandwidth, y = RMSE)) +
-  geom_line(color = "orange", linewidth = 1) +
+p_h <- ggplot(gwrf_results, aes(x = Bandwidth, y = RMSE,
+                                text = paste0(
+                                   "<b>Bandwidth:</b> ", Bandwidth,
+                                   "<br><b>RMSE:</b> $", format(round(RMSE, 2), big.mark = ","),
+                                   "<br><b>Improvement vs RF:</b> $", format(round(41950 - RMSE, 2), big.mark = ",")
+                                 ))) +
+  geom_line(color = "orange", linewidth = 1, aes(text = NULL)) +
   geom_point(color = "orange", size = 3) +
   geom_hline(yintercept = 41950, color = "blue", linetype = "dashed", linewidth = 1) +
   geom_hline(yintercept = 38028, color = "red", linetype = "dashed", linewidth = 1) +
@@ -3942,8 +3950,10 @@ ggplot(gwrf_results, aes(x = Bandwidth, y = RMSE)) +
     panel.border = element_rect(color = "white", fill = NA, linewidth = 1),
     plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
     plot.subtitle = element_text(hjust = 0.5, size = 10))
+
+ggplotly(p_h, tooltip = "text")
 ```
 
 ### iii. Conclusion
 
-Results showed that increasing bandwidth improved gwRF performance (RMSE: 46,306 at BW=48 → 41,396 at BW=200), yet even optimal gwRF underperformed standard RF (RMSE=38,423). This reveals a fundamental paradox: gwRF requires larger bandwidths to improve accuracy, but this negates the local spatial weighting that motivated its design. The consistent superiority of RF suggests that spatial dependencies are adequately represented through proximity features. They make explicit geographic weighting unnecessary, and potentially harmful when combined with tree-based ensemble methods.
+Results showed that increasing bandwidth improved gwRF performance (RMSE: 46,306 at BW=48 → 41,396 at BW=200), yet even optimal gwRF's MAE underperformed standard RF (RMSE=29,540). This reveals a fundamental paradox: gwRF requires larger bandwidths to improve accuracy, but this negates the local spatial weighting that motivated its design. The consistent superiority of RF suggests that spatial dependencies are adequately represented through proximity features. They make explicit geographic weighting unnecessary, and potentially harmful when combined with tree-based ensemble methods.
