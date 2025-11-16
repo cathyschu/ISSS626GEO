@@ -97,57 +97,131 @@ Below table shows the packages used for this study and their descriptions, inclu
 
 ## 3 The Data
 
-We will make use of the following daa sets.
+We will make use of the following data sets to prepare the predictors as well as dependent variable (i.e. HDB resale price) in the master dataset for predictive modeling.
 
-+--------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
-| Data set                       | Link                                                                                                                                                                            | Source        |
-+================================+=================================================================================================================================================================================+===============+
-| CBD                            |                                                                                                                                                                                 |               |
-+--------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
-| Business Parks                 | [JTC Business Park Land](https://data.gov.sg/datasets?query=park&page=1&resultId=d_7555d52fb87e75da7397bd65d4f107dd)                                                            |               |
-+--------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
-| eldercare                      | [Eldercare Services](https://data.gov.sg/datasets?query=eldercare&page=1&resultId=d_f0fd1b3643ed8bd34bd403dedd7c1533)                                                           |               |
-+--------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
-| foodcourt/hawker centres       | [**Hawker Centres (GEOJSON)**](https://data.gov.sg/datasets?query=hawker+centre&page=1&resultId=d_4a086da0a5553be1d89383cd90d07ecd)                                             | data.gov.sg   |
-+--------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
-| MRT                            | [TrainStation_Aug2025](https://datamall.lta.gov.sg/content/datamall/en/static-data.html)                                                                                        | DataMall      |
-+--------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
-| Major interchange stations     | Derive from MRT based on [LTAguru](https://landtransportguru.net/bus-interchanges-and-terminals/)                                                                               |               |
-+--------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
-| Upcoming bus interchange       | Derive from MRT based on [LTAguru](https://landtransportguru.net/bus-interchanges-and-terminals/)                                                                               |               |
-+--------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
-| park                           | [Park Facilities](https://data.gov.sg/datasets?query=park&page=1&resultId=d_14d807e20158338fd578c2913953516e)                                                                   |               |
-+--------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
-| shopping mall                  | wiki + Kaggle                                                                                                                                                                   | wiki + Kaggle |
-+--------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
-| supermarket                    | Supermarkets (GEOJSON)                                                                                                                                                          | data.gov.sg   |
-+--------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
-| kindergartens within 350m      | [Kindergartens](https://data.gov.sg/datasets?query=kindergarten&resultId=d_7fe9a72b1afff18e48111772c8d0fd39&page=1)                                                             |               |
-+--------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
-| childcare centres within 350m  | [Pre-Schools Location](https://data.gov.sg/datasets?query=preschool&resultId=d_61eefab99958fd70e6aab17320a71f1c&page=1)                                                         |               |
-|                                |                                                                                                                                                                                 |               |
-|                                | [Listing of Centres](https://data.gov.sg/datasets?query=kindergarten&resultId=d_696c994c50745b079b3684f0e90ffc53&page=1)                                                        |               |
-+--------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
-| bus stop within 350m           |                                                                                                                                                                                 | DataMall      |
-+--------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
-| primary school within 1km      | [School Directory and Information](https://data.gov.sg/datasets?query=school+information&resultId=457&page=1)                                                                   |               |
-+--------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
-| good primary school within 1km | Primary school with data from [sophia education](https://sophiaeducation.sg/2025-singapore-psle-school-rankings/#%F0%9F%8F%AB_Top_20_Primary_Schools_in_Singapore_2025_Edition) |               |
-+--------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
-| healthcare facilities          | [CHAS Clinics](https://data.gov.sg/datasets?query=clinic&resultId=d_548c33ea2d99e29ec63a7cc9edcccedc&page=1)                                                                    |               |
-+--------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
-| Sports hall                    | [SportsFields\@SG](https://data.gov.sg/datasets?query=sports+hub&page=1&resultId=d_f71b449b4b43a69b5ecfe411b440d249)                                                            | data.gov.sg   |
-+--------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+
+::: panel-tabset
+## Data sets
+
++--------------------------+------------------------------------------------------------------------------------------------------------------------------+
+| Data set                 | Description                                                                                                                  |
++==========================+==============================================================================================================================+
+| **HDB**                  |                                                                                                                              |
++--------------------------+------------------------------------------------------------------------------------------------------------------------------+
+| HDB resale price         | Resale flat prices based on registration date from Jan-2017 onwards                                                          |
++--------------------------+------------------------------------------------------------------------------------------------------------------------------+
+| **Education**            |                                                                                                                              |
++--------------------------+------------------------------------------------------------------------------------------------------------------------------+
+| Childcare centers        | Organisations offering play-based learning learning for younger kids.                                                        |
++--------------------------+------------------------------------------------------------------------------------------------------------------------------+
+| Kindergarten             | Singapore kindergartens, among which many are government-run to prepare older children for primary school.                   |
++--------------------------+------------------------------------------------------------------------------------------------------------------------------+
+| Primary schools          | Singapore primary schools                                                                                                    |
++--------------------------+------------------------------------------------------------------------------------------------------------------------------+
+| Top primary schools      | Top Singapore primary schools based on PSLE exam (secondary school entrance exam) results                                    |
++--------------------------+------------------------------------------------------------------------------------------------------------------------------+
+| **Business**             |                                                                                                                              |
++--------------------------+------------------------------------------------------------------------------------------------------------------------------+
+| CBD                      | The Central Business District areas, including RAFFLES PLACE, MARINA CENTRE, TANJONG PAGAR, CITY HALL, ENTRAL SUBZONE areas. |
++--------------------------+------------------------------------------------------------------------------------------------------------------------------+
+| Business park            | Areas where offices are concentrated across the island.                                                                      |
++--------------------------+------------------------------------------------------------------------------------------------------------------------------+
+| **Recreation**           |                                                                                                                              |
++--------------------------+------------------------------------------------------------------------------------------------------------------------------+
+| Shopping malls           | Shopping mall buildings of all sizes.                                                                                        |
++--------------------------+------------------------------------------------------------------------------------------------------------------------------+
+| Sports halls             | Sports halls that provide sports facilities for the public use, including some school sports halls.                          |
++--------------------------+------------------------------------------------------------------------------------------------------------------------------+
+| Parks                    | Indicative polygon of Parks and Open Space in the Parks and Waterbodies Plan.                                                |
++--------------------------+------------------------------------------------------------------------------------------------------------------------------+
+| Community Clubs          | Common spaces for people of all races to come together, build friendships and promote social bonding.                        |
++--------------------------+------------------------------------------------------------------------------------------------------------------------------+
+| **F&B**                  |                                                                                                                              |
++--------------------------+------------------------------------------------------------------------------------------------------------------------------+
+| Supermarkets             | Retail markets where people shop groceries.                                                                                  |
++--------------------------+------------------------------------------------------------------------------------------------------------------------------+
+| Foodcourt/Hawker centers | Footcourts and Hawker centers where people grab meals conveniently.                                                          |
++--------------------------+------------------------------------------------------------------------------------------------------------------------------+
+| **Transportation**       |                                                                                                                              |
++--------------------------+------------------------------------------------------------------------------------------------------------------------------+
+| Bus                      | Bus stops                                                                                                                    |
++--------------------------+------------------------------------------------------------------------------------------------------------------------------+
+| MRT                      | MRT & LRT stations                                                                                                           |
++--------------------------+------------------------------------------------------------------------------------------------------------------------------+
+| **Healthcare**           |                                                                                                                              |
++--------------------------+------------------------------------------------------------------------------------------------------------------------------+
+| Clinics                  | Clinics / GP                                                                                                                 |
++--------------------------+------------------------------------------------------------------------------------------------------------------------------+
+| Eldercare services       | Nursing homes, senior service centers                                                                                        |
++--------------------------+------------------------------------------------------------------------------------------------------------------------------+
+
+## Sources
+
++--------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Data set                 | Source                                                                                                                                                                          |
++==========================+=================================================================================================================================================================================+
+| **HDB**                  |                                                                                                                                                                                 |
++--------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| HDB resale price         | [Resale flat prices](https://data.gov.sg/datasets?query=hdb+resale&resultId=d_8b84c4ee58e3cfc0ece0d773c8ca6abc)                                                                 |
++--------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| **Education**            |                                                                                                                                                                                 |
++--------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Childcare centers        | [Pre-Schools Location](https://data.gov.sg/datasets?query=preschool&resultId=d_61eefab99958fd70e6aab17320a71f1c&page=1)                                                         |
++--------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Kindergarten             | [Kindergartens](https://data.gov.sg/datasets?query=kindergarten&resultId=d_7fe9a72b1afff18e48111772c8d0fd39&page=1)                                                             |
++--------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Primary schools          | [School Directory and Information](https://data.gov.sg/datasets?query=school+information&resultId=457&page=1)                                                                   |
++--------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Top primary schools      | Primary school with data from [sophia education](https://sophiaeducation.sg/2025-singapore-psle-school-rankings/#%F0%9F%8F%AB_Top_20_Primary_Schools_in_Singapore_2025_Edition) |
++--------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| **Business**             |                                                                                                                                                                                 |
++--------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| CBD                      | Shape file derived from Master Plan 2019 Planning Area Boundary                                                                                                                 |
++--------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Business park            | [JTC Business Park Land](https://data.gov.sg/datasets?query=park&page=1&resultId=d_7555d52fb87e75da7397bd65d4f107dd)                                                            |
++--------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| **Recreation**           |                                                                                                                                                                                 |
++--------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Shopping malls           | -   [Shopping mall coordinates from Kaggle.](https://www.kaggle.com/datasets/karthikgangula/shopping-mall-coordinates)                                                          |
+|                          |                                                                                                                                                                                 |
+|                          | -   [Wiki page](https://en.wikipedia.org/wiki/List_of_shopping_malls_in_Singapore)                                                                                              |
++--------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Sports halls             | [SportsFields\@SG](https://data.gov.sg/datasets?query=sports+hub&page=1&resultId=d_f71b449b4b43a69b5ecfe411b440d249)                                                            |
++--------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Parks                    | [Park Facilities](https://data.gov.sg/datasets?query=park&page=1&resultId=d_14d807e20158338fd578c2913953516e)                                                                   |
++--------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Community Clubs          | [Community clubs geojson](https://data.gov.sg/datasets?query=community+club&resultId=d_f706de1427279e61fe41e89e24d440fa)                                                        |
++--------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| **F&B**                  |                                                                                                                                                                                 |
++--------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Supermarkets             | [Supermarkets (GEOJSON)](https://data.gov.sg/datasets?query=supermarket&resultId=d_cac2c32f01960a3ad7202a99c27268a0)2024                                                        |
++--------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Foodcourt/Hawker centers | [Hawker Centres (GEOJSON)](https://data.gov.sg/datasets?query=hawker+centre&page=1&resultId=d_4a086da0a5553be1d89383cd90d07ecd) 2025                                            |
++--------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| **Transportation**       |                                                                                                                                                                                 |
++--------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Bus                      | [Bus stops location](https://datamall.lta.gov.sg/content/datamall/en/static-data.html)                                                                                          |
++--------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| MRT                      | [MRT & LRT station exits](https://datamall.lta.gov.sg/content/datamall/en/static-data.html)                                                                                     |
++--------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| **Healthcare**           |                                                                                                                                                                                 |
++--------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Clinics                  | [CHAS Clinics](https://data.gov.sg/datasets?query=clinic&resultId=d_548c33ea2d99e29ec63a7cc9edcccedc&page=1)                                                                    |
++--------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Eldercare services       | [Eldercare Services](https://data.gov.sg/datasets?query=eldercare&page=1&resultId=d_f0fd1b3643ed8bd34bd403dedd7c1533)                                                           |
++--------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+:::
 
 ### 2.1 Import Data
 
 #### 2.1.0 Singapore Maps
 
-Below we will import *Master Plan 2019 Subzone Boundary (No Sea).*
+Below we will import *Master Plan 2019 Subzone Boundary (No Sea).* from data.gov.sg.
+
+::: panel-tabset
+## Code
 
 ```{r}
 #| eval: false
-#| code-fold: true
 mpsz <- st_read("data/rawdata/MasterPlan2019SubzoneBoundaryNoSeaKML.kml") %>%
   st_zm(drop = TRUE, what = "ZM") %>%
   st_transform(crs = 3414)
@@ -181,14 +255,21 @@ mpsz <- mpsz %>%
 write_rds(mpsz, "data/rds/mpsz.rds")
 ```
 
+## Output
+
 ```{r}
 #| echo: false
 mpsz <- read_rds("data/rds/mpsz.rds")
 st_crs(mpsz)
 ```
 
+
+:::
+
 #### 2.1.1 HDB resale data Preparation
 
+::: panel-tabset
+## Load data
 -   **Load HDB Resale Data** This data set comprises of HDB resale transactions from July 2017 onwards. Below we will extract a sub-set of transaction records on 4-Room flat transacted during July 2024 to June 2025.
 
 ```{r}
@@ -200,11 +281,20 @@ HDBresale <- read_csv(
   filter(flat_type == "4 ROOM") %>%
   filter(month >= "2024-07" & month <= "2025-09") # filter the sample data for the exercise till 09/2025.
 
-
 write_rds(HDBresale, "data/rds/HDBresale.rds")
 ```
 
--   **Further processing for street names** We do further processing for the data as the street names with Saint are usually written as St.
+```{r}
+#| echo: false
+HDBresale <- read_rds("data/rds/HDBresale.rds")
+kable(head(HDBresale, 5))
+
+```
+
+## Street names
+-   **Further processing for street names** 
+
+We do further processing for the data as the street names with Saint are usually written as St.
 
 ```{r}
 #| eval: false
@@ -222,7 +312,11 @@ HDBresale <- read_rds("data/rds/HDBresale.rds")
 glimpse(HDBresale)
 ```
 
--   **Geocoding HDB Resale Data** We use OneMap Geocode API: - <https://www.onemap.gov.sg/apidocs/.> - [ttps://www.onemap.gov.sg/apidocs/reverseGeocode](ttps://www.onemap.gov.sg/apidocs/reverseGeocode)
+## Geocoding Resale Data
+
+We use OneMap Geocode API: 
+-   <https://www.onemap.gov.sg/apidocs/.> 
+-   [https://www.onemap.gov.sg/apidocs/reverseGeocode](https://www.onemap.gov.sg/apidocs/reverseGeocode)
 
 Below we will prepare a geocoding function. It aims to perform the following tasks:
 
@@ -235,6 +329,7 @@ Below we will prepare a geocoding function. It aims to perform the following tas
 
 ```{r}
 #| eval: false
+#| code-fold: true
 # for multiple queries
 geocode <- function(block, streetname) {
   base_url <- "https://onemap.gov.sg/api/common/elastic/search"
@@ -258,6 +353,7 @@ geocode <- function(block, streetname) {
 
 ```{r}
 #| eval: false
+#| code-fold: true
 HDBresale$LATITUDE <- 0
 HDBresale$LONGITUDE <- 0
 
@@ -269,7 +365,11 @@ for(i in 1:nrow(HDBresale)){
 }
 ```
 
--   **Transform to sf data frame** We want to ensure that:
+## sf objects transformation
+
+-   **Transform to sf data frame** 
+
+We want to ensure that:
 -   both input data sets must be in sf objects
 -   they must be in similar projected coordinates systems
 
@@ -290,42 +390,50 @@ write_rds(HDBresale_sf, "data/rds/HDBresale_sf.rds")
 ```{r}
 #| echo: false
 HDBresale_sf <- read_rds("data/rds/HDBresale_sf.rds")
+kable(head(HDBresale_sf, 5))
 ```
+:::
 
 #### 2.1.2 Load location factors data
-
--   Structural factors
-
-    -   Area of the unit
-    -   Floor level
-    -   Remaining lease
-    -   Age of the unit
-    -   Main Upgrading Program (MUP) completed (optional)
-    -   Average population age in the area??
-
--   Location factors
-
-    -   Proxomity to CBD
-    -   Proxomity to business park
-    -   Proximity to eldercare
-    -   Proximity to foodcourt/hawker centres
-    -   Proximity to MRT
-    -   Proximity to park
-    -   Proximity to top primary school
-    -   Proximity to shopping mall
-    -   Proximity to supermarket
-    -   Proximity to healthcare facilities
-    -   Proximity to sports halls
-    -   Proximity to community clubs\
-    -   Numbers of kindergartens within 350m
-    -   Numbers of childcare centres within 350m
-    -   Numbers of bus stop within 350m
-    -   Numbers of primary school within 1km
+We determined the predict factors in 2 categories. One is structural factors, and the other is location factors.
 
 ::: panel-tabset
+
+## Structural factors
+-   Area of the unit
+-   Floor level
+-   Planning area (town)
+-   Remaining lease
+-   Age of the unit
+
+## Location factors
+-   Proxomity to CBD
+-   Proxomity to business park
+-   Proximity to eldercare
+-   Proximity to foodcourt/hawker centres
+-   Proximity to MRT
+-   Proximity to park
+-   Proximity to top primary school
+-   Proximity to shopping mall
+-   Proximity to supermarket
+-   Proximity to healthcare facilities
+-   Proximity to sports halls
+-   Proximity to community clubs
+-   Numbers of kindergartens within 350m
+-   Numbers of childcare centres within 350m
+-   Numbers of bus stop within 350m
+-   Numbers of primary school within 1km
+:::
+
+Below we will start processing the data for these predictive factors.
+
+::: panel-tabset
+
 ## Education
 
--   **Childcare centers**
+[**CHILDCARE CENTERS**]{style="color: #F08787;"}
+
+For childcare centers, we derive a geometry point to compute numbers of childcare centers within 350m to the HDB units. 
 
 ```{r}
 #| eval: false
@@ -362,15 +470,26 @@ write_rds(preschool_data, "data/rds/preschool_data.rds")
 ```{r}
 #| echo: false
 preschool_data <- read_rds("data/rds/preschool_data.rds")
+summary(preschool_data)
+
 ```
 
--   **Kindergartens**
+[**Quick view of the data set**]{style="color: #96A78D;"}
+```{r}
+kable(head(preschool_data, 3))
+```
+
+
+[ **KINDERGARTENS**]{style="color: #F08787;"}
+
+For kindergartens, we derive a geometry point to compute numbers of childcare centers within 350m to the HDB units. 
 
 ```{r}
 #| eval: false
 #| code-fold: true
 kindergarten_data <- st_read("data/rawdata/Kindergartens.geojson") %>%
-  st_transform(crs = 3414)
+  st_transform(crs = 3414) %>%
+  select(OBJECTID, NAME, geometry, DESCRIPTION)
 
 write_rds(kindergarten_data, "data/rds/kindergarten_data.rds")
 ```
@@ -379,9 +498,18 @@ write_rds(kindergarten_data, "data/rds/kindergarten_data.rds")
 #| echo: false
 #| code-fold: true
 kindergarten_data <- read_rds("data/rds/kindergarten_data.rds")
+summary(kindergarten_data)
 ```
 
--   **Primary schools data**
+[**Quick view of the data set**]{style="color: #96A78D;"}
+```{r}
+kable(head(kindergarten_data, 3))
+```
+
+
+[**PRIMARY SCHOOLS**]{style="color: #F08787;"}
+
+For primary schools, we derive a geometry point to compute numbers of childcare centers within 350m to the HDB units. 
 
 ```{r}
 #| code-fold: true
@@ -436,7 +564,7 @@ primschool_data <- primschool_data %>%
 nrow(primschool_data)  # How many successfully geocoded
 ```
 
-Check what schools we will filter out using keywords:
+We examine the school list and check what schools we will filter out using keywords, and derive the geometry point for all primary schools in the list.
 
 ```{r}
 #| code-fold: true
@@ -446,31 +574,35 @@ primschool_data %>%
     grepl("SECONDARY|HIGH|INSTITUTE|INSTITUTION|SCHOOL OF|JUNIOR|COLLEGE", 
                school_name, 
                ignore.case = TRUE)) %>%
-  select(school_name) %>%
-  print(n = 50)
-```
 
-```{r}
-#| code-fold: true
-#| eval: false
 # Remove non-primary schools 
-primschool_data <- primschool_data %>%
-  filter(school_name %in% c("MARIS STELLA HIGH SCHOOL", "CATHOLIC HIGH SCHOOL")  |
-    !grepl("SECONDARY|HIGH|INSTITUTE|INSTITUTION|SCHOOL OF|JUNIOR|COLLEGE", 
-                school_name, 
-                ignore.case = TRUE)) %>%
-  filter(!school_name %in% c("CHIJ KATONG CONVENT", "CHIJ ST. JOSEPH'S CONVENT"))
+  filter(school_name %in% 
+           c("MARIS STELLA HIGH SCHOOL", "CATHOLIC HIGH SCHOOL") |
+           !grepl("SECONDARY|HIGH|INSTITUTE|INSTITUTION|
+                  SCHOOL OF|JUNIOR|COLLEGE", 
+                  school_name, ignore.case = TRUE)) %>%
+  filter(!school_name %in% 
+           c("CHIJ KATONG CONVENT", "CHIJ ST. JOSEPH'S CONVENT"))
 
-nrow(primschool_data)
 write_rds(primschool_data, "data/rds/primschool_data.rds") 
 ```
 
 ```{r}
 #| echo: false
 primschool_data <- read_rds("data/rds/primschool_data.rds")
+summary(primschool_data)
+
 ```
 
--   **Top Primary schools**
+[**Quick view of the data set**]{style="color: #96A78D;"}
+```{r}
+kable(head(primschool_data, 3))
+```
+
+
+[**TOP PRIMARY SCHOOLS**]{style="color: #F08787;"}
+
+We identify top 20 primary school from [sophia education](https://sophiaeducation.sg/2025-singapore-psle-school-rankings/#%F0%9F%8F%AB_Top_20_Primary_Schools_in_Singapore_2025_Edition) eestimated by exam scrores and academic excellence.
 
 ```{r}
 #| code-fold: true
@@ -493,13 +625,16 @@ write_rds(top_primschool_data, "data/rds/top_primschool_data.rds")
 #| echo: false
 
 top_primschool_data <- read_rds("data/rds/top_primschool_data.rds")
+summary(top_primschool_data)
 ```
 
+
 ## Business
+Proximity to offices is a factor when people consider buying a house. We assume that a shorter the distance to the offices drives higher purchasing value. In this study, we consider proximity to the CBD area and other business parks across the island.
 
--   **CBD**
+[ **CBD**]{style="color: #F08787;"}
 
-For CBD, we will extract the area for CBD from `mpsz`.
+For CBD, we will extract the area for CBD from `mpsz`. 
 
 ```{r}
 #| code-fold: true
@@ -514,15 +649,17 @@ write_rds(cbd_data, "data/rds/cbd_data.rds")
 ```{r}
 #| echo: false
 cbd_data <- read_rds("data/rds/cbd_data.rds")
+summary(cbd_data)
 ```
 
+*cbd_data* is now a single merged polygon representing the entire CBD area. We will use this to calculate distance in later section.
+
+[**Quick view of the data set**]{style="color: #96A78D;"}
 ```{r}
-glimpse(cbd_data)
+kable(head(cbd_data, 3))
 ```
 
-cbd_data is now a single merged polygon representing the entire CBD area. We will use this to calculate distance in later section.
-
--   **Business park**
+[**BUSINESS PARKS**]{style="color: #F08787;"}
 
 Business parks are typically smaller than planning areas, and we have multiple business parks to consider. Therefore, we will calculate centroid for measuring proximity, and transform polygon data to centroid point data.
 
@@ -533,7 +670,8 @@ Business parks are typically smaller than planning areas, and we have multiple b
 bizpark_data <- st_read("data/rawdata/JTCBusinessParkLandGEOJSON.geojson") %>% 
   st_zm(drop = TRUE, what = "ZM") %>%
   st_transform(crs = 3414) %>%
-  st_centroid()
+  st_centroid() %>%
+  select(OBJECTID_1, LANDUSE, geometry)
 
 write_rds(bizpark_data, "data/rds/bizpark_data.rds")
 ```
@@ -541,11 +679,17 @@ write_rds(bizpark_data, "data/rds/bizpark_data.rds")
 ```{r}
 #| echo: false
 bizpark_data <- read_rds("data/rds/bizpark_data.rds")
+summary(bizpark_data)
+```
+
+[**Quick view of the data set**]{style="color: #96A78D;"}
+```{r}
+kable(head(bizpark_data, 3))
 ```
 
 ## Recreation
 
--   **Shopping malls**
+[**SHOPPING MALLS**]{style="color: #F08787;"}
 
 ```{r}
 #| code-fold: true
@@ -574,9 +718,24 @@ malls_without_coords <- merged_malls %>%
 malls_without_coords
 ```
 
-Amber Mansions - demolished in 1984 Bedok Point Capitol Centre Ellenborough Market Funan DigitaLife Mall - duplicate Great World - duplicate GV Yishun - cinema Jurong Entertainment Centre - demolished 2010 Shaw Tower - demolished Specialists' Shopping Centre - redeveloped as Orchard Gateway Tanglin Shopping Centre - CLOSED The Golden Mile - CLOSED The Verge - closed Woodland Mall - change to Woods square mall
+Among checks, we identified some malls no longer in business:
 
-For this case, we manually check with Google maps
+-   Amber Mansions: demolished in 1984 
+-   Bedok Point 
+-   Capitol Centre 
+-   Ellenborough Market 
+-   Funan DigitaLife Mall: duplicate 
+-   Great World: duplicate 
+-   GV Yishun: cinema 
+-   Jurong Entertainment Centre: demolished 2010 
+-   Shaw Tower: demolished 
+-   Specialists' Shopping Centre: redeveloped as Orchard Gateway 
+-   Tanglin Shopping Centre: CLOSED 
+-   The Golden Mile: CLOSED 
+-   The Verge: closed 
+-   Woodland Mall: renamed to Woods square mall
+
+For other malls, we manually check with Google maps and add the coordinates into the data set.
 
 ```{r}
 #| code-fold: true
@@ -650,7 +809,7 @@ merged_malls <- merged_malls %>%
   bind_rows(new_malls)
 ```
 
-Check the malls with missing coordinates, meaning that we did not find the coordinates for these mall as they're closed.
+Check the malls with missing coordinates.
 
 ```{r}
 #| code-fold: true
@@ -658,7 +817,15 @@ Check the malls with missing coordinates, meaning that we did not find the coord
 malls_with_na <- merged_malls %>%
   filter(is.na(LONGITUDE) | is.na(LATITUDE)) 
 
-malls_with_na
+write_rds(malls_with_na, "data/rds/malls_with_na.rds")
+
+```
+
+```{r}
+#| echo: false
+
+malls_with_na <- read_rds("data/rds/malls_with_na.rds")
+kable(malls_with_na)
 ```
 
 These malls are the ones duplicate or closed. We will go ahead to remove them. We will also remove 2 duplicate malls observed from *merged_malls*.
@@ -684,11 +851,16 @@ write_rds(merged_malls, "data/rds/malls_data.rds")
 
 ```{r}
 #| echo: false
-
 malls_data <- read_rds("data/rds/malls_data.rds")
+summary(malls_data)
 ```
 
--   **Sports halls**
+[**Quick view of the data set**]{style="color: #96A78D;"}
+```{r}
+kable(head(malls_data, 3))
+```
+
+[**SPORTS HALLS**]{style="color: #F08787;"}
 
 ```{r}
 #| code-fold: true
@@ -718,7 +890,8 @@ sports_data <- sports_data %>%
     description = map_chr(Description, extract_kml_field, "DESCRIPTION")
   ) %>%
   select(-Name, -Description) %>%
-  relocate(geometry, .after = last_col())
+  relocate(geometry, .after = last_col()) %>%
+  select(-description)
 
 write_rds(sports_data, "data/rds/sports_data.rds")
 ```
@@ -726,11 +899,17 @@ write_rds(sports_data, "data/rds/sports_data.rds")
 ```{r}
 #| echo: false
 sports_data <- read_rds("data/rds/sports_data.rds")
-
+summary(sports_data)
 ```
 
--   **Parks**
+[**Quick view of the data set**]{style="color: #96A78D;"}
+```{r}
+kable(head(sports_data, 3))
+```
 
+[**PARKS**]{style="color: #F08787;"}
+
+For the parks, we will compute centroid for each park and open space.
 ```{r}
 #| code-fold: true
 #| eval: false
@@ -741,7 +920,8 @@ park_data <- st_read("data/rawdata/MasterPlan2019SDCPParkandOpenSpacelayer.kml")
 
 # Calculate centroids 
 park_data <- park_data %>%
-  mutate(centroid = st_centroid(geometry))
+  mutate(centroid = st_centroid(geometry)) %>%
+  select(-Description)
 
 write_rds(park_data, "data/rds/park_data.rds")
 ```
@@ -749,9 +929,92 @@ write_rds(park_data, "data/rds/park_data.rds")
 ```{r}
 #| echo: false
 park_data <- read_rds("data/rds/park_data.rds")
+summary(park_data)
 ```
 
--   **Supermarkets**
+[**Quick view of the data set**]{style="color: #96A78D;"}
+```{r}
+kable(head(park_data, 3))
+```
+
+
+[**COMMUNITY CLUBS**]{style="color: #F08787;"}
+
+```{r}
+#| code-fold: true
+#| eval: false
+cc_data <- st_read("data/rawdata/CommunityClubs.geojson") %>%
+  st_zm(drop = TRUE, what = "ZM") %>%
+  st_transform(crs = 3414)
+
+extract_kml_field <- function(html_text, field_name) {
+  if (is.na(html_text) || html_text == "") return(NA_character_)
+  
+  page <- read_html(html_text)
+  rows <- page %>% html_elements("tr")
+  
+  value <- rows %>%
+    keep(~ html_text2(html_element(.x, "th")) == field_name) %>%
+    html_element("td") %>%
+    html_text2()
+  
+  if (length(value) == 0) NA_character_ else value
+}
+
+cc_data <- cc_data %>%
+  mutate(
+    name = map_chr(Description, extract_kml_field, "NAME")
+  ) %>%
+  select(-Name, -Description) %>%
+  relocate(geometry, .after = last_col())
+
+write_rds(cc_data, "data/rds/cc_data.rds")
+```
+
+```{r}
+#| echo: false
+cc_data <- read_rds("data/rds/cc_data.rds")
+summary(cc_data)
+```
+
+[**Quick view of the data set**]{style="color: #96A78D;"}
+```{r}
+kable(head(cc_data, 3))
+```
+
+## F&B 
+
+[**FOODCOURT/HAWKER CENTERS**]{style="color: #F08787;"}
+
+```{r}
+#| code-fold: true
+#| eval: false
+hkcenter_data <- st_read("data/rawdata/HawkerCentresGEOJSON.geojson") %>%
+  st_zm(drop = TRUE, what = "ZM") %>%
+  st_transform(crs = 3414) %>%
+  select(OBJECTID, NAME, geometry, STATUS)
+
+write_rds(hkcenter_data, "data/rds/hkcenter_data.rds")
+
+```
+
+```{r}
+#| echo: false
+hkcenter_data <- read_rds("data/rds/hkcenter_data.rds")
+summary(hkcenter_data)
+```
+
+[**Quick view of the data set**]{style="color: #96A78D;"}
+```{r}
+kable(head(hkcenter_data, 3))
+```
+Below we will check the status of these hawker centers, and find that all are either existing or under construction. None has stopped the business, so we will keep all these. 
+```{r}
+unique(hkcenter_data$STATUS)
+```
+
+
+[**SUPERMARKETS**]{style="color: #F08787;"}
 
 ```{r}
 #| code-fold: true
@@ -793,70 +1056,16 @@ write_rds(supermarkets_data, "data/rds/supermarkets_data.rds")
 ```{r}
 #| echo: false
 supermarkets_data <- read_rds("data/rds/supermarkets_data.rds")
+summary(supermarkets_data)
 ```
 
--   **Community clubs**
-
+[**Quick view of the data set**]{style="color: #96A78D;"}
 ```{r}
-#| code-fold: true
-#| eval: false
-cc_data <- st_read("data/rawdata/CommunityClubs.geojson") %>%
-  st_zm(drop = TRUE, what = "ZM") %>%
-  st_transform(crs = 3414)
-
-extract_kml_field <- function(html_text, field_name) {
-  if (is.na(html_text) || html_text == "") return(NA_character_)
-  
-  page <- read_html(html_text)
-  rows <- page %>% html_elements("tr")
-  
-  value <- rows %>%
-    keep(~ html_text2(html_element(.x, "th")) == field_name) %>%
-    html_element("td") %>%
-    html_text2()
-  
-  if (length(value) == 0) NA_character_ else value
-}
-
-cc_data <- cc_data %>%
-  mutate(
-    name = map_chr(Description, extract_kml_field, "NAME")
-  ) %>%
-  select(-Name, -Description) %>%
-  relocate(geometry, .after = last_col())
-
-write_rds(cc_data, "data/rds/cc_data.rds")
+kable(head(supermarkets_data, 3))
 ```
-
-```{r}
-#| echo: false
-cc_data <- read_rds("data/rds/cc_data.rds")
-```
-
--   **Foodcourt/Hawker centers**
-
-```{r}
-#| code-fold: true
-#| eval: false
-hkcenter_data <- st_read("data/rawdata/HawkerCentresGEOJSON.geojson") %>%
-  st_zm(drop = TRUE, what = "ZM") %>%
-  st_transform(crs = 3414)
-
-write_rds(hkcenter_data, "data/rds/hkcenter_data.rds")
-
-```
-
-```{r}
-#| echo: false
-hkcenter_data <- read_rds("data/rds/hkcenter_data.rds")
-
-```
-
-Data is also transformed to SVY21.
-
 ## Transportation
 
--   **MRT**
+[**MRT**]{style="color: #F08787;"}
 
 Below we will import MRT station exit shapefile. The MRT stations may have multiple exits, and these exits matter when people go through them to enter or exit the stations. We will use the data to compute for proximity to HDB units.
 
@@ -865,9 +1074,16 @@ Below we will import MRT station exit shapefile. The MRT stations may have multi
 mrt_data <- st_read("data/rawdata/TrainStationExit_Feb2025/Train_Station_Exit_Layer.shp") %>%
   st_transform(crs = 3414)
 
+summary(mrt_data)
+
 ```
 
--   **Bus stops**
+[**Quick view of the data set**]{style="color: #96A78D;"}
+```{r}
+kable(head(mrt_data, 3))
+```
+
+[**BUS STOPS**]{style="color: #F08787;"}
 
 Below we will import *Bus Stop Location* shapfile from LTA DataMall.
 
@@ -885,12 +1101,16 @@ write_rds(bus_data, "data/rds/bus_data.rds")
 ```{r}
 #| echo: false
 bus_data <- read_rds("data/rds/bus_data.rds")
-
+summary(mrt_data)
 ```
 
+[**Quick view of the data set**]{style="color: #96A78D;"}
+```{r}
+kable(head(bus_data, 3))
+```
 ## Healthcare
 
--   **Clinics**
+[**CLINICS**]{style="color: #F08787;"}
 
 ```{r}
 #| code-fold: true
@@ -929,10 +1149,15 @@ write_rds(clinics_data, "data/rds/clinics_data.rds")
 ```{r}
 #| echo: false
 clinics_data <- read_rds("data/rds/clinics_data.rds")
-
+summary(clinics_data)
 ```
 
--   **Eldercare**
+[**Quick view of the data set**]{style="color: #96A78D;"}
+```{r}
+kable(head(clinics_data, 3))
+```
+
+[**ELDERCARE SERVICES**]{style="color: #F08787;"}
 
 ```{r}
 #| code-fold: true
@@ -971,62 +1196,75 @@ write_rds(eldercare_data, "data/rds/eldercare_data.rds")
 ```{r}
 #| echo: false
 eldercare_data <- read_rds("data/rds/eldercare_data.rds")
+summary(eldercare_data)
+```
+
+[**Quick view of the data set**]{style="color: #96A78D;"}
+```{r}
+kable(head(eldercare_data, 3))
 ```
 :::
 
 #### 2.1.3 Initial data inspection
 
-We validate the coordinates of the location factor data below. It shows us that all now conform to SVY21, and ready for proximity computation.
+We validate the coordinates of the location factor data below. It shows us that all now conform to **SVY21**, and ready for proximity computation.
+
+::: panel-tabset
+
+## Result
 
 ```{r}
-#| code-fold: true
-cat('bizpark_data: ')
-st_crs(bizpark_data)$epsg
-cat('bd_data: ')
-st_crs(cbd_data)$epsg
-cat('clinics_data: ')
-st_crs(clinics_data)$epsg
-cat('eldercare_data: ')
-st_crs(eldercare_data)$epsg
-cat('hkcenter_data: ')
-st_crs(hkcenter_data)$epsg
-cat('malls_data: ')
-st_crs(malls_data)$epsg
-cat('mrt_data: ')
-st_crs(mrt_data)$epsg
-cat('park_data: ')
-st_crs(park_data)$epsg
-cat('preschool_data: ')
-st_crs(preschool_data)$epsg
-cat('primschool_data: ')
-st_crs(primschool_data)$epsg
-cat('supermarkets_data: ')
-st_crs(supermarkets_data)$epsg
-cat('sports_data: ')
-st_crs(sports_data)$epsg
-cat('bus_data: ')
-st_crs(bus_data)$epsg
-cat('kindergarten_data: ')
-st_crs(kindergarten_data)$epsg
-cat('cc_data: ')
-st_crs(cc_data)$epsg
+#| echo: false
+cat('Business Park bizpark_data: ',st_crs(bizpark_data)$epsg, '\n','\n',
+'CBD cbd_data: ', st_crs(cbd_data)$epsg, '\n','\n',
+'Clinics clinics_data: ', st_crs(clinics_data)$epsg, '\n','\n',
+'Eldercare Services eldercare_data: ', st_crs(eldercare_data)$epsg, '\n','\n',
+'Foodcourt/Hawker Centers hkcenter_data: ', st_crs(hkcenter_data)$epsg, '\n','\n',
+'Shopping malls malls_data: ', st_crs(malls_data)$epsg, '\n','\n',
+'MRT mrt_data: ', st_crs(mrt_data)$epsg, '\n','\n',
+'Parks park_data: ', st_crs(park_data)$epsg, '\n','\n',
+'Childcares preschool_data: ', st_crs(preschool_data)$epsg, '\n','\n',
+'Primary Schools primschool_data: ', st_crs(primschool_data)$epsg, '\n','\n',
+'Supermarkets supermarkets_data: ', st_crs(supermarkets_data)$epsg, '\n','\n',
+'Sports halls sports_data: ', st_crs(sports_data)$epsg, '\n','\n',
+'Bus stops bus_data: ', st_crs(bus_data)$epsg, '\n','\n',
+'Kindergartens kindergarten_data: ', st_crs(kindergarten_data)$epsg, '\n','\n',
+'Community Clubscc_data: ', st_crs(cc_data)$epsg)
+```
 
+## Code
+
+```{r}
+#| eval: false
+cat('Business Park bizpark_data: ',st_crs(bizpark_data)$epsg, '\n','\n',
+    'CBD cbd_data: ', st_crs(cbd_data)$epsg, '\n','\n',
+    'Clinics clinics_data: ', st_crs(clinics_data)$epsg, '\n','\n',
+    'Eldercare Services eldercare_data: ', st_crs(eldercare_data)$epsg, '\n','\n',
+    'Foodcourt/Hawker Centers hkcenter_data: ', st_crs(hkcenter_data)$epsg, '\n','\n',
+    'Shopping malls malls_data: ', st_crs(malls_data)$epsg, '\n','\n',
+    'MRT mrt_data: ', st_crs(mrt_data)$epsg, '\n','\n',
+    'Parks park_data: ', st_crs(park_data)$epsg, '\n','\n',
+    'Childcares preschool_data: ', st_crs(preschool_data)$epsg, '\n','\n',
+    'Primary Schools primschool_data: ', st_crs(primschool_data)$epsg, '\n','\n',
+    'Supermarkets supermarkets_data: ', st_crs(supermarkets_data)$epsg, '\n','\n',
+    'Sports halls sports_data: ', st_crs(sports_data)$epsg, '\n','\n',
+    'Bus stops bus_data: ', st_crs(bus_data)$epsg, '\n','\n',
+    'Kindergartens kindergarten_data: ', st_crs(kindergarten_data)$epsg, '\n','\n',
+    'Community Clubscc_data: ', st_crs(cc_data)$epsg)
 
 ```
 
+:::
+
 ### 2.2 Structural factors
 
-The tructural factors for this study include flat type, floor level, town, planning area, area of unit, age of unit, main upgrading program, and flat model. Currently in our data, we have the factors shown below:
+The tructural factors for this study include flat type, floor level, town, planning area, area of unit, age of unit, main upgrading program, and flat model. Currently in our data, we have the variables shown below:
 
 ```{r}
 names(HDBresale_sf)
 ```
 
 We will rename some of the factors and keep the factors being used for the study. In addition, we will convert the floor range `storey_range` to numerical variable, using its lowest level, and rename the varaible to `floor_level`. We will also calculate the unit age using the `lease_commence_date` variable.
-
-```{r}
-names(HDBresale_sf)
-```
 
 ```{r}
 #| code-fold: true
@@ -1093,11 +1331,9 @@ In this section, we will prepare location factors of their proximity to the HDB 
 
 #### 2.3.1 Computing shortest distance
 
-Instead of counting number of preschools located within 350m of each HDB resale property, code chunk below is used to compute the distance between the nearest preschool from each HDB resale property.
+We would like to use proximity from the HDB units to the location factors to predict the resale price. When one purchases housing, distance to useful facilities is always a consideration or value drivers. For example, an HDB unit being only 100m away would be very different from 500m away from the nearest MRT station, as it takes longer time to commute and can be inconvenient in rainy and hot days.  
 
-`st_is_within_distance()` of [**sf**]{style="color: #F08787;"} package is used to determine whether two spatial objects (HDB property and preschool) are within a set distance of each other. It returns a logical matrix (or a sparse list of indices if sparse = TRUE) indicating for each geometry in HDB property which geometries in the facility are within the set distance.
-
-check for outliers / errors Verify coordinates are in Singapore (plot tmaps)
+Therefore, below we will compute the distance between the nearest facilities/infrastructures from each HDB resale property. The distance computed would be in meters.
 
 ::: panel-tabset
 ## Education
@@ -1114,8 +1350,14 @@ HDB_combine_edu <- HDB_data %>%
                   top_primschool_data[st_nearest_feature(
                     geometry, top_primschool_data), ], 
                   by_element = TRUE)
-      )
-    )
+      ))
+write_rds(HDB_combine_edu, "data/rds/HDB_combine_edu.rds")
+```
+
+```{r}
+#| code-fold: true
+HDB_combine_edu <- read_rds("data/rds/HDB_combine_edu.rds")
+kable(head(HDB_combine_edu, 3))
 ```
 
 ## F&B
@@ -1140,6 +1382,13 @@ HDB_combine_2fb <- HDB_combine_edu %>%
                   by_element = TRUE))
     )
 
+write_rds(HDB_combine_2fb, "data/rds/HDB_combine_2fb.rds")
+```
+
+```{r}
+#| code-fold: true
+HDB_combine_2fb <- read_rds("data/rds/HDB_combine_2fb.rds")
+kable(head(HDB_combine_2fb, 3))
 ```
 
 ## Healthcare
@@ -1163,6 +1412,13 @@ HDB_combine_3hc <- HDB_combine_2fb %>%
                   by_element = TRUE))
     )
 
+write_rds(HDB_combine_3hc, "data/rds/HDB_combine_3hc.rds")
+```
+
+```{r}
+#| code-fold: true
+HDB_combine_3hc <- read_rds("data/rds/HDB_combine_3hc.rds")
+kable(head(HDB_combine_3hc, 3))
 ```
 
 ## Recreation
@@ -1198,6 +1454,13 @@ HDB_combine_4rc <- HDB_combine_3hc %>%
                   by_element = TRUE))
     )
 
+write_rds(HDB_combine_4rc, "data/rds/HDB_combine_4rc.rds")
+```
+
+```{r}
+#| code-fold: true
+HDB_combine_4rc <- read_rds("data/rds/HDB_combine_4rc.rds")
+kable(head(HDB_combine_4rc, 3))
 ```
 
 ## Transportation
@@ -1215,6 +1478,13 @@ HDB_combine_5transp <- HDB_combine_4rc %>%
                   by_element = TRUE))
     )
 
+write_rds(HDB_combine_5transp, "data/rds/HDB_combine_5transp.rds")
+```
+
+```{r}
+#| code-fold: true
+HDB_combine_5transp <- read_rds("data/rds/HDB_combine_5transp.rds")
+kable(head(HDB_combine_5transp, 3))
 ```
 
 ## Business
@@ -1238,14 +1508,21 @@ HDB_combine_6biz <- HDB_combine_5transp %>%
                     geometry, bizpark_data), ], 
                   by_element = TRUE))
     )
+write_rds(HDB_combine_6biz, "data/rds/HDB_combine_6biz.rds")
 ```
-:::
 
--   `map_int()` of [**purr**]{style="color: #F08787;"} package is used to the number of preschools found in the newly created WITHIN_350M_PRISCHOOL field.
+```{r}
+#| code-fold: true
+HDB_combine_6biz <- read_rds("data/rds/HDB_combine_6biz.rds")
+kable(head(HDB_combine_6biz, 3))
+```
+
+:::
 
 #### **2.3.2 Create binary proximity indicators**
 
 Next we will derive a binary data to find out which schools are within 350 meters.
+`st_is_within_distance()` of [**sf**]{style="color: #F08787;"} package is used to determine whether two spatial objects (HDB property and preschool) are within a set distance of each other. It returns a logical matrix (or a sparse list of indices if sparse = TRUE) indicating for each geometry in HDB property which geometries in the facility are within the set distance.
 
 ::: panel-tabset
 ## Top primary school
@@ -1263,6 +1540,14 @@ HDB_combine_7bi_primschool <- HDB_combine_6biz %>%
     WITHIN_1km_TOPPRISCH = map_int(within_1km, length),
     WITHIN_1km_TOPPRISCH_BINARY = ifelse(WITHIN_1km_TOPPRISCH > 0, 1, 0)
 )
+write_rds(HDB_combine_7bi_primschool, "data/rds/HDB_combine_7bi_primschool.rds")
+```
+
+```{r}
+#| code-fold: true
+HDB_combine_7bi_primschool <- 
+  read_rds("data/rds/HDB_combine_7bi_primschool.rds")
+kable(head(HDB_combine_7bi_primschool, 3))
 ```
 
 ## MRT
@@ -1279,6 +1564,13 @@ HDB_combine_7bi_mrt <- HDB_combine_7bi_primschool %>%
   mutate(
     WITHIN_500m_MRT_BINARY = as.numeric(lengths(within_500m_mrt) > 0)
 )
+write_rds(HDB_combine_7bi_mrt, "data/rds/HDB_combine_7bi_mrt.rds")
+```
+
+```{r}
+#| code-fold: true
+HDB_combine_7bi_mrt <- read_rds("data/rds/HDB_combine_7bi_mrt.rds")
+kable(head(HDB_combine_7bi_mrt, 3))
 ```
 
 ## Hawker centre
@@ -1295,17 +1587,25 @@ HDB_combine_7bi_hkcenter <- HDB_combine_7bi_mrt %>%
   mutate(
     WITHIN_500m_HKC_BINARY = as.numeric(lengths(within_500m_hkcenter) > 0)
 )
+write_rds(HDB_combine_7bi_hkcenter, "data/rds/HDB_combine_7bi_hkcenter.rds")
 ```
+
+```{r}
+#| code-fold: true
+HDB_combine_7bi_hkcenter <- read_rds("data/rds/HDB_combine_7bi_hkcenter.rds")
+kable(head(HDB_combine_7bi_hkcenter, 3))
+```
+
 :::
 
 ### 2.4 Amenity Density Analysis
 
-Computing number of location factors
+We would like to compute the amenity density with the number of location factors within a designated distance. `map_int()` of [**purr**]{style="color: #F08787;"} package is used to the number of preschools found in the newly created `WITHIN_[distance]_[amenity]` field.
 
 ::: panel-tabset
 ## kindergarten
 
-within 350m
+Kindergartens within 350m of the HDB unit.
 
 ```{r}
 #| code-fold: true
@@ -1317,11 +1617,18 @@ HDB_combine_8dense_kindg <- HDB_combine_7bi_hkcenter %>%
   mutate(
     WITHIN_350m_KINDG = map_int(within_350m_kindg, length)
 )
+write_rds(HDB_combine_8dense_kindg, "data/rds/HDB_combine_8dense_kindg.rds")
+```
+
+```{r}
+#| code-fold: true
+HDB_combine_8dense_kindg <- read_rds("data/rds/HDB_combine_8dense_kindg.rds")
+kable(head(HDB_combine_8dense_kindg, 3))
 ```
 
 ## childcare
 
-within 350m
+Childcares within 350m of the HDB unit.
 
 ```{r}
 #| code-fold: true
@@ -1333,11 +1640,18 @@ HDB_combine_8dense_childc <- HDB_combine_8dense_kindg %>%
   mutate(
     WITHIN_350m_CHILDC = map_int(within_350m_childc, length)
 )
+write_rds(HDB_combine_8dense_childc, "data/rds/HDB_combine_8dense_childc.rds")
+```
+
+```{r}
+#| code-fold: true
+HDB_combine_8dense_childc <- read_rds("data/rds/HDB_combine_8dense_childc.rds")
+kable(head(HDB_combine_8dense_childc, 3))
 ```
 
 ## bus stop
 
-within 350m
+Bus stops within 350m of the HDB unit.
 
 ```{r}
 #| code-fold: true
@@ -1349,11 +1663,18 @@ HDB_combine_8dense_bus <- HDB_combine_8dense_childc %>%
   mutate(
     WITHIN_350m_BUS = map_int(within_350m_bus, length)
 )
+write_rds(HDB_combine_8dense_bus, "data/rds/HDB_combine_8dense_bus.rds")
+```
+
+```{r}
+#| code-fold: true
+HDB_combine_8dense_bus <- read_rds("data/rds/HDB_combine_8dense_bus.rds")
+kable(head(HDB_combine_8dense_bus, 3))
 ```
 
 ## primary school
 
-within 1km
+Kindergartens within 1km of the HDB unit. We use 1km because housing within 1km of a primary school gets the priority of entolment. This is an important factor for some parents to look for (new) housing due to children education planning.
 
 ```{r}
 #| code-fold: true
@@ -1366,6 +1687,13 @@ HDB_combine_8dense_primsch <- HDB_combine_8dense_bus %>%
     WITHIN_1km_PRISCH = map_int(within_1km_primsch, length)
 )
 
+write_rds(HDB_combine_8dense_primsch, "data/rds/HDB_combine_8dense_primsch.rds")
+```
+
+```{r}
+#| code-fold: true
+HDB_combine_8dense_primsch <- read_rds("data/rds/HDB_combine_8dense_primsch.rds")
+kable(head(HDB_combine_8dense_primsch, 3))
 ```
 :::
 
@@ -1374,6 +1702,7 @@ HDB_combine_8dense_primsch <- HDB_combine_8dense_bus %>%
 #### **2.5.1 Save the master dataset**
 
 With each data processing step in section 2.3 and 2.4, we have assembled all structural and location factors into the dataset *HDB_combine_8dense_primsch*.
+Below code we removed *remaining_lease_mths* because it has been converted to a new variable in months *remaining_lease_mths_num*.
 
 ```{r}
 #| code-fold: true
@@ -1392,7 +1721,7 @@ HDB_master <- read_rds("data/rds/HDB_master.rds")
 glimpse(HDB_master)
 ```
 
-#### 2.5.2 **Handle remaining missing values**
+#### **2.5.2 Handle remaining missing values**
 
 After data assembly, let's check if there is any missing values from the master dataset. The result **FALSE** indicates that there is no missing value.
 
@@ -1404,89 +1733,762 @@ anyNA(HDB_master)
 
 ### 3.1 Data Quality Check
 
--   Summary statistics
+Let's run a summary statistics to examine is there is any obvious anomaly or outliers. 
+From below results, there is no obvious anomaly detected. Just an interesting fact that the childcare service density could be up to 35 within 350m of range.
 
 ```{r}
 summary(HDB_master)
 ```
 
 ### 3.2 Target Variable Analysis
+Before we start data set preparation for predictive modeling training, we would like to leverage visualisations to observe the location factors and structural factors, and further examine if there are any anomalies. 
 
--   Statistical Point Map (dot)
--   Distribution of the selling price (histogram price x count)
--   Check for outliers for price (boxplot) HDB resale price distribution (structural factors & location factors plots)
 
 ```{r}
 names(HDB_master)
 ```
 
-### 3.3 Multiple Histogram Plots distribution of variables
 
-### 3.4 Spatial Visualization of Amenities
+#### **3.2.1 Plot distribution of variables**
 
--   Coordinate validation
+<placeholder>
+
+::: panel-tabset
+## Price distribution
+
 
 ```{r}
+#| code-fold: true
+
+ggplot(HDB_master, 
+       aes(x = resale_price)) + 
+  geom_histogram(bins = 30, color = "#F0F0F0", fill = "#96A78D") +
+  labs(
+    title = "Distribution of resale prices: HDB 4-room",
+    subtitle = "(July 2024 - Sep 2025)",
+    x = "Resale price S$",
+    y = "Count",
+    colour = "Gears") +
+  theme(panel.background = element_rect(color = "white"),
+        plot.background = element_rect(fill = "#D0DDD0")) 
+
+```
+
+## Price x Proximity
+
+
+```{r}
+#| code-fold: true
+#| fig-width: 12
+#| fig-height: 12
+HDB_master_long <- HDB_master %>%
+  pivot_longer(cols = c(PROX_TOPSCHOOL, PROX_HKCENTER, PROX_CLINIC, 
+                        PROX_MALLS, PROX_CC, PROX_MRT, PROX_SUPERMKT, 
+                        PROX_ELDERCARE, PROX_SPORTS, PROX_PARK,
+                        PROX_CBD),
+               names_to = "facility",
+               values_to = "proximity")
+
+ggplot(HDB_master_long, aes(x = proximity, y = resale_price)) +
+  geom_point(alpha = 0.1, size = 0.4, colour = "#626F47") +
+  geom_smooth(method = "lm", color = "#FF8282", se = FALSE) +
+  facet_wrap(~ facility, ncol = 3, scales = "free_x") +
+  labs(x = "Proximity (m)", y = "Resale Price ($)",
+       title = "HDB Resale Price vs Proximity to Facilities") +
+  theme(panel.background = element_rect(color = "white"),
+        plot.background = element_rect(fill = "#D0DDD0"),
+        strip.text = element_text(size = 15),
+        plot.title = element_text(size = 22),      
+        axis.title = element_text(size = 15),
+        axis.text.x = element_text(size = 11),
+        axis.text.y = element_text(size = 11))
+```
+## Price x Facility density
+```{r}
+#| code-fold: true
+#| fig-width: 12
+#| fig-height: 10
+
+HDB_master_long_dist <- HDB_master %>%
+  pivot_longer(cols = c(WITHIN_1km_TOPPRISCH,
+                        WITHIN_350m_BUS, WITHIN_350m_KINDG,
+                        WITHIN_350m_CHILDC, WITHIN_1km_PRISCH),
+               names_to = "facility_dist",
+               values_to = "count") 
+
+# Violin plot with boxplot inside
+ggplot(HDB_master_long_dist, aes(x = factor(count), y = resale_price)) +
+  geom_boxplot(width = 0.1, fill = "white", outlier.size = 0.5) +
+  facet_wrap(~ facility_dist, ncol = 2, scales = "free_x") +
+  labs(x = "Number of Facilities within distance",
+       y = "Resale Price ($)",
+       title = "HDB Resale Price Distribution by Facility Density") +
+  theme(panel.background = element_rect(color = "white"),
+        plot.background = element_rect(fill = "#D0DDD0"),
+        strip.text = element_text(size = 15),
+        plot.title = element_text(size = 22),      
+        axis.title = element_text(size = 15),
+        axis.text.x = element_text(size = 11),
+        axis.text.y = element_text(size = 11))
+```
+## Price x Availability
+ 
+
+```{r}
+#| code-fold: true
+#| fig-width: 12
+#| fig-height: 4
+
+HDB_master_long_binary <- HDB_master %>%
+  pivot_longer(cols = c(WITHIN_1km_TOPPRISCH_BINARY, WITHIN_500m_MRT_BINARY,
+                        WITHIN_500m_HKC_BINARY),
+               names_to = "facility_binary",
+               values_to = "count") 
+
+# Violin plot with boxplot inside
+ggplot(HDB_master_long_binary, aes(x = factor(count), y = resale_price)) +
+  geom_boxplot(width = 0.1, fill = "white", outlier.size = 0.5) +
+  facet_wrap(~ facility_binary, ncol = 3, scales = "free_x") +
+  labs(x = "Availability of Facilities within distance",
+       y = "Resale Price ($)",
+       title = "HDB Resale Price Distribution by Facility Availability") +
+  theme(panel.background = element_rect(color = "white"),
+        plot.background = element_rect(fill = "#D0DDD0"),
+        strip.text = element_text(size = 15),
+        plot.title = element_text(size = 22),      
+        axis.title = element_text(size = 15),
+        axis.text.x = element_text(size = 11),
+        axis.text.y = element_text(size = 11))
+```
+
+:::
+
+#### **3.2.2 Visualise HDB units prices on thematic map**
+            
+```{r}
+names(HDB_master)
+```
+
+
+```{r}
+#| fig-width: 12
+#| fig-height: 8
+#| code-fold: true
+
+# tmap_mode("view")
+tm_shape(mpsz) + 
+  tm_polygons(fill = "REGION_N", col = "white", lwd = 0.8, 
+              fill_alpha = 0.4, fill.legend = tm_legend(show = FALSE),
+              fill.scale = tm_scale_categorical(
+                values = c("#FFC4C4", "#87BAC3", "#8FABD4", 
+                           "#FDE7B3", "#FDCFFA"))) +
+  
+  tm_shape(HDB_master) +
+  tm_dots(fill = "resale_price",
+          size = 0.2,
+          fill_alpha = 0.7,
+          fill.scale = tm_scale_continuous(values = "brewer.reds"),
+          fill.legend = tm_legend(title = "Resale Price ($)",
+          title.size = 1.2,      
+          text.size = 1),
+          ) +  
+  
+  tm_title(text = "HDB Resale Prices (2024-2025)")+
+  tm_layout(
+    legend.position = c("right", "bottom"),  
+    legend.text.size = 0.7,             
+    legend.title.size = 1,                
+    legend.bg.alpha = 0,
+    outer.margins = 0,
+    inner.margins = c(0.1, 0.1, 0.1, 0.1), 
+    bg.color = "#D0DDD0",
+    outer.bg.color = "#D0DDD0",
+    frame = TRUE,
+    frame.color = "white",
+    frame.alpha = 0.3
+  )
+tmap_mode("plot")
+```
+#### **3.2.3 Spatial Visualization of Amenities**
+
+::: panel-tabset
+
+## Education
+
+[**Primary schools (top 20 highlighted**)]{style="color: #F08787;"}
+```{r}
+#| code-fold: true
+#| fig-width: 12
+#| fig-height: 8
+
+tm_shape(mpsz) + 
+  tm_polygons(fill = "REGION_N", col = "white", lwd = 0.8, 
+              fill_alpha = 0.3, fill.legend = tm_legend(show = FALSE),
+              fill.scale = tm_scale_categorical(
+                values = c("#FFC4C4", "#87BAC3", "#8FABD4", 
+                           "#FDE7B3", "#FDCFFA"))) +
+  
+  tm_shape(HDB_master) +
+  tm_dots(fill = "resale_price",
+          size = 0.3,
+          fill_alpha = 0.5,
+          fill.scale = tm_scale_continuous(values = "brewer.blues"),
+          fill.legend = tm_legend(title = "Resale Price ($)",
+          title.size = 0.7,      
+          text.size = 0.6),
+          ) +  
+  
+  tm_shape(top_primschool_data) +
+  tm_dots(fill = "#FE7743", size = 0.3) +    
+    
+  tm_title(text = "HDB Resale Prices vs Top Primary schools")+
+  tm_layout(
+    legend.position = c("right", "bottom"),  
+    legend.bg.alpha = 0,
+    outer.margins = 0,
+    inner.margins = c(0.1, 0.1, 0.1, 0.1), 
+    bg.color = "white",
+    outer.bg.color = "#D0DDD0",
+    frame = TRUE,
+    frame.color = "white",
+    frame.alpha = 0.3
+  )
+```
+[**Kindergartens**]{style="color: #F08787;"}
+
+```{r}
+#| code-fold: true
+#| fig-width: 12
+#| fig-height: 8
+
+tm_shape(mpsz) + 
+  tm_polygons(fill = "REGION_N", col = "white", lwd = 0.8, 
+              fill_alpha = 0.3, fill.legend = tm_legend(show = FALSE),
+              fill.scale = tm_scale_categorical(
+                values = c("#FFC4C4", "#87BAC3", "#8FABD4", 
+                           "#FDE7B3", "#FDCFFA"))) +
+  
+  tm_shape(HDB_master) +
+  tm_dots(fill = "resale_price",
+          size = 0.3,
+          fill_alpha = 0.5,
+          fill.scale = tm_scale_continuous(values = "brewer.blues"),
+          fill.legend = tm_legend(title = "Resale Price ($)",
+          title.size = 0.7,      
+          text.size = 0.6),
+          ) +  
+  
+  tm_shape(kindergarten_data) +
+  tm_dots(fill = "#FE7743", size = 0.3) +   
+    
+  tm_title(text = "HDB Resale Prices vs Kindergartens")+
+  tm_layout(
+    legend.position = c("right", "bottom"),  
+    legend.bg.alpha = 0,
+    outer.margins = 0,
+    inner.margins = c(0.1, 0.1, 0.1, 0.1), 
+    bg.color = "white",
+    outer.bg.color = "#D0DDD0",
+    frame = TRUE,
+    frame.color = "white",
+    frame.alpha = 0.3
+  )
+```
+
+[**Childcare centres**]{style="color: #F08787;"}
+```{r}
+#| code-fold: true
+#| fig-width: 12
+#| fig-height: 8
+
+tm_shape(mpsz) + 
+  tm_polygons(fill = "REGION_N", col = "white", lwd = 0.8, 
+              fill_alpha = 0.3, fill.legend = tm_legend(show = FALSE),
+              fill.scale = tm_scale_categorical(
+                values = c("#FFC4C4", "#87BAC3", "#8FABD4", 
+                           "#FDE7B3", "#FDCFFA"))) +
+  
+  tm_shape(HDB_master) +
+  tm_dots(fill = "resale_price",
+          size = 0.3,
+          fill_alpha = 0.5,
+          fill.scale = tm_scale_continuous(values = "brewer.blues"),
+          fill.legend = tm_legend(title = "Resale Price ($)",
+          title.size = 0.7,      
+          text.size = 0.6),
+          ) +  
+  
+  tm_shape(preschool_data) +
+  tm_dots(fill = "#FE7743", size = 0.3) +   
+    
+  tm_title(text = "HDB Resale Prices vs Childcare centres")+
+  tm_layout(
+    legend.position = c("right", "bottom"),  
+    legend.bg.alpha = 0,
+    outer.margins = 0,
+    inner.margins = c(0.1, 0.1, 0.1, 0.1), 
+    bg.color = "white",
+    outer.bg.color = "#D0DDD0",
+    frame = TRUE,
+    frame.color = "white",
+    frame.alpha = 0.3
+  )
+```
+
+
+## Transport
+
+[**MRT station exits*]{style="color: #F08787;"}
+
+```{r}
+#| code-fold: true
+#| fig-width: 12
+#| fig-height: 8
+
+tm_shape(mpsz) + 
+  tm_polygons(fill = "REGION_N", col = "white", lwd = 0.8, 
+              fill_alpha = 0.3, fill.legend = tm_legend(show = FALSE),
+              fill.scale = tm_scale_categorical(
+                values = c("#FFC4C4", "#87BAC3", "#8FABD4", 
+                           "#FDE7B3", "#FDCFFA"))) +
+  
+  tm_shape(HDB_master) +
+  tm_dots(fill = "resale_price",
+          size = 0.3,
+          fill_alpha = 0.5,
+          fill.scale = tm_scale_continuous(values = "brewer.blues"),
+          fill.legend = tm_legend(title = "Resale Price ($)",
+          title.size = 0.7,      
+          text.size = 0.6),
+          ) +  
+  
+  tm_shape(top_primschool_data) +
+  tm_dots(fill = "#FE7743", size = 0.3) +   
+    
+  tm_title(text = "HDB Resale Prices vs MRT station exits")+
+  tm_layout(
+    legend.position = c("right", "bottom"),  
+    legend.bg.alpha = 0,
+    outer.margins = 0,
+    inner.margins = c(0.1, 0.1, 0.1, 0.1), 
+    bg.color = "white",
+    outer.bg.color = "#D0DDD0",
+    frame = TRUE,
+    frame.color = "white",
+    frame.alpha = 0.3
+  )
+```
+
+[**Bus stops**]{style="color: #F08787;"}
+```{r}
+#| code-fold: true
+#| fig-width: 12
+#| fig-height: 8
+
+tm_shape(mpsz) + 
+  tm_polygons(fill = "REGION_N", col = "white", lwd = 0.8, 
+              fill_alpha = 0.3, fill.legend = tm_legend(show = FALSE),
+              fill.scale = tm_scale_categorical(
+                values = c("#FFC4C4", "#87BAC3", "#8FABD4", 
+                           "#FDE7B3", "#FDCFFA"))) +
+  
+  tm_shape(HDB_master) +
+  tm_dots(fill = "resale_price",
+          size = 0.3,
+          fill_alpha = 0.5,
+          fill.scale = tm_scale_continuous(values = "brewer.blues"),
+          fill.legend = tm_legend(title = "Resale Price ($)",
+          title.size = 0.7,      
+          text.size = 0.6),
+          ) +  
+  
+  tm_shape(top_primschool_data) +
+  tm_dots(fill = "#FE7743", size = 0.3) +    
+  
+  tm_title(text = "HDB Resale Prices vs Bus stops")+
+  tm_layout(
+    legend.position = c("right", "bottom"),  
+    legend.bg.alpha = 0,
+    outer.margins = 0,
+    inner.margins = c(0.1, 0.1, 0.1, 0.1), 
+    bg.color = "white",
+    outer.bg.color = "#D0DDD0",
+    frame = TRUE,
+    frame.color = "white",
+    frame.alpha = 0.3
+  )
+```
+
+## Commercial
+
+[**Shopping malls**]{style="color: #F08787;"}
+```{r}
+#| code-fold: true
+#| fig-width: 12
+#| fig-height: 8
+
+tm_shape(mpsz) + 
+  tm_polygons(fill = "REGION_N", col = "white", lwd = 0.8, 
+              fill_alpha = 0.3, fill.legend = tm_legend(show = FALSE),
+              fill.scale = tm_scale_categorical(
+                values = c("#FFC4C4", "#87BAC3", "#8FABD4", 
+                           "#FDE7B3", "#FDCFFA"))) +
+  
+  tm_shape(HDB_master) +
+  tm_dots(fill = "resale_price",
+          size = 0.3,
+          fill_alpha = 0.5,
+          fill.scale = tm_scale_continuous(values = "brewer.blues"),
+          fill.legend = tm_legend(title = "Resale Price ($)",
+          title.size = 0.7,      
+          text.size = 0.6),
+          ) +  
+  
+  tm_shape(top_primschool_data) +
+  tm_dots(fill = "#FE7743", size = 0.3) +   
+  
+  tm_title(text = "HDB Resale Prices vs Malls")+
+  tm_layout(
+    legend.position = c("right", "bottom"),  
+    legend.bg.alpha = 0,
+    outer.margins = 0,
+    inner.margins = c(0.1, 0.1, 0.1, 0.1), 
+    bg.color = "white",
+    outer.bg.color = "#D0DDD0",
+    frame = TRUE,
+    frame.color = "white",
+    frame.alpha = 0.3
+  )
+```
+[**Hawker centres**]{style="color: #F08787;"}
+```{r}
+#| code-fold: true
+#| fig-width: 12
+#| fig-height: 8
+
+tm_shape(mpsz) + 
+  tm_polygons(fill = "REGION_N", col = "white", lwd = 0.8, 
+              fill_alpha = 0.3, fill.legend = tm_legend(show = FALSE),
+              fill.scale = tm_scale_categorical(
+                values = c("#FFC4C4", "#87BAC3", "#8FABD4", 
+                           "#FDE7B3", "#FDCFFA"))) +
+  
+  tm_shape(HDB_master) +
+  tm_dots(fill = "resale_price",
+          size = 0.3,
+          fill_alpha = 0.5,
+          fill.scale = tm_scale_continuous(values = "brewer.blues"),
+          fill.legend = tm_legend(title = "Resale Price ($)",
+          title.size = 0.7,      
+          text.size = 0.6),
+          ) +  
+  
+  tm_shape(top_primschool_data) +
+  tm_dots(fill = "#FE7743", size = 0.3) +    
+  
+  tm_title(text = "HDB Resale Prices vs Hawkers")+
+  tm_layout(
+    legend.position = c("right", "bottom"),  
+    legend.bg.alpha = 0,
+    outer.margins = 0,
+    inner.margins = c(0.1, 0.1, 0.1, 0.1), 
+    bg.color = "white",
+    outer.bg.color = "#D0DDD0",
+    frame = TRUE,
+    frame.color = "white",
+    frame.alpha = 0.3
+  )
+```
+
+[**Supermarkets**]{style="color: #F08787;"}
+```{r}
+#| code-fold: true
+#| fig-width: 12
+#| fig-height: 8
+
+tm_shape(mpsz) + 
+  tm_polygons(fill = "REGION_N", col = "white", lwd = 0.8, 
+              fill_alpha = 0.4, fill.legend = tm_legend(show = FALSE),
+              fill.scale = tm_scale_categorical(
+                values = c("#FFC4C4", "#87BAC3", "#8FABD4", 
+                           "#FDE7B3", "#FDCFFA"))) +
+  
+  tm_shape(HDB_master) +
+  tm_dots(fill = "resale_price",
+          size = 0.3,
+          fill_alpha = 0.5,
+          fill.scale = tm_scale_continuous(values = "brewer.blues"),
+          fill.legend = tm_legend(title = "Resale Price ($)",
+          title.size = 0.7,      
+          text.size = 0.6),
+          ) +  
+  
+  tm_shape(top_primschool_data) +
+  tm_dots(fill = "#FE7743", size = 0.3) +    
+  
+  tm_title(text = "HDB Resale Prices vs Supermarkets")+
+  tm_layout(
+    legend.position = c("right", "bottom"),  
+    legend.bg.alpha = 0,
+    outer.margins = 0,
+    inner.margins = c(0.1, 0.1, 0.1, 0.1), 
+    bg.color = "white",
+    outer.bg.color = "#D0DDD0",
+    frame = TRUE,
+    frame.color = "white",
+    frame.alpha = 0.3
+  )
+```
+
+## Business
+
+[**CBD**]{style="color: #F08787;"}
+
+```{r}
+#| code-fold: true
+#| fig-width: 12
+#| fig-height: 8
 map_cbd <- tm_shape(mpsz) + 
   tm_polygons(
     fill = "REGION_N", col = "white", lwd = 0.8,
     fill.scale = tm_scale_categorical(
       values = c("#FFC4C4", "#87BAC3", "#8FABD4", "#FDE7B3", "#FDCFFA")
     ),
-  fill_alpha = 0.7) +
+  fill_alpha = 0.4) +
   tm_shape(cbd_data) +
-  tm_polygons(col = "red", col_alpha = 0.3) +  # Show CBD area
+  tm_polygons(col = "red", col_alpha = 0.8, lwd = 2) + 
   
   tm_shape(HDB_master) +
   tm_dots(col = "PROX_CBD", 
-          size = 0.02,              # Smaller dots
-          palette = "-RdYlBu",      # Red = far, Blue = close
-          alpha = 0.5)
+          size = 0.2,             
+          palette = "-RdYlBu",     
+          alpha = 0.5) +
+
+  tm_title(text = "HDB Resale Prices vs CBD")+
+  tm_layout(
+    legend.position = c("right", "bottom"),  
+    legend.bg.alpha = 0,
+    outer.margins = 0,
+    inner.margins = c(0.1, 0.1, 0.1, 0.1), 
+    bg.color = "white",
+    outer.bg.color = "#D0DDD0",
+    frame = TRUE,
+    frame.color = "white",
+    frame.alpha = 0.3
+  )
+
 map_cbd
 
-# Arrange in 3 columns
-#tmap_arrange(map1, map2, map3, map4, map5, map6, ncol = 3)
 ```
 
-::: panel-tabset
-## HDB Units
+[**Business parks**]{style="color: #F08787;"}
 
--   All resale units (color by price)
+```{r}
+#| code-fold: true
+#| fig-width: 12
+#| fig-height: 8
 
-## Education
-
--   Primary schools (top 20 highlighted)
--   Kindergartens
--   Childcare centres
-
-## Transport
-
--   MRT stations (current + future)
--   Major bus interchanges
-
-## Commercial
-
--   Shopping malls
--   Hawker centres
--   Supermarkets
-
-## Business
-
--   CBD
--   BUsiness parks
-
+tm_shape(mpsz) + 
+  tm_polygons(fill = "REGION_N", col = "white", lwd = 0.8, 
+              fill_alpha = 0.4, fill.legend = tm_legend(show = FALSE),
+              fill.scale = tm_scale_categorical(
+                values = c("#FFC4C4", "#87BAC3", "#8FABD4", 
+                           "#FDE7B3", "#FDCFFA"))) +
+  
+  tm_shape(HDB_master) +
+  tm_dots(fill = "resale_price",
+          size = 0.3,
+          fill_alpha = 0.5,
+          fill.scale = tm_scale_continuous(values = "brewer.blues"),
+          fill.legend = tm_legend(title = "Resale Price ($)",
+          title.size = 0.7,      
+          text.size = 0.6),
+          ) +  
+  
+  tm_shape(bizpark_data) +
+  tm_dots(fill = "#FE7743", size = 0.3) +    
+  
+  tm_title(text = "HDB Resale Prices vs Business parks")+
+  tm_layout(
+    legend.position = c("right", "bottom"),  
+    legend.bg.alpha = 0,
+    outer.margins = 0,
+    inner.margins = c(0.1, 0.1, 0.1, 0.1), 
+    bg.color = "white",
+    outer.bg.color = "#D0DDD0",
+    frame = TRUE,
+    frame.color = "white",
+    frame.alpha = 0.3
+  )
+```
 ## Recreation & Others
 
--   Parks
--   Sports facilities
--   Healthcare
+[**Parks**]{style="color: #F08787;"}
+```{r}
+#| code-fold: true
+#| fig-width: 12
+#| fig-height: 8
+
+tm_shape(mpsz) + 
+  tm_polygons(fill = "REGION_N", col = "white", lwd = 0.8, 
+              fill_alpha = 0.4, fill.legend = tm_legend(show = FALSE),
+              fill.scale = tm_scale_categorical(
+                values = c("#FFC4C4", "#87BAC3", "#8FABD4", 
+                           "#FDE7B3", "#FDCFFA"))) +
+  
+  tm_shape(HDB_master) +
+  tm_dots(fill = "resale_price",
+          size = 0.3,
+          fill_alpha = 0.5,
+          fill.scale = tm_scale_continuous(values = "brewer.blues"),
+          fill.legend = tm_legend(title = "Resale Price ($)",
+          title.size = 0.7,      
+          text.size = 0.6),
+          ) +  
+  
+  tm_shape(park_data) +
+  tm_dots(fill = "#FE7743", size = 0.2) +    
+  
+  tm_title(text = "HDB Resale Prices vs Parks")+
+  tm_layout(
+    legend.position = c("right", "bottom"),  
+    legend.bg.alpha = 0,
+    outer.margins = 0,
+    inner.margins = c(0.1, 0.1, 0.1, 0.1), 
+    bg.color = "white",
+    outer.bg.color = "#D0DDD0",
+    frame = TRUE,
+    frame.color = "white",
+    frame.alpha = 0.3
+  )
+```
+[**Sports halls**]{style="color: #F08787;"}
+```{r}
+#| code-fold: true
+#| fig-width: 12
+#| fig-height: 8
+
+tm_shape(mpsz) + 
+  tm_polygons(fill = "REGION_N", col = "white", lwd = 0.8, 
+              fill_alpha = 0.4, fill.legend = tm_legend(show = FALSE),
+              fill.scale = tm_scale_categorical(
+                values = c("#FFC4C4", "#87BAC3", "#8FABD4", 
+                           "#FDE7B3", "#FDCFFA"))) +
+  
+  tm_shape(HDB_master) +
+  tm_dots(fill = "resale_price",
+          size = 0.3,
+          fill_alpha = 0.5,
+          fill.scale = tm_scale_continuous(values = "brewer.blues"),
+          fill.legend = tm_legend(title = "Resale Price ($)",
+          title.size = 0.7,      
+          text.size = 0.6),
+          ) +  
+  
+  tm_shape(sports_data) +
+  tm_dots(fill = "#FE7743", size = 0.2) +    
+  
+  tm_title(text = "HDB Resale Prices vs Sports halls")+
+  tm_layout(
+    legend.position = c("right", "bottom"),  
+    legend.bg.alpha = 0,
+    outer.margins = 0,
+    inner.margins = c(0.1, 0.1, 0.1, 0.1), 
+    bg.color = "white",
+    outer.bg.color = "#D0DDD0",
+    frame = TRUE,
+    frame.color = "white",
+    frame.alpha = 0.3
+  )
+```
+
+## Healthcare
+[**Clinics**]{style="color: #F08787;"}
+```{r}
+#| code-fold: true
+#| fig-width: 12
+#| fig-height: 8
+
+tm_shape(mpsz) + 
+  tm_polygons(fill = "REGION_N", col = "white", lwd = 0.8, 
+              fill_alpha = 0.4, fill.legend = tm_legend(show = FALSE),
+              fill.scale = tm_scale_categorical(
+                values = c("#FFC4C4", "#87BAC3", "#8FABD4", 
+                           "#FDE7B3", "#FDCFFA"))) +
+  
+  tm_shape(HDB_master) +
+  tm_dots(fill = "resale_price",
+          size = 0.3,
+          fill_alpha = 0.5,
+          fill.scale = tm_scale_continuous(values = "brewer.blues"),
+          fill.legend = tm_legend(title = "Resale Price ($)",
+          title.size = 0.7,      
+          text.size = 0.6),
+          ) +  
+  
+  tm_shape(clinics_data) +
+  tm_dots(fill = "#FE7743", size = 0.2) +    
+  
+  tm_title(text = "HDB Resale Prices vs Clinics")+
+  tm_layout(
+    legend.position = c("right", "bottom"),  
+    legend.bg.alpha = 0,
+    outer.margins = 0,
+    inner.margins = c(0.1, 0.1, 0.1, 0.1), 
+    bg.color = "white",
+    outer.bg.color = "#D0DDD0",
+    frame = TRUE,
+    frame.color = "white",
+    frame.alpha = 0.3
+  )
+```
+[**Eldercare services**]{style="color: #F08787;"}
+```{r}
+#| code-fold: true
+#| fig-width: 12
+#| fig-height: 8
+
+tm_shape(mpsz) + 
+  tm_polygons(fill = "REGION_N", col = "white", lwd = 0.8, 
+              fill_alpha = 0.4, fill.legend = tm_legend(show = FALSE),
+              fill.scale = tm_scale_categorical(
+                values = c("#FFC4C4", "#87BAC3", "#8FABD4", 
+                           "#FDE7B3", "#FDCFFA"))) +
+  
+  tm_shape(HDB_master) +
+  tm_dots(fill = "resale_price",
+          size = 0.3,
+          fill_alpha = 0.5,
+          fill.scale = tm_scale_continuous(values = "brewer.blues"),
+          fill.legend = tm_legend(title = "Resale Price ($)",
+          title.size = 0.7,      
+          text.size = 0.6),
+          ) +  
+  
+  tm_shape(eldercare_data) +
+  tm_dots(fill = "#FE7743", size = 0.2) +    
+  
+  tm_title(text = "HDB Resale Prices vs Eldercare services")+
+  tm_layout(
+    legend.position = c("right", "bottom"),  
+    legend.bg.alpha = 0,
+    outer.margins = 0,
+    inner.margins = c(0.1, 0.1, 0.1, 0.1), 
+    bg.color = "white",
+    outer.bg.color = "#D0DDD0",
+    frame = TRUE,
+    frame.color = "white",
+    frame.alpha = 0.3
+  )
+```
+
 :::
 
 ## 4 Pre-modeling Preparation
 
 ### 4.1 Preparing Data
 
-For this study, we will use the entire dataset of `HDB_master` during the period of July 2024 to June 2025. Therefore, we will split the data to 2 sets. In this step we will split the `HDB_master` to the training data (Jul 2024 - June 2025) and testing data (July - Sep 2025).
+For this study, we will divide the entire dataset of `HDB_master` during the period of July 2024 to September 2025 into 2 sets. The training data (Jul 2024 - June 2025) and testing data (July - Sep 2025).
 
 #### **4.1.1 Split data for train/test data**
 
@@ -1525,37 +2527,26 @@ HDB_test <- read_rds("data/rds/HDB_test.rds")
 ```
 
 #### **4.1.2 Sample train data**
-
+We will sample 5,000 data sets for predictive modeling training. 
 ```{r}
 set.seed(1234)
 HDB_train_5k <- HDB_train %>%
   sample_n(5000)
 ```
 
-``` r
-# Compare distributions
-par(mfrow = c(2,2))
-
-# Price distribution
-plot(density(hdb_data$resale_price), main = "Full Dataset", col = "blue")
-plot(density(hdb_sample$resale_price), main = "Sample", col = "red")
-
-# Town distribution
-barplot(table(hdb_data$town), main = "Full Dataset - Towns")
-barplot(table(hdb_sample$town), main = "Sample - Towns")
-```
 
 ### 4.2 Multicollinearity Check
 
 #### **4.2.1 Correlation Matrix**
 
-We will do a multicollinearity analysis on the predictors with the correlatiom matrix. In this step, we are using this as EDA to explore
+First we need to do a multicollinearity analysis on the predictors. We will create a correlatiom matrix. In this step, we are using this as EDA to explore the data.
 
 ```{r}
 #| fig-width: 12
 #| fig-height: 9
 #| code-fold: true
-par(bg = "#B8C4A9") 
+par(bg = "#B8C4A9",
+    mar = c(0.5, 0.5, 0.5, 0.5)) 
 corrplot(cor(st_drop_geometry(HDB_train_5k)[, c(2, 3, 5, 7, 8:28)]),
          diag = FALSE, 
          order = "AOE",
@@ -1576,7 +2567,7 @@ corrplot(cor(st_drop_geometry(HDB_train_5k)[, c(2, 3, 5, 7, 8:28)]),
 :::
 
 ::: markgoals-container
--   From the scatterplot matrix, it is clear that *WITHIN_1km_TOPSCH* is highly correlated to *WITHIN_1km_TOPSCH_BINARY*. In addition, other pairs of variables *PROX_TOPSCHOOL* & *PROX_CBD*, *age* & *remaining_lease_mths_num*, *PROX_MRT* & *WITHIN_500m_MRT_BINARY* are also highly correlated (0.8).
+-   From the scatterplot matrix, it is clear that *WITHIN_1km_TOPSCH* is highly correlated to *WITHIN_1km_TOPSCH_BINARY*. In addition, other pairs of variables *PROX_TOPSCHOOL* & *PROX_CBD*, *age* & *remaining_lease_mths_num*, *PROX_MRT* & *WITHIN_500m_MRT_BINARY* are also highly correlated (>0.8 or near 0.8).
 -   In view of this, it is wiser to only include either one of them in the subsequent model building. As a result, ***WITHIN_1km_TOPPRISCH***, ***age***, ***WITHIN_500m_MRT_BINARY*** and ***PROX_TOPSCHOOL*** are excluded in the subsequent model building.
 
 ```{r}
@@ -1608,10 +2599,16 @@ test_data_corr <- read_rds("data/rds/test_data_corr.rds")
 :::::
 
 #### **4.2.2 Initial Models**
+After collinearity check, we directly removed the highly correlated variables from the datasets. Next we will perform VIF check. A high VIF indicates that a particular predictor variable is highly correlated with other predictors in the model, which can inflate the variance of its coefficient, leading to unstable and unreliable results. 
 
-Check VIF before building MLR/GWR
+Therefore, we will check VIF before building the models, using the remaining variables below: 
 
-floor_level + plan_area + floor_area_sqm + flat_model + geometry + remaining_lease_mths_num + PROX_HKCENTER + PROX_SUPERMKT + PROX_CLINIC + PROX_ELDERCARE + PROX_MALLS + PROX_SPORTS + PROX_CC + PROX_PARK + PROX_MRT + PROX_CBD + PROX_BIZPK + WITHIN_1km_TOPPRISCH_BINARY + WITHIN_500m_HKC_BINARY + WITHIN_350m_KINDG + WITHIN_350m_CHILDC + WITHIN_350m_BUS + WITHIN_1km_PRISCH,
+```{r}
+#| echo: false
+
+names(train_data_corr)[3:25]
+```
+Below we will start the VIF iteration. For each VIF iteration, we will check the VIF scores, and remove the highest to perform the next iteration until there is no high VIF scores > 10.
 
 ::: panel-tabset
 ## VIF1
@@ -1668,7 +2665,7 @@ summary(initial_mlr2)
 
 ## VIF3
 
-In the 3rd iteration, we will remove the highest VIF *flat_model* (14.29).
+In the 3rd iteration, we will remove the highest VIF *flat_model* (10.98).
 
 ```{r}
 #| code-fold: true
@@ -1701,6 +2698,7 @@ summary(initial_mlr3)
 ::: panel-tabset
 ## VIF1
 
+Based on the following VIF scores, 4 variables are in the High Correlation category, with *plan_area* of 1.20e+05 being the highest. 
 ```{r}
 #| code-fold: true
 check_collinearity(initial_mlr1)
@@ -1720,7 +2718,7 @@ plot(mlr1.vif) +
 ```
 
 ## VIF2
-
+After removing *plan_area* from VIF1, 1 variable remains in the High Correlation category, with *flat_model* of 10.98 being the highest. 
 ```{r}
 #| code-fold: true
 check_collinearity(initial_mlr2)
@@ -1740,7 +2738,7 @@ plot(mlr2.vif) +
 ```
 
 ## VIF3
-
+At the 3rd iteration, we see all remaining variables are all low correlated. 
 ```{r}
 #| code-fold: true
 check_collinearity(initial_mlr3)
@@ -1766,7 +2764,7 @@ plot(mlr3.vif) +
 
 After 3 iterations of removing high VIF variables, all VIF are now below 10. So we can conclude that there are no sign of multicollinearity among the independent variables.
 
-Based on the Coefficient result from VIF3, we find that some variables are not statistically significant, including *PROX_CLINIC* and *PROX_PARK*. We will revise the initial model by removing these 2 variables.
+Based on the multicollinearity measuring results from VIF3, we find that some variables are not statistically significant, including *PROX_CLINIC* and *PROX_PARK*. We will revise the initial model by removing these 2 variables.
 
 **Total original dataset size**
 
@@ -1776,7 +2774,7 @@ The rest of 3,057 obervations from July - September 2025 are test data for predi
 
 ## [PREDICTIVE MODELING]{style="color: #E45A92;"}
 
-From section 5 to 7, we will calibrate 4 predictive modeling for HDB resale price using the same set of variables for a comparison. The models include Multi Linear Regression model (MLR), Geographycally Weighed Regression (GWR) model, Non-spatial Random Forest model, as well as Geographical Weighted Random Forest (gwRF) model.
+From section 5 to 6, we will calibrate 4 predictive modeling for HDB resale price using the same set of variables for a comparison and then predict the prices using the test data. The models include Multi Linear Regression model (MLR), Geographycally Weighed Regression (GWR) model, Non-spatial Random Forest model, as well as Geographical Weighted Random Forest (gwRF) model.
 
 ## 5 Model Calibration
 
