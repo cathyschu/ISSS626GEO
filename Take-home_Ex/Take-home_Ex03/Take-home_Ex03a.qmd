@@ -11,7 +11,7 @@ execute: #how YML page work
   freeze: true #controls rendering - no render if no changes
 ---
 
-![](images/banner.png){fig-align="center"}
+![](images/banner.png){fig-align="center" width="900"}
 
 ## 1 Overview
 
@@ -29,13 +29,8 @@ The objective of this take-home exercise is to develop a spatially informed mode
 
 In this study, we will first determine potential factors that influence the HDB resale price, import the data of these factors, and process them for predictive modeling. The modeling we will investigate in this task include Multi-linear Regression (MLR), Geographically Weighted Regression (GWR), non-spatial Random Forest, as well as Geographical Weighted Random Forest Model (gwRF). Among these models, we will examine and compare them to derive the best performing model.
 
-### Abstract
-
-<placeholder> analysis showing when spatial ensemble methods fail to add value!
-
 ## 2 Installing and Loading R packages
-
-One new package called [**jsonlite**]{style="color: #F08787;"} will be installed and loaded onto R environment. It will be used to parse json file into R as data frame.
+Below we will load the R packages. The table shows the packages used for this study and their descriptions, including links to more details to the package.
 
 ::: panel-tabset
 ## Load Packages
@@ -45,12 +40,10 @@ pacman::p_load(httr, tidyverse, sf, tmap, jsonlite, progress,
                spdep, GWmodel, SpatialML, rsample, Metrics, knitr,
                kableExtra, spatialRF, randomForestExplainer, rvest,
                stringr, lubridate, corrplot, performance, see,
-               gtsummary, ModelMetrics, dt)
+               gtsummary, ModelMetrics, DT, plotly)
 ```
 
 ## Package Intro
-
-Below table shows the packages used for this study and their descriptions, including links to more details to the package.
 
 +------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | R Package                                                                                      | Description                                                                                                                                                                                                                                                                                                                             |
@@ -262,14 +255,13 @@ write_rds(mpsz, "data/rds/mpsz.rds")
 mpsz <- read_rds("data/rds/mpsz.rds")
 st_crs(mpsz)
 ```
-
-
 :::
 
 #### 2.1.1 HDB resale data Preparation
 
 ::: panel-tabset
 ## Load data
+
 -   **Load HDB Resale Data** This data set comprises of HDB resale transactions from July 2017 onwards. Below we will extract a sub-set of transaction records on 4-Room flat transacted during July 2024 to June 2025.
 
 ```{r}
@@ -292,7 +284,8 @@ kable(head(HDBresale, 5))
 ```
 
 ## Street names
--   **Further processing for street names** 
+
+-   **Further processing for street names**
 
 We do further processing for the data as the street names with Saint are usually written as St.
 
@@ -314,9 +307,7 @@ glimpse(HDBresale)
 
 ## Geocoding Resale Data
 
-We use OneMap Geocode API: 
--   <https://www.onemap.gov.sg/apidocs/.> 
--   [https://www.onemap.gov.sg/apidocs/reverseGeocode](https://www.onemap.gov.sg/apidocs/reverseGeocode)
+We use OneMap Geocode API: - <https://www.onemap.gov.sg/apidocs/.> - <https://www.onemap.gov.sg/apidocs/reverseGeocode>
 
 Below we will prepare a geocoding function. It aims to perform the following tasks:
 
@@ -367,11 +358,9 @@ for(i in 1:nrow(HDBresale)){
 
 ## sf objects transformation
 
--   **Transform to sf data frame** 
+-   **Transform to sf data frame**
 
-We want to ensure that:
--   both input data sets must be in sf objects
--   they must be in similar projected coordinates systems
+We want to ensure that: - both input data sets must be in sf objects - they must be in similar projected coordinates systems
 
 ```{r}
 #| eval: false
@@ -395,11 +384,12 @@ kable(head(HDBresale_sf, 5))
 :::
 
 #### 2.1.2 Load location factors data
+
 We determined the predict factors in 2 categories. One is structural factors, and the other is location factors.
 
 ::: panel-tabset
-
 ## Structural factors
+
 -   Area of the unit
 -   Floor level
 -   Planning area (town)
@@ -407,6 +397,7 @@ We determined the predict factors in 2 categories. One is structural factors, an
 -   Age of the unit
 
 ## Location factors
+
 -   Proxomity to CBD
 -   Proxomity to business park
 -   Proximity to eldercare
@@ -428,12 +419,11 @@ We determined the predict factors in 2 categories. One is structural factors, an
 Below we will start processing the data for these predictive factors.
 
 ::: panel-tabset
-
 ## Education
 
 [**CHILDCARE CENTERS**]{style="color: #F08787;"}
 
-For childcare centers, we derive a geometry point to compute numbers of childcare centers within 350m to the HDB units. 
+For childcare centers, we derive a geometry point to compute numbers of childcare centers within 350m to the HDB units.
 
 ```{r}
 #| eval: false
@@ -475,14 +465,14 @@ summary(preschool_data)
 ```
 
 [**Quick view of the data set**]{style="color: #96A78D;"}
+
 ```{r}
 kable(head(preschool_data, 3))
 ```
 
+[**KINDERGARTENS**]{style="color: #F08787;"}
 
-[ **KINDERGARTENS**]{style="color: #F08787;"}
-
-For kindergartens, we derive a geometry point to compute numbers of childcare centers within 350m to the HDB units. 
+For kindergartens, we derive a geometry point to compute numbers of childcare centers within 350m to the HDB units.
 
 ```{r}
 #| eval: false
@@ -502,14 +492,14 @@ summary(kindergarten_data)
 ```
 
 [**Quick view of the data set**]{style="color: #96A78D;"}
+
 ```{r}
 kable(head(kindergarten_data, 3))
 ```
 
-
 [**PRIMARY SCHOOLS**]{style="color: #F08787;"}
 
-For primary schools, we derive a geometry point to compute numbers of childcare centers within 350m to the HDB units. 
+For primary schools, we derive a geometry point to compute numbers of childcare centers within 350m to the HDB units.
 
 ```{r}
 #| code-fold: true
@@ -595,10 +585,10 @@ summary(primschool_data)
 ```
 
 [**Quick view of the data set**]{style="color: #96A78D;"}
+
 ```{r}
 kable(head(primschool_data, 3))
 ```
-
 
 [**TOP PRIMARY SCHOOLS**]{style="color: #F08787;"}
 
@@ -628,13 +618,13 @@ top_primschool_data <- read_rds("data/rds/top_primschool_data.rds")
 summary(top_primschool_data)
 ```
 
-
 ## Business
+
 Proximity to offices is a factor when people consider buying a house. We assume that a shorter the distance to the offices drives higher purchasing value. In this study, we consider proximity to the CBD area and other business parks across the island.
 
-[ **CBD**]{style="color: #F08787;"}
+[**CBD**]{style="color: #F08787;"}
 
-For CBD, we will extract the area for CBD from `mpsz`. 
+For CBD, we will extract the area for CBD from `mpsz`.
 
 ```{r}
 #| code-fold: true
@@ -655,6 +645,7 @@ summary(cbd_data)
 *cbd_data* is now a single merged polygon representing the entire CBD area. We will use this to calculate distance in later section.
 
 [**Quick view of the data set**]{style="color: #96A78D;"}
+
 ```{r}
 kable(head(cbd_data, 3))
 ```
@@ -683,6 +674,7 @@ summary(bizpark_data)
 ```
 
 [**Quick view of the data set**]{style="color: #96A78D;"}
+
 ```{r}
 kable(head(bizpark_data, 3))
 ```
@@ -720,19 +712,19 @@ malls_without_coords
 
 Among checks, we identified some malls no longer in business:
 
--   Amber Mansions: demolished in 1984 
--   Bedok Point 
--   Capitol Centre 
--   Ellenborough Market 
--   Funan DigitaLife Mall: duplicate 
--   Great World: duplicate 
--   GV Yishun: cinema 
--   Jurong Entertainment Centre: demolished 2010 
--   Shaw Tower: demolished 
--   Specialists' Shopping Centre: redeveloped as Orchard Gateway 
--   Tanglin Shopping Centre: CLOSED 
--   The Golden Mile: CLOSED 
--   The Verge: closed 
+-   Amber Mansions: demolished in 1984
+-   Bedok Point
+-   Capitol Centre
+-   Ellenborough Market
+-   Funan DigitaLife Mall: duplicate
+-   Great World: duplicate
+-   GV Yishun: cinema
+-   Jurong Entertainment Centre: demolished 2010
+-   Shaw Tower: demolished
+-   Specialists' Shopping Centre: redeveloped as Orchard Gateway
+-   Tanglin Shopping Centre: CLOSED
+-   The Golden Mile: CLOSED
+-   The Verge: closed
 -   Woodland Mall: renamed to Woods square mall
 
 For other malls, we manually check with Google maps and add the coordinates into the data set.
@@ -856,6 +848,7 @@ summary(malls_data)
 ```
 
 [**Quick view of the data set**]{style="color: #96A78D;"}
+
 ```{r}
 kable(head(malls_data, 3))
 ```
@@ -903,6 +896,7 @@ summary(sports_data)
 ```
 
 [**Quick view of the data set**]{style="color: #96A78D;"}
+
 ```{r}
 kable(head(sports_data, 3))
 ```
@@ -910,6 +904,7 @@ kable(head(sports_data, 3))
 [**PARKS**]{style="color: #F08787;"}
 
 For the parks, we will compute centroid for each park and open space.
+
 ```{r}
 #| code-fold: true
 #| eval: false
@@ -933,10 +928,10 @@ summary(park_data)
 ```
 
 [**Quick view of the data set**]{style="color: #96A78D;"}
+
 ```{r}
 kable(head(park_data, 3))
 ```
-
 
 [**COMMUNITY CLUBS**]{style="color: #F08787;"}
 
@@ -978,11 +973,12 @@ summary(cc_data)
 ```
 
 [**Quick view of the data set**]{style="color: #96A78D;"}
+
 ```{r}
 kable(head(cc_data, 3))
 ```
 
-## F&B 
+## F&B
 
 [**FOODCOURT/HAWKER CENTERS**]{style="color: #F08787;"}
 
@@ -1005,14 +1001,16 @@ summary(hkcenter_data)
 ```
 
 [**Quick view of the data set**]{style="color: #96A78D;"}
+
 ```{r}
 kable(head(hkcenter_data, 3))
 ```
-Below we will check the status of these hawker centers, and find that all are either existing or under construction. None has stopped the business, so we will keep all these. 
+
+Below we will check the status of these hawker centers, and find that all are either existing or under construction. None has stopped the business, so we will keep all these.
+
 ```{r}
 unique(hkcenter_data$STATUS)
 ```
-
 
 [**SUPERMARKETS**]{style="color: #F08787;"}
 
@@ -1060,9 +1058,11 @@ summary(supermarkets_data)
 ```
 
 [**Quick view of the data set**]{style="color: #96A78D;"}
+
 ```{r}
 kable(head(supermarkets_data, 3))
 ```
+
 ## Transportation
 
 [**MRT**]{style="color: #F08787;"}
@@ -1079,6 +1079,7 @@ summary(mrt_data)
 ```
 
 [**Quick view of the data set**]{style="color: #96A78D;"}
+
 ```{r}
 kable(head(mrt_data, 3))
 ```
@@ -1105,9 +1106,11 @@ summary(mrt_data)
 ```
 
 [**Quick view of the data set**]{style="color: #96A78D;"}
+
 ```{r}
 kable(head(bus_data, 3))
 ```
+
 ## Healthcare
 
 [**CLINICS**]{style="color: #F08787;"}
@@ -1153,6 +1156,7 @@ summary(clinics_data)
 ```
 
 [**Quick view of the data set**]{style="color: #96A78D;"}
+
 ```{r}
 kable(head(clinics_data, 3))
 ```
@@ -1200,6 +1204,7 @@ summary(eldercare_data)
 ```
 
 [**Quick view of the data set**]{style="color: #96A78D;"}
+
 ```{r}
 kable(head(eldercare_data, 3))
 ```
@@ -1210,7 +1215,6 @@ kable(head(eldercare_data, 3))
 We validate the coordinates of the location factor data below. It shows us that all now conform to **SVY21**, and ready for proximity computation.
 
 ::: panel-tabset
-
 ## Result
 
 ```{r}
@@ -1253,7 +1257,6 @@ cat('Business Park bizpark_data: ',st_crs(bizpark_data)$epsg, '\n','\n',
     'Community Clubscc_data: ', st_crs(cc_data)$epsg)
 
 ```
-
 :::
 
 ### 2.2 Structural factors
@@ -1331,7 +1334,7 @@ In this section, we will prepare location factors of their proximity to the HDB 
 
 #### 2.3.1 Computing shortest distance
 
-We would like to use proximity from the HDB units to the location factors to predict the resale price. When one purchases housing, distance to useful facilities is always a consideration or value drivers. For example, an HDB unit being only 100m away would be very different from 500m away from the nearest MRT station, as it takes longer time to commute and can be inconvenient in rainy and hot days.  
+We would like to use proximity from the HDB units to the location factors to predict the resale price. When one purchases housing, distance to useful facilities is always a consideration or value drivers. For example, an HDB unit being only 100m away would be very different from 500m away from the nearest MRT station, as it takes longer time to commute and can be inconvenient in rainy and hot days.
 
 Therefore, below we will compute the distance between the nearest facilities/infrastructures from each HDB resale property. The distance computed would be in meters.
 
@@ -1516,13 +1519,11 @@ write_rds(HDB_combine_6biz, "data/rds/HDB_combine_6biz.rds")
 HDB_combine_6biz <- read_rds("data/rds/HDB_combine_6biz.rds")
 kable(head(HDB_combine_6biz, 3))
 ```
-
 :::
 
 #### **2.3.2 Create binary proximity indicators**
 
-Next we will derive a binary data to find out which schools are within 350 meters.
-`st_is_within_distance()` of [**sf**]{style="color: #F08787;"} package is used to determine whether two spatial objects (HDB property and preschool) are within a set distance of each other. It returns a logical matrix (or a sparse list of indices if sparse = TRUE) indicating for each geometry in HDB property which geometries in the facility are within the set distance.
+Next we will derive a binary data to find out which schools are within 350 meters. `st_is_within_distance()` of [**sf**]{style="color: #F08787;"} package is used to determine whether two spatial objects (HDB property and preschool) are within a set distance of each other. It returns a logical matrix (or a sparse list of indices if sparse = TRUE) indicating for each geometry in HDB property which geometries in the facility are within the set distance.
 
 ::: panel-tabset
 ## Top primary school
@@ -1595,7 +1596,6 @@ write_rds(HDB_combine_7bi_hkcenter, "data/rds/HDB_combine_7bi_hkcenter.rds")
 HDB_combine_7bi_hkcenter <- read_rds("data/rds/HDB_combine_7bi_hkcenter.rds")
 kable(head(HDB_combine_7bi_hkcenter, 3))
 ```
-
 :::
 
 ### 2.4 Amenity Density Analysis
@@ -1701,8 +1701,7 @@ kable(head(HDB_combine_8dense_primsch, 3))
 
 #### **2.5.1 Save the master dataset**
 
-With each data processing step in section 2.3 and 2.4, we have assembled all structural and location factors into the dataset *HDB_combine_8dense_primsch*.
-Below code we removed *remaining_lease_mths* because it has been converted to a new variable in months *remaining_lease_mths_num*.
+With each data processing step in section 2.3 and 2.4, we have assembled all structural and location factors into the dataset *HDB_combine_8dense_primsch*. Below code we removed *remaining_lease_mths* because it has been converted to a new variable in months *remaining_lease_mths_num*.
 
 ```{r}
 #| code-fold: true
@@ -1733,29 +1732,27 @@ anyNA(HDB_master)
 
 ### 3.1 Data Quality Check
 
-Let's run a summary statistics to examine is there is any obvious anomaly or outliers. 
-From below results, there is no obvious anomaly detected. Just an interesting fact that the childcare service density could be up to 35 within 350m of range.
+Let's run a summary statistics to examine is there is any obvious anomaly or outliers. From below results, there is no obvious anomaly detected. Just an interesting fact that the childcare service density could be up to 35 within 350m of range.
 
 ```{r}
 summary(HDB_master)
 ```
 
 ### 3.2 Target Variable Analysis
-Before we start data set preparation for predictive modeling training, we would like to leverage visualisations to observe the location factors and structural factors, and further examine if there are any anomalies. 
 
+Before we start data set preparation for predictive modeling training, we would like to leverage visualisations to observe the location factors and structural factors, and further examine if there are any anomalies.
 
 ```{r}
 names(HDB_master)
 ```
 
-
 #### **3.2.1 Plot distribution of variables**
 
-<placeholder>
 
 ::: panel-tabset
-## Price distribution
 
+## Price distribution
+The resale prices concentrate on 700,000 and is right skewed, indicating that there are many above 1 million dollar housing and even some outliers pricing crossing 1.2 million dollars.
 
 ```{r}
 #| code-fold: true
@@ -1775,7 +1772,8 @@ ggplot(HDB_master,
 ```
 
 ## Price x Proximity
-
+Most facilities show a downward trend in resale price as proximity to the facilities increases, such as clinics, MRT stations, parks, etc. Among these, CBD and top primary schools show the most obvious trends, while supermarkets and community centers show less obvious patterns. Interestingly, sports halls show a downward trend for shorter distances. However, after a distance of 1km, the trend reverses and prices begin to trend upward. 
+Based on these observations, these variables will be retained as predicting factors in the model.
 
 ```{r}
 #| code-fold: true
@@ -1803,7 +1801,12 @@ ggplot(HDB_master_long, aes(x = proximity, y = resale_price)) +
         axis.text.x = element_text(size = 11),
         axis.text.y = element_text(size = 11))
 ```
+
 ## Price x Facility density
+The boxplots indicate that facility density variables exhibit varying relationships with HDB resale prices. Top primary schools and kindergartens demonstrate positive trends, whereas facilities like bus stops and primary schools show less pronounced associations. 
+
+Despite these varying patterns, all density variables were retained as potential predictors given their theoretical relevance to housing valuation. 
+
 ```{r}
 #| code-fold: true
 #| fig-width: 12
@@ -1831,8 +1834,9 @@ ggplot(HDB_master_long_dist, aes(x = factor(count), y = resale_price)) +
         axis.text.x = element_text(size = 11),
         axis.text.y = element_text(size = 11))
 ```
+
 ## Price x Availability
- 
+The availability of top primary schools within 1km, hawker centers within 500m, and MRT stations within 500m show similar patterns in the boxplots. Suggests that the presence of these facilities could be a driver for HDB resale pricing. Interestingly, the absence of these facilities results in resale prices constrained within a narrower range compared to cases where these facilities are present, although numerous outliers are observed in both groups.
 
 ```{r}
 #| code-fold: true
@@ -1860,22 +1864,20 @@ ggplot(HDB_master_long_binary, aes(x = factor(count), y = resale_price)) +
         axis.text.x = element_text(size = 11),
         axis.text.y = element_text(size = 11))
 ```
-
 :::
 
 #### **3.2.2 Visualise HDB units prices on thematic map**
-            
+
 ```{r}
 names(HDB_master)
 ```
-
 
 ```{r}
 #| fig-width: 12
 #| fig-height: 8
 #| code-fold: true
 
-# tmap_mode("view")
+tmap_mode("view")
 tm_shape(mpsz) + 
   tm_polygons(fill = "REGION_N", col = "white", lwd = 0.8, 
               fill_alpha = 0.4, fill.legend = tm_legend(show = FALSE),
@@ -1885,7 +1887,8 @@ tm_shape(mpsz) +
   
   tm_shape(HDB_master) +
   tm_dots(fill = "resale_price",
-          size = 0.2,
+          size = 0.5,
+          col = NA,
           fill_alpha = 0.7,
           fill.scale = tm_scale_continuous(values = "brewer.reds"),
           fill.legend = tm_legend(title = "Resale Price ($)",
@@ -1909,13 +1912,28 @@ tm_shape(mpsz) +
   )
 tmap_mode("plot")
 ```
+
+::::: markgoals
+::: markgoals-header
+**Observation**
+:::
+
+::: markgoals-container
+The thematic map reveals that HDB resale prices are generally higher closer to the city center, demonstrating a clear distance-decay pattern from the CBD. However, substantial price variation exists within all regions, ranging from low to high values. Also note that spatial clusters of high-priced units appear in certain mature estates despite their distance from the CBD, while some peripheral areas show unexpectedly elevated prices. This spatial heterogeneity suggests that locational factors (such as proximity to MRT stations and top primary schools) and structural characteristics (such as age) interact to influence pricing patterns across different neighborhoods.
+
+:::
+:::::
+
+
 #### **3.2.3 Spatial Visualization of Amenities**
 
-::: panel-tabset
+Below are thematic maps of amenity variables reveal varied spatial patterns across Singapore. These visualisations suggest spatial heterogeneity in the distribution of amenities and housing attributes; altogether supporting the need for spatial analytical approaches in modeling HDB resale prices. 
 
+::: panel-tabset
 ## Education
 
 [**Primary schools (top 20 highlighted**)]{style="color: #F08787;"}
+
 ```{r}
 #| code-fold: true
 #| fig-width: 12
@@ -1930,8 +1948,9 @@ tm_shape(mpsz) +
   
   tm_shape(HDB_master) +
   tm_dots(fill = "resale_price",
-          size = 0.3,
-          fill_alpha = 0.5,
+          size = 0.6,
+          fill_alpha = 0.4,
+          col = "grey",
           fill.scale = tm_scale_continuous(values = "brewer.blues"),
           fill.legend = tm_legend(title = "Resale Price ($)",
           title.size = 0.7,      
@@ -1953,7 +1972,9 @@ tm_shape(mpsz) +
     frame.color = "white",
     frame.alpha = 0.3
   )
+tmap_mode("plot")
 ```
+
 [**Kindergartens**]{style="color: #F08787;"}
 
 ```{r}
@@ -1996,6 +2017,7 @@ tm_shape(mpsz) +
 ```
 
 [**Childcare centres**]{style="color: #F08787;"}
+
 ```{r}
 #| code-fold: true
 #| fig-width: 12
@@ -2035,10 +2057,9 @@ tm_shape(mpsz) +
   )
 ```
 
-
 ## Transport
 
-[**MRT station exits*]{style="color: #F08787;"}
+[\*\*MRT station exits\*\*]{style="color: #F08787;"}
 
 ```{r}
 #| code-fold: true
@@ -2080,6 +2101,7 @@ tm_shape(mpsz) +
 ```
 
 [**Bus stops**]{style="color: #F08787;"}
+
 ```{r}
 #| code-fold: true
 #| fig-width: 12
@@ -2122,6 +2144,7 @@ tm_shape(mpsz) +
 ## Commercial
 
 [**Shopping malls**]{style="color: #F08787;"}
+
 ```{r}
 #| code-fold: true
 #| fig-width: 12
@@ -2160,7 +2183,9 @@ tm_shape(mpsz) +
     frame.alpha = 0.3
   )
 ```
+
 [**Hawker centres**]{style="color: #F08787;"}
+
 ```{r}
 #| code-fold: true
 #| fig-width: 12
@@ -2201,6 +2226,7 @@ tm_shape(mpsz) +
 ```
 
 [**Supermarkets**]{style="color: #F08787;"}
+
 ```{r}
 #| code-fold: true
 #| fig-width: 12
@@ -2321,9 +2347,11 @@ tm_shape(mpsz) +
     frame.alpha = 0.3
   )
 ```
+
 ## Recreation & Others
 
 [**Parks**]{style="color: #F08787;"}
+
 ```{r}
 #| code-fold: true
 #| fig-width: 12
@@ -2362,7 +2390,9 @@ tm_shape(mpsz) +
     frame.alpha = 0.3
   )
 ```
+
 [**Sports halls**]{style="color: #F08787;"}
+
 ```{r}
 #| code-fold: true
 #| fig-width: 12
@@ -2403,7 +2433,9 @@ tm_shape(mpsz) +
 ```
 
 ## Healthcare
+
 [**Clinics**]{style="color: #F08787;"}
+
 ```{r}
 #| code-fold: true
 #| fig-width: 12
@@ -2442,7 +2474,9 @@ tm_shape(mpsz) +
     frame.alpha = 0.3
   )
 ```
+
 [**Eldercare services**]{style="color: #F08787;"}
+
 ```{r}
 #| code-fold: true
 #| fig-width: 12
@@ -2481,7 +2515,6 @@ tm_shape(mpsz) +
     frame.alpha = 0.3
   )
 ```
-
 :::
 
 ## 4 Pre-modeling Preparation
@@ -2522,18 +2555,20 @@ write_rds(HDB_test, "data/rds/HDB_test.rds")
 ```
 
 ```{r}
+#| echo: false
 HDB_train <- read_rds("data/rds/HDB_train.rds")
 HDB_test <- read_rds("data/rds/HDB_test.rds")
 ```
 
 #### **4.1.2 Sample train data**
-We will sample 5,000 data sets for predictive modeling training. 
+
+We will sample 5,000 data sets for predictive modeling training.
+
 ```{r}
 set.seed(1234)
 HDB_train_5k <- HDB_train %>%
   sample_n(5000)
 ```
-
 
 ### 4.2 Multicollinearity Check
 
@@ -2567,7 +2602,7 @@ corrplot(cor(st_drop_geometry(HDB_train_5k)[, c(2, 3, 5, 7, 8:28)]),
 :::
 
 ::: markgoals-container
--   From the scatterplot matrix, it is clear that *WITHIN_1km_TOPSCH* is highly correlated to *WITHIN_1km_TOPSCH_BINARY*. In addition, other pairs of variables *PROX_TOPSCHOOL* & *PROX_CBD*, *age* & *remaining_lease_mths_num*, *PROX_MRT* & *WITHIN_500m_MRT_BINARY* are also highly correlated (>0.8 or near 0.8).
+-   From the scatterplot matrix, it is clear that *WITHIN_1km_TOPSCH* is highly correlated to *WITHIN_1km_TOPSCH_BINARY*. In addition, other pairs of variables *PROX_TOPSCHOOL* & *PROX_CBD*, *age* & *remaining_lease_mths_num*, *PROX_MRT* & *WITHIN_500m_MRT_BINARY* are also highly correlated (\>0.8 or near 0.8).
 -   In view of this, it is wiser to only include either one of them in the subsequent model building. As a result, ***WITHIN_1km_TOPPRISCH***, ***age***, ***WITHIN_500m_MRT_BINARY*** and ***PROX_TOPSCHOOL*** are excluded in the subsequent model building.
 
 ```{r}
@@ -2599,16 +2634,18 @@ test_data_corr <- read_rds("data/rds/test_data_corr.rds")
 :::::
 
 #### **4.2.2 Initial Models**
-After collinearity check, we directly removed the highly correlated variables from the datasets. Next we will perform VIF check. A high VIF indicates that a particular predictor variable is highly correlated with other predictors in the model, which can inflate the variance of its coefficient, leading to unstable and unreliable results. 
 
-Therefore, we will check VIF before building the models, using the remaining variables below: 
+After collinearity check, we directly removed the highly correlated variables from the datasets. Next we will perform VIF check. A high VIF indicates that a particular predictor variable is highly correlated with other predictors in the model, which can inflate the variance of its coefficient, leading to unstable and unreliable results.
+
+Therefore, we will check VIF before building the models, using the remaining variables below:
 
 ```{r}
 #| echo: false
 
 names(train_data_corr)[3:25]
 ```
-Below we will start the VIF iteration. For each VIF iteration, we will check the VIF scores, and remove the highest to perform the next iteration until there is no high VIF scores > 10.
+
+Below we will start the VIF iteration. For each VIF iteration, we will check the VIF scores, and remove the highest to perform the next iteration until there is no high VIF scores \> 10.
 
 ::: panel-tabset
 ## VIF1
@@ -2698,7 +2735,8 @@ summary(initial_mlr3)
 ::: panel-tabset
 ## VIF1
 
-Based on the following VIF scores, 4 variables are in the High Correlation category, with *plan_area* of 1.20e+05 being the highest. 
+Based on the following VIF scores, 4 variables are in the High Correlation category, with *plan_area* of 1.20e+05 being the highest.
+
 ```{r}
 #| code-fold: true
 check_collinearity(initial_mlr1)
@@ -2718,7 +2756,9 @@ plot(mlr1.vif) +
 ```
 
 ## VIF2
-After removing *plan_area* from VIF1, 1 variable remains in the High Correlation category, with *flat_model* of 10.98 being the highest. 
+
+After removing *plan_area* from VIF1, 1 variable remains in the High Correlation category, with *flat_model* of 10.98 being the highest.
+
 ```{r}
 #| code-fold: true
 check_collinearity(initial_mlr2)
@@ -2738,7 +2778,9 @@ plot(mlr2.vif) +
 ```
 
 ## VIF3
-At the 3rd iteration, we see all remaining variables are all low correlated. 
+
+At the 3rd iteration, we see all remaining variables are all low correlated.
+
 ```{r}
 #| code-fold: true
 check_collinearity(initial_mlr3)
@@ -2781,6 +2823,8 @@ From section 5 to 6, we will calibrate 4 predictive modeling for HDB resale pric
 ::: panel-tabset
 ## 5.1 MLR
 
+### **5.1.1 Model calibration**
+
 Multiple Linear Regression Building upon the initial MLR model from section 4.2.2, we calibrate the revised MLR model as below. *PROX_CLINIC* and *PROX_PARK* will be removed.
 
 ```{r}
@@ -2808,11 +2852,32 @@ summary(hdb.mlr)
 
 The output above reveals that all explanatory variables are statistically significant at 95% confident level.
 
+### **5.1.2 MLR Model calibration result**
+
+We use `tbl_regression()` to create a regression report for MLR.
+
+```{r}
+#| code-fold: true
+tbl_regression(hdb.mlr, 
+               intercept = TRUE) %>% 
+  add_glance_source_note(
+    label = list(sigma ~ "\U03C3"),
+    include = c(r.squared, adj.r.squared, 
+                AIC, statistic,
+                p.value, sigma)) %>%
+  modify_table_styling(
+    columns = label,
+    rows = variable %in% c("flat_type", "floor_range"),
+    footnote = "Categorical variable"
+  ) %>%
+  bold_labels()
+```
+
 ## 5.2 GWR
 
 We will use Geographically Weighted Regression to build a Hedonic Pricing Model in this section.
 
-### 5.2.1 Bandwidth selection
+### **5.2.1 Bandwidth selection**
 
 Adaptive bandwidth is the chosen approach for the GWR modeling as Singapore has varying spatial density of the housing.
 
@@ -2846,7 +2911,7 @@ write_rds(bw.adaptive, "data/rds/bw.adaptive.rds")
 bw.adaptive <- read_rds("data/rds/bw.adaptive.rds")
 ```
 
-### 5.2.2 Model fitting
+### **5.2.2 Model calibration**
 
 Now we will calibrate the GWR-based hedonic pricing model using the adaptive bandwidth from section 5.2.1 and gaussian kernel.
 
@@ -2871,6 +2936,8 @@ gwr.adaptive <- gwr.basic(
 write_rds(gwr.adaptive, "data/model/gwr.adaptive.rds")
 ```
 
+### **5.2.3 GRW Model calibration**
+
 ```{r}
 #| echo: false
 gwr.adaptive <- read_rds("data/model/gwr.adaptive.rds")
@@ -2881,7 +2948,7 @@ gwr.adaptive
 
 In this section, we want to calibrate a model to predict HDB resale price using the Random Forest method.
 
-### 5.3.1 Data preparation
+### **5.3.1 Data preparation**
 
 First is to **extract the x, y coordinates** of the training and test data sets.
 
@@ -2913,7 +2980,7 @@ test_data_nogeom <- test_data_corr %>%
 
 ```
 
-### 5.3.3 Calibrate non-spatial RF model with `ranger()`
+### **5.3.2 Calibrate non-spatial RF model with** `ranger()`
 
 ```{r}
 #| eval: false
@@ -2935,6 +3002,8 @@ rf <- ranger(
 write_rds(rf, "data/model/rf.rds")
 ```
 
+### **5.3.3 RF Model calibration**
+
 ```{r}
 #| echo: false
 rf <- read_rds("data/model/rf.rds")
@@ -2943,9 +3012,13 @@ rf
 
 ## 5.4 GWRF
 
-In this section, we will calibrate Geographical Weighted Random Forest Model with the training data. \### 5.4.1 Bandwidth selection We will use GWR Bandwidth for GWRF: `bw.adaptive`
+In this section, we will calibrate Geographical Weighted Random Forest Model with the training data.
 
-### 5.4.2 Model fitting
+### **5.4.1 Bandwidth selection**
+
+We will use GWR Bandwidth for GWRF: `bw.adaptive`.
+
+### **5.4.2 Model calibration**
 
 ```{r}
 #| eval: false
@@ -2972,33 +3045,14 @@ write_rds(gwRF_adaptive, "data/model/gwRF_adaptive.rds")
 
 ```
 
+### **5.4.3 gwRF Model calibration result**
+
 ```{r}
 #| code-fold: true
 gwRF_adaptive <- read_rds("data/model/gwRF_adaptive.rds")
 gwRF_adaptive$LocalModelSummary
 ```
 :::
-
-### 5.5 Model Calibration Results
-
-We use `tbl_regression()` to create a regression report.
-
-```{r}
-#| code-fold: true
-tbl_regression(hdb.mlr, 
-               intercept = TRUE) %>% 
-  add_glance_source_note(
-    label = list(sigma ~ "\U03C3"),
-    include = c(r.squared, adj.r.squared, 
-                AIC, statistic,
-                p.value, sigma)) %>%
-  modify_table_styling(
-    columns = label,
-    rows = variable %in% c("flat_type", "floor_range"),
-    footnote = "Categorical variable"
-  ) %>%
-  bold_labels()
-```
 
 ## 6 Predictions with Test Data
 
@@ -3043,19 +3097,25 @@ ss_res <- sum((test_data_p_mlr$resale_price - test_data_p_mlr$mlr_pred)^2)
 ss_tot <- sum((test_data_p_mlr$resale_price - mean(test_data_p_mlr$resale_price))^2)
 r2_mlr <- 1 - (ss_res / ss_tot)
 
-cat("RMSE:", format(rmse_mlr), "\n")
-cat("MAE:", format(mae_mlr), "\n")
-cat("R^2:", round(r2_mlr, 4), "\n")
+cat("MLR RMSE:", format(rmse_mlr), "\n",
+    "MLR MAE:", format(mae_mlr), "\n",
+    "MLR R^2:", round(r2_mlr, 4))
 ```
 
 ### **6.1.4 Visualising the predicted values**
 
 ```{r}
 #| code-fold: true
-ggplot(data = test_data_p_mlr,
+p1 <- ggplot(data = test_data_p_mlr,
        aes(x = mlr_pred,
-           y = resale_price)) +
+           y = resale_price,
+           text = paste("Actual: $", format(resale_price, big.mark = ","),
+                       "\nPredicted: $", format(mlr_pred, big.mark = ","),
+                       "\nError: $", format(resale_price - mlr_pred, big.mark = ","),
+                       sep = ""))) +           
   geom_point(col = "#EF7722", size = 0.5) +
+  geom_abline(intercept = 0, slope = 1, 
+              color = "#DC143C", linetype = "dashed", linewidth = 1) +  
   labs(title = "MLR: Predicted vs Actual Resale Prices",
        x = "Predicted Resale Price (S$)",
        y = "Actual Resale Price (S$)") +
@@ -3065,7 +3125,11 @@ ggplot(data = test_data_p_mlr,
     panel.background = element_rect(fill = "#F5F5F5"),   
     plot.title = element_text(hjust = 0.5, size = 14, face = "bold") 
   )  
+ggplotly(p1, tooltip = "text")
+
 ```
+
+MLR predictions quite largely deviate from the actual prices, especially for higher quantums beyond \$900,000.
 
 ## 6.2 GWR
 
@@ -3102,6 +3166,8 @@ gwr_pred <- read_rds("data/model/gwr_pred.rds")
 
 ### **6.2.2 Append predicted values to the test dataset**
 
+Below is to append the predicted values using GWR moderling to the test dataset. You will see the first few rows of the result.
+
 ```{r}
 #| code-fold: true
 gwr_predictions <- gwr_pred$SDF$prediction
@@ -3110,11 +3176,11 @@ test_data_p <- test_data_p_mlr
 test_data_p$gwr_pred <- gwr_predictions
 
 kable(head(test_data_p[, c("resale_price", "gwr_pred")]))
-
-
 ```
 
-### **6.2.3 RF Model performance metrics**
+### **6.2.3 GWR Model performance metrics**
+
+To assess GWR modeling performance, we will obtain the performance metrics Root Mean Squared Error (RMSE), Mean Absolute Error (MAE) and R square metrics.
 
 ```{r}
 #| code-fold: true
@@ -3152,11 +3218,17 @@ print(paste("GWR R^2:", round(gwr_rsq, 4)))
 Let's visualise the actual resale price and the predicted resale price in the scatter plot.
 
 ```{r}
-
-ggplot(data = test_data_p,
+#| code-fold: true
+p2 <- ggplot(data = test_data_p,
        aes(x = gwr_pred,
-           y = resale_price)) +
+           y = resale_price,
+           text = paste("Actual: $", format(resale_price, big.mark = ","),
+                       "\nPredicted: $", format(gwr_pred, big.mark = ","),
+                       "\nError: $", format(resale_price - gwr_pred, big.mark = ","),
+                       sep = ""))) +           
   geom_point(col = "#8AA624", size = 0.5) +
+  geom_abline(intercept = 0, slope = 1, 
+              color = "#DC143C", linetype = "dashed", linewidth = 1) +
   labs(title = "GWR: Predicted vs Actual Resale Prices",
        x = "Predicted Resale Price (S$)",
        y = "Actual Resale Price (S$)") +
@@ -3167,11 +3239,16 @@ ggplot(data = test_data_p,
     plot.title = element_text(hjust = 0.5, size = 14, face = "bold") 
   )  
   
+ggplotly(p2, tooltip = "text")
 ```
+
+The scatterplot demonstrates strong predictive performance, with points clustering tightly along the 45-degree line (perfect prediction). The majority of predictions fall within a narrow band around the diagonal, indicating minimal systematic bias. Even the outliers remain within ±\$150,000 of actual values. This tight concentration suggests the GWR model effectively captures the spatial variation in HDB pricing across Singapore's diverse regions.
 
 ## 6.3 RF
 
 ### **6.3.1 Predict with test data**
+
+Mode
 
 ```{r}
 #| eval: false
@@ -3235,11 +3312,17 @@ print(paste("RF R^2:", rf_rsq))
 Let's visualise the actual resale price and the predicted resale price in the scatter plot.
 
 ```{r}
-
-ggplot(data = test_data_p,
+#| code-fold: true
+p3 <- ggplot(data = test_data_p,
        aes(x = rf_pred,
-           y = resale_price)) +
+           y = resale_price,
+           text = paste("Actual: $", format(resale_price, big.mark = ","),
+                       "\nPredicted: $", format(rf_pred, big.mark = ","),
+                       "\nError: $", format(resale_price - rf_pred, big.mark = ","),
+                       sep = ""))) +           
   geom_point(col = "#3396D3", size = 0.5) +
+  geom_abline(intercept = 0, slope = 1, 
+              color = "#DC143C", linetype = "dashed", linewidth = 1) +  
   labs(title = "RF: Predicted vs Actual Resale Prices",
        x = "Predicted Resale Price (S$)",
        y = "Actual Resale Price (S$)") +
@@ -3250,7 +3333,10 @@ ggplot(data = test_data_p,
     plot.title = element_text(hjust = 0.5, size = 14, face = "bold") 
   )  
   
+ggplotly(p2, tooltip = "text")
 ```
+
+RF predictions are generally decent as they are all quite close to the slope of 1. The model also tends to predict lower than the actual resale prices, but there are few outliers.
 
 ## 6.4 GWRF
 
@@ -3266,7 +3352,9 @@ test_data_gwrf <- cbind(
 kable(head(test_data_gwrf))
 ```
 
-### **6.4.2 Predict with test data**
+### **6.4.2 gwRF Predict with test data**
+
+Below prediction ran for 40 sec.
 
 ```{r}
 #| eval: false
@@ -3348,11 +3436,17 @@ print(paste("gwRF R^2:", rf_rsq))
 Let's visualise the actual resale price and the predicted resale price in the scatter plot.
 
 ```{r}
-
-ggplot(data = test_data_p,
+#| code-fold: true
+p4 <- ggplot(data = test_data_p,
        aes(x = gwrf_pred,
-           y = resale_price)) +
+           y = resale_price,
+           text = paste("Actual: $", format(resale_price, big.mark = ","),
+                       "\nPredicted: $", format(gwrf_pred, big.mark = ","),
+                       "\nError: $", format(resale_price - gwrf_pred, big.mark = ","),
+                       sep = ""))) +           
   geom_point(col = "#E45A92", size = 0.5) +
+  geom_abline(intercept = 0, slope = 1, 
+              color = "#DC143C", linetype = "dashed", linewidth = 1) +   
   labs(title = "GWRF: Predicted vs Actual Resale Prices",
        x = "Predicted Resale Price (S$)",
        y = "Actual Resale Price (S$)") +
@@ -3363,81 +3457,107 @@ ggplot(data = test_data_p,
     plot.title = element_text(hjust = 0.5, size = 14, face = "bold") 
   )  
   
+ggplotly(p4, tooltip = "text")
 ```
+
+gwRF model predictions are mostly close to the actual resale prices, but it has many outliers that divate for almost 50,0000 (50%) higher than the actual prices.
 :::
 
 ## 7 Model Evaluation
 
 ```{r}
-#| fig-width: 12 
-#| fig-height: 10
-#| code-fold: true
-p1 <- ggplot(data = test_data_p_mlr,
-       aes(x = mlr_pred,
-           y = resale_price)) +
-  geom_point(col = "#EF7722", size = 0.5) +
-  labs(title = "MLR: Predicted vs Actual Resale Prices",
-       x = "Predicted Resale Price (S$)",
-       y = "Actual Resale Price (S$)") +
-    theme_minimal() +  
-  theme(
-    plot.background = element_rect(fill = "#D0DDD0"),      
-    panel.background = element_rect(fill = "#F5F5F5"),   
-    plot.title = element_text(hjust = 0.5, size = 14, face = "bold") 
-  )  
+#| fig-width: 10 
+#| fig-height: 8
+#| echo: false
 
-p2 <- ggplot(data = test_data_p,
-       aes(x = gwr_pred,
-           y = resale_price)) +
-  geom_point(col = "#8AA624", size = 0.5) +
-  labs(title = "GWR: Predicted vs Actual Resale Prices",
-       x = "Predicted Resale Price (S$)",
-       y = "Actual Resale Price (S$)") +
-    theme_minimal() +  
-  theme(
-    plot.background = element_rect(fill = "#D0DDD0"),      
-    panel.background = element_rect(fill = "#F5F5F5"),   
-    plot.title = element_text(hjust = 0.5, size = 14, face = "bold") 
-  )  
-
-p3 <- ggplot(data = test_data_p,
-       aes(x = rf_pred,
-           y = resale_price)) +
-  geom_point(col = "#3396D3", size = 0.5) +
-  labs(title = "RF: Predicted vs Actual Resale Prices",
-       x = "Predicted Resale Price (S$)",
-       y = "Actual Resale Price (S$)") +
-    theme_minimal() +  
-  theme(
-    plot.background = element_rect(fill = "#D0DDD0"),      
-    panel.background = element_rect(fill = "#F5F5F5"),   
-    plot.title = element_text(hjust = 0.5, size = 14, face = "bold") 
-  )  
-
-p4 <- ggplot(data = test_data_p,
-       aes(x = gwrf_pred,
-           y = resale_price)) +
-  geom_point(col = "#E45A92", size = 0.5) +
-  labs(title = "GWRF: Predicted vs Actual Resale Prices",
-       x = "Predicted Resale Price (S$)",
-       y = "Actual Resale Price (S$)") +
-    theme_minimal() +  
-  theme(
-    plot.background = element_rect(fill = "#D0DDD0"),      
-    panel.background = element_rect(fill = "#F5F5F5"),   
-    plot.title = element_text(hjust = 0.5, size = 14, face = "bold") 
-  )  
+# p1 <- ggplot(data = test_data_p_mlr,
+#        aes(x = mlr_pred,
+#            y = resale_price)) +
+#   geom_point(col = "#EF7722", size = 0.5) +
+#   geom_abline(intercept = 0, slope = 1, 
+#               color = "#DC143C", linetype = "dashed", linewidth = 1) +
+#   labs(title = "MLR: Predicted vs Actual Resale Prices",
+#        x = "Predicted Resale Price (S$)",
+#        y = "Actual Resale Price (S$)") +
+#     theme_minimal() +  
+#   theme(
+#     plot.background = element_rect(fill = "#D0DDD0"),      
+#     panel.background = element_rect(fill = "#F5F5F5"),   
+#     plot.title = element_text(hjust = 0.5, size = 14, face = "bold") 
+#   )  
+# 
+# p2 <- ggplot(data = test_data_p,
+#        aes(x = gwr_pred,
+#            y = resale_price)) +
+#   geom_point(col = "#8AA624", size = 0.5) +
+#   geom_abline(intercept = 0, slope = 1, 
+#               color = "#DC143C", linetype = "dashed", linewidth = 1) +  
+#   labs(title = "GWR: Predicted vs Actual Resale Prices",
+#        x = "Predicted Resale Price (S$)",
+#        y = "Actual Resale Price (S$)") +
+#     theme_minimal() +  
+#   theme(
+#     plot.background = element_rect(fill = "#D0DDD0"),      
+#     panel.background = element_rect(fill = "#F5F5F5"),   
+#     plot.title = element_text(hjust = 0.5, size = 14, face = "bold") 
+#   )  
+# 
+# p3 <- ggplot(data = test_data_p,
+#        aes(x = rf_pred,
+#            y = resale_price)) +
+#   geom_point(col = "#3396D3", size = 0.5) +
+#   geom_abline(intercept = 0, slope = 1, 
+#               color = "#DC143C", linetype = "dashed", linewidth = 1) +
+#   labs(title = "RF: Predicted vs Actual Resale Prices",
+#        x = "Predicted Resale Price (S$)",
+#        y = "Actual Resale Price (S$)") +
+#     theme_minimal() +  
+#   theme(
+#     plot.background = element_rect(fill = "#D0DDD0"),      
+#     panel.background = element_rect(fill = "#F5F5F5"),   
+#     plot.title = element_text(hjust = 0.5, size = 14, face = "bold") 
+#   )  
+# 
+# p4 <- ggplot(data = test_data_p,
+#        aes(x = gwrf_pred,
+#            y = resale_price)) +
+#   geom_point(col = "#E45A92", size = 0.5) +
+#   geom_abline(intercept = 0, slope = 1, 
+#               color = "#DC143C", linetype = "dashed", linewidth = 1) +
+#   labs(title = "GWRF: Predicted vs Actual Resale Prices",
+#        x = "Predicted Resale Price (S$)",
+#        y = "Actual Resale Price (S$)") +
+#     theme_minimal() +  
+#   theme(
+#     plot.background = element_rect(fill = "#D0DDD0"),      
+#     panel.background = element_rect(fill = "#F5F5F5"),   
+#     plot.title = element_text(hjust = 0.5, size = 14, face = "bold") 
+#   )  
 
 (p1 | p2) / (p3 | p4)
+
 ```
 
 ### 7.1 Performance metrics (RMSE, MAE, R²)
 
-Prediction Performance Metrics
+Based on the scatterplots and the metrics result below, we can conclude that:
+
+-   **Geographically Weighted Regression**
+
+GWR demonstrates the strongest performance, with predictions clustering tightly along the 45-degree reference line and minimal systematic bias. Even outliers remain within ±\$150,000 of actual values, indicating the model effectively captures spatial variation across Singapore's diverse housing markets.
+
+-   **Random Forest**
+
+Random Forest shows generally good performance with most predictions close to the diagonal, though the model exhibits a slight tendency to underpredict for higher-priced units. Outliers are minimal and predictions maintain consistency across the price range.
+
+-   **Multiple Linear Regression** MLR shows the weakest performance, with predictions substantially deviating from actual prices, especially for premium units exceeding \$900,000. The scatter indicates systematic bias and inability to capture non-linear relationships in the data.
+
+-   **Geographical Weighted Random Forest**
+
+gwRF displays mixed results, with most predictions reasonably close to actual values but suffering from many significant outliers that overpredict by up to \$479,244 (approximately 50% error). This inconsistency suggests the model struggles with certain spatial or feature combinations.
 
 ```{r}
 #| code-fold: true
-library(DT)
 
 model_comparison <- data.frame(
   Model = c("MLR", "GWR", "Random Forest", "gwRF"),
@@ -3455,110 +3575,160 @@ datatable(model_comparison,
 
 RMSE (Root Mean Squared Error) MAE (Mean Absolute Error) R² on test set Compare across all 4 models
 
-### 7.3 Model comparison
+### 7.2 Model comparison
 
 Table from Section 7.1 is an interactive table that readers can sort the values in ascending or descending order for each metric.
 
-We also plot the metrics in
+The bar charts below helps decide that GWR is the winner among all 4 models across all 3 metrics, with the highest R² and lowest RMSE & MAE, followed by Random Forest, Geographical Weighted Random Forest and lastly Multilinear Regression.
 
-Which model predicts best? Performance on unseen data
+-   **RMSE:** GWR \> RF \> geRF \> MLR
+-   **MAE:** GWR \> RF \> geRF \> MLR
+-   **R²:** GWR \> RF \> geRF \> MLR
 
-### 7.4 Best model selection
+```{r}
+#| code-fold: true
+# pivot longer
+model_comparison_long <- model_comparison %>%
+  pivot_longer(cols = c(RMSE, MAE, R_2),
+               names_to = "metric",
+               values_to = "value") %>%
+  mutate(metric = recode(metric,
+                         "R_2" = "R^2",
+                         "RMSE" = "RMSE",
+                         "MAE" = "MAE"))
 
--   Best overall model GWR (lowest RMSE = 38,028; lowest MAE = 28,750, highest R² = 0.9587)
+# Create ordering within each metric
+model_comparison_long <- model_comparison_long %>%
+  group_by(metric) %>%
+  mutate(
+    sort_helper = if_else(metric %in% c("RMSE", "MAE"), value, -value),
+    Rank = if_else(metric %in% c("RMSE", "MAE"), 
+                   rank(value), 
+                   rank(-value))    
+  ) %>%
+  arrange(metric, sort_helper) %>%  # Sort within each metric
+  mutate(
+    Model_metric = paste(Model, metric, sep = "___"),  # Create unique identifier
+    Model_metric = factor(Model_metric, levels = unique(Model_metric))
+  ) %>%
+  ungroup()
 
--   Improvement over baseline Comparing spatial models (GWR, gwRF) vs non-spatial (MLR, RF), all 3 metrics show that the spatial models clearly significantly outperform non-spatial models. MLR is the bottom performer among the 4 models. This validates that spatial heterogeneity is important, so using geographical weighted methods much better predicts the HDB resle price.
+p <- ggplot(model_comparison_long, 
+       aes(x = Model_metric, y = value, fill = Model,
+           text = paste0("<b>", Model, "</b>",
+                        "\n", metric, ": ", format(round(value, 4), big.mark = ","),
+                        "\nRank: ", Rank, " of 4"))) +            
+  
+  geom_bar(stat = "identity", alpha = 0.8) +
+  facet_wrap(~ metric, scales = "free", ncol = 3) +
+  scale_x_discrete(labels = function(x) gsub("___.*", "", x)) + 
+  scale_fill_manual(values = c("MLR" = "#E2A16F", 
+                                "GWR" = "#A6B28B", 
+                                "Random Forest" = "#B2C6D5", 
+                                "gwRF" = "#FFC6C6")) +
+  labs(title = "Model Performance Comparison",
+       x = "Model",
+       y = "Value") +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "none",
+    strip.text = element_text(size = 11, face = "bold"),
+    plot.background = element_rect(fill = "#D0DDD0"),      
+    panel.background = element_rect(fill = "#F5F5F5"),   
+    panel.border = element_rect(color = "white", fill = NA, linewidth = 1),
+    plot.title = element_text(hjust = 0.5, size = 14, face = "bold"))
+ggplotly(p, tooltip = "text")
+```
 
--   Model complexity trade-off When we run the models using 5,000 datasets for training and approximately 3,000 datasets for testing, GWR modeling required the most time - around 15-40 minutes. The rest of the modeling did not take noticeable long time to complete training and testing. This is given that the author's laptop specs is premium for machine learning projects. Although GWR is more computational expensive, it gives the best performance. If resource is scarcer, gwRF is recommended
+### 7.3 Best model selection
 
-Both GWR and gwRF used an adaptive bandwidth of 48 neighbors, optimized using cross-validation for the GWR model. Future work could explore whether gwRF benefits from a larger bandwidth given the additional data requirements of ensemble methods.
+-   **The best overall model** These visual patterns confirm the quantitative metrics: **Geographically Weighted Regression (GWR)** achieves the most reliable predictions, followed by RF, while gwRF's outlier problem and MLR's systematic bias limit their practical utility.
 
-*Check residuals to see if spatial models (GWR, geRF) improve over non-spatial ones* *Helps explain WHY spatial models perform better*
+It has the best performance across all metrics (Lowest RMSE = 38,028; Lowest MAE = 28,750; Highest R² = 0.9587). This demonstrates superior predictive accuracy for HDB resale prices.
+
+-   **Spatial vs Non-Spatial models**
+
+The results present an interesting finding: while GWR (spatial) outperforms all models, Random Forest outperforms Geographically Weighted Random Forest (spatial). This suggests that spatial heterogeneity matters, but its benefit depends on the modeling approach.
+
+GWR's parametric framework effectively captures smooth spatial gradients in Singapore's housing market, while GWRF's localised tree-based partitioning may struggle with the continuous nature of spatial price variations. MLR's poor performance (RMSE = 51,438) confirms that a simple global model is insufficient for capturing Singapore's spatially complex housing dynamics.
+
+-   **Computational trade-offs**
+
+GWR requires significantly more computational resources, taking short time to train but 30-40 minutes to predict on 5,000 observations, as compared to negligible training and testing time for other models (tested on a high-specification laptop).
+
+Despite this computational cost, GWR's superior accuracy justifies its use for applications prioritising prediction quality. For resource-constrained scenarios or applications requiring rapid retraining, Random Forest would provide a strong alternative with comparable performance (RMSE = 38,423) and minimal computational overhead.
 
 ## 8 Discussion & Conclusion
 
-The results reveal important insights about spatial modeling for HDB resale prices: Spatial heterogeneity is significant: GWR substantially outperformed all other models, achieving the lowest RMSE (38,028) and highest R² (0.9587). This demonstrates that locally-varying relationships between property characteristics and prices are crucial for accurate prediction in Singapore's HDB market. Different neighborhoods exhibit different pricing dynamics that cannot be captured by global models. Random Forest cannot fully substitute for spatial modeling: Despite its flexibility, RF (RMSE=41,950) could not match GWR's performance. While RF can learn complex patterns, it lacks the explicit spatial weighting mechanism that allows GWR to adapt coefficients by location. The \~4,000 SGD difference in RMSE represents practically significant prediction error (\~10% improvement with GWR). Over-localization problem in gwRF: Adding spatial weighting to Random Forest actually degraded performance below standalone RF. With bandwidth=48 neighbors, each local RF trains on insufficient data, leading to overfitting. The hybrid approach (60% local, 40% global) partially recovered performance but still couldn't match either GWR or RF. Model recommendations:
-
-For best prediction accuracy: Use GWR - it provides superior performance and spatial interpretability For computational efficiency: Use RF as a faster alternative with acceptable accuracy Avoid: Fully local gwRF due to overfitting and poor performance despite high computational cost Best performing model Spatial vs non-spatial comparison Variable importance insights Limitations
-
 ### 8.1 Key findings
 
-We tested a hybrid gwRF approach (60% local, 40% global weights) to address potential over-localization. While the hybrid model outperformed the fully local gwRF, it remained inferior to both GWR and standalone RF. This confirms that:
+The results reveal important insights about spatial modeling for HDB resale prices.
 
-Pure local modeling with bandwidth=48 is suboptimal for ensemble methods Even with global information, gwRF cannot match the performance of purpose-built spatial (GWR) or global ensemble (RF) models
+-   **Spatial heterogeneity is significant:**
 
-Conclusion: gwRF, whether fully local or hybrid, does not provide a useful middle ground for this dataset and should not be preferred over GWR (for accuracy) or RF (for efficiency).
+GWR substantially outperformed all other models, achieving the lowest RMSE (38,028) and highest R² (0.9587). This demonstrates that locally-varying relationships between property characteristics and prices are crucial for accurate prediction in Singapore's HDB market.
 
-### 8.2 gwRF bandwidth sensitivity analysis
+Different neighborhoods exhibit different pricing dynamics that cannot be captured by global models. For Random Forest, despite its flexibility, its RMSE=41,950 could not match GWR's performance. While RF can learn complex patterns, it lacks the explicit spatial weighting mechanism that allows GWR to adapt coefficients by location. The 4,000 SGD difference in RMSE represents practically significant prediction error (\~10% improvement with GWR).
 
-We conducted a bandwidth sensitivity analysis testing values from 48 to 200 neighbors. Results showed a positive trend: as bandwidth increased, gwRF performance improved substantially (RMSE decreased from 46,306 at BW=48 to 41,396 at BW=200). However, even at the optimal bandwidth of 200, gwRF still could not outperform the simpler Random Forest model (RMSE=41,950). This finding reveals a fundamental limitation: as gwRF's bandwidth increases to improve performance, it essentially converges toward global modeling, negating the theoretical advantage of local spatial weighting. The bandwidth sensitivity analysis confirms that:
+-   **Over-localisation problem in gwRF**
 
-Small bandwidths lead to over-localization and unstable local models Large bandwidths approach global modeling behavior At no bandwidth does gwRF provide a meaningful advantage over either GWR (for spatial modeling) or RF (for global ensemble modeling)
+Adding spatial weighting to Random Forest actually degraded performance below standalone RF. With bandwidth=48 neighbors, each local RF seemed to train on insufficient data, leading to overfitting. We experimented with a hybrid approach (60% local, 40% global) partially recovered performance but still couldn't match either GWR or RF *(see Appendix)*.
 
-Conclusion: gwRF occupies an awkward middle ground - when localized it underperforms due to insufficient data, and when globalized it merely approximates RF at higher computational cost. \### 8.2 Limitations & Future work
+-   **Model recommendations**
+
+For best prediction accuracy: Use GWR. It provides superior performance and spatial interpretability
+
+For computational efficiency: Use RF as a faster alternative with acceptable accuracy. It ran only for 1-3 seconds for this study.
+
+Avoid fully local gwRF: due to overfitting and poor performance despite higher computational cost (than RF). We tested a hybrid gwRF approach to address potential over-localisation. While the hybrid model outperformed the fully local gwRF, it remained inferior to both GWR and standalone RF. This confirms that:
+
+```         
+-   Pure local modeling with bandwidth=48 is suboptimal for ensemble methods Even with global information, gwRF cannot match the performance of GWR or global ensemble models RF.
+```
+
+### 8.2 Future work
+
+Both GWR and gwRF used an adaptive bandwidth of 48 neighbors, optimized using cross-validation for the GWR model. Future work could explore whether gwRF benefits from a larger bandwidth given the additional data requirements of ensemble methods.
+
+These findings suggest that future research on spatial ensemble methods should focus on alternative approaches to incorporating spatial information—such as spatial features or constraints—rather than geographic weighting schemes that may conflict with the inherent spatial partitioning of tree-based models
+
 
 ::::: markgoals
 ::: markgoals-header
-**Note**
+**Self Reflection**
 :::
 
 ::: markgoals-container
+Geospatial studies are very exciting because the methods and models allow us to discover tremendous insights for informing policies and business strategies. Through this assignment I learned to appreciate predictive modeling methodologies in the geospatial field. The finding is also quite interesting as it kind of goes against what I initially thought - GWR and gwRF must win. It came as a surprise that gwRF actually did not! 
+
+All the lessons covered help me realise that there are just yet a lot more to learn. I always find data so fascinating when I come to each of the lesson since Data Analytics Lab module. Sincere thanks to Prof. Kam's patience and encouragement on the assignments and answering questions, making the data analytics journey so amazing! Together with visual analytics, I have developed greater interest in these fields and will continue the journey. Hopefully I can really utilise the knowledge and skillset to do some good to the society. 
+
 :::
 :::::
 
-```{r}
-mdata <- read_rds("data/rawdata/mdata.rds")
-```
 
-```{r}
-tm_shape(mpsz) +
-  tm_polygons(
-    fill = "REGION_N",
-    fill.scale = tm_scale_categorical(
-      values = c("#FFC4C4", "#87BAC3", "#8FABD4", "#FDE7B3", "#FDCFFA")
-    ),
-    fill.legend = tm_legend(title = "Region"),
-    col = "white",
-    lwd = 0.8
-  ) +
-  tm_layout(
-    main.title = "Singapore Planning Regions",
-    legend.outside = TRUE
-  )
-```
+## 9 Reference
 
-Plot the MRT station exits in a tmap.
+-   Kam, T. S. 2025. *R for Geospatial Data Science and Analytics*
 
-```{r}
-#| eval: false
-#| fig-width: 12
-#| fig-height: 8
-#| code-fold: true
-#tmap_mode("view")
-tm_shape(mpsz) +
-  tm_polygons(fill = "#FAF3F3", fill_alpha = 0.2) +
-tm_shape(mrt_sf) +
-  tm_symbols(
-   fill = "#87A7B3", size = 0.5,
-   col = "#0C4271",
-#   popup = "STATION"
-  ) +
-  tm_layout(main.title = "MRT Stations",
-            bg.color = "#F6E6E4",
-            outer.margins = c(0.01, 0.01, 0.01, 0.01))
-#tmap_mode("plot")
-```
+-   Gangula, K. (n.d.). *Shopping mall coordinates* \[Data set\]. Kaggle. Retrieved November 9, 2025, from <https://www.kaggle.com/datasets/karthikgangula/shopping-mall-coordinates>
 
-``` r
-test <- st_read("data/rawdata/JTCBusinessParkLandGEOJSON.geojson") 
-read_html(test$Description[1]) %>% 
-  html_table() %>% 
-  .[[1]]
-```
+-   data.gov.sg. (2025). *multiple data sets* \[Data set\] (refer to section 2.1) Retrieved Nov 9, 2025, from <https://data.gov.sg/>
 
-##====================testing=================
+-   Land Transport (2025). *multiple data sets* \[Data set\] (refer to section 2.1). Retrieved Nov 9, 2025, from <https://datamall.lta.gov.sg/content/datamall/en.html>.
 
-### **6.4.2 Predict with test data**
+-   *Shopping mall.* (n.d.). In Wikipedia. Retrieved November 9, 2025, from https://en.wikipedia.org/wiki/Shopping_mall
+
+-   Sophia Education. (2025). *2025 Singapore PSLE school rankings: Where do the top schools stand this year?* Sophia Education. https://sophiaeducation.sg/2025-singapore-psle-school-rankings
+
+## [APPENDIX]{style="color: #E45A92;"}
+
+## I. gwRF Hybrid Modeling
+
+### i. Adjust spatial effects
+
+Given that gwRF unexpectedly underperformed relative to RF, we explore whether a hybrid approach can improve performance by balancing local spatial effects (60%) with global patterns (40%). This configuration allows the model to capture spatial heterogeneity while maintaining awareness of market-wide trends.
 
 ```{r}
 #| eval: false
@@ -3579,7 +3749,7 @@ gwRF_hybrid_pred <- read_rds("data/model/gwRF_hybrid_pred.rds")
 
 ```
 
-### **6.4.3 Append predicted values to the test dataset**
+### ii. Append predicted values to the test dataset
 
 ```{r}
 #| eval: false
@@ -3592,21 +3762,17 @@ write_rds(test_data_p, "data/rds/test_data_p.rds")
 
 ```{r}
 #| echo: false
-
 test_data_p <- read_rds("data/rds/test_data_p.rds")
 kable(head(test_data_p))
 
 ```
 
-### **6.4.4 gwRF Model performance metrics**
-
-We calculate the root mean square error (RMSE) to measure how far predicted values are from observed values in a regression analysis.
+### iii. gwRF Model performance metrics
 
 ```{r}
 #| code-fold: true
 #| eval: false
 # RMSE
-
 gwrf_hybrid_rmse <- sqrt(mean((test_data_p$resale_price - test_data_p$gwrf_hybrid_pred)^2))
 
 # MAE
@@ -3633,31 +3799,19 @@ print(paste("gwRF_hybrid MAE:", rf_mae))
 print(paste("gwRF_hybrid R^2:", rf_rsq))
 ```
 
-### **6.4.5 Visualising the predicted values**
+### iv. Visualising the predicted values
 
-Let's visualise the actual resale price and the predicted resale price in the scatter plot.
+Let's visualise the actual resale price and the predicted resale price in the scatter plot and compare the metrics with the existing models.
 
-```{r}
+While the hybrid gwRF model improves upon fully localised gwRF, it still underperforms compared to non-spatial Random Forest. This result suggests that explicit geographic weighting may not be necessary when rich locational features (proximity to amenities, CBD distance) are already included as predictors.
 
-ggplot(data = test_data_p,
-       aes(x = gwrf_hybrid_pred,
-           y = resale_price)) +
-  geom_point(col = "#BB6653", size = 0.5) +
-  labs(title = "GWRF: Predicted vs Actual Resale Prices",
-       x = "Predicted Resale Price (S$)",
-       y = "Actual Resale Price (S$)") +
-    theme_minimal() +  
-  theme(
-    plot.background = element_rect(fill = "#D0DDD0"),      
-    panel.background = element_rect(fill = "#F5F5F5"),   
-    plot.title = element_text(hjust = 0.5, size = 14, face = "bold") 
-  )  
-  
-```
+Random Forest's ability to capture complex non-linear interactions between these spatial features may be more effective than gwRF's localized approach for this dataset.
+
+::: panel-tabset
+## Performance metrics table
 
 ```{r}
 #| code-fold: true
-library(DT)
 
 model_comparison_v2 <- data.frame(
   Model = c("MLR", "GWR", "Random Forest", "gwRF", "gwRF_hb"),
@@ -3673,12 +3827,39 @@ datatable(model_comparison_v2,
   formatRound(columns = c('RMSE', 'MAE', 'R_2'), digits = 4) 
 ```
 
-##================testing2===========
+## Scatterplot
+
+```{r}
+#| code-fold: true
+ggplot(data = test_data_p,
+       aes(x = gwrf_hybrid_pred,
+           y = resale_price)) +
+  geom_point(col = "#BB6653", size = 0.5) +
+  geom_abline(intercept = 0, slope = 1, 
+               color = "#DC143C", linetype = "dashed", linewidth = 1) +  
+  labs(title = "GWRF: Predicted vs Actual Resale Prices",
+       x = "Predicted Resale Price (S$)",
+       y = "Actual Resale Price (S$)") +
+    theme_minimal() +  
+  theme(
+    plot.background = element_rect(fill = "#D0DDD0"),      
+    panel.background = element_rect(fill = "#F5F5F5"),   
+    plot.title = element_text(hjust = 0.5, size = 14, face = "bold") 
+  )  
+  
+```
+:::
+
+## II. gwRF bandwidth sensitivity analysis
+
+### i. Adjust bandwidth
+
+We conducted a further bandwidth sensitivity analysis testing values from 48, 75, 100, 150 to 200 neighbors.
 
 ```{r}
 #| eval: false
 #| code-fold: true
-# Test a few bandwidths quickly
+
 bandwidths <- c(48, 75, 100, 150, 200)
 gwrf_results <- data.frame()
 
@@ -3730,24 +3911,14 @@ write_rds(gwrf_results, "data/rds/gwrf_results.rds")
 ```{r}
 #| echo: false
 gwrf_results <- read_rds("data/rds/gwrf_results.rds")
+kable(gwrf_results)
+
 ```
 
-```{r}
-# Plot results
-ggplot(gwrf_results, aes(x = Bandwidth, y = RMSE)) +
-  geom_line() +
-  geom_point() +
-  geom_hline(yintercept = 41950, color = "blue", linetype = "dashed") +  # RF
-  geom_hline(yintercept = 38028, color = "red", linetype = "dashed") +   # GWR
-  labs(title = "gwRF Performance by Bandwidth",
-       subtitle = "Blue = RF, Red = GWR") +
-  theme_minimal()
-```
+### ii. Result visualisation
 
 ```{r}
-
-library(ggplot2)
-
+#| code-fold: true
 ggplot(gwrf_results, aes(x = Bandwidth, y = RMSE)) +
   geom_line(color = "orange", linewidth = 1) +
   geom_point(color = "orange", size = 3) +
@@ -3762,6 +3933,17 @@ ggplot(gwrf_results, aes(x = Bandwidth, y = RMSE)) +
        x = "Adaptive Bandwidth (Number of Neighbors)",
        y = "RMSE (SGD)") +
   theme_minimal() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
-        plot.subtitle = element_text(hjust = 0.5, size = 10))
+    theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "none",
+    strip.text = element_text(size = 11, face = "bold"),
+    plot.background = element_rect(fill = "#D0DDD0"),      
+    panel.background = element_rect(fill = "#F5F5F5"),   
+    panel.border = element_rect(color = "white", fill = NA, linewidth = 1),
+    plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
+    plot.subtitle = element_text(hjust = 0.5, size = 10))
 ```
+
+### iii. Conclusion
+
+Results showed that increasing bandwidth improved gwRF performance (RMSE: 46,306 at BW=48 → 41,396 at BW=200), yet even optimal gwRF underperformed standard RF (RMSE=38,423). This reveals a fundamental paradox: gwRF requires larger bandwidths to improve accuracy, but this negates the local spatial weighting that motivated its design. The consistent superiority of RF suggests that spatial dependencies are adequately represented through proximity features. They make explicit geographic weighting unnecessary, and potentially harmful when combined with tree-based ensemble methods.
