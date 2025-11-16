@@ -1877,7 +1877,7 @@ names(HDB_master)
 #| fig-height: 8
 #| code-fold: true
 
-tmap_mode("view")
+#tmap_mode("view")
 tm_shape(mpsz) + 
   tm_polygons(fill = "REGION_N", col = "white", lwd = 0.8, 
               fill_alpha = 0.4, fill.legend = tm_legend(show = FALSE),
